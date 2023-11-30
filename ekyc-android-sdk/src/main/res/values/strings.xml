@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">cowpaySDK</string>
+
+    <string name="payment_methods">Payment Methods</string>
+    <string name="select_payment_methods">Select Payment Method</string>
+    <string name="fawry_pay">Fawry Pay</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="noPaymentOptions">There is no payment methods available</string>
+
+    <string name="noConnection">Check your connection and try again</string>
+    <string name="unAuth">Something went wrong. Please contact your merchant</string>
+    <string name="someThingWentWrong">Something went wrong</string>
+    <string name="next">Next</string>
+    <string name="exit">Exit</string>
+    <string name="retry">Retry</string>
+    <string name="dismiss">Dismiss</string>
+
+    <string name="saved_cards">Saved Cards</string>
+    <string name="select_card">Select Card</string>
+    <string name="add_new_card">Add New Card</string>
+
+    <string name="payment_details">Payment Details</string>
+    <string name="add_payment_card">Add Payment Card</string>
+    <string name="card_holder_name">Card Holder Name</string>
+    <string name="card_number">Card Number</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="cvv">cvv</string>
+    <string name="save_this_card">Save this card information for faster payment</string>
+    <string name="total_payment_amount">Total Payment Amount</string>
+    <string name="currency">EGP</string>
+    <string name="subtotal">Subtotal : </string>
+    <string name="vat">Vat : </string>
+    <string name="fees">Fees : </string>
+    <string name="pay">Pay</string>
+
+    <string name="invalidCardNumber">Invalid Card number</string>
+    <string name="requiredCardNumber">Card number is required</string>
+    <string name="invalidCardExpiryOldDate">Card is expired</string>
+
+    <string name="there_is_no_saved_cards">There is no saved cards</string>
+
+    <string name="requiredCardExpiry">Expiry date is required</string>
+    <string name="invalidCardExpiry">Invalid Expiry date</string>
+
+    <string name="requiredCardHolderName">Name is required</string>
+    <string name="invalidCardHolderName">Invalid Name</string>
+
+    <string name="requiredCardCvv">Cvv is required</string>
+    <string name="invalidCardCvv">Invalid Cvv</string>
+
+    <string name="requiredMobileNumber">Mobile number is required</string>
+    <string name="invalidMobileNumber">Mobile number must be 11 digits start with 01</string>
+
+    <string name="pay_now">Pay Now</string>
+    <string name="type_card_cvv_number">Type card CVV number</string>
+
+    <string name="paymentFailed">Payment had been failed</string>
+    <string name="successPayment">Payment is successfully done</string>
+    <string name="referenceNumber">Reference Number</string>
+    <string name="youAreAboutToExitPayment">You are about to exit from your payment</string>
+
+    <string name="mobileNumber">Mobile Number</string>
+    <string name="enter_your_mobile_number">Enter your Mobile number</string>
+    <string name="proceed">Proceed</string>
+    <string name="close">Close</string>
+    <string name="use_this_code_to_complete_your_payment_with_Fawry">Use this code to complete your payment with Fawry</string>
+    <string name="copied">Copied</string>
+
+</resources>

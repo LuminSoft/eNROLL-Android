@@ -1,0 +1,13 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.luminsoft.setting_password'
+}
+
+dependencies {
+    implementation(project(":ekyc-android-sdk:core"))
+    sharedGroup dependencies
+}

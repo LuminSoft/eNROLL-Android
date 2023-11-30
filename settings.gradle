@@ -1,0 +1,31 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+}
+rootProject.name = "ekyc-android"
+include ':app'
+include ':ekyc-android-sdk'
+include ':ekyc-android-sdk:ui-components'
+include ':ekyc-android-sdk:main'
+include ':ekyc-android-sdk:national-id-confirmation'
+include ':ekyc-android-sdk:face-capture'
+include ':ekyc-android-sdk:phone-numbers'
+include ':ekyc-android-sdk:email'
+include ':ekyc-android-sdk:setting-password'
+include ':ekyc-android-sdk:location'
+include ':ekyc-android-sdk:device-data'
+include ':ekyc-android-sdk:security-questions'
+include ':ekyc-android-sdk:core'

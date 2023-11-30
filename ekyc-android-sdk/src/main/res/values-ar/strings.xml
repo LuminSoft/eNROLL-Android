@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">cowpaySDK</string>
+
+    <string name="payment_methods">طرق الدفع</string>
+    <string name="select_payment_methods">اختر طريقة الدفع</string>
+    <string name="fawry_pay">فوري</string>
+    <string name="credit_card">بطاقة ائتمان</string>
+    <string name="noPaymentOptions">لا توجد طرق دفع متاحة</string>
+
+    <string name="noConnection">تحقق من الاتصال و اعد المحاولة</string>
+    <string name="unAuth">حدث خطأ. من فضلك اتصل بالتاجر</string>
+    <string name="someThingWentWrong">حدث خطأ</string>
+    <string name="next">التالي</string>
+    <string name="exit">خروج</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="dismiss">إلغاء</string>
+
+    <string name="saved_cards">البطاقات المحفوظة</string>
+    <string name="select_card">اختر بطاقة</string>
+    <string name="add_new_card">اضافة بطاقة جديدة</string>
+    <string name="type_card_cvv_number">ادخل رمز التحقق</string>
+    <string name="add_payment_card">اضافة بطاقة دفع</string>
+
+    <string name="payment_details">بيانات الدفع</string>
+    <string name="card_holder_name">اسم حامل البطاقة</string>
+    <string name="card_number">رقم البطاقة</string>
+    <string name="expiry_date">تاريخ انتهاء البطاقة</string>
+    <string name="cvv">رمز التحقق</string>
+    <string name="save_this_card">حفظ البطاقة للمعاملات اللاحقة </string>
+    <string name="total_payment_amount">الإجمالي</string>
+    <string name="currency">ج.م</string>
+    <string name="subtotal">المبلغ الاساسي : </string>
+    <string name="vat">ضريبة القيمة المضافة : </string>
+    <string name="fees">مصاريف الخدمة : </string>
+    <string name="pay">ادفع</string>
+
+    <string name="invalidCardNumber">رقم البطاقة غير صحيح</string>
+    <string name="requiredCardNumber">رقم البطاقة مطلوب</string>
+    <string name="invalidCardExpiryOldDate">البطاقة منتهية الصلاحية</string>
+
+    <string name="requiredCardExpiry">تاريخ انتهاء الصلاحية مطلوب</string>
+    <string name="invalidCardExpiry">تاريخ انتهاء الصلاحية غير صحيح</string>
+
+    <string name="requiredCardHolderName">الأسم مطلوب</string>
+    <string name="invalidCardHolderName">الأسم غير صحيح</string>
+
+    <string name="requiredCardCvv">رمز التحقق مطلوب</string>
+    <string name="invalidCardCvv">رمز التحقق غير صحيح</string>
+
+    <string name="requiredMobileNumber">رقم الهاتف مطلوب</string>
+    <string name="invalidMobileNumber">رقم الهاتف يجب أن يتكون من 11 رقم يبدأ ب 01</string>
+
+    <string name="pay_now">ادفع الأن</string>
+
+    <string name="there_is_no_saved_cards">لا توجد بطاقات محفوظة</string>
+    <string name="paymentFailed">فشل عملية الدفع</string>
+    <string name="successPayment">تم الدفع بنجاح</string>
+    <string name="referenceNumber">الرقم المرجعي</string>
+    <string name="youAreAboutToExitPayment">انت على وشك مغادرة صحفة الدفع</string>
+
+    <string name="mobileNumber">رقم الهاتف</string>
+    <string name="enter_your_mobile_number">ادخل رقم الهاتف</string>
+    <string name="proceed">استمرار</string>
+    <string name="close">إغلاق</string>
+    <string name="use_this_code_to_complete_your_payment_with_Fawry">استخدم هذا الكود لاستكمال عملية الدفع عن طريق فوري</string>
+    <string name="copied">تم النسخ</string>
+
+</resources>

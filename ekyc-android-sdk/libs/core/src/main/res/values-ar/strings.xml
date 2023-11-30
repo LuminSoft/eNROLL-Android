@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ekycSDK</string>
+    <string name="noConnection">تحقق من الاتصال و اعد المحاولة</string>
+    <string name="unAuth">حدث خطأ. من فضلك اتصل بالتاجر</string>
+    <string name="someThingWentWrong">حدث خطأ</string>
+</resources>
