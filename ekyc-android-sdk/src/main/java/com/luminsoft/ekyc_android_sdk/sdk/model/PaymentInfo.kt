@@ -1,4 +1,4 @@
-package com.luminsoft.core.sdk.model
+package com.luminsoft.ekyc_android_sdk.sdk.model
 
 data class PaymentInfo(
     val merchantReferenceId: String ,

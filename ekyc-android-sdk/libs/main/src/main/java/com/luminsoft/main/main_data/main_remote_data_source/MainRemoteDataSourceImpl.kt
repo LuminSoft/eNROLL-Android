@@ -1,16 +1,16 @@
-package com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_remote_data_source
-import com.luminsoft.cowpay_sdk.network.BaseRemoteDataSource
-import com.luminsoft.cowpay_sdk.network.BaseResponse
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_models.get_token.GetCardsRequest
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_api.CardsPaymentApi
+package com.luminsoft.main.main_data.main_remote_data_source
+import com.luminsoft.core.network.BaseRemoteDataSource
+import com.luminsoft.core.network.BaseResponse
+import com.luminsoft.main.main_data.main_models.get_token.GetCardsRequest
+import com.luminsoft.main.main_data.main_api.MainApi
 
 
-class  MainRemoteDataSourceImpl (private val network: BaseRemoteDataSource, private val cardsPaymentApi: CardsPaymentApi):
-    CardsPaymentRemoteDataSource {
+class  MainRemoteDataSourceImpl (private val network: BaseRemoteDataSource, private val mainApi: MainApi):
+    MainRemoteDataSource {
 
     override suspend fun getCards(request: GetCardsRequest, ): BaseResponse<Any> {
 
-            return network.apiRequest { cardsPaymentApi.getCards(request) }
+            return network.apiRequest { mainApi.getCards(request) }
 
     }
 }

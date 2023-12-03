@@ -2,8 +2,8 @@ package com.luminsoft.main.main_data.main_api
 
 
 import com.luminsoft.core.network.ApiBaseResponse
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_models.get_token.TokenizedCardData
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_models.get_token.GetCardsRequest
+import com.luminsoft.main.main_data.main_models.get_token.TokenizedCardData
+import com.luminsoft.main.main_data.main_models.get_token.GetCardsRequest
 
 import retrofit2.Response
 import retrofit2.http.*

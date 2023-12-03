@@ -31,7 +31,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.luminsoft.ekyc_android.theme.NewcowpayTheme
-import com.luminsoft.ekyc_android_sdk.ui.components.NormalTextField
+import com.luminsoft.ekyc_android_sdk.sdk.EkycSdk
+import com.luminsoft.ekyc_android_sdk.sdk.EkycEnvironment
+import com.luminsoft.ekyc_android_sdk.sdk.EkycMode
+import com.luminsoft.ekyc_android_sdk.sdk.LocalizationCode
+import com.luminsoft.ekyc_android_sdk.sdk.model.EKYCCallback
+import com.luminsoft.ekyc_android_sdk.sdk.model.PaymentFailedModel
+import com.luminsoft.ekyc_android_sdk.sdk.model.PaymentSuccessModel
 import io.github.cdimascio.dotenv.dotenv
 import java.util.Locale
 import java.util.Random
@@ -40,9 +46,8 @@ val dotenv = dotenv {
     directory = "/assets"
     filename = "env"
 }
-var merchantMobileNumber = mutableStateOf(TextFieldValue(text = dotenv["MERCHANT_MOBILE"]))
-var merchantHashKey = mutableStateOf(TextFieldValue(text = dotenv["HASH_KEY"]))
-var merchantCode = mutableStateOf(TextFieldValue(text = dotenv["MERCHANT_CODE"]))
+var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
+var tenantSecret = mutableStateOf(TextFieldValue(text = dotenv["TENANT_SECRET"]))
 var isArabic = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
@@ -64,25 +69,6 @@ class MainActivity : ComponentActivity() {
                     .padding(horizontal = 15.dp), verticalArrangement = Arrangement.SpaceBetween) {
                     Column {
                         Spacer(modifier = Modifier.height(20.dp))
-                        NormalTextField(
-                            label = "Merchant Code",
-                            value = merchantCode.value,
-                            onValueChange = {
-                                merchantCode.value = it
-                            })
-
-                        NormalTextField(
-                            label = "Hash Key",
-                            value = merchantHashKey.value,
-                            onValueChange = {
-                                merchantHashKey.value = it
-                            })
-                        NormalTextField(
-                            label = "Merchant Mobile",
-                            value = merchantMobileNumber.value,
-                            onValueChange = {
-                                merchantMobileNumber.value = it
-                            })
 
                         Spacer(modifier = Modifier.height(10.dp))
 
@@ -117,6 +103,60 @@ class MainActivity : ComponentActivity() {
                             .padding(
                                 start = 15.dp, end = 15.dp
                             )
+                        Button(
+                            border=border,
+                            modifier=modifier,
+                            onClick =  {
+                                try {
+
+                                    EkycSdk.init(
+                                        tenantId.value.text,
+                                        tenantSecret.value.text,
+                                        EkycMode.ONBOARDING,
+                                        EkycEnvironment.STAGING,
+                                        ekycCallback = object : EKYCCallback {
+                                            override fun success(paymentSuccessModel: PaymentSuccessModel) {
+//                                        if (paymentSuccessModel is PaymentSuccessModel.FawrySuccessModel) {
+//                                            Log.e("SuccessFawry", paymentSuccessModel.paymentMethodName)
+//                                        } else if (paymentSuccessModel is PaymentSuccessModel.CreditCardSuccessModel) {
+//                                            Log.e("SuccessCard", paymentSuccessModel.paymentReferenceId)
+//                                            Log.e("SuccessCard", paymentSuccessModel.paymentMethodName)
+//                                        }
+//                                        Log.e("SuccessCard", paymentSuccessModel.toString())
+                                                text.value =
+                                                    "payment method: ${paymentSuccessModel.paymentMethodName} \nReference number: ${paymentSuccessModel.paymentReferenceId}"
+                                            }
+
+                                            override fun error(paymentFailedModel: PaymentFailedModel) {
+                                                text.value = paymentFailedModel.failureMessage
+
+                                            }
+
+                                        },
+                                        localizationCode = isArabic.value.let { if(it) LocalizationCode.AR else LocalizationCode.EN},
+                                    )
+                                } catch (e: Exception) {
+                                    Log.e("error", e.toString())
+                                }
+                                try {
+
+                                    EkycSdk.launch(activity)
+                                } catch (e: Exception) {
+                                    Log.e("error", e.toString())
+                                }
+                            },
+                            contentPadding = PaddingValues(0.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+
+                            ) {
+                            Text(
+                                text = "Launch EKYC",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
 
                         Spacer(modifier = Modifier.height(20.dp))
                     }

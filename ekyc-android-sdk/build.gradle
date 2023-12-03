@@ -44,19 +44,32 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.1'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
 }
 
 dependencies {
     sharedGroup dependencies
     implementation("io.arrow-kt:arrow-core:1.2.0")
-    implementation(project(":ekyc-android-sdk:core"))
-    implementation(project(":ekyc-android-sdk:email"))
-    implementation(project(":ekyc-android-sdk:phone-numbers"))
-    implementation(project(":ekyc-android-sdk:face-capture"))
-    implementation(project(":ekyc-android-sdk:device-data"))
-    implementation(project(":ekyc-android-sdk:location"))
-    implementation(project(":ekyc-android-sdk:national-id-confirmation"))
-    implementation(project(":ekyc-android-sdk:security-questions"))
-    implementation(project(":ekyc-android-sdk:setting-password"))
-    implementation(project(":ekyc-android-sdk:ui-components"))
+    implementation project(":ekyc-android-sdk:libs:core")
+    implementation(project(":ekyc-android-sdk:libs:ui-components"))
+
+    implementation(project(":ekyc-android-sdk:libs:features:email"))
+    implementation(project(":ekyc-android-sdk:libs:features:phone-numbers"))
+    implementation(project(":ekyc-android-sdk:libs:features:face-capture"))
+    implementation(project(":ekyc-android-sdk:libs:features:device-data"))
+    implementation(project(":ekyc-android-sdk:libs:features:location"))
+    implementation(project(":ekyc-android-sdk:libs:features:national-id-confirmation"))
+    implementation(project(":ekyc-android-sdk:libs:features:security-questions"))
+    implementation(project(":ekyc-android-sdk:libs:features:setting-password"))
+    implementation(project(":ekyc-android-sdk:libs:main"))
 }

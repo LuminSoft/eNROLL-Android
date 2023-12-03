@@ -1,6 +1,5 @@
 package com.luminsoft.core.network
 
-import com.luminsoft.core.sdk.EKYCSDK
 import com.luminsoft.cowpay_sdk.utils.WifiService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -18,10 +17,13 @@ private const val TIME_OUT_CONNECTION = 1
 private val TINE_UNIT_FOR_CONNECTION = TimeUnit.MINUTES
 
 object RetroClient {
-    private val baseUrl = EKYCSDK.getApisUrl()
+    private var baseUrl = ""
     internal var token = ""
     fun setToken(token: String) {
         RetroClient.token = token
+    }
+    fun setBaseUrl(url: String) {
+        baseUrl = url
     }
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()

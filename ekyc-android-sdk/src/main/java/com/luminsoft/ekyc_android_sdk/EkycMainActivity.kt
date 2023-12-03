@@ -5,14 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.luminsoft.core.sdk.appModule
+import com.luminsoft.core.network.RetroClient
+import com.luminsoft.ekyc_android_sdk.sdk.sdkModule
 import com.luminsoft.core.utils.ResourceProvider
-import com.luminsoft.core.utils.SdkNavigation
 import com.luminsoft.location.location_di.locationModule
 import com.luminsoft.cowpay_sdk.utils.WifiService
 import com.luminsoft.device_data.device_data_di.deviceDataModule
+import com.luminsoft.ekyc_android_sdk.sdk.EkycSdk
 import com.luminsoft.email.email_di.emailModule
 import com.luminsoft.face_capture.face_capture_di.faceCaptureModule
+import com.luminsoft.main.main_di.mainModule
 import com.luminsoft.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
 import com.luminsoft.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPrescanScreen
 import com.luminsoft.national_id_confirmation.national_id_navigation.nationalIdRouter
@@ -31,11 +33,11 @@ class EkycMainActivity : ComponentActivity() {
 
         WifiService.instance.initializeWithApplicationContext(this)
         ResourceProvider.instance.initializeWithApplicationContext(this)
+        RetroClient.setBaseUrl(EkycSdk.getApisUrl())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
-
         setupServices()
         super.onCreate(savedInstanceState)
 
@@ -57,7 +59,7 @@ class EkycMainActivity : ComponentActivity() {
             activity.getKoin()
         } else {
             GlobalContext.getOrNull() ?: startKoin {
-                modules(appModule)
+                modules(sdkModule)
                 modules(deviceDataModule)
                 modules(emailModule)
                 modules(faceCaptureModule)
@@ -66,6 +68,7 @@ class EkycMainActivity : ComponentActivity() {
                 modules(phoneNumbersModule)
                 modules(securityQuestionsModule)
                 modules(passwordModule)
+                modules(mainModule)
             }.koin
         }
 

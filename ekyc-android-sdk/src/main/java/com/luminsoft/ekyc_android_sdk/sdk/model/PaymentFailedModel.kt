@@ -1,3 +1,3 @@
-package com.luminsoft.core.sdk.model
+package com.luminsoft.ekyc_android_sdk.sdk.model
 
 data class PaymentFailedModel (val  failureMessage:String,val error:Any? = null)

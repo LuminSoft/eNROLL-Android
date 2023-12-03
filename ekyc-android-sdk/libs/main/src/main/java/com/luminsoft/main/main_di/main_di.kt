@@ -1,44 +1,36 @@
-package com.luminsoft.cowpay_sdk.features.cards_payment.di
+package com.luminsoft.main.main_di
 
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_domain.repository.CardsPaymentRepository
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_domain.usecases.GetSavedCardsUseCase
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_presentation.add_card.view_model.AddCardViewModel
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_presentation.saved_cards.view_model.SavedCardsViewModel
-import com.luminsoft.cowpay_sdk.network.AuthInterceptor
-import com.luminsoft.cowpay_sdk.network.RetroClient
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_api.CardsPaymentApi
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_repository.CardsPaymentRepositoryImplementation
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_remote_data_source.CardsPaymentRemoteDataSource
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_remote_data_source.CardsPaymentRemoteDataSourceImpl
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_presentation.web_view.view_models.WebViewViewModel
+import com.luminsoft.core.network.AuthInterceptor
+import com.luminsoft.core.network.RetroClient
+import com.luminsoft.main.main_data.main_api.MainApi
+import com.luminsoft.main.main_data.main_remote_data_source.MainRemoteDataSource
+import com.luminsoft.main.main_data.main_remote_data_source.MainRemoteDataSourceImpl
+import com.luminsoft.main.main_data.main_repository.MainRepositoryImplementation
+import com.luminsoft.main.main_domain.repository.MainRepository
+import com.luminsoft.main.main_domain.usecases.GetSavedCardsUseCase
+import com.luminsoft.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val cardsPaymentModule = module{
+val mainModule = module{
     single {
         GetSavedCardsUseCase(get())
     }
-    single<CardsPaymentRemoteDataSource> {
-        CardsPaymentRemoteDataSourceImpl(get(),get())
+    single<MainRemoteDataSource> {
+        MainRemoteDataSourceImpl(get(),get())
     }
-    single<CardsPaymentRepository> {
-        CardsPaymentRepositoryImplementation(get())
+    single<MainRepository> {
+        MainRepositoryImplementation(get())
     }
     single {
         RetroClient.provideRetrofit(
             RetroClient.provideOkHttpClient(
                 AuthInterceptor()
             )
-        ).create(CardsPaymentApi::class.java)
+        ).create(MainApi::class.java)
     }
     viewModel{
-        AddCardViewModel(get(),get())
-    }
-    viewModel{
-        SavedCardsViewModel(get(),get(),get())
-    }
-    viewModel{
-        WebViewViewModel()
+        OnBoardingViewModel(get())
     }
 
 }

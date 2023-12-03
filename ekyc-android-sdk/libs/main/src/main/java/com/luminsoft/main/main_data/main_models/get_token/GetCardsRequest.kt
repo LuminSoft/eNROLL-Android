@@ -1,4 +1,4 @@
-package com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_data.cards_payment_models.get_token
+package com.luminsoft.main.main_data.main_models.get_token
 
 import com.google.gson.annotations.SerializedName
 

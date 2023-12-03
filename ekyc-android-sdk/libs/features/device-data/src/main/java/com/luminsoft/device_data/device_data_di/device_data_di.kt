@@ -2,7 +2,7 @@ package com.luminsoft.device_data.device_data_di
 
 import com.luminsoft.core.network.AuthInterceptor
 import com.luminsoft.core.network.RetroClient
-import com.luminsoft.cowpay_sdk.features.cards_payment.cards_payment_domain.usecases.GetSavedCardsUseCase
+import com.luminsoft.device_data.device_data_domain.usecases.GetSavedCardsUseCase
 import com.luminsoft.device_data.device_data_data.device_data_api.DeviceDataApi
 import com.luminsoft.device_data.device_data_data.device_data_remote_data_source.DeviceDataRemoteDataSource
 import com.luminsoft.device_data.device_data_data.device_data_remote_data_source.DeviceDataRemoteDataSourceImpl

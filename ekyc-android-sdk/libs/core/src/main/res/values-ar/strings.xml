@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">ekycSDK</string>
     <string name="noConnection">تحقق من الاتصال و اعد المحاولة</string>
-    <string name="unAuth">حدث خطأ. من فضلك اتصل بالتاجر</string>
+    <string name="unAuth">يرجى إعادة إنشاء الحساب\n .عفواً .. انتهت صلاحية الجلسة الخاصة بكم</string>
     <string name="someThingWentWrong">حدث خطأ</string>
 </resources>

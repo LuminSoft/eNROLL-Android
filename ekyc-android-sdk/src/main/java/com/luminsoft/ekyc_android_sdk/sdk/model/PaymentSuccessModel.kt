@@ -1,4 +1,4 @@
-package com.luminsoft.core.sdk.model
+package com.luminsoft.ekyc_android_sdk.sdk.model
 
 sealed class PaymentSuccessModel {
      class CreditCardSuccessModel(paymentReferenceId: String) : PaymentSuccessModel("CreditCard",

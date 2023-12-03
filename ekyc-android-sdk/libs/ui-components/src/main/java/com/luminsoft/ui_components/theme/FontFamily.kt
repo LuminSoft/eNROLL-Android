@@ -4,7 +4,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import com.luminsoft.ui_components.R
+import com.luminsoft.ekyc_android_sdk.ui_components.R
 
 val sdkFontFamily = FontFamily(
     fonts = arrayOf(

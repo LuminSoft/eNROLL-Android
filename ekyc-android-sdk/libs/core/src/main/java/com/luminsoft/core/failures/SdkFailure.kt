@@ -17,7 +17,7 @@ class NetworkFailure(mes:String = ResourceProvider.instance.getStringResource(R.
 }
 
 class ServerFailure(apiErrorResponse: ApiErrorResponse) : ConnectionFailure {
-    override val message: String = apiErrorResponse.operationMessage ?: ResourceProvider.instance.getStringResource(R.string.someThingWentWrong)
+    override val message: String = apiErrorResponse.message ?: ResourceProvider.instance.getStringResource(R.string.someThingWentWrong)
 }
 class NoConnectionFailure() : ConnectionFailure {
     override val message: String = ResourceProvider.instance.getStringResource(R.string.noConnection)

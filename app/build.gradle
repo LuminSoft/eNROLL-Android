@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'com.luminsoft.ekyc_android'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.luminsoft.ekyc_android"
-        minSdk 21
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -29,6 +29,17 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.1'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
