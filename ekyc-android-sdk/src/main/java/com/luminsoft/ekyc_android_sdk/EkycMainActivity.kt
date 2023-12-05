@@ -5,23 +5,33 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.luminsoft.core.network.RetroClient
-import com.luminsoft.ekyc_android_sdk.sdk.sdkModule
-import com.luminsoft.core.utils.ResourceProvider
-import com.luminsoft.location.location_di.locationModule
 import com.luminsoft.cowpay_sdk.utils.WifiService
-import com.luminsoft.device_data.device_data_di.deviceDataModule
-import com.luminsoft.ekyc_android_sdk.sdk.EkycSdk
-import com.luminsoft.email.email_di.emailModule
-import com.luminsoft.face_capture.face_capture_di.faceCaptureModule
-import com.luminsoft.main.main_di.mainModule
-import com.luminsoft.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
-import com.luminsoft.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPrescanScreen
-import com.luminsoft.national_id_confirmation.national_id_navigation.nationalIdRouter
-import com.luminsoft.password.password_di.passwordModule
-import com.luminsoft.phone_numbers.phone_numbers_di.phoneNumbersModule
-import com.luminsoft.security_questions.security_questions_di.securityQuestionsModule
-import com.luminsoft.ui_components.theme.EKYCsDKTheme
+import com.luminsoft.ekyc_android_sdk.core.models.EkycMode
+import com.luminsoft.ekyc_android_sdk.core.models.sdkModule
+import com.luminsoft.ekyc_android_sdk.core.network.RetroClient
+import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
+import com.luminsoft.ekyc_android_sdk.core.utils.ResourceProvider
+import com.luminsoft.ekyc_android_sdk.features.device_data.device_data_di.deviceDataModule
+import com.luminsoft.ekyc_android_sdk.features.device_data.device_data_navigation.deviceDataRouter
+import com.luminsoft.ekyc_android_sdk.features.email.email_di.emailModule
+import com.luminsoft.ekyc_android_sdk.features.email.email_navigation.emailRouter
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_di.faceCaptureModule
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureRouter
+import com.luminsoft.ekyc_android_sdk.features.location.location_di.locationModule
+import com.luminsoft.ekyc_android_sdk.features.location.location_navigation.locationRouter
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdRouter
+import com.luminsoft.ekyc_android_sdk.features.phone_numbers.phone_numbers_di.phoneNumbersModule
+import com.luminsoft.ekyc_android_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumberRouter
+import com.luminsoft.ekyc_android_sdk.features.security_questions.security_questions_di.securityQuestionsModule
+import com.luminsoft.ekyc_android_sdk.features.security_questions.security_questions_navigation.securityQuestionsRouter
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_di.passwordModule
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_navigation.settingPasswordRouter
+import com.luminsoft.ekyc_android_sdk.main.main_di.mainModule
+import com.luminsoft.ekyc_android_sdk.main.main_navigation.mainRouter
+import com.luminsoft.ekyc_android_sdk.main.main_navigation.splashScreenAuthContent
+import com.luminsoft.ekyc_android_sdk.main.main_navigation.splashScreenOnBoardingContent
+import com.luminsoft.ekyc_android_sdk.ui_components.theme.EKYCsDKTheme
 import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
@@ -30,7 +40,6 @@ import org.koin.core.context.startKoin
 
 class EkycMainActivity : ComponentActivity() {
     private fun setupServices() {
-
         WifiService.instance.initializeWithApplicationContext(this)
         ResourceProvider.instance.initializeWithApplicationContext(this)
         RetroClient.setBaseUrl(EkycSdk.getApisUrl())
@@ -46,9 +55,17 @@ class EkycMainActivity : ComponentActivity() {
             EKYCsDKTheme (dynamicColor = false){
                 NavHost(
                     navController = navController,
-                    startDestination = nationalIdOnBoardingPrescanScreen
+                    startDestination = splashScreenOnBoardingContent
                 ) {
+                    mainRouter(navController = navController)
                     nationalIdRouter(navController = navController)
+                    deviceDataRouter(navController = navController)
+                    emailRouter(navController = navController)
+                    faceCaptureRouter(navController = navController)
+                    locationRouter(navController = navController)
+                    phoneNumberRouter(navController = navController)
+                    securityQuestionsRouter(navController = navController)
+                    settingPasswordRouter(navController = navController)
                 }
             }
         }
@@ -60,6 +77,7 @@ class EkycMainActivity : ComponentActivity() {
         } else {
             GlobalContext.getOrNull() ?: startKoin {
                 modules(sdkModule)
+                modules(mainModule)
                 modules(deviceDataModule)
                 modules(emailModule)
                 modules(faceCaptureModule)
@@ -68,9 +86,23 @@ class EkycMainActivity : ComponentActivity() {
                 modules(phoneNumbersModule)
                 modules(securityQuestionsModule)
                 modules(passwordModule)
-                modules(mainModule)
             }.koin
         }
+    }
 
+    private fun getStartingRoute(): String {
+        return when (EkycSdk.ekycMode) {
+            EkycMode.ONBOARDING -> {
+                splashScreenOnBoardingContent
+            }
+
+            EkycMode.AUTH -> {
+                splashScreenAuthContent
+            }
+
+            else -> {
+                return splashScreenOnBoardingContent
+            }
+        }
     }
 }

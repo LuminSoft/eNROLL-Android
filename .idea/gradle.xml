@@ -13,19 +13,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/ekyc-android-sdk" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/core" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/device-data" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/email" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/face-capture" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/location" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/national-id-confirmation" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/phone-numbers" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/security-questions" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/features/setting-password" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/main" />
-            <option value="$PROJECT_DIR$/ekyc-android-sdk/libs/ui-components" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -30,14 +30,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.luminsoft.ekyc_android_sdk.sdk.Ekyc
 import com.luminsoft.ekyc_android.theme.NewcowpayTheme
-import com.luminsoft.ekyc_android_sdk.sdk.EkycSdk
-import com.luminsoft.ekyc_android_sdk.sdk.EkycEnvironment
-import com.luminsoft.ekyc_android_sdk.sdk.EkycMode
-import com.luminsoft.ekyc_android_sdk.sdk.LocalizationCode
-import com.luminsoft.ekyc_android_sdk.sdk.model.EKYCCallback
-import com.luminsoft.ekyc_android_sdk.sdk.model.PaymentFailedModel
-import com.luminsoft.ekyc_android_sdk.sdk.model.PaymentSuccessModel
+import com.luminsoft.ekyc_android_sdk.core.models.EKYCCallback
+import com.luminsoft.ekyc_android_sdk.core.models.EkycEnvironment
+import com.luminsoft.ekyc_android_sdk.core.models.EkycMode
+import com.luminsoft.ekyc_android_sdk.core.models.LocalizationCode
+import com.luminsoft.ekyc_android_sdk.core.models.PaymentFailedModel
+import com.luminsoft.ekyc_android_sdk.core.models.PaymentSuccessModel
 import io.github.cdimascio.dotenv.dotenv
 import java.util.Locale
 import java.util.Random
@@ -55,12 +55,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setLocale("en")
-
-
-
-
         setContent {
             val activity = LocalContext.current as Activity
             NewcowpayTheme {
@@ -108,13 +103,13 @@ class MainActivity : ComponentActivity() {
                             modifier=modifier,
                             onClick =  {
                                 try {
-
-                                    EkycSdk.init(
+                                    Ekyc.init(
                                         tenantId.value.text,
                                         tenantSecret.value.text,
                                         EkycMode.ONBOARDING,
                                         EkycEnvironment.STAGING,
-                                        ekycCallback = object : EKYCCallback {
+                                        ekycCallback = object :
+                                            EKYCCallback {
                                             override fun success(paymentSuccessModel: PaymentSuccessModel) {
 //                                        if (paymentSuccessModel is PaymentSuccessModel.FawrySuccessModel) {
 //                                            Log.e("SuccessFawry", paymentSuccessModel.paymentMethodName)
@@ -133,14 +128,13 @@ class MainActivity : ComponentActivity() {
                                             }
 
                                         },
-                                        localizationCode = isArabic.value.let { if(it) LocalizationCode.AR else LocalizationCode.EN},
+                                        localizationCode = isArabic.value.let { if(it)LocalizationCode.AR else LocalizationCode.EN},
                                     )
                                 } catch (e: Exception) {
                                     Log.e("error", e.toString())
                                 }
                                 try {
-
-                                    EkycSdk.launch(activity)
+                                    Ekyc.launch(activity)
                                 } catch (e: Exception) {
                                     Log.e("error", e.toString())
                                 }
