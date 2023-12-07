@@ -237,7 +237,7 @@ fun ConfirmButton(
             onClick = {
                     onClick()
             },
-            stringResource(id = R.string.next),
+            stringResource(id = R.string.confirm),
         )
 }
 //
