@@ -1,7 +1,5 @@
-package com.luminsoft.ekyc_android_sdk.main.main_onboarding.view_model
+package com.luminsoft.ekyc_android_sdk.main.main_presentation.main_auth.view_model
 
-import android.content.Context
-import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
@@ -11,24 +9,20 @@ import com.luminsoft.ekyc_android_sdk.core.utils.ResourceProvider
 import com.luminsoft.ekyc_android_sdk.core.utils.ui
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
+import com.luminsoft.ekyc_android_sdk.main.main_presentation.common.MainViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.koin.android.ext.koin.androidContext
-import java.util.UUID
 
-class OnBoardingViewModel(private val generateOnboardingSessionToken: GenerateOnboardingSessionTokenUsecase) : ViewModel() ,
+class AuthViewModel(private val generateOnboardingSessionToken: GenerateOnboardingSessionTokenUsecase) : ViewModel() ,
     MainViewModel
 {
     override var loading: MutableStateFlow<Boolean> =MutableStateFlow(false)
     override var isButtonLoading: MutableStateFlow<Boolean> =  MutableStateFlow(false)
     override var failure: MutableStateFlow<SdkFailure?> =  MutableStateFlow(null)
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
+    override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     override suspend fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
-
-    var token = MutableStateFlow<String?>(null)
-//    private var payResponse = MutableStateFlow<PayResponse?>(null)
-
     init {
         generateToken()
     }
@@ -37,8 +31,7 @@ class OnBoardingViewModel(private val generateOnboardingSessionToken: GenerateOn
 
         loading.value = true
         ui {
-            val udid:String = UUID.randomUUID().toString()
-            println(udid)
+            val udid:String = ResourceProvider.instance.getDeviceData()
             params.value = GenerateOnboardingSessionTokenUsecaseParams(EkycSdk.tenantId,EkycSdk.tenantSecret , udid)
 
             val response: Either<SdkFailure, String> = generateOnboardingSessionToken.call(params.value as GenerateOnboardingSessionTokenUsecaseParams)

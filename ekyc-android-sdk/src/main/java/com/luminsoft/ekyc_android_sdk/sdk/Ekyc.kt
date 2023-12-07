@@ -14,8 +14,8 @@ import java.util.Locale
 object Ekyc {
     @Throws(Exception::class)
     fun init(
-        tenantSecret: String,
         tenantId: String,
+        tenantSecret: String,
         ekycMode: EkycMode,
         environment: EkycEnvironment = EkycEnvironment.STAGING,
         localizationCode: LocalizationCode = LocalizationCode.EN,

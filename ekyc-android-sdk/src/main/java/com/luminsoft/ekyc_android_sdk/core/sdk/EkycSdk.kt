@@ -19,7 +19,7 @@ object EkycSdk {
 
     private fun getBaseUrl(): String {
        return when (environment) {
-            EkycEnvironment.STAGING -> "http://197.168.1.39"
+            EkycEnvironment.STAGING -> "http://197.44.231.206"
            EkycEnvironment.PRODUCTION -> "https://ekyc.nasps.org.eg"
     }
     }

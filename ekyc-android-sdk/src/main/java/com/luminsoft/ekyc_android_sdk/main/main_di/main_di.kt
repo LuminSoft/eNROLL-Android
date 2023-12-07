@@ -8,9 +8,8 @@ import com.luminsoft.ekyc_android_sdk.main.main_data.main_remote_data_source.Mai
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_repository.MainRepositoryImplementation
 import com.luminsoft.ekyc_android_sdk.main.main_domain.repository.MainRepository
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
-import com.luminsoft.ekyc_android_sdk.main.main_onboarding.view_model.AuthViewModel
-import com.luminsoft.ekyc_android_sdk.main.main_onboarding.view_model.OnBoardingViewModel
-import org.koin.android.ext.koin.androidContext
+import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_auth.view_model.AuthViewModel
+import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
