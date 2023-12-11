@@ -1,6 +1,8 @@
 package com.luminsoft.ekyc_android_sdk.ui_components.components
 
+import android.content.res.Resources
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,19 +12,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.luminsoft.ekyc_android_sdk.R
+
 
 @Composable
-fun BackGroundView(title: String?, isBackButton: Boolean = false,navController:NavController, onClick: (() -> Unit)?=null, content: @Composable () -> Unit) {
+fun BackGroundView(  appBarHeight:Double =  0.25, showAppBar: Boolean = true,navController:NavController, onClick: (() -> Unit)?=null, content: @Composable () -> Unit) {
+    val configuration = LocalConfiguration.current
+
     BackHandler(
         enabled = true, onBack = {
             if(onClick ==null) {
@@ -31,27 +41,46 @@ fun BackGroundView(title: String?, isBackButton: Boolean = false,navController:N
                 onClick()
             }
     })
-    Surface (modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primary){
+    Surface (modifier = Modifier.fillMaxSize()){
+        Image(
+            painterResource(R.drawable.screen_bg),
+            contentDescription = "",
+            contentScale = ContentScale.FillBounds,
+            modifier  = Modifier
+                .fillMaxSize())
         Column {
-            if(title != null) {
+            if(showAppBar)
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(70.dp)
+                        .fillMaxWidth().height(ScreenHelper.sh(appBarHeight))
                 ) {
-                    Row(horizontalArrangement =  Arrangement.Center,
-                    verticalAlignment= Alignment.CenterVertically, modifier = Modifier.fillMaxSize()) {
-                        Text(text = title,  style = MaterialTheme.typography.titleLarge)
 
+                        Image(
+                            painterResource(R.drawable.header),
+                            contentDescription = "",
+                            contentScale = ContentScale.FillBounds,
+                            modifier  = Modifier
+                                .fillMaxSize()
+                                .fillMaxWidth(),
+                        )
+
+                    Row(horizontalArrangement =  Arrangement.Start,
+                        verticalAlignment= Alignment.Bottom, modifier= Modifier
+                            .fillMaxSize()
+                            .padding(start = ScreenHelper.sw(0.1), bottom = ScreenHelper.sh(0.05))) {
+                        Image(
+                            painterResource(R.drawable.logo),
+                            contentScale = ContentScale.FillBounds,
+                            contentDescription = "",
+                            modifier  = Modifier.width(ScreenHelper.sw(0.3)).height(ScreenHelper.sh(0.08)),
+                        )
                     }
 
                 }
-            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
-                    .background(color = MaterialTheme.colorScheme.onPrimary)
                     .padding(
                         start = 15.dp, end = 15.dp
                     )
@@ -61,5 +90,13 @@ fun BackGroundView(title: String?, isBackButton: Boolean = false,navController:N
 
         }
 
+    }
+}
+object ScreenHelper{
+    fun sw(value: Double): Dp {
+        return (value*Resources.getSystem().displayMetrics.xdpi).dp
+    }
+    fun sh(value: Double): Dp {
+        return (value*Resources.getSystem().displayMetrics.ydpi).dp
     }
 }

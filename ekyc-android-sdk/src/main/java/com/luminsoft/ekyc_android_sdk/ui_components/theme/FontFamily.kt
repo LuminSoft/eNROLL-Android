@@ -9,22 +9,22 @@ import com.luminsoft.ekyc_android_sdk.R
 val sdkFontFamily = FontFamily(
     fonts = arrayOf(
         Font(
-            resId = R.font.poppins_bold,
+            resId = R.font.ge_flow_bold,
             weight = FontWeight.W900,
             FontStyle.Normal
         ),
         Font(
-            resId = R.font.poppins_medium,
+            resId = R.font.ge_flow_regular,
             weight = FontWeight.W500,
             FontStyle.Normal
         ),
         Font(
-            resId = R.font.poppins_semi_bold,
+            resId =R.font.ge_flow_bold,
             weight = FontWeight.W600,
             FontStyle.Normal
         ),
         Font(
-            resId = R.font.poppins_regular,
+            resId = R.font.ge_flow_regular,
             weight = FontWeight.W400,
             FontStyle.Normal
         ),

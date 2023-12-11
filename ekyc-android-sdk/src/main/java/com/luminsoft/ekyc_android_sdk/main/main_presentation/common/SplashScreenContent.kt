@@ -13,6 +13,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.main.main_di.mainModule
 import com.luminsoft.ekyc_android_sdk.main.main_navigation.onBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.LoadingView
 import org.koin.androidx.compose.koinViewModel
 
@@ -31,17 +32,19 @@ fun SplashScreenContent(
     if (loading.value) {
         LoadingView()
     }else {
-        Text(
-            token.value.toString(),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        ConfirmButton(onClick = {
-            navController.navigate(
-                onBoardingScreenContent
-                )
-
-        }, viewModel = viewModel)
+        BackGroundView(showAppBar=false,navController = navController,) {
+//            Text(
+//                token.value.toString(),
+//                style = MaterialTheme.typography.labelLarge,
+//                color = MaterialTheme.colorScheme.onSurface
+//            )
+//            ConfirmButton(onClick = {
+//                navController.navigate(
+//                    onBoardingScreenContent
+//                )
+//
+//            }, viewModel = viewModel)
+        }
     }
 }
 //    val loading = addCardViewModel.loading.collectAsState()

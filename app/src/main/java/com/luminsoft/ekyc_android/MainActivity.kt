@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.luminsoft.ekyc_android_sdk.sdk.Ekyc
@@ -38,6 +39,9 @@ import com.luminsoft.ekyc_android_sdk.core.models.EkycMode
 import com.luminsoft.ekyc_android_sdk.core.models.LocalizationCode
 import com.luminsoft.ekyc_android_sdk.core.models.PaymentFailedModel
 import com.luminsoft.ekyc_android_sdk.core.models.PaymentSuccessModel
+import com.luminsoft.ekyc_android_sdk.ui_components.components.BottomSheetStatus
+import com.luminsoft.ekyc_android_sdk.ui_components.components.DialogView
+import com.luminsoft.ekyc_android_sdk.ui_components.components.NormalTextField
 import io.github.cdimascio.dotenv.dotenv
 import java.util.Locale
 import java.util.Random
@@ -64,7 +68,18 @@ class MainActivity : ComponentActivity() {
                     .padding(horizontal = 15.dp), verticalArrangement = Arrangement.SpaceBetween) {
                     Column {
                         Spacer(modifier = Modifier.height(20.dp))
-
+                        NormalTextField(
+                            label = "Tenant Id",
+                            value =tenantId.value,
+                            onValueChange = {
+                                tenantId.value = it
+                            })
+                        NormalTextField(
+                            label = "Tenant Secret",
+                            value = tenantSecret.value,
+                            onValueChange = {
+                                tenantSecret.value = it
+                            })
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
@@ -86,6 +101,7 @@ class MainActivity : ComponentActivity() {
                                 },
                             )
                         }
+
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(text.value)
                     }
@@ -98,6 +114,7 @@ class MainActivity : ComponentActivity() {
                             .padding(
                                 start = 15.dp, end = 15.dp
                             )
+
                         Button(
                             border=border,
                             modifier=modifier,
@@ -155,6 +172,14 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.ERROR,
+                    text ="sadasdsad" ,
+                    buttonText ="asdsadsa" ,
+                    onPressedButton = { /*TODO*/ }){
+                        Log.e("dialog","closed")
+                }
+
             }
         }
 

@@ -4,13 +4,15 @@ import androidx.compose.ui.graphics.Color
 
 
 
+
+val hintGrey = Color(0xFF899399)
+val medium = Color(0xFF1D56B8)
 val white = Color(0xffffffff)
 val black = Color(0xff333333)
-val backGround = Color(0xFFF5F4F2)
-val hintGrey = Color(0xFF899399)
-val primary = Color(0xff5F338B)
-val medium = Color(0xffC3B1D5)
-val secondary = Color(0xffffffff)
-val errorColor = Color(0xffF8006B)
-val successColor = Color(0xff00A136)
-val warningColor = Color(0xffF8BE00)
+val backGround = Color(0xFFFFFFFF)
+val primary = Color(0xFF1D56B8)
+val secondary = Color(0xFF1C1526)
+val successColor = Color(0xff61CC3D)
+val warningColor = Color(0xFFF9D548)
+val errorColor = Color(0xFFDB305B)
+val textColor = Color(0xff444444)

@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
@@ -45,19 +46,17 @@ fun NormalTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     colors: TextFieldColors = TextFieldDefaults.colors(
-        focusedTextColor = MaterialTheme.colorScheme.primary,
-        focusedContainerColor = Color.White,
-        unfocusedTextColor = MaterialTheme.colorScheme.primary,
-        unfocusedContainerColor = Color.White,
-        errorContainerColor = Color.White,
-        disabledTextColor = Color.Transparent,
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        errorContainerColor = Color.Transparent,
         focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-        unfocusedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-        disabledIndicatorColor = Color.Transparent ,
+        unfocusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+        errorIndicatorColor = MaterialTheme.colorScheme.error,
+        focusedTextColor = MaterialTheme.colorScheme.primary,
         cursorColor = MaterialTheme.colorScheme.primary,
         errorCursorColor = MaterialTheme.colorScheme.error,
+        errorTextColor = MaterialTheme.colorScheme.primary,
     ),
-    shape: Shape = RoundedCornerShape(12.dp)
 ) {
     var focusedBorderThickness = 1.2.dp
     var unfocusedBorderThickness = 1.2.dp
@@ -83,10 +82,14 @@ fun NormalTextField(
             interactionSource = interactionSource,
             singleLine = true,
             decorationBox = @Composable { innerTextField ->
-                TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                TextFieldDefaults.DecorationBox(
                     value = value.text,
-                    visualTransformation = visualTransformation,
                     innerTextField = innerTextField,
+                    enabled = true,
+                    singleLine = true,
+                    visualTransformation = visualTransformation,
+                    interactionSource = interactionSource,
+                    isError = error != null,
                     label = {
                         Text(
                             text = label,
@@ -94,7 +97,6 @@ fun NormalTextField(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    contentPadding = PaddingValues(4.dp),
                     leadingIcon = icon?:
                     painter?.let {
                         {
@@ -106,22 +108,16 @@ fun NormalTextField(
                             )
                         }
                     },
-                    singleLine = true,
-                    isError = error != null,
-                    interactionSource = interactionSource,
                     colors = colors,
-                    enabled = true,
+                    contentPadding = PaddingValues(4.dp),
                     container = {
-                        TextFieldDefaults.OutlinedBorderContainerBox(
+                        TextFieldDefaults.ContainerBox(
                             enabled = true,
                             isError = error != null,
-                            interactionSource,
-                            colors,
-                            shape = shape,
-                            focusedBorderThickness = focusedBorderThickness,
-                            unfocusedBorderThickness = unfocusedBorderThickness
+                            interactionSource = interactionSource,
+                            colors = colors,
                         )
-                    }
+                    },
                 )
 
             }
