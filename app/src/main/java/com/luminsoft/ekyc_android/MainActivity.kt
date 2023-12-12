@@ -105,7 +105,6 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(text.value)
                     }
-
                     Column {
                         val border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                         val modifier = Modifier
@@ -171,13 +170,6 @@ class MainActivity : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(20.dp))
                     }
-                }
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.ERROR,
-                    text ="sadasdsad" ,
-                    buttonText ="asdsadsa" ,
-                    onPressedButton = { /*TODO*/ }){
-                        Log.e("dialog","closed")
                 }
 
             }
