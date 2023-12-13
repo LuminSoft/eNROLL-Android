@@ -1,4 +1,4 @@
-package com.luminsoft.cowpay_sdk.utils
+package com.luminsoft.ekyc_android_sdk.core.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

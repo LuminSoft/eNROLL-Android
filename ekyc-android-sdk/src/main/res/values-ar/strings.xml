@@ -204,4 +204,5 @@
 <string name="getLocationText">لاكمال عملية التسجيل سوف نحتاج الموقع الحالي ، يرجى النقر على الحصول على الموقع</string>
 <string name="locationAccessErrorText">يجب أن تسمح بالموقع ولن تكتمل تطبيقك بدون موقعك ، من أجل السماح بالانتقال إلى الصلاحيات التطبيق والسماح بالموقع.</string>
 <string name="getLocationButtonText">الحصول على الموقع</string>
+    <string name="retry">اعادة محاولة</string>
 </resources>

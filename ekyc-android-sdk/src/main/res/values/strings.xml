@@ -203,4 +203,5 @@
     <string name="getLocationText">we are going to grab your current location please click on grab location</string>
     <string name="locationAccessErrorText">You must allow the location and your application wouldn\'t be completed without your location, in-order to allow go to application permission and allow location.</string>
     <string name="getLocationButtonText">Get Location</string>
+    <string name="retry">Retry</string>
 </resources>

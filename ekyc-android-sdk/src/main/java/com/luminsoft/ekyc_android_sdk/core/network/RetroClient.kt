@@ -1,6 +1,6 @@
 package com.luminsoft.ekyc_android_sdk.core.network
 
-import com.luminsoft.cowpay_sdk.utils.WifiService
+import com.luminsoft.ekyc_android_sdk.core.utils.WifiService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response

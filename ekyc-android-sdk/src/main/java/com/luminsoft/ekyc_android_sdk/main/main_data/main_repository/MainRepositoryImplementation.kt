@@ -21,7 +21,6 @@ class MainRepositoryImplementation(private val mainRemoteDataSource: MainRemoteD
             is BaseResponse.Error -> {
                 Either.Left(response.error)
             }
-
         }
     }
 }

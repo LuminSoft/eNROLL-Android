@@ -9,14 +9,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.components.LoadingView
+import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun OnboardingScreenContent(
-    viewModel : OnBoardingViewModel = koinViewModel<OnBoardingViewModel>(),
     navController:NavController,
 ) {
+    val viewModel : OnBoardingViewModel =  getViewModel()
     val loading = viewModel.loading.collectAsState()
     val failure = viewModel.failure.collectAsState()
     val token = viewModel.token.collectAsState()

@@ -11,5 +11,5 @@ interface MainViewModel {
     var params: MutableStateFlow<Any?>
     var token: MutableStateFlow<String?>
 
-    suspend fun retry(navController: NavController)
+    fun retry(navController: NavController)
 }

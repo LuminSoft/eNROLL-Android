@@ -21,7 +21,7 @@ class OnBoardingViewModel(private val generateOnboardingSessionToken: GenerateOn
     override var failure: MutableStateFlow<SdkFailure?> =  MutableStateFlow(null)
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
-    override suspend fun retry(navController: NavController) {
+    override  fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
 

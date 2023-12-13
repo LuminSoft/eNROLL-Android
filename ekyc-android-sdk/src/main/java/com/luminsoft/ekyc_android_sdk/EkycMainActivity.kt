@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.luminsoft.cowpay_sdk.utils.WifiService
+import com.luminsoft.ekyc_android_sdk.core.utils.WifiService
 import com.luminsoft.ekyc_android_sdk.core.models.EkycMode
 import com.luminsoft.ekyc_android_sdk.core.models.sdkModule
 import com.luminsoft.ekyc_android_sdk.core.network.RetroClient
@@ -33,7 +33,10 @@ import com.luminsoft.ekyc_android_sdk.main.main_di.mainModule
 import com.luminsoft.ekyc_android_sdk.main.main_navigation.mainRouter
 import com.luminsoft.ekyc_android_sdk.main.main_navigation.splashScreenAuthContent
 import com.luminsoft.ekyc_android_sdk.main.main_navigation.splashScreenOnBoardingContent
+import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_auth.view_model.AuthViewModel
+import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.theme.EKYCsDKTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
@@ -41,6 +44,8 @@ import org.koin.core.context.startKoin
 
 
 class EkycMainActivity : ComponentActivity() {
+    val onBoardingViewModel: OnBoardingViewModel by viewModel()
+    val authViewModel: AuthViewModel by viewModel()
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
         ResourceProvider.instance.initializeWithApplicationContext(this)
@@ -62,7 +67,7 @@ class EkycMainActivity : ComponentActivity() {
             EKYCsDKTheme (dynamicColor = false){
                 NavHost(
                     navController = navController,
-                    startDestination = splashScreenOnBoardingContent
+                    startDestination = getStartingRoute()
                 ) {
                     mainRouter(navController = navController)
                     nationalIdRouter(navController = navController)
