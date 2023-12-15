@@ -1,4 +1,4 @@
-package com.luminsoft.cowpay_sdk.ui.components
+package com.luminsoft.ekyc_android_sdk.ui_components.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues

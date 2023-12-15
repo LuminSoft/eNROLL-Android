@@ -45,7 +45,7 @@ import androidx.navigation.NavController
 //import com.luminsoft.cowpay_sdk.ui.components.BackGroundView
 //import com.luminsoft.cowpay_sdk.ui.components.BottomSheet
 //import com.luminsoft.cowpay_sdk.ui.components.BottomSheetStatus
-//import com.luminsoft.cowpay_sdk.ui.components.ButtonView
+//import com.luminsoft.ekyc_android_sdk.ui_components.components.ButtonView
 //import com.luminsoft.cowpay_sdk.ui.components.LoadingView
 //import com.luminsoft.cowpay_sdk.ui.components.MaskVisualTransformation
 //import com.luminsoft.cowpay_sdk.ui.components.NormalTextField

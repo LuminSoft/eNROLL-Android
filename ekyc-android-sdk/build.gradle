@@ -63,6 +63,8 @@ android {
 dependencies {
     sharedGroup dependencies
     implementation("io.arrow-kt:arrow-core:1.2.0")
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
 //    implementation(project(":ekyc-android-sdk:libs:main"))
 //    implementation(project(":ekyc-android-sdk:libs:core"))
 //

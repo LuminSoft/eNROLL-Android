@@ -5,4 +5,5 @@ import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.generate_onboar
 
 interface  MainRemoteDataSource  {
     suspend fun generateOnboardingSessionToken(request: GenerateOnboardingSessionTokenRequest): BaseResponse<Any>
+    suspend fun getOnBoardingStepsConfigurations(): BaseResponse<Any>
 }

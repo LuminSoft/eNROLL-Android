@@ -8,6 +8,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_data.main_remote_data_source.Mai
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_repository.MainRepositoryImplementation
 import com.luminsoft.ekyc_android_sdk.main.main_domain.repository.MainRepository
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
+import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,6 +17,9 @@ import org.koin.dsl.module
 val mainModule = module{
     single {
         GenerateOnboardingSessionTokenUsecase(get())
+    }
+    single {
+        GetOnboardingStepConfigurationsUsecase(get())
     }
     single<MainRemoteDataSource> {
         MainRemoteDataSourceImpl(get(),get())
@@ -31,7 +35,7 @@ val mainModule = module{
         ).create(MainApi::class.java)
     }
     viewModel{
-        OnBoardingViewModel(get())
+        OnBoardingViewModel(get(),get())
     }
     viewModel{
         AuthViewModel(get())

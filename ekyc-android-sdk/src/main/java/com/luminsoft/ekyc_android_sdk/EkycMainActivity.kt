@@ -36,6 +36,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_navigation.splashScreenOnBoardin
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.theme.EKYCsDKTheme
+import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
@@ -63,13 +64,14 @@ class EkycMainActivity : ComponentActivity() {
         }
 
         setContent {
+            val onBoardingViewModel:OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
             val navController = rememberNavController()
             EKYCsDKTheme (dynamicColor = false){
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()
                 ) {
-                    mainRouter(navController = navController)
+                    mainRouter(navController = navController,onBoardingViewModel)
                     nationalIdRouter(navController = navController)
                     deviceDataRouter(navController = navController)
                     emailRouter(navController = navController)

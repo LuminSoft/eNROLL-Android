@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.luminsoft.cowpay_sdk.ui.components.ButtonView
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.ui_components.theme.errorColor
 import com.luminsoft.ekyc_android_sdk.ui_components.theme.successColor

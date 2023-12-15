@@ -1,5 +1,6 @@
 package com.luminsoft.ekyc_android_sdk.main.main_navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -20,14 +21,16 @@ fun NavController.navigateToMain(navOptions: NavOptions? = null) {
     this.navigate(splashScreenOnBoardingContent, navOptions)
 }
 
-fun NavGraphBuilder.mainRouter(navController: NavController) {
+@OptIn(ExperimentalAnimationApi::class)
+fun NavGraphBuilder.mainRouter(navController: NavController, onBoardingViewModel:OnBoardingViewModel) {
+
     composable(route = splashScreenOnBoardingContent) {
-        SplashScreenContent(koinViewModel<OnBoardingViewModel>(),navController=navController)
+        SplashScreenContent(onBoardingViewModel,navController=navController)
     }
-    composable(route = splashScreenAuthContent) {
-        SplashScreenContent(koinViewModel<AuthViewModel>(),navController=navController)
-    }
+//    composable(route = splashScreenAuthContent) {
+//        SplashScreenContent(koinViewModel<AuthViewModel>(),navController=navController)
+//    }
     composable(route = onBoardingScreenContent) {
-        OnboardingScreenContent(navController=navController)
+        OnboardingScreenContent(onBoardingViewModel,navController=navController)
     }
 }
