@@ -12,6 +12,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardi
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecaseParams
+import com.luminsoft.ekyc_android_sdk.main.main_navigation.onBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.common.MainViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.UUID
@@ -27,18 +28,18 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
+    var navController: NavController? = null
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
-
-//    private var payResponse = MutableStateFlow<PayResponse?>(null)
-
     init {
         generateToken()
     }
 
-    private fun generateToken() {
+//    private var payResponse = MutableStateFlow<PayResponse?>(null)
 
+
+    private fun generateToken() {
         loading.value = true
         ui {
             val udid: String = UUID.randomUUID().toString()
@@ -70,6 +71,7 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
+                            navController!!.navigate(onBoardingScreenContent)
                         })
 
                     }

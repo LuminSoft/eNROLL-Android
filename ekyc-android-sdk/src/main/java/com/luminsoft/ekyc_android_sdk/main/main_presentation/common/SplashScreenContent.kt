@@ -33,6 +33,7 @@ fun SplashScreenContent(
     val steps = viewModel.steps.collectAsState()
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
+    viewModel.navController = navController
 
     Surface (modifier = Modifier.fillMaxSize()) {
         Image(
@@ -43,13 +44,7 @@ fun SplashScreenContent(
                 .fillMaxSize()
         )
     }
-    if(steps.value != null){
-        if(EkycSdk.ekycMode == EkycMode.ONBOARDING) {
-            navController.navigate(
-                onBoardingScreenContent
-            )
-        }
-    }else if (!failure.value?.message.isNullOrEmpty()) {
+     if (!failure.value?.message.isNullOrEmpty()) {
         if (failure.value is AuthFailure) {
             failure.value?.let {
                 DialogView(

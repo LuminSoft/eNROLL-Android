@@ -32,7 +32,7 @@ fun LoadingView(
 
     Surface (modifier = Modifier.fillMaxSize()){
         Image(
-            painterResource(R.drawable.header),
+            painterResource(R.drawable.bg_shapes),
             contentDescription = "",
             contentScale = ContentScale.FillBounds,
             modifier  = Modifier
@@ -45,7 +45,7 @@ fun LoadingView(
                 ) {
 
                     Image(
-                        painterResource(R.drawable.screen_bg),
+                        painterResource(R.drawable.bg_shapes),
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds,
                         modifier  = Modifier

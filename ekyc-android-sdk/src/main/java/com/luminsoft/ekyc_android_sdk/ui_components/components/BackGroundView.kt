@@ -43,7 +43,7 @@ fun BackGroundView(  appBarHeight:Double =  0.25, showAppBar: Boolean = true,nav
     })
     Surface (modifier = Modifier.fillMaxSize()){
         Image(
-            painterResource(R.drawable.screen_bg),
+            painterResource(R.drawable.bg_shapes),
             contentDescription = "",
             contentScale = ContentScale.FillBounds,
             modifier  = Modifier
@@ -56,7 +56,7 @@ fun BackGroundView(  appBarHeight:Double =  0.25, showAppBar: Boolean = true,nav
                 ) {
 
                         Image(
-                            painterResource(R.drawable.header),
+                            painterResource(R.drawable.header_shapes),
                             contentDescription = "",
                             contentScale = ContentScale.FillBounds,
                             modifier  = Modifier
