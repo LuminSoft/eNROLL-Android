@@ -2,12 +2,14 @@ package com.luminsoft.ekyc_android_sdk.main.main_data.main_repository
 
 
 import arrow.core.Either
+import arrow.core.raise.Null
 import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
 import com.luminsoft.ekyc_android_sdk.core.network.BaseResponse
 import com.luminsoft.ekyc_android_sdk.main.main_domain.repository.MainRepository
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
+import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_remote_data_source.MainRemoteDataSource
 
 class MainRepositoryImplementation(private val mainRemoteDataSource: MainRemoteDataSource):
@@ -30,6 +32,17 @@ class MainRepositoryImplementation(private val mainRemoteDataSource: MainRemoteD
             is BaseResponse.Success -> {
                 Either.Right(response.data as List<StepModel>)
 
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+        }
+    }
+    override suspend fun initializeRequest(request: InitializeRequestRequest): Either<SdkFailure, Null> {
+        return when (val response = mainRemoteDataSource.initializeRequest(request)) {
+            is BaseResponse.Success -> {
+                Either.Right(null)
             }
 
             is BaseResponse.Error -> {

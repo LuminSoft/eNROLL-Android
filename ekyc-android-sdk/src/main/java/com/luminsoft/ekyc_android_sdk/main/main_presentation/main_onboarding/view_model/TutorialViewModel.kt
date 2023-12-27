@@ -6,7 +6,9 @@ import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.OnBoardingPage
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_configurations.RegistrationStepSetting
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.logging.Handler
 
 class TutorialViewModel(val steps: MutableStateFlow<List<StepModel>?>) : ViewModel(){
     var pages: MutableStateFlow<List<OnBoardingPage>?> = MutableStateFlow(null)

@@ -9,6 +9,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_data.main_repository.MainReposit
 import com.luminsoft.ekyc_android_sdk.main.main_domain.repository.MainRepository
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
+import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.TutorialViewModel
@@ -21,6 +22,9 @@ val mainModule = module{
     }
     single {
         GetOnboardingStepConfigurationsUsecase(get())
+    }
+    single {
+        InitializeRequestUsecase(get())
     }
     single<MainRemoteDataSource> {
         MainRemoteDataSourceImpl(get(),get())
@@ -36,7 +40,7 @@ val mainModule = module{
         ).create(MainApi::class.java)
     }
     viewModel{
-        OnBoardingViewModel(get(),get())
+        OnBoardingViewModel(get(),get(),get())
     }
     viewModel{
         AuthViewModel(get())

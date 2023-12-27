@@ -82,25 +82,25 @@ class MainActivity : ComponentActivity() {
                             })
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-                            Text("Is Arabic?")
-                            Switch(
-                                modifier = Modifier.scale(0.8f),
-                                checked = isArabic.value,
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = MaterialTheme.colorScheme.primary,
-                                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                                    uncheckedThumbColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                                    uncheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                                    uncheckedBorderColor = Color.Unspecified,
-                                    checkedBorderColor = Color.Unspecified,
-
-                                    ),
-                                onCheckedChange = {
-                                    isArabic.value = it
-                                },
-                            )
-                        }
+//                        Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+//                            Text("Is Arabic?")
+//                            Switch(
+//                                modifier = Modifier.scale(0.8f),
+//                                checked = isArabic.value,
+//                                colors = SwitchDefaults.colors(
+//                                    checkedThumbColor = MaterialTheme.colorScheme.primary,
+//                                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+//                                    uncheckedThumbColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+//                                    uncheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+//                                    uncheckedBorderColor = Color.Unspecified,
+//                                    checkedBorderColor = Color.Unspecified,
+//
+//                                    ),
+//                                onCheckedChange = {
+//                                    isArabic.value = it
+//                                },
+//                            )
+//                        }
 
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(text.value)
@@ -144,7 +144,7 @@ class MainActivity : ComponentActivity() {
                                             }
 
                                         },
-                                        localizationCode = isArabic.value.let { if(it)LocalizationCode.AR else LocalizationCode.EN},
+                                        localizationCode = LocalizationCode.EN,
                                     )
                                 } catch (e: Exception) {
                                     Log.e("error", e.toString())
@@ -167,7 +167,60 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         Spacer(modifier = Modifier.height(20.dp))
+                        Button(
+                            border=border,
+                            modifier=modifier,
+                            onClick =  {
+                                try {
+                                    Ekyc.init(
+                                        tenantId.value.text,
+                                        tenantSecret.value.text,
+                                        EkycMode.ONBOARDING,
+                                        EkycEnvironment.STAGING,
+                                        ekycCallback = object :
+                                            EKYCCallback {
+                                            override fun success(paymentSuccessModel: PaymentSuccessModel) {
+//                                        if (paymentSuccessModel is PaymentSuccessModel.FawrySuccessModel) {
+//                                            Log.e("SuccessFawry", paymentSuccessModel.paymentMethodName)
+//                                        } else if (paymentSuccessModel is PaymentSuccessModel.CreditCardSuccessModel) {
+//                                            Log.e("SuccessCard", paymentSuccessModel.paymentReferenceId)
+//                                            Log.e("SuccessCard", paymentSuccessModel.paymentMethodName)
+//                                        }
+//                                        Log.e("SuccessCard", paymentSuccessModel.toString())
+                                                text.value =
+                                                    "payment method: ${paymentSuccessModel.paymentMethodName} \nReference number: ${paymentSuccessModel.paymentReferenceId}"
+                                            }
 
+                                            override fun error(paymentFailedModel: PaymentFailedModel) {
+                                                text.value = paymentFailedModel.failureMessage
+
+                                            }
+
+                                        },
+                                        localizationCode = LocalizationCode.AR,
+                                    )
+                                } catch (e: Exception) {
+                                    Log.e("error", e.toString())
+                                }
+                                try {
+                                    Ekyc.launch(activity)
+                                } catch (e: Exception) {
+                                    Log.e("error", e.toString())
+                                }
+                            },
+                            contentPadding = PaddingValues(0.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+
+                            ) {
+                            Text(
+                                text = "ابدا",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }

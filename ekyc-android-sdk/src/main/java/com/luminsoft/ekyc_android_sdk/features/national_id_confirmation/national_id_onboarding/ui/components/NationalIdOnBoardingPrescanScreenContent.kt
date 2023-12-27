@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.view_model.NationalIdFrontOcrViewModel
+import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -39,11 +40,13 @@ fun NationalIdOnBoardingPrescanScreen(
     isSavedCards:Boolean = true
 ) {
 
-    Text(
-                        "R.string.add_payment_card",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+    BackGroundView(navController = navController) {
+        Text(
+            "nationalId",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
 }
 //    val loading = addCardViewModel.loading.collectAsState()
 //    val failure = addCardViewModel.failure.collectAsState()

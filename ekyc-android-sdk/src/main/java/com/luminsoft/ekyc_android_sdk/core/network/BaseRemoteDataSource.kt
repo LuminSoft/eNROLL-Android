@@ -21,12 +21,15 @@ class BaseRemoteDataSource {
             val response = call.invoke()
             if (response.isSuccessful) {
                 val body = response.body() ?: {}
-                if ((response.code() == 200 || response.code() == 201))
+                if ((response.code() == 200 || response.code() == 201|| response.code() == 204))
                     return BaseResponse.Success(body)
             } else {
                 return if (response.code() == 401) {
                    BaseResponse.Error(
-                        AuthFailure()
+                        AuthFailure(response.errorBody().let {gson.fromJson(
+                            response.errorBody()?.string(),
+                            ApiErrorResponse::class.java
+                        )})
                     )
 
                 } else {

@@ -65,6 +65,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:1.2.0")
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+    implementation "com.airbnb.android:lottie-compose:6.0.1"
 //    implementation(project(":ekyc-android-sdk:libs:main"))
 //    implementation(project(":ekyc-android-sdk:libs:core"))
 //

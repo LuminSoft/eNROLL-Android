@@ -2,21 +2,20 @@ package com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,8 @@ import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.OnBoardingPage
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.TutorialViewModel
-import org.koin.androidx.compose.koinViewModel
+import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
+import com.luminsoft.ekyc_android_sdk.ui_components.components.SpinKitLoadingIndicator
 
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalAnimationApi
@@ -45,17 +45,10 @@ fun OnboardingScreenContent(
 
 ) {
     val pagerState = rememberPagerState()
-    val tutorialViewModel = TutorialViewModel(viewModel.steps)
+    val tutorialViewModel = remember{TutorialViewModel(viewModel.steps)}
     val pages = tutorialViewModel.pages.collectAsState()
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.bg_shapes),
-            modifier = Modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = "Screen Bg"
-        )
+    val loading = viewModel.loading.collectAsState()
+    BackGroundView(navController = navController, showAppBar = false) {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             HorizontalPager(
                 count = pages.value?.size ?: 0,
@@ -67,8 +60,8 @@ fun OnboardingScreenContent(
             }
 
             Box(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)) {
+                .fillMaxWidth().height(150.dp)
+                .padding(start = 20.dp, end = 20.dp)) {
                 HorizontalPagerIndicator(
                     modifier = Modifier.align(Alignment.Center),
                     pagerState = pagerState,
@@ -97,38 +90,44 @@ fun OnboardingScreenContent(
                                 }
                             }
                         })
-                if (pagerState.currentPage == ((pages.value?.size ?: 0)-1))
-                    ClickableText(
-                        text = AnnotatedString(stringResource(id = R.string.done)),
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.primary
-                        ),
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd),
-                        onClick = {
-                            if (pagerState.currentPage == ((pages.value?.size ?: 0)-1)) {
-                                navController.popBackStack()
-                                navController.navigate(nationalIdOnBoardingPrescanScreen)
-                            }
-                        })
-                if (pagerState.currentPage != ((pages.value?.size ?: 0)-1))
-                    IconButton(modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.CenterEnd),
-                        onClick = {
-                          ui{
-                              pagerState.scrollToPage(pagerState.currentPage+1)
-                          }
-                        }) {
-                        Icon(
-                            Icons.Filled.ArrowForward,
-                            "contentDescription",
-                            tint = MaterialTheme.colorScheme.primary)
+                if(!loading.value) {
+                    if (pagerState.currentPage == ((pages.value?.size ?: 0)-1))
+                        ClickableText(
+                            text = AnnotatedString(stringResource(id = R.string.done)),
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.primary
+                            ),
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd),
+                            onClick = {
+                                if (pagerState.currentPage == ((pages.value?.size ?: 0) - 1)) {
+                                    viewModel.initRequest(navController)
+                                }
+                            })
+                }else{
+                    Box (modifier = Modifier
+                        .align(Alignment.CenterEnd)){
+                        SpinKitLoadingIndicator()
                     }
+                }
 
+                if (pagerState.currentPage != ((pages.value?.size ?: 0) - 1))
+                    Image(
+                        modifier = Modifier
+                            .clickable {
+                                ui {
+                                    pagerState.scrollToPage(pagerState.currentPage + 1)
+                                }
+                            }
+                            .size(24.dp)
+                            .align(Alignment.CenterEnd),
+                        painter = painterResource(id = R.drawable.arrow_icon),
+                        contentDescription = "",
+                        alignment = Alignment.Center
+                    )
 
             }
 
@@ -141,7 +140,7 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 80.dp),
+            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -158,7 +157,7 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
         Text(
             modifier = Modifier
                 .fillMaxWidth(),
-            text = onBoardingPage.text,
+            text = stringResource(id = onBoardingPage.text),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,

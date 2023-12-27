@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.luminsoft.ekyc_android_sdk.core.utils.WifiService
@@ -57,7 +59,8 @@ class EkycMainActivity : ComponentActivity() {
         getKoin(this)
         setupServices()
         super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -69,7 +72,7 @@ class EkycMainActivity : ComponentActivity() {
             EKYCsDKTheme (dynamicColor = false){
                 NavHost(
                     navController = navController,
-                    startDestination = getStartingRoute()
+                    startDestination = splashScreenOnBoardingContent
                 ) {
                     mainRouter(navController = navController,onBoardingViewModel)
                     nationalIdRouter(navController = navController)

@@ -64,7 +64,7 @@ fun BackGroundView(  appBarHeight:Double =  0.25, showAppBar: Boolean = true,nav
                                 .fillMaxWidth(),
                         )
 
-                    Row(horizontalArrangement =  Arrangement.Start,
+                    Row(horizontalArrangement =  Arrangement.Absolute.Left,
                         verticalAlignment= Alignment.Bottom, modifier= Modifier
                             .fillMaxSize()
                             .padding(start = ScreenHelper.sw(0.1), bottom = ScreenHelper.sh(0.05))) {
@@ -81,9 +81,6 @@ fun BackGroundView(  appBarHeight:Double =  0.25, showAppBar: Boolean = true,nav
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(
-                        start = 15.dp, end = 15.dp
-                    )
             ) {
                 content()
             }
