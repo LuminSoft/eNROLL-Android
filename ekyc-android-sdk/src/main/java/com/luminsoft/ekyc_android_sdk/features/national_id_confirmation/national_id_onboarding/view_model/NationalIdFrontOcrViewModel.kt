@@ -1,6 +1,7 @@
 package com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.view_model
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
@@ -51,6 +52,7 @@ class NationalIdFrontOcrViewModel(
                     s.let { it1 ->
                         customerData.value = it1
                         loading.value = false
+                        Log.e("customerData",customerData.toString())
                     }
                 })
         }

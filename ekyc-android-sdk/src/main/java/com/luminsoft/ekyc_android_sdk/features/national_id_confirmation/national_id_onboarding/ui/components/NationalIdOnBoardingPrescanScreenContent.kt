@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
 import com.luminsoft.ekyc_android_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.ekyc_android_sdk.innovitices.core.DotHelper
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -47,10 +48,11 @@ fun NationalIdOnBoardingPrescanScreen(
                 val facialDocumentModel = DotHelper.documentDetectFace(documentFrontUri, activity)
                 onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
                 onBoardingViewModel.nationalIdFrontImage.value = facialDocumentModel.documentImage
+                navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
             }
         }
 
-    BackGroundView(navController = navController) {
+    BackGroundView(navController = navController, showAppBar = false) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,

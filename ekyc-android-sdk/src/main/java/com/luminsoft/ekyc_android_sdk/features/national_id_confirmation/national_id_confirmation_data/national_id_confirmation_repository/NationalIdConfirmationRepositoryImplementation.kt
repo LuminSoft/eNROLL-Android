@@ -3,8 +3,9 @@ package com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.nationa
 
 import arrow.core.Either
 import arrow.core.raise.Null
+import com.luminsoft.ekyc_android_sdk.core.failures.NetworkFailure
 import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
-import com.luminsoft.ekyc_android_sdk.core.network.ApiBaseResponse
+import com.luminsoft.ekyc_android_sdk.core.failures.ServerFailure
 import com.luminsoft.ekyc_android_sdk.core.network.BaseResponse
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_approve.PersonalConfirmationApproveRequest
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
@@ -20,7 +21,12 @@ class NationalIdConfirmationRepositoryImplementation(private val nationalIdConfi
         return when (val response =
             nationalIdConfirmationRemoteDataSource.personalConfirmationUploadImage(request)) {
             is BaseResponse.Success -> {
-                Either.Right((response.data as ApiBaseResponse<NationalIDConfirmationResponse>).data.customerData!!)
+                val response = response.data as NationalIDConfirmationResponse
+                if (response.isSuccess!!) {
+                    Either.Right(response.customerData!!)
+                } else {
+                    Either.Left(NetworkFailure(mes = response.message!!))
+                }
             }
 
             is BaseResponse.Error -> {
