@@ -13,6 +13,11 @@ dependencyResolutionManagement {
         maven {
             url 'https://jitpack.io'
         }
+        maven {
+            url 'http://maven.innovatrics.com/releases'
+            allowInsecureProtocol = true
+        }
+        jcenter()
     }
 }
 rootProject.name = "ekyc-android"

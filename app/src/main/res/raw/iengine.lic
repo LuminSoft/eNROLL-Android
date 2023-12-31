@@ -1,0 +1,22 @@
+{
+    "version": "2.1",
+    "contract": {
+        "customer": "excel_sys",
+        "expiration": {
+            "day": 1,
+            "month": 3,
+            "year": 2024
+        },
+        "hwids": [
+            "AmPz/KrpD+Cib5ID"
+        ],
+        "products": [
+            "iface"
+        ],
+        "idkit": {
+            "database_size": 0,
+            "max_client_connections": 0
+        }
+    },
+    "contract_signature": "agrXw4QTDkyCzCBhlDNKErw8KEvvW8Xw8dRii3e3QbvKvPxOiAwuMgmVYVDASTrL/jyfXMajDlh24Ml948KzXwV6VIKuMgXFvgKpkj52mccjsFakqQqyvYhocWaIQQ+o0z9B22zJKlhF/lwIh4fKdoZCYzGmWUy2PeYdbVUM2Tw="
+}

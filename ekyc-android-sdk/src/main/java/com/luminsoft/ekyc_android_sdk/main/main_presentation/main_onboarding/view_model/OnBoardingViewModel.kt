@@ -1,5 +1,6 @@
 package com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model
 
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -36,6 +37,8 @@ class OnBoardingViewModel(
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
+    var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }

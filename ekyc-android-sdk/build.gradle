@@ -61,11 +61,23 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.android.material:material:1.10.0'
     sharedGroup dependencies
     implementation("io.arrow-kt:arrow-core:1.2.0")
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
     implementation "com.airbnb.android:lottie-compose:6.0.1"
+    implementation "com.innovatrics.dot:dot-document:$dotDocumentVersion"
+    implementation "com.innovatrics.dot:dot-face-detection-fast:$dotFaceVersion"
+    implementation "com.innovatrics.dot:dot-face-expression-neutral:$dotFaceVersion"
+    implementation "com.innovatrics.dot:dot-face-passive-liveness:$dotFaceVersion"
+    implementation "com.innovatrics.dot:dot-nfc:$dotNfcVersion"
+    implementation "com.innovatrics.dot:dot-face-verification:$dotFaceVersion"
+    implementation 'com.gemalto.jp2:jp2-android:1.0.3'
+
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    implementation "androidx.appcompat:appcompat:1.6.1"
 //    implementation(project(":ekyc-android-sdk:libs:main"))
 //    implementation(project(":ekyc-android-sdk:libs:core"))
 //

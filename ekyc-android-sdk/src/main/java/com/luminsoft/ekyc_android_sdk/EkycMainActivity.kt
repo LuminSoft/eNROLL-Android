@@ -72,10 +72,10 @@ class EkycMainActivity : ComponentActivity() {
             EKYCsDKTheme (dynamicColor = false){
                 NavHost(
                     navController = navController,
-                    startDestination = splashScreenOnBoardingContent
+                    startDestination = getStartingRoute()
                 ) {
                     mainRouter(navController = navController,onBoardingViewModel)
-                    nationalIdRouter(navController = navController)
+                    nationalIdRouter(navController = navController,onBoardingViewModel)
                     deviceDataRouter(navController = navController)
                     emailRouter(navController = navController)
                     faceCaptureRouter(navController = navController)

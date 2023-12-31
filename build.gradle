@@ -5,6 +5,9 @@ buildscript {
     ext.lifecycle = "2.6.1"
     ext.koin_version = "3.4.3"
     ext.accompanist_version = '0.24.2-alpha'
+    ext.dotDocumentVersion = '3.4.1'
+    ext.dotFaceVersion = '4.8.2'
+    ext.dotNfcVersion = '2.2.2'
 }
 plugins {
     id 'com.android.application' version '8.0.2' apply false

@@ -2,7 +2,6 @@ package com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -15,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,12 +27,12 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.*
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.utils.ui
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPrescanScreen
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.OnBoardingPage
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.TutorialViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.ekyc_android_sdk.ui_components.components.EkycItemView
 
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalAnimationApi
@@ -45,7 +43,7 @@ fun OnboardingScreenContent(
 
 ) {
     val pagerState = rememberPagerState()
-    val tutorialViewModel = remember{TutorialViewModel(viewModel.steps)}
+    val tutorialViewModel = remember { TutorialViewModel(viewModel.steps) }
     val pages = tutorialViewModel.pages.collectAsState()
     val loading = viewModel.loading.collectAsState()
     BackGroundView(navController = navController, showAppBar = false) {
@@ -60,7 +58,8 @@ fun OnboardingScreenContent(
             }
 
             Box(modifier = Modifier
-                .fillMaxWidth().height(150.dp)
+                .fillMaxWidth()
+                .height(150.dp)
                 .padding(start = 20.dp, end = 20.dp)) {
                 HorizontalPagerIndicator(
                     modifier = Modifier.align(Alignment.Center),
@@ -137,30 +136,5 @@ fun OnboardingScreenContent(
 
 @Composable
 fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Spacer(modifier = Modifier.height(80.dp))
-        Image(
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .fillMaxHeight(0.5f),
-            painter = painterResource(id = onBoardingPage.image),
-            contentScale = ContentScale.Fit,
-            contentDescription = "Pager Image"
-        )
-        Spacer(modifier = Modifier.height(80.dp))
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = stringResource(id = onBoardingPage.text),
-            fontSize = MaterialTheme.typography.labelLarge.fontSize,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-        )
-    }
+    EkycItemView(onBoardingPage.image,onBoardingPage.text)
 }

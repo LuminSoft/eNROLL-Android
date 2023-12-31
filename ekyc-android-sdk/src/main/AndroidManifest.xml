@@ -11,5 +11,25 @@
             android:screenOrientation="portrait"
             >
         </activity>
+        <activity
+            android:name=".innovitices.activities.DocumentActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:configChanges="locale|orientation|keyboardHidden|screenSize"
+            android:label="@string/document_front_screen"
+            />
+
+        <activity
+            android:name=".innovitices.activities.FaceCaptureActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:configChanges="locale|orientation|keyboardHidden|screenSize"
+            android:label="@string/face_capture_screen"
+            />
+
+        <activity
+            android:name=".innovitices.activities.SmileLivenessActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:configChanges="locale|orientation|keyboardHidden|screenSize"
+            android:label="@string/smile_liveness_screen"
+            />
     </application>
 </manifest>
