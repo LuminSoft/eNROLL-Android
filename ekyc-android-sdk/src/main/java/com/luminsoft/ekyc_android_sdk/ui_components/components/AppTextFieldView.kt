@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,10 +40,11 @@ fun NormalTextField(
     onValueChange: (TextFieldValue) -> Unit,
     error: String? = null,
     icon: @Composable (() -> Unit)? = null,
-    painter: Painter?= null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    painter: Painter? = null,
     height: Double = 45.0,
-    keyboardOptions:KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions:KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     colors: TextFieldColors = TextFieldDefaults.colors(
@@ -64,21 +66,26 @@ fun NormalTextField(
         focusedBorderThickness = 1.8.dp
         unfocusedBorderThickness = 1.8.dp
     }
-    Column( modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 5.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 5.dp)
+    ) {
         BasicTextField(
             value = value,
-            onValueChange =onValueChange,
+            onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(height.dp)
-            ,
-            textStyle = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.primary),
-            cursorBrush =  SolidColor(error?.let { MaterialTheme.colorScheme.error}?:MaterialTheme.colorScheme.primary) ,
+                .height(height.dp),
+            textStyle = MaterialTheme.typography.labelSmall.copy(
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp
+            ),
+            cursorBrush = SolidColor(error?.let { MaterialTheme.colorScheme.error }
+                ?: MaterialTheme.colorScheme.primary),
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
-            keyboardActions =keyboardActions,
+            keyboardActions = keyboardActions,
             interactionSource = interactionSource,
             singleLine = true,
             decorationBox = @Composable { innerTextField ->
@@ -97,8 +104,17 @@ fun NormalTextField(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    leadingIcon = icon?:
-                    painter?.let {
+                    leadingIcon = icon ?: painter?.let {
+                        {
+                            Image(
+                                painter = it,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(20.dp),
+                            )
+                        }
+                    },
+                    trailingIcon = trailingIcon ?: painter?.let {
                         {
                             Image(
                                 painter = it,
@@ -109,7 +125,11 @@ fun NormalTextField(
                         }
                     },
                     colors = colors,
-                    contentPadding = PaddingValues(4.dp),
+                    contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(
+                        top = 0.dp,
+                        bottom = 0.dp,
+                        start = 1.dp
+                    ),
                     container = {
                         TextFieldDefaults.ContainerBox(
                             enabled = true,

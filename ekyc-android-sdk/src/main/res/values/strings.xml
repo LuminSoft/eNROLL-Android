@@ -9,10 +9,12 @@
     <string name="signInTitle">Sign In</string>
     <string name="fullName">Full name</string>
     <string name="mail">Mail</string>
+    <string name="send">Send</string>
     <string name="mobileNumber">Mobile number</string>
     <string name="confirmPassword">Confirm password</string>
     <string name="errorEmptyPassword">Please enter your password</string>
     <string name="errorLengthPassword">Password must not be less than 5 characters</string>
+    <string name="errorMaxLengthPassword">Password must not be more than 20 characters</string>
     <string name="errorFormatPassword">Incorrect password</string>
     <string name="scanIDFrontSide">Scan ID front side</string>
     <string name="takeAPictureOfFrontSide">Take a picture of the ID front side</string>

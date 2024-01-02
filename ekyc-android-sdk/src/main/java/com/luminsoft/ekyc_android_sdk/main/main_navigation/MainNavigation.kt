@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_onboarding.ui.components.SettingPasswordOnBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.common.SplashScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.ui.components.OnboardingScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -13,21 +14,28 @@ import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.vie
 const val splashScreenOnBoardingContent = "splashScreenOnBoardingContent"
 const val splashScreenAuthContent = "splashScreenAuthContent"
 const val onBoardingScreenContent = "onBoardingScreenContent"
+const val passwordScreenContent = "passwordScreenContent"
 
 fun NavController.navigateToMain(navOptions: NavOptions? = null) {
     this.navigate(splashScreenOnBoardingContent, navOptions)
 }
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.mainRouter(navController: NavController, onBoardingViewModel:OnBoardingViewModel) {
+fun NavGraphBuilder.mainRouter(
+    navController: NavController,
+    onBoardingViewModel: OnBoardingViewModel
+) {
 
     composable(route = splashScreenOnBoardingContent) {
-        SplashScreenContent(onBoardingViewModel,navController=navController)
+        SplashScreenContent(onBoardingViewModel, navController = navController)
     }
 //    composable(route = splashScreenAuthContent) {
 //        SplashScreenContent(koinViewModel<AuthViewModel>(),navController=navController)
 //    }
     composable(route = onBoardingScreenContent) {
-        OnboardingScreenContent(onBoardingViewModel,navController=navController)
+        OnboardingScreenContent(onBoardingViewModel, navController = navController)
+    }
+    composable(route = passwordScreenContent) {
+        SettingPasswordOnBoardingScreenContent(navController = navController)
     }
 }

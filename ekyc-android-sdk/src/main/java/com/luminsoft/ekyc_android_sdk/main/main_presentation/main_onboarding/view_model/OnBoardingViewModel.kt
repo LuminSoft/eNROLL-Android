@@ -19,6 +19,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GetOnboardingSte
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.InitializeRequestUsecaseParams
 import com.luminsoft.ekyc_android_sdk.main.main_navigation.onBoardingScreenContent
+import com.luminsoft.ekyc_android_sdk.main.main_navigation.passwordScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.common.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,33 +43,35 @@ class OnBoardingViewModel(
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
-     fun initRequest(navController: NavController) {
-         loading.value = true
-         ui {
-             val udid: String = UUID.randomUUID().toString()
-             val manufacturer: String = Build.MANUFACTURER
-             val deviceModel: String = Build.MODEL
 
-             params.value = InitializeRequestUsecaseParams(
-                 udid,
-                 manufacturer,
-                 deviceModel
-             )
-             val response: Either<SdkFailure, Null> =
-                 initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)
+    fun initRequest(navController: NavController) {
+        loading.value = true
+        ui {
+            val udid: String = UUID.randomUUID().toString()
+            val manufacturer: String = Build.MANUFACTURER
+            val deviceModel: String = Build.MODEL
 
-             response.fold(
-                 {
-                     failure.value = it
-                     loading.value = false
-                 },
-                 {
-                     loading.value = false
-                     navController.navigate(nationalIdOnBoardingPrescanScreen)
-                 })
+            params.value = InitializeRequestUsecaseParams(
+                udid,
+                manufacturer,
+                deviceModel
+            )
+            val response: Either<SdkFailure, Null> =
+                initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)
 
-         }
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    loading.value = false
+                    navController.navigate(nationalIdOnBoardingPrescanScreen)
+                })
+
+        }
     }
+
     init {
         generateToken()
     }
@@ -108,7 +111,8 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
-                            navController!!.navigate(onBoardingScreenContent)
+//                            navController!!.navigate(onBoardingScreenContent)
+                            navController!!.navigate(passwordScreenContent)
                         })
 
                     }

@@ -14,6 +14,7 @@
 <string name="confirmPassword">تأكيد كلمة المرور</string>
 <string name="errorEmptyPassword">من فضلك أدخل كلمة المرور</string>
 <string name="errorLengthPassword">يجب ألا تقل كلمة المرور عن خمسة أحرف</string>
+<string name="errorMaxLengthPassword">يجب ألا تزيد كلمة المرور عن عشرون حرف</string>
 <string name="errorFormatPassword">كلمة المرور غير صحيحة</string>
 <string name="scanIDFrontSide">مسح الوجه الأمامي لبطاقة الهوية ضوئيا</string>
 <string name="takeAPictureOfFrontSide">التقاط صورة الوجه الأمامي لبطاقة الهوية</string>
@@ -156,6 +157,7 @@
 <string name="emailOtpMessage">لم تستلم رمز التأكيد؟ يمكن إعادة إرساله خلال</string>
 <string name="second">ثانية</string>
 <string name="resend">إعادة إرسـال</string>
+<string name="send">إرسـال</string>
 <string name="otpSendTo">تم إرسال رمز التحقق إلى رقم</string>
 <string name="emailOtpSendTo">تم إرسال رمز التحقق إلى البريد الإلكتروني</string>
 <string name="edit">تعديل</string>
