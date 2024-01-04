@@ -29,6 +29,10 @@ class NationalIdFrontOcrViewModel(
     var customerData: MutableStateFlow<CustomerData?> = MutableStateFlow(null)
     var navController: NavController? = null
 
+    fun retry(navController: NavController) {
+        sendFrontImage()
+    }
+
     init {
         sendFrontImage()
     }
@@ -52,7 +56,7 @@ class NationalIdFrontOcrViewModel(
                     s.let { it1 ->
                         customerData.value = it1
                         loading.value = false
-                        Log.e("customerData",customerData.toString())
+                        Log.e("customerData", customerData.toString())
                     }
                 })
         }
