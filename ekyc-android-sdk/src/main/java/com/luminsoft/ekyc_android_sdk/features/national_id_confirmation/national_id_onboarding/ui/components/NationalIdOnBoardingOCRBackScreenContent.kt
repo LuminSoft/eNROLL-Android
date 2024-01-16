@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,8 +31,9 @@ import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ResourceProvider
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationApproveUseCase
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.view_model.NationalIdBackOcrViewModel
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_navigation.settingPasswordOnBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.ekyc_android_sdk.innovitices.core.DotHelper
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -47,8 +49,7 @@ import org.koin.compose.koinInject
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun NationalIdOnBoardingBackConfirmationScreen(
-    navController: NavController,
-    onBoardingViewModel: OnBoardingViewModel
+    navController: NavController, onBoardingViewModel: OnBoardingViewModel
 ) {
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -58,39 +59,28 @@ fun NationalIdOnBoardingBackConfirmationScreen(
     val personalConfirmationUploadImageUseCase =
         PersonalConfirmationUploadImageUseCase(koinInject())
 
-    val personalConfirmationApproveUseCase =
-        PersonalConfirmationApproveUseCase(koinInject())
+    val personalConfirmationApproveUseCase = PersonalConfirmationApproveUseCase(koinInject())
 
-    val nationalIdBackOcrVM =
-        document.value?.let {
-            remember {
-                onBoardingViewModel.customerId.value?.let { it1 ->
-                    NationalIdBackOcrViewModel(
-                        personalConfirmationUploadImageUseCase,
-                        personalConfirmationApproveUseCase,
-                        it,
-                        it1
-                    )
-                }
+    val nationalIdBackOcrVM = document.value?.let {
+        remember {
+            onBoardingViewModel.customerId.value?.let { it1 ->
+                NationalIdBackOcrViewModel(
+                    personalConfirmationUploadImageUseCase,
+                    personalConfirmationApproveUseCase,
+                    it,
+                    it1
+                )
             }
         }
+    }
 
     val nationalIdBackOcrViewModel = remember { nationalIdBackOcrVM }
 
     val customerData = nationalIdBackOcrViewModel!!.customerData.collectAsState()
     val loading = nationalIdBackOcrViewModel.loading.collectAsState()
     val failure = nationalIdBackOcrViewModel.failure.collectAsState()
+    val backNIApproved = nationalIdBackOcrViewModel.backNIApproved.collectAsState()
 
-    val startForResult =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            val documentFrontUri = it.data?.data
-            if (documentFrontUri != null) {
-                val facialDocumentModel = DotHelper.documentDetectFace(documentFrontUri, activity)
-                onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
-                onBoardingViewModel.nationalIdFrontImage.value = facialDocumentModel.documentImage
-                navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
-            }
-        }
 
     val startForBackResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -99,13 +89,16 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 val nonFacialDocumentModel = DotHelper.documentNonFacial(documentBackUri, activity)
                 onBoardingViewModel.nationalIdBackImage.value =
                     nonFacialDocumentModel.documentImageBase64
-                navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
+                navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
             }
         }
 
 
-
     BackGroundView(navController = navController, showAppBar = true) {
+        if (backNIApproved.value) {
+            navController.navigate(settingPasswordOnBoardingScreenContent)
+        }
+
         if (loading.value) Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -119,47 +112,45 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                     .padding(horizontal = 20.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                TextItem(R.string.nameAr, customerData.value!!.fullName!!, R.drawable.user_icon)
-                if (customerData.value!!.fullNameEn != null) Spacer(modifier = Modifier.height(10.dp))
-                if (customerData.value!!.fullNameEn != null) TextItem(
-                    R.string.nameEn,
-                    customerData.value!!.fullNameEn!!,
-                    R.drawable.user_icon
+                if (customerData.value!!.profession != null) TextItem(
+                    R.string.profession,
+                    customerData.value!!.profession!!,
+                    R.drawable.profession_icon
                 )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.address,
-                    "customerData.value!!.address!!",
-                    R.drawable.address_icon
+                if (customerData.value!!.gender != null) Spacer(modifier = Modifier.height(10.dp))
+                if (customerData.value!!.gender != null) TextItem(
+                    R.string.gender, customerData.value!!.gender!!, R.drawable.gender_icon
                 )
-                /*       Spacer(modifier = Modifier.height(10.dp))
-                       TextItem(
-                           R.string.birthDate,
-                           customerData.value!!.birthdate!!.split("T")[0],
-                           R.drawable.calendar_icon
-                       )
-                       Spacer(modifier = Modifier.height(10.dp))
-                       TextItem(
-                           R.string.nationalIdNumber,
-                           customerData.value!!.idNumber!!,
-                           R.drawable.id_card_icon
-                       )
-                       Spacer(modifier = Modifier.height(10.dp))
-                       TextItem(
-                           R.string.factoryNumber,
-                           customerData.value!!.documentNumber!!,
-                           R.drawable.factory_num_icon
-                       )
-                       Spacer(modifier = Modifier.fillMaxHeight(0.3f))*/
+                if (customerData.value!!.religion != null) Spacer(modifier = Modifier.height(10.dp))
+                if (customerData.value!!.religion != null) TextItem(
+                    R.string.religion, customerData.value!!.religion!!, R.drawable.religion_icon
+                )
+                if (customerData.value!!.expirationDate != null) Spacer(
+                    modifier = Modifier.height(
+                        10.dp
+                    )
+                )
+                if (customerData.value!!.expirationDate != null) TextItem(
+                    R.string.dateOfExpiry,
+                    customerData.value!!.expirationDate!!.split("T")[0],
+                    R.drawable.calendar_icon
+                )
+                if (customerData.value!!.maritalStatus != null) Spacer(
+                    modifier = Modifier.height(
+                        10.dp
+                    )
+                )
+                if (customerData.value!!.maritalStatus != null) TextItem(
+                    R.string.maritalStatus,
+                    customerData.value!!.maritalStatus!!,
+                    R.drawable.marital_status_icon
+                )
+                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
                 ButtonView(
                     onClick = {
-                        val intent =
-                            Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-                        startForBackResult.launch(intent)
-                    },
-                    title = stringResource(id = R.string.confirmAndContinue)
+                        nationalIdBackOcrViewModel.callApproveBack()
+                    }, title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -167,8 +158,8 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                     onClick = {
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
-                        startForResult.launch(intent)
+                        intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                        startForBackResult.launch(intent)
                     },
                     textColor = MaterialTheme.colorScheme.primary,
                     color = MaterialTheme.colorScheme.onPrimary,
@@ -188,8 +179,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                             EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
 
                         },
-                    )
-                    {
+                    ) {
                         activity.finish()
                         EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
 
@@ -197,24 +187,21 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 }
             } else {
                 failure.value?.let {
-                    DialogView(
-                        bottomSheetStatus = BottomSheetStatus.ERROR,
+                    DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
                             intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-                            startForResult.launch(intent)
+                            startForBackResult.launch(intent)
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
                             activity.finish()
                             EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
 
-                        }
-                    )
-                    {
+                        }) {
                         activity.finish()
                         EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
                     }
@@ -226,18 +213,18 @@ fun NationalIdOnBoardingBackConfirmationScreen(
 
 @Composable
 private fun TextItem(label: Int, value: String, icon: Int) {
-    NormalTextField(
-        label = ResourceProvider.instance.getStringResource(label),
-        value = TextFieldValue(text = value),
+    val newValue: String = if (label == R.string.gender) {
+        if (value == "M") ResourceProvider.instance.getStringResource(R.string.male)
+        else ResourceProvider.instance.getStringResource(R.string.female)
+    } else value
+
+    NormalTextField(label = ResourceProvider.instance.getStringResource(label),
+        value = TextFieldValue(text = newValue),
         onValueChange = { },
         enabled = false,
         icon = {
             Image(
-                painterResource(icon),
-                contentDescription = "",
-                modifier = Modifier
-                    .height(50.dp)
+                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp)
             )
-        }
-    )
+        })
 }

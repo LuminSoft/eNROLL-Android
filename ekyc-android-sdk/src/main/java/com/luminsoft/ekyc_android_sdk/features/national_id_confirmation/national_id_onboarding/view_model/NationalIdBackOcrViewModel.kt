@@ -29,9 +29,11 @@ class NationalIdBackOcrViewModel(
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var customerData: MutableStateFlow<CustomerData?> = MutableStateFlow(null)
     var navController: NavController? = null
+    var backNIApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-    fun retry(navController: NavController) {
-        sendBackImage()
+
+    fun callApproveBack() {
+        approveBack()
     }
 
     init {
@@ -70,7 +72,7 @@ class NationalIdBackOcrViewModel(
     }
 
     private fun approveBack() {
-        isButtonLoading.value = true
+        loading.value = true
         ui {
 
             params.value = PersonalConfirmationApproveUseCaseParams(scanType = ScanType.Back)
@@ -81,10 +83,11 @@ class NationalIdBackOcrViewModel(
             response.fold(
                 {
                     failure.value = it
-                    isButtonLoading.value = false
+                    loading.value = false
                 },
                 {
-                    isButtonLoading.value = false
+                    loading.value = false
+                    backNIApproved.value = true
                 })
         }
 
