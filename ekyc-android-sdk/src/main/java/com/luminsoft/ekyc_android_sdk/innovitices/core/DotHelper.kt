@@ -41,6 +41,22 @@ object DotHelper {
         }
     }
 
+    fun documentNonFacial(imageUri: Uri, activity: Activity): NonFacialDocumentModel {
+        try {
+            val documentInputStream: InputStream? =
+                activity.contentResolver.openInputStream(imageUri);
+            val documentBitmap: Bitmap = BitmapFactory.decodeStream(documentInputStream)
+
+
+            return NonFacialDocumentModel(documentBitmap)
+
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
     private fun detectFace(imageUri: Uri, isFaceImage: Boolean, activity: Activity): DetectedFace {
 
         val faceDetector = FaceDetectorFactory.create()
@@ -64,7 +80,7 @@ object DotHelper {
 
     }
 
-    private  fun getThumbnail(uri: Uri?, activity: Activity): Bitmap {
+    private fun getThumbnail(uri: Uri?, activity: Activity): Bitmap {
         val THUMBNAIL_SIZE = 150.0;
         var input: InputStream? = activity.contentResolver.openInputStream(uri!!)
         val onlyBoundsOptions: BitmapFactory.Options = BitmapFactory.Options()
@@ -91,7 +107,7 @@ object DotHelper {
         return if (k == 0) 1 else k
     }
 
-     fun bitmapToBase64(bitmap: Bitmap): String {
+    fun bitmapToBase64(bitmap: Bitmap): String {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         var imageBytes = baos.toByteArray()

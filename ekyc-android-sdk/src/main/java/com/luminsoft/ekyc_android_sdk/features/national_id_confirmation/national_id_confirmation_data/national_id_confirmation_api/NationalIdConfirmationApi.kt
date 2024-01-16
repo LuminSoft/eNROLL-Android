@@ -15,7 +15,7 @@ interface NationalIdConfirmationApi {
     suspend fun nationalIdUploadFrontImage(@Body request: PersonalConfirmationUploadImageRequest): Response<NationalIDConfirmationResponse>
 
     @POST("/api/v1/onboarding/NationalId/ApproveFrontImage")
-    suspend fun nationalIdApproveFront(@Body request: PersonalConfirmationApproveRequest): Response<Null>
+    suspend fun nationalIdApproveFront(@Body request: PersonalConfirmationApproveRequest): Response<String>
 
     @POST("/api/v1/onboarding/NationalId/UploadBackImage")
     suspend fun nationalIdUploadBackImage(@Body request: PersonalConfirmationUploadImageRequest): Response<NationalIDConfirmationResponse>

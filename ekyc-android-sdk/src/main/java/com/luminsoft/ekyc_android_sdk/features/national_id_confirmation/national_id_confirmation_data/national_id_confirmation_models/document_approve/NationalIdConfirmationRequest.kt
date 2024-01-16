@@ -17,6 +17,6 @@ open class PersonalConfirmationApproveRequest {
     @SerializedName("fullNameAr")
     internal var fullNameAr: String? = null
 
-    var scanType : ScanType = ScanType.FRONT
+    var scanType: ScanType = ScanType.FRONT
 
 }
