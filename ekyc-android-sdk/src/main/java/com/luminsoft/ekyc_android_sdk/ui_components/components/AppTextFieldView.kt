@@ -39,10 +39,11 @@ fun NormalTextField(
     onValueChange: (TextFieldValue) -> Unit,
     error: String? = null,
     icon: @Composable (() -> Unit)? = null,
-    painter: Painter?= null,
-    height: Double = 45.0,
-    keyboardOptions:KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions:KeyboardActions = KeyboardActions.Default,
+    painter: Painter? = null,
+    height: Double = 55.0,
+    enabled: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     colors: TextFieldColors = TextFieldDefaults.colors(
@@ -64,23 +65,26 @@ fun NormalTextField(
         focusedBorderThickness = 1.8.dp
         unfocusedBorderThickness = 1.8.dp
     }
-    Column( modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 5.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 5.dp)
+    ) {
         BasicTextField(
             value = value,
-            onValueChange =onValueChange,
+            onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(height.dp)
-            ,
+                .height(height.dp),
             textStyle = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.primary),
-            cursorBrush =  SolidColor(error?.let { MaterialTheme.colorScheme.error}?:MaterialTheme.colorScheme.primary) ,
+            cursorBrush = SolidColor(error?.let { MaterialTheme.colorScheme.error }
+                ?: MaterialTheme.colorScheme.primary),
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
-            keyboardActions =keyboardActions,
+            keyboardActions = keyboardActions,
             interactionSource = interactionSource,
             singleLine = true,
+            enabled = enabled,
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
                     value = value.text,
@@ -97,8 +101,7 @@ fun NormalTextField(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    leadingIcon = icon?:
-                    painter?.let {
+                    leadingIcon = icon ?: painter?.let {
                         {
                             Image(
                                 painter = it,

@@ -35,40 +35,44 @@ class OnBoardingViewModel(
     override var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
+    var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
-     fun initRequest(navController: NavController) {
-         loading.value = true
-         ui {
-             val udid: String = UUID.randomUUID().toString()
-             val manufacturer: String = Build.MANUFACTURER
-             val deviceModel: String = Build.MODEL
 
-             params.value = InitializeRequestUsecaseParams(
-                 udid,
-                 manufacturer,
-                 deviceModel
-             )
-             val response: Either<SdkFailure, Null> =
-                 initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)
+    fun initRequest(navController: NavController) {
+        loading.value = true
+        ui {
+            val udid: String = UUID.randomUUID().toString()
+            val manufacturer: String = Build.MANUFACTURER
+            val deviceModel: String = Build.MODEL
 
-             response.fold(
-                 {
-                     failure.value = it
-                     loading.value = false
-                 },
-                 {
-                     loading.value = false
-                     navController.navigate(nationalIdOnBoardingPrescanScreen)
-                 })
+            params.value = InitializeRequestUsecaseParams(
+                udid,
+                manufacturer,
+                deviceModel
+            )
+            val response: Either<SdkFailure, Null> =
+                initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)
 
-         }
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    loading.value = false
+                    navController.navigate(nationalIdOnBoardingPrescanScreen)
+                })
+
+        }
     }
+
     init {
         generateToken()
     }

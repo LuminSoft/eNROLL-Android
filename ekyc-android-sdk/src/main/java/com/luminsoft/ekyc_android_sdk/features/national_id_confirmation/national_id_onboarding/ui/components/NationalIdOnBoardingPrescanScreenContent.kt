@@ -38,6 +38,7 @@ fun NationalIdOnBoardingPrescanScreen(
     isSavedCards: Boolean = true,
     onBoardingViewModel: OnBoardingViewModel
 ) {
+    val rememberedViewModel = remember { onBoardingViewModel }
     val context = LocalContext.current
     val activity = context.findActivity()
     var code = remember { mutableStateOf(0) }
@@ -45,10 +46,17 @@ fun NationalIdOnBoardingPrescanScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
             val documentFrontUri = it.data?.data
             if (documentFrontUri != null) {
-                val facialDocumentModel = DotHelper.documentDetectFace(documentFrontUri, activity)
-                onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
-                onBoardingViewModel.nationalIdFrontImage.value = facialDocumentModel.documentImage
-                navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
+                try {
+                    val facialDocumentModel =
+                        DotHelper.documentDetectFace(documentFrontUri, activity)
+                    rememberedViewModel.faceImage.value = facialDocumentModel.faceImage
+                    rememberedViewModel.nationalIdFrontImage.value =
+                        facialDocumentModel.documentImage
+                    navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
+                } catch (e: Exception) {
+                    //TODO handle error
+                    println(e.message)
+                }
             }
         }
 
@@ -71,7 +79,11 @@ fun NationalIdOnBoardingPrescanScreen(
                 stringResource(id = R.string.start),
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
-            Spacer(modifier = Modifier.safeContentPadding().height(10.dp))
+            Spacer(
+                modifier = Modifier
+                    .safeContentPadding()
+                    .height(10.dp)
+            )
         }
     }
 

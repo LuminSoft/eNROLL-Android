@@ -44,6 +44,7 @@
 <string name="ekycPopupSuccess">تم إدخال البيانات بنجاح وفتح الحساب.</string>
 <string name="ekycPopupError">حدث خطأ، يرجى إعادة المحاولة</string>
 <string name="tryAgain">إعادة المحاولة</string>
+<string name="reScan">إعادة المسـح</string>
 <string name="continue_to_next">استمرار</string>
 <string name="aboutUs">عن التطبيق</string>
 <string name="aNewVersionIsAvailableNow">الإصدار الجديد متاح الآن</string>

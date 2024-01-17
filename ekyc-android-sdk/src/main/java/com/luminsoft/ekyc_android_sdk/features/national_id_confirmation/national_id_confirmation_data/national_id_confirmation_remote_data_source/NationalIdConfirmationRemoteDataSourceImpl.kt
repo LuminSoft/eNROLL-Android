@@ -1,4 +1,5 @@
 package com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_remote_data_source
+
 import com.luminsoft.ekyc_android_sdk.core.network.BaseRemoteDataSource
 import com.luminsoft.ekyc_android_sdk.core.network.BaseResponse
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_api.NationalIdConfirmationApi
@@ -7,7 +8,10 @@ import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 
 
-class  NationalIdConfirmationRemoteDataSourceImpl (private val network:BaseRemoteDataSource, private val nationalIdConfirmationApi: NationalIdConfirmationApi):
+class NationalIdConfirmationRemoteDataSourceImpl(
+    private val network: BaseRemoteDataSource,
+    private val nationalIdConfirmationApi: NationalIdConfirmationApi
+) :
     NationalIdConfirmationRemoteDataSource {
 
     override suspend fun personalConfirmationUploadImage(request: PersonalConfirmationUploadImageRequest): BaseResponse<Any> {
