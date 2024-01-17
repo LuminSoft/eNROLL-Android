@@ -44,6 +44,7 @@ fun NormalTextField(
     painter: Painter? = null,
     height: Double = 45.0,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    enabled: Boolean = true,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -68,12 +69,12 @@ fun NormalTextField(
     }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 5.dp)
+        .fillMaxWidth()
+        .padding(vertical = 5.dp)
     ) {
         BasicTextField(
             value = value,
-            onValueChange = onValueChange,
+            onValueChange =onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(height.dp),
@@ -85,9 +86,10 @@ fun NormalTextField(
                 ?: MaterialTheme.colorScheme.primary),
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
+            keyboardActions =keyboardActions,
             interactionSource = interactionSource,
             singleLine = true,
+            enabled = enabled,
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
                     value = value.text,
@@ -104,7 +106,8 @@ fun NormalTextField(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    leadingIcon = icon ?: painter?.let {
+                    leadingIcon = icon?:
+                    painter?.let {
                         {
                             Image(
                                 painter = it,

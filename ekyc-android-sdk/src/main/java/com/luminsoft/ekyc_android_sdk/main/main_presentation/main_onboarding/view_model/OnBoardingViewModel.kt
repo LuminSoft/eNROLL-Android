@@ -36,10 +36,12 @@ class OnBoardingViewModel(
     override var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
+    var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
