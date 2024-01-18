@@ -1,15 +1,54 @@
 package com.luminsoft.ekyc_android_sdk.features.setting_password.password_onboarding.view_model
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.input.TextFieldValue
+
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
-import com.luminsoft.ekyc_android_sdk.features.setting_password.password_domain.usecases.GetSavedCardsUseCase
+import arrow.core.raise.Null
+import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
+import com.luminsoft.ekyc_android_sdk.core.utils.ui
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_domain.usecases.OnboardingSettingPasswordUseCase
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_domain.usecases.PasswordUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class PasswordOnBoardingViewModel(private val getSavedCardsUseCase: GetSavedCardsUseCase) :
+class PasswordOnBoardingViewModel(private val setPasswordUseCase: OnboardingSettingPasswordUseCase) :
     ViewModel() {
+    var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var passwordApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
+    var params: MutableStateFlow<Any?> = MutableStateFlow(null)
+    var navController: NavController? = null
+
+
+    fun callSetPassword(password: String) {
+        setPassword(password)
+    }
+
+    private fun setPassword(password: String) {
+        isButtonLoading.value = true
+        ui {
+
+            params.value = PasswordUseCaseParams(password = password)
+
+            val response: Either<SdkFailure, Null> =
+                setPasswordUseCase.call(params.value as PasswordUseCaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    isButtonLoading.value = false
+
+                },
+                {
+                    isButtonLoading.value = false
+                    passwordApproved.value = true
+
+                })
+        }
+
+
+    }
+
 
 //    var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 //    var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)

@@ -9,7 +9,6 @@ import com.luminsoft.ekyc_android_sdk.features.setting_password.password_onboard
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.common.SplashScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.ui.components.OnboardingScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
-import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.TutorialViewModel
 
 const val splashScreenOnBoardingContent = "splashScreenOnBoardingContent"
 const val splashScreenAuthContent = "splashScreenAuthContent"

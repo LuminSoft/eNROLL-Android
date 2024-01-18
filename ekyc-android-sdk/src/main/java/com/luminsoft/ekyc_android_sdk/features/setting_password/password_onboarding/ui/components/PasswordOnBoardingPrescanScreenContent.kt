@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,9 +36,8 @@ var validate = mutableStateOf(false)
 
 @Composable
 fun SettingPasswordOnBoardingScreenContent(
-    passwordOnBoardingViewModel: PasswordOnBoardingViewModel = koinViewModel<PasswordOnBoardingViewModel>(),
-    navController: NavController,
-    isSavedCards: Boolean = true
+    passwordOnBoardingViewModel: PasswordOnBoardingViewModel = koinViewModel(),
+    navController: NavController
 ) {
 
     BackGroundView(navController = navController, showAppBar = true) {
@@ -61,6 +61,7 @@ fun SettingPasswordOnBoardingScreenContent(
             NormalTextField(
                 label = ResourceProvider.instance.getStringResource(R.string.password),
                 value = password.value,
+                visualTransformation = PasswordVisualTransformation(),
                 onValueChange = { password.value = it },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
@@ -74,6 +75,7 @@ fun SettingPasswordOnBoardingScreenContent(
                 label = ResourceProvider.instance.getStringResource(R.string.confirmPassword),
                 value = confirmPassword.value,
                 onValueChange = { confirmPassword.value = it },
+                visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done,
@@ -82,7 +84,12 @@ fun SettingPasswordOnBoardingScreenContent(
             )
             Spacer(modifier = Modifier.fillMaxHeight(0.3f))
             ButtonView(
-                onClick = { validate.value = true },
+                onClick = {
+                    validate.value = true
+                    if (passwordValidation() == null && confirmPasswordValidation() == null) {
+                        passwordOnBoardingViewModel.callSetPassword(password.value.text)
+                    }
+                },
                 title = ResourceProvider.instance.getStringResource(R.string.send)
             )
         }
@@ -91,7 +98,7 @@ fun SettingPasswordOnBoardingScreenContent(
 
 }
 
-@Composable
+
 private fun passwordValidation() = when {
     !validate.value -> {
         null
@@ -101,21 +108,36 @@ private fun passwordValidation() = when {
         ResourceProvider.instance.getStringResource(R.string.errorEmptyPassword)
     }
 
-    password.value.text.length < 5 -> {
+    password.value.text.length < 6 -> {
         ResourceProvider.instance.getStringResource(R.string.errorLengthPassword)
     }
 
-    password.value.text.length > 20 -> {
+    password.value.text.length > 128 -> {
         ResourceProvider.instance.getStringResource(R.string.errorMaxLengthPassword)
+    }
+
+    !Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{6,128}\$").matches(
+        password.value.text
+    ) -> {
+        ResourceProvider.instance.getStringResource(R.string.errorFormatPassword)
+
     }
 
     else -> null
 }
 
-@Composable
+
 private fun confirmPasswordValidation() = when {
     !validate.value -> {
         null
+    }
+
+    confirmPassword.value.text.isEmpty() -> {
+        ResourceProvider.instance.getStringResource(R.string.required_confirm_password)
+    }
+
+    passwordValidation() != null -> {
+        ResourceProvider.instance.getStringResource(R.string.enterValidPasswordFirst)
     }
 
     password.value != confirmPassword.value -> {

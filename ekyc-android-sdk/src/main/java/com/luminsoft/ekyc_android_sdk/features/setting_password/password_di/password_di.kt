@@ -2,7 +2,7 @@ package com.luminsoft.ekyc_android_sdk.features.setting_password.password_di
 
 import com.luminsoft.ekyc_android_sdk.core.network.AuthInterceptor
 import com.luminsoft.ekyc_android_sdk.core.network.RetroClient
-import com.luminsoft.ekyc_android_sdk.features.setting_password.password_domain.usecases.GetSavedCardsUseCase
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_domain.usecases.OnboardingSettingPasswordUseCase
 import com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.password_api.PasswordApi
 import com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.password_remote_data_source.PasswordRemoteDataSource
 import com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.password_remote_data_source.PasswordRemoteDataSourceImpl
@@ -14,7 +14,7 @@ import org.koin.dsl.module
 
 val passwordModule = module{
     single {
-        GetSavedCardsUseCase(get())
+        OnboardingSettingPasswordUseCase(get())
     }
     single<PasswordRemoteDataSource> {
         PasswordRemoteDataSourceImpl(get(),get())

@@ -2,21 +2,19 @@ package com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.p
 
 
 import arrow.core.Either
+import arrow.core.raise.Null
 import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
-import com.luminsoft.ekyc_android_sdk.core.network.ApiBaseResponse
 import com.luminsoft.ekyc_android_sdk.core.network.BaseResponse
 import com.luminsoft.ekyc_android_sdk.features.setting_password.password_domain.repository.PasswordRepository
-import com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.password_models.get_token.GetCardsRequest
-import com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.password_models.get_token.TokenizedCardData
+import com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.password_models.get_token.SetPasswordRequest
 import com.luminsoft.ekyc_android_sdk.features.setting_password.password_data.password_remote_data_source.PasswordRemoteDataSource
 
-class PasswordRepositoryImplementation(private val passwordRemoteDataSource: PasswordRemoteDataSource):
+class PasswordRepositoryImplementation(private val passwordRemoteDataSource: PasswordRemoteDataSource) :
     PasswordRepository {
-
-    override suspend fun getCards(request: GetCardsRequest): Either<SdkFailure, ArrayList<TokenizedCardData>> {
-        return when (val response = passwordRemoteDataSource.getCards(request)) {
+    override suspend fun setPassword(request: SetPasswordRequest): Either<SdkFailure, Null> {
+        return when (val response = passwordRemoteDataSource.setPassword(request)) {
             is BaseResponse.Success -> {
-                Either.Right((response.data as ApiBaseResponse<ArrayList<TokenizedCardData>>).data)
+                Either.Right(null)
             }
 
             is BaseResponse.Error -> {
