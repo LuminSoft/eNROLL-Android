@@ -19,6 +19,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GetOnboardingSte
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.InitializeRequestUsecaseParams
 import com.luminsoft.ekyc_android_sdk.main.main_navigation.onBoardingScreenContent
+import com.luminsoft.ekyc_android_sdk.main.main_navigation.passwordScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.common.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -112,7 +113,8 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
-                            navController!!.navigate(onBoardingScreenContent)
+//                            navController!!.navigate(onBoardingScreenContent)
+                            navController!!.navigate(passwordScreenContent)
                         })
 
                     }

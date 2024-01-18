@@ -13,7 +13,8 @@
 <string name="mobileNumber">رقم الهاتف</string>
 <string name="confirmPassword">تأكيد كلمة المرور</string>
 <string name="errorEmptyPassword">من فضلك أدخل كلمة المرور</string>
-<string name="errorLengthPassword">يجب ألا تقل كلمة المرور عن خمسة أحرف</string>
+<string name="errorLengthPassword">يجب ألا تقل كلمة المرور عن سته أحرف</string>
+<string name="errorMaxLengthPassword">يجب ألا تزيد كلمة المرور عن 128 حرف</string>
 <string name="errorFormatPassword">كلمة المرور غير صحيحة</string>
 <string name="scanIDFrontSide">مسح الوجه الأمامي لبطاقة الهوية ضوئيا</string>
 <string name="takeAPictureOfFrontSide">التقاط صورة الوجه الأمامي لبطاقة الهوية</string>
@@ -157,6 +158,7 @@
 <string name="emailOtpMessage">لم تستلم رمز التأكيد؟ يمكن إعادة إرساله خلال</string>
 <string name="second">ثانية</string>
 <string name="resend">إعادة إرسـال</string>
+<string name="send">إرسـال</string>
 <string name="otpSendTo">تم إرسال رمز التحقق إلى رقم</string>
 <string name="emailOtpSendTo">تم إرسال رمز التحقق إلى البريد الإلكتروني</string>
 <string name="edit">تعديل</string>
@@ -164,6 +166,7 @@
 <string name="maximum_invalid_password">كلمة المرور يجب ألا تزيد عن 30 حرفا</string>
 <string name="minimum_invalid_password">كلمة المرور يجب ألا تقل عن 8 أحرف</string>
 <string name="invalid_confirm_password">تأكيد كلمة المرور غير صحيحة</string>
+<string name="enterValidPasswordFirst">برجاء ادخال كلمه مرور صحيحه اولا</string>
 <string name="manufacture">اسم المُصنع:</string>
 <string name="modelName">اسم الموديل:</string>
 <string name="imei">رقم هوية الهاتف:</string>
