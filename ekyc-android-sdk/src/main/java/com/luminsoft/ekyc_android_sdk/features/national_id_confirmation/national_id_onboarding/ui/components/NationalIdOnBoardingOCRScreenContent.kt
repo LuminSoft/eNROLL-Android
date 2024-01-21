@@ -15,16 +15,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,9 +37,11 @@ import com.luminsoft.ekyc_android_sdk.core.models.PaymentFailedModel
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ResourceProvider
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationApproveUseCase
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.view_model.NationalIdFrontOcrViewModel
 import com.luminsoft.ekyc_android_sdk.innovitices.activities.DocumentActivity
@@ -50,6 +55,7 @@ import com.luminsoft.ekyc_android_sdk.ui_components.components.NormalTextField
 import com.luminsoft.ekyc_android_sdk.ui_components.components.SpinKitLoadingIndicator
 import org.koin.compose.koinInject
 
+var userNameValue = mutableStateOf(TextFieldValue())
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -60,7 +66,6 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
     val context = LocalContext.current
     val activity = context.findActivity()
     val document = onBoardingViewModel.nationalIdFrontImage.collectAsState()
-
 
     val personalConfirmationUploadImageUseCase =
         PersonalConfirmationUploadImageUseCase(koinInject())
@@ -92,7 +97,9 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                         facialDocumentModel.documentImage
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
-                    //TODO handle error
+                    onBoardingViewModel.errorMessage.value = e.message
+                    onBoardingViewModel.scanType.value = ScanType.FRONT
+                    navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
             }
@@ -102,10 +109,18 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val documentBackUri = it.data?.data
             if (documentBackUri != null) {
-                val nonFacialDocumentModel = DotHelper.documentNonFacial(documentBackUri, activity)
-                onBoardingViewModel.nationalIdBackImage.value =
-                    nonFacialDocumentModel.documentImageBase64
-                navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
+                try {
+                    val nonFacialDocumentModel =
+                        DotHelper.documentNonFacial(documentBackUri, activity)
+                    onBoardingViewModel.nationalIdBackImage.value =
+                        nonFacialDocumentModel.documentImageBase64
+                    navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
+                } catch (e: Exception) {
+                    onBoardingViewModel.errorMessage.value = e.message
+                    onBoardingViewModel.scanType.value = ScanType.Back
+                    navController.navigate(nationalIdOnBoardingErrorScreen)
+                    println(e.message)
+                }
             }
         }
 
@@ -136,6 +151,7 @@ private fun MainContent(
     val loading = nationalIdFrontOcrViewModel.loading.collectAsState()
     val frontNIApproved = nationalIdFrontOcrViewModel.frontNIApproved.collectAsState()
     val failure = nationalIdFrontOcrViewModel.failure.collectAsState()
+    val userHasModifiedText = remember { mutableStateOf(false) }
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (frontNIApproved.value) {
@@ -151,67 +167,7 @@ private fun MainContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
-        else if (customerData.value != null) {
-            setCustomerId(onBoardingViewModel, customerData)
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp)
-            ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                TextItem(R.string.nameAr, customerData.value!!.fullName!!, R.drawable.user_icon)
-                if (customerData.value!!.fullNameEn != null) Spacer(modifier = Modifier.height(10.dp))
-                if (customerData.value!!.fullNameEn != null) TextItem(
-                    R.string.nameEn,
-                    customerData.value!!.fullNameEn!!,
-                    R.drawable.user_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(R.string.address, customerData.value!!.address!!, R.drawable.address_icon)
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.birthDate,
-                    customerData.value!!.birthdate!!.split("T")[0],
-                    R.drawable.calendar_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.nationalIdNumber,
-                    customerData.value!!.idNumber!!,
-                    R.drawable.id_card_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.factoryNumber,
-                    customerData.value!!.documentNumber!!,
-                    R.drawable.factory_num_icon
-                )
-                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
-
-                ButtonView(
-                    onClick = {
-                        nationalIdFrontOcrViewModel.callApproveFront()
-
-                    },
-                    title = stringResource(id = R.string.confirmAndContinue)
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-
-                ButtonView(
-                    onClick = {
-                        val intent =
-                            Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
-                        startForResult.launch(intent)
-                    },
-                    textColor = MaterialTheme.colorScheme.primary,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    borderColor = MaterialTheme.colorScheme.primary,
-                    title = stringResource(id = R.string.reScan)
-                )
-            }
-        } else if (!failure.value?.message.isNullOrEmpty()) {
+        else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(
@@ -255,7 +211,100 @@ private fun MainContent(
                     }
                 }
             }
+        } else if (customerData.value != null) {
+            if (customerData.value!!.fullNameEn != null)
+                if (!userHasModifiedText.value) {
+                    userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
+                }
+            setCustomerId(onBoardingViewModel, customerData)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
+            ) {
+                Spacer(modifier = Modifier.height(20.dp))
+                TextItem(R.string.nameAr, customerData.value!!.fullName!!, R.drawable.user_icon)
+                if (customerData.value!!.fullNameEn != null) Spacer(modifier = Modifier.height(10.dp))
+
+                if (customerData.value!!.fullNameEn != null)
+                    NormalTextField(
+                        label = ResourceProvider.instance.getStringResource(R.string.nameEn),
+                        value = userNameValue.value,
+                        icon = {
+                            Image(
+                                painterResource(R.drawable.user_icon),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .height(50.dp)
+                            )
+                        },
+                        trailingIcon = {
+                            Image(
+                                painterResource(R.drawable.edit_icon),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .height(50.dp)
+                            )
+                        },
+                        onValueChange = {
+                            userNameValue.value = it
+                            userHasModifiedText.value = true
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                        ),
+                        error = englishNameValidation(),
+                    )
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(R.string.address, customerData.value!!.address!!, R.drawable.address_icon)
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.birthDate,
+                    customerData.value!!.birthdate!!.split("T")[0],
+                    R.drawable.calendar_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.nationalIdNumber,
+                    customerData.value!!.idNumber!!,
+                    R.drawable.id_card_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.factoryNumber,
+                    customerData.value!!.documentNumber!!,
+                    R.drawable.factory_num_icon
+                )
+                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+
+                ButtonView(
+                    onClick = {
+                        if (customerData.value!!.fullNameEn != null && englishNameValidation() == null)
+                            nationalIdFrontOcrViewModel.callApproveFront(userNameValue.value.text)
+                        else if (customerData.value!!.fullNameEn == null)
+                            nationalIdFrontOcrViewModel.callApproveFront("")
+
+                    },
+                    title = stringResource(id = R.string.confirmAndContinue)
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+
+                ButtonView(
+                    onClick = {
+                        val intent =
+                            Intent(activity.applicationContext, DocumentActivity::class.java)
+                        intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                        startForResult.launch(intent)
+                    },
+                    textColor = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    borderColor = MaterialTheme.colorScheme.primary,
+                    title = stringResource(id = R.string.reScan)
+                )
+            }
         }
+
     }
 }
 
@@ -283,4 +332,29 @@ private fun TextItem(label: Int, value: String, icon: Int) {
             )
         }
     )
+}
+
+
+private fun englishNameValidation() = when {
+
+    userNameValue.value.text.isEmpty() -> {
+        ResourceProvider.instance.getStringResource(R.string.required_english_name)
+    }
+
+    userNameValue.value.text.length < 2 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_min)
+    }
+
+    userNameValue.value.text.length > 150 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_max)
+    }
+
+    !Regex("^[A-Za-z-. ]+\$").matches(
+        userNameValue.value.text
+    ) -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_english_name)
+
+    }
+
+    else -> null
 }

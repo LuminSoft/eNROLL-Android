@@ -10,7 +10,7 @@ import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
 import com.luminsoft.ekyc_android_sdk.core.network.RetroClient
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ui
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPrescanScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
@@ -19,9 +19,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GetOnboardingSte
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.InitializeRequestUsecaseParams
 import com.luminsoft.ekyc_android_sdk.main.main_navigation.onBoardingScreenContent
-import com.luminsoft.ekyc_android_sdk.main.main_navigation.passwordScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.common.MainViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.UUID
 
@@ -37,16 +35,19 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var currentStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
+    var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
 
-    fun initRequest(navController: NavController) {
+    fun initRequest() {
         loading.value = true
         ui {
             val udid: String = UUID.randomUUID().toString()
@@ -68,7 +69,8 @@ class OnBoardingViewModel(
                 },
                 {
                     loading.value = false
-                    navController.navigate(nationalIdOnBoardingPrescanScreen)
+//                    navController.navigate(nationalIdOnBoardingPrescanScreen)
+                    navigateToNextStep()
                 })
 
         }
@@ -77,9 +79,6 @@ class OnBoardingViewModel(
     init {
         generateToken()
     }
-
-//    private var payResponse = MutableStateFlow<PayResponse?>(null)
-
 
     private fun generateToken() {
         loading.value = true
@@ -113,8 +112,7 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
-//                            navController!!.navigate(onBoardingScreenContent)
-                            navController!!.navigate(passwordScreenContent)
+                            navController!!.navigate(onBoardingScreenContent)
                         })
 
                     }
@@ -122,5 +120,21 @@ class OnBoardingViewModel(
         }
 
 
+    }
+
+    fun removeCurrentStep() {
+        if (steps.value != null) {
+            val stepsSize = steps.value!!.size
+            steps.value = steps.value!!.toMutableList().apply {
+                removeIf { x -> x.registrationStepId == currentStepId.value }
+            }.toList()
+            val newStepsSize = steps.value!!.size
+            if (stepsSize != newStepsSize)
+                navigateToNextStep()
+        }
+    }
+
+    private fun navigateToNextStep() {
+        navController!!.navigate(steps.value!!.first().stepNameNavigator())
     }
 }

@@ -29,11 +29,12 @@ import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
 import com.luminsoft.ekyc_android_sdk.core.models.PaymentFailedModel
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ResourceProvider
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationApproveUseCase
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.view_model.NationalIdBackOcrViewModel
-import com.luminsoft.ekyc_android_sdk.features.setting_password.password_navigation.settingPasswordOnBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.ekyc_android_sdk.innovitices.core.DotHelper
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -86,17 +87,25 @@ fun NationalIdOnBoardingBackConfirmationScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val documentBackUri = it.data?.data
             if (documentBackUri != null) {
-                val nonFacialDocumentModel = DotHelper.documentNonFacial(documentBackUri, activity)
-                onBoardingViewModel.nationalIdBackImage.value =
-                    nonFacialDocumentModel.documentImageBase64
-                navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
+                try {
+                    val nonFacialDocumentModel =
+                        DotHelper.documentNonFacial(documentBackUri, activity)
+                    onBoardingViewModel.nationalIdBackImage.value =
+                        nonFacialDocumentModel.documentImageBase64
+                    navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
+                } catch (e: Exception) {
+                    onBoardingViewModel.errorMessage.value = e.message
+                    onBoardingViewModel.scanType.value = ScanType.Back
+                    navController.navigate(nationalIdOnBoardingErrorScreen)
+                    println(e.message)
+                }
             }
         }
 
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (backNIApproved.value) {
-            navController.navigate(settingPasswordOnBoardingScreenContent)
+            onBoardingViewModel.removeCurrentStep()
         }
 
         if (loading.value) Column(

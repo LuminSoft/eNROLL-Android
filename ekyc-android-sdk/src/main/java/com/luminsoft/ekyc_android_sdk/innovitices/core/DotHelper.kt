@@ -12,6 +12,7 @@ import com.innovatrics.dot.face.detection.DetectedFace
 import com.innovatrics.dot.face.detection.FaceDetectorFactory
 import com.innovatrics.dot.face.image.BgrRawImageFactory
 import com.innovatrics.dot.face.image.FaceImageFactory
+import com.luminsoft.ekyc_android_sdk.R
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -37,7 +38,7 @@ object DotHelper {
 
         } catch (e: IOException) {
             e.printStackTrace()
-            throw e
+            throw IOException(activity.getString(R.string.noFacesDetected))
         }
     }
 

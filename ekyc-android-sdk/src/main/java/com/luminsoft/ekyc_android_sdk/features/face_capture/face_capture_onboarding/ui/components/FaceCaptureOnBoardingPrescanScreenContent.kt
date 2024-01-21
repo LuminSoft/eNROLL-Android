@@ -10,6 +10,7 @@ import org.koin.androidx.compose.koinViewModel
 fun FaceCaptureBoardingPrescanScreenContent(
     navController:NavController,
 ) {
+
 //    val loading = addCardViewModel.loading.collectAsState()
 //    val failure = addCardViewModel.failure.collectAsState()
 //    val feesResponse = addCardViewModel.feesResponse.collectAsState()

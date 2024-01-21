@@ -67,7 +67,7 @@ fun SettingPasswordOnBoardingScreenContent(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next,
                 ),
-                error = passwordValidation(),
+                error = englishNameValidation(),
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -86,7 +86,7 @@ fun SettingPasswordOnBoardingScreenContent(
             ButtonView(
                 onClick = {
                     validate.value = true
-                    if (passwordValidation() == null && confirmPasswordValidation() == null) {
+                    if (englishNameValidation() == null && confirmPasswordValidation() == null) {
                         passwordOnBoardingViewModel.callSetPassword(password.value.text)
                     }
                 },
@@ -99,7 +99,7 @@ fun SettingPasswordOnBoardingScreenContent(
 }
 
 
-private fun passwordValidation() = when {
+private fun englishNameValidation() = when {
     !validate.value -> {
         null
     }
@@ -136,7 +136,7 @@ private fun confirmPasswordValidation() = when {
         ResourceProvider.instance.getStringResource(R.string.required_confirm_password)
     }
 
-    passwordValidation() != null -> {
+    englishNameValidation() != null -> {
         ResourceProvider.instance.getStringResource(R.string.enterValidPasswordFirst)
     }
 

@@ -1,14 +1,11 @@
 package com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.view_model
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import arrow.core.raise.Null
-import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
 import com.luminsoft.ekyc_android_sdk.core.utils.ui
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
@@ -33,8 +30,8 @@ class NationalIdFrontOcrViewModel(
     var navController: NavController? = null
 
 
-    fun callApproveFront() {
-        approveFront()
+    fun callApproveFront(englishName: String) {
+        approveFront(englishName)
     }
 
     fun scanBack() {
@@ -74,11 +71,18 @@ class NationalIdFrontOcrViewModel(
 
     }
 
-    private fun approveFront() {
+    private fun approveFront(englishName: String) {
         loading.value = true
         ui {
-
-            params.value = PersonalConfirmationApproveUseCaseParams(scanType = ScanType.FRONT)
+            if (customerData.value!!.fullNameEn != null)
+                params.value = PersonalConfirmationApproveUseCaseParams(
+                    scanType = ScanType.FRONT,
+                    fullNameEn = englishName,
+                    familyNameEn = "",
+                    firstNameEn = ""
+                )
+            else
+                params.value = PersonalConfirmationApproveUseCaseParams(scanType = ScanType.FRONT)
 
             val response: Either<SdkFailure, Null> =
                 personalConfirmationApproveUseCase.call(params.value as PersonalConfirmationApproveUseCaseParams)
