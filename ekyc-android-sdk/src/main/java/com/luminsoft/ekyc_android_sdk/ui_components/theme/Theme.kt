@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.luminsoft.ekyc_android_sdk.core.models.LocalizationCode
 
 
 private val LightColorScheme = lightColorScheme(
@@ -39,12 +40,14 @@ private val DarkColorScheme = darkColorScheme(
 fun EKYCsDKTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
+    localizationCode: LocalizationCode = LocalizationCode.EN,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             LightColorScheme
         }
+
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -55,13 +58,21 @@ fun EKYCsDKTheme(
             window.statusBarColor = Color.Transparent.toArgb()
             window.navigationBarColor = Color.Transparent.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars =
+                darkTheme
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = sdkTypography,
-        content = content
-    )
+    if (localizationCode == LocalizationCode.AR) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = sdkTypography,
+            content = content
+        )
+    } else
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = sdkTypographyEn,
+            content = content
+        )
 }

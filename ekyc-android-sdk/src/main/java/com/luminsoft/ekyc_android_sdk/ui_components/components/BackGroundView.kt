@@ -72,7 +72,11 @@ fun BackGroundView(
                         horizontalArrangement = Arrangement.Absolute.Left,
                         verticalAlignment = Alignment.Bottom, modifier = Modifier
                             .fillMaxSize()
-                            .padding(end = ScreenHelper.sw(0.1), bottom = ScreenHelper.sh(0.05))
+                            .padding(
+                                end = ScreenHelper.sw(0.1),
+                                start = ScreenHelper.sw(0.1),
+                                bottom = ScreenHelper.sh(0.05)
+                            )
                     ) {
                         Image(
                             painterResource(R.drawable.logo),

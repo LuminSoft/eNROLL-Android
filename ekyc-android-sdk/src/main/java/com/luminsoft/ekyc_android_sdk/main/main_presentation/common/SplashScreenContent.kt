@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -29,10 +28,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
-import com.luminsoft.ekyc_android_sdk.core.models.EkycMode
-import com.luminsoft.ekyc_android_sdk.core.models.PaymentFailedModel
+import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
-import com.luminsoft.ekyc_android_sdk.main.main_navigation.onBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.ekyc_android_sdk.ui_components.components.DialogView
@@ -76,13 +73,13 @@ fun SplashScreenContent(
                     buttonText = stringResource(id = R.string.exit),
                     onPressedButton = {
                         activity.finish()
-                        EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message,it))
+                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message,it))
 
                     },
                 )
                 {
                     activity.finish()
-                    EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message,it))
+                    EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message,it))
 
                 }
             }
@@ -98,13 +95,13 @@ fun SplashScreenContent(
                     secondButtonText = stringResource(id = R.string.exit),
                     onPressedSecondButton = {
                         activity.finish()
-                        EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message,it))
+                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message,it))
 
                     }
                 )
                 {
                     activity.finish()
-                    EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message,it))
+                    EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message,it))
                 }
             }
         }

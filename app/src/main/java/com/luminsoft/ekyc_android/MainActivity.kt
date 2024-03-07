@@ -10,7 +10,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,15 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.luminsoft.ekyc_android_sdk.sdk.Ekyc
@@ -37,10 +31,8 @@ import com.luminsoft.ekyc_android_sdk.core.models.EKYCCallback
 import com.luminsoft.ekyc_android_sdk.core.models.EkycEnvironment
 import com.luminsoft.ekyc_android_sdk.core.models.EkycMode
 import com.luminsoft.ekyc_android_sdk.core.models.LocalizationCode
-import com.luminsoft.ekyc_android_sdk.core.models.PaymentFailedModel
+import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
 import com.luminsoft.ekyc_android_sdk.core.models.PaymentSuccessModel
-import com.luminsoft.ekyc_android_sdk.ui_components.components.BottomSheetStatus
-import com.luminsoft.ekyc_android_sdk.ui_components.components.DialogView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.NormalTextField
 import io.github.cdimascio.dotenv.dotenv
 import java.util.Locale
@@ -127,18 +119,11 @@ class MainActivity : ComponentActivity() {
                                         ekycCallback = object :
                                             EKYCCallback {
                                             override fun success(paymentSuccessModel: PaymentSuccessModel) {
-//                                        if (paymentSuccessModel is PaymentSuccessModel.FawrySuccessModel) {
-//                                            Log.e("SuccessFawry", paymentSuccessModel.paymentMethodName)
-//                                        } else if (paymentSuccessModel is PaymentSuccessModel.CreditCardSuccessModel) {
-//                                            Log.e("SuccessCard", paymentSuccessModel.paymentReferenceId)
-//                                            Log.e("SuccessCard", paymentSuccessModel.paymentMethodName)
-//                                        }
-//                                        Log.e("SuccessCard", paymentSuccessModel.toString())
                                                 text.value =
                                                     "payment method: ${paymentSuccessModel.paymentMethodName} \nReference number: ${paymentSuccessModel.paymentReferenceId}"
                                             }
 
-                                            override fun error(paymentFailedModel: PaymentFailedModel) {
+                                            override fun error(paymentFailedModel: EKYCFailedModel) {
                                                 text.value = paymentFailedModel.failureMessage
 
                                             }
@@ -191,7 +176,7 @@ class MainActivity : ComponentActivity() {
                                                     "payment method: ${paymentSuccessModel.paymentMethodName} \nReference number: ${paymentSuccessModel.paymentReferenceId}"
                                             }
 
-                                            override fun error(paymentFailedModel: PaymentFailedModel) {
+                                            override fun error(paymentFailedModel: EKYCFailedModel) {
                                                 text.value = paymentFailedModel.failureMessage
 
                                             }

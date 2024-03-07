@@ -20,6 +20,7 @@ class PasswordOnBoardingViewModel(private val setPasswordUseCase: OnboardingSett
     var navController: NavController? = null
 
 
+
     fun callSetPassword(password: String) {
         setPassword(password)
     }

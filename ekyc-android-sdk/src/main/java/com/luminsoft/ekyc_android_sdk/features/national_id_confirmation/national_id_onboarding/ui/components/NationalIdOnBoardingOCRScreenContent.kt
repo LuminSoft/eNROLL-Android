@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
-import com.luminsoft.ekyc_android_sdk.core.models.PaymentFailedModel
+import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ResourceProvider
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
@@ -176,13 +176,13 @@ private fun MainContent(
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
                             activity.finish()
-                            EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
+                            EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
 
                         },
                     )
                     {
                         activity.finish()
-                        EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
+                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
 
                     }
                 }
@@ -201,17 +201,18 @@ private fun MainContent(
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
                             activity.finish()
-                            EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
+                            EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
 
                         }
                     )
                     {
                         activity.finish()
-                        EkycSdk.ekycCallback?.error(PaymentFailedModel(it.message, it))
+                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
                     }
                 }
             }
-        } else if (customerData.value != null) {
+        }
+        else if (customerData.value != null) {
             if (customerData.value!!.fullNameEn != null)
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
