@@ -123,7 +123,7 @@ fun NormalTextField(
                                 painter = it,
                                 contentDescription = "",
                                 modifier = Modifier
-                                    .size(20.dp),
+                                    .size(30.dp),
                             )
                         }
                     },

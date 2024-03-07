@@ -43,7 +43,7 @@ object Ekyc {
         setLocale(EkycSdk.localizationCode,activity)
         activity.startActivity(Intent(activity, EkycMainActivity::class.java))
     }
-    fun setLocale(lang: LocalizationCode, activity: Activity) {
+    private fun setLocale(lang: LocalizationCode, activity: Activity) {
         val locale = if(lang != LocalizationCode.AR){
             Locale("en")
         }else{
