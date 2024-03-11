@@ -11,6 +11,7 @@ import com.luminsoft.ekyc_android_sdk.core.network.RetroClient
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ui
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
@@ -69,7 +70,7 @@ class OnBoardingViewModel(
                 },
                 {
                     loading.value = false
-//                    navController.navigate(nationalIdOnBoardingPrescanScreen)
+//                    navController!!.navigate(nationalIdOnBoardingPreScanScreen)
                     navigateToNextStep()
                 })
 

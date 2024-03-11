@@ -1,5 +1,6 @@
 package com.luminsoft.ekyc_android_sdk
 
+
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -22,6 +23,7 @@ import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_di.face
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureRouter
 import com.luminsoft.ekyc_android_sdk.features.location.location_di.locationModule
 import com.luminsoft.ekyc_android_sdk.features.location.location_navigation.locationRouter
+import com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdRouter
 import com.luminsoft.ekyc_android_sdk.features.phone_numbers.phone_numbers_di.phoneNumbersModule
@@ -45,9 +47,12 @@ import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 
 
+@Suppress("DEPRECATION")
 class EkycMainActivity : ComponentActivity() {
     val onBoardingViewModel: OnBoardingViewModel by viewModel()
+    val locationOnBoardingViewModel: LocationOnBoardingViewModel by viewModel()
     val authViewModel: AuthViewModel by viewModel()
+
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
         ResourceProvider.instance.initializeWithApplicationContext(this)
@@ -62,30 +67,36 @@ class EkycMainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
 
         setContent {
-            val onBoardingViewModel:OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
+            val onBoardingViewModel: OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
+            val locationOnBoardingViewModel: LocationOnBoardingViewModel =
+                koinViewModel<LocationOnBoardingViewModel>()
             val navController = rememberNavController()
-            EKYCsDKTheme (dynamicColor = false){
+
+            EKYCsDKTheme(dynamicColor = false) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()
                 ) {
-                    mainRouter(navController = navController,onBoardingViewModel)
-                    nationalIdRouter(navController = navController,onBoardingViewModel)
+                    mainRouter(navController = navController, onBoardingViewModel)
+                    nationalIdRouter(navController = navController, onBoardingViewModel)
                     deviceDataRouter(navController = navController)
                     emailRouter(navController = navController)
                     faceCaptureRouter(navController = navController)
-                    locationRouter(navController = navController)
+                    locationRouter(navController = navController, locationOnBoardingViewModel)
                     phoneNumberRouter(navController = navController)
                     securityQuestionsRouter(navController = navController)
                     settingPasswordRouter(navController = navController)
                 }
             }
+
         }
     }
+
 
     private fun getKoin(activity: ComponentActivity): Koin {
         return if (activity is KoinComponent) {
@@ -121,4 +132,5 @@ class EkycMainActivity : ComponentActivity() {
             }
         }
     }
+
 }

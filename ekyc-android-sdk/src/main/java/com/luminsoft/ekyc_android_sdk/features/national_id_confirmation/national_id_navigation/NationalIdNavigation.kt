@@ -10,7 +10,7 @@ import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingPrescanScreen
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 
-const val nationalIdOnBoardingPrescanScreen = "nationalIdOnBoardingPrescanScreen"
+const val nationalIdOnBoardingPreScanScreen = "nationalIdOnBoardingPreScanScreen"
 const val nationalIdOnBoardingFrontConfirmationScreen =
     "nationalIdOnBoardingFrontConfirmationScreen"
 const val nationalIdOnBoardingBackConfirmationScreen =
@@ -18,26 +18,12 @@ const val nationalIdOnBoardingBackConfirmationScreen =
 const val nationalIdOnBoardingErrorScreen =
     "nationalIdOnBoardingErrorScreen"
 
-/*
-fun NavController.navigateToNationalIdConfirmation(navOptions: NavOptions? = null) {
-    this.navigate(nationalIdOnBoardingPrescanScreen, navOptions)
-}
-
-fun NavController.nationalIdOnBoardingFrontConfirmationScreen(navOptions: NavOptions? = null) {
-    this.navigate(nationalIdOnBoardingFrontConfirmationScreen, navOptions)
-}
-
-fun NavController.nationalIdOnBoardingBackConfirmationScreen(navOptions: NavOptions? = null) {
-    this.navigate(nationalIdOnBoardingBackConfirmationScreen, navOptions)
-}
-*/
-
 fun NavGraphBuilder.nationalIdRouter(
     navController: NavController,
     onBoardingViewModel: OnBoardingViewModel
 ) {
 
-    composable(route = nationalIdOnBoardingPrescanScreen) {
+    composable(route = nationalIdOnBoardingPreScanScreen) {
         NationalIdOnBoardingPrescanScreen(
             navController = navController,
             onBoardingViewModel = remember { onBoardingViewModel }

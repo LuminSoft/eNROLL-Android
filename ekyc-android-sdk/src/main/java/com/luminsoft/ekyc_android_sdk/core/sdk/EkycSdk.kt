@@ -9,6 +9,7 @@ import com.luminsoft.ekyc_android_sdk.core.models.LocalizationCode
 object EkycSdk {
     // this info related to organization
     var tenantId = ""
+    var googleApiKey = ""
     var tenantSecret = ""
 
     // this info related to sdk initiation

@@ -5,8 +5,7 @@ import com.luminsoft.ekyc_android_sdk.features.device_data.device_data_navigatio
 import com.luminsoft.ekyc_android_sdk.features.email.email_navigation.emailOnBoardingPrescanScreenContent
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPrescanScreenContent
 import com.luminsoft.ekyc_android_sdk.features.location.location_navigation.locationOnBoardingScreenContent
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPrescanScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.ekyc_android_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.features.setting_password.password_navigation.settingPasswordOnBoardingScreenContent
@@ -39,7 +38,7 @@ data class StepModel(
 
     fun stepNameNavigator(): String {
         return when (this.registrationStepId) {
-            1 -> nationalIdOnBoardingPrescanScreen
+            1 -> nationalIdOnBoardingPreScanScreen
             2 -> faceCaptureBoardingPrescanScreenContent
             3 -> phoneNumbersOnBoardingScreenContent
             4 -> emailOnBoardingPrescanScreenContent
@@ -48,7 +47,7 @@ data class StepModel(
             7 -> securityQuestionsOnBoardingScreenContent
             8 -> settingPasswordOnBoardingScreenContent
             else -> {
-                nationalIdOnBoardingPrescanScreen
+                nationalIdOnBoardingPreScanScreen
             }
         }
     }
@@ -68,7 +67,7 @@ enum class EkycStepType {
 
     fun getRouteId(): String {
         return when (this) {
-            EkycStepType.PersonalConfirmation -> nationalIdOnBoardingPrescanScreen
+            EkycStepType.PersonalConfirmation -> nationalIdOnBoardingPreScanScreen
             EkycStepType.SmileLiveness -> faceCaptureBoardingPrescanScreenContent
             EkycStepType.PhoneOtp -> phoneNumbersOnBoardingScreenContent
             EkycStepType.EmailOtp -> emailOnBoardingPrescanScreenContent
@@ -76,7 +75,7 @@ enum class EkycStepType {
             EkycStepType.SecurityQuestions -> securityQuestionsOnBoardingScreenContent
             EkycStepType.SettingPassword -> settingPasswordOnBoardingScreenContent
             else -> {
-                nationalIdOnBoardingPrescanScreen
+                nationalIdOnBoardingPreScanScreen
             }
         }
     }

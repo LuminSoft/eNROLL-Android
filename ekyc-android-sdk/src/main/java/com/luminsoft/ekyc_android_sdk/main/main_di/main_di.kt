@@ -2,6 +2,8 @@ package com.luminsoft.ekyc_android_sdk.main.main_di
 
 import com.luminsoft.ekyc_android_sdk.core.network.AuthInterceptor
 import com.luminsoft.ekyc_android_sdk.core.network.RetroClient
+import com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.ui.components.LocationOnBoardingScreenContent
+import com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_api.MainApi
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_remote_data_source.MainRemoteDataSource
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_remote_data_source.MainRemoteDataSourceImpl
@@ -16,7 +18,7 @@ import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.vie
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val mainModule = module{
+val mainModule = module {
     single {
         GenerateOnboardingSessionTokenUsecase(get())
     }
@@ -27,7 +29,7 @@ val mainModule = module{
         InitializeRequestUsecase(get())
     }
     single<MainRemoteDataSource> {
-        MainRemoteDataSourceImpl(get(),get())
+        MainRemoteDataSourceImpl(get(), get())
     }
     single<MainRepository> {
         MainRepositoryImplementation(get())
@@ -39,10 +41,13 @@ val mainModule = module{
             )
         ).create(MainApi::class.java)
     }
-    viewModel{
-        OnBoardingViewModel(get(),get(),get())
+    viewModel {
+        OnBoardingViewModel(get(), get(), get())
     }
-    viewModel{
+    viewModel {
+        LocationOnBoardingViewModel()
+    }
+    viewModel {
         AuthViewModel(get())
     }
 

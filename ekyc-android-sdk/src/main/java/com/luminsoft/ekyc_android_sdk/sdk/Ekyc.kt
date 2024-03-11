@@ -20,6 +20,7 @@ object Ekyc {
         environment: EkycEnvironment = EkycEnvironment.STAGING,
         localizationCode: LocalizationCode = LocalizationCode.EN,
         ekycCallback: EKYCCallback? = null,
+        googleApiKey: String? = ""
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -28,9 +29,10 @@ object Ekyc {
         EkycSdk.environment = environment
         EkycSdk.tenantSecret = tenantSecret
         EkycSdk.tenantId = tenantId
+        EkycSdk.googleApiKey = googleApiKey!!
         EkycSdk.localizationCode = localizationCode
-        EkycSdk.ekycCallback =ekycCallback
-        EkycSdk.ekycMode =ekycMode
+        EkycSdk.ekycCallback = ekycCallback
+        EkycSdk.ekycMode = ekycMode
     }
 
     fun launch(
@@ -40,13 +42,14 @@ object Ekyc {
             throw Exception("Invalid tenant id")
         if (EkycSdk.tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
-        setLocale(EkycSdk.localizationCode,activity)
+        setLocale(EkycSdk.localizationCode, activity)
         activity.startActivity(Intent(activity, EkycMainActivity::class.java))
     }
+
     private fun setLocale(lang: LocalizationCode, activity: Activity) {
-        val locale = if(lang != LocalizationCode.AR){
+        val locale = if (lang != LocalizationCode.AR) {
             Locale("en")
-        }else{
+        } else {
             Locale("ar")
         }
 
