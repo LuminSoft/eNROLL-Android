@@ -168,6 +168,8 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
                         intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                        intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                         startForBackResult.launch(intent)
                     },
                     textColor = MaterialTheme.colorScheme.primary,
@@ -203,6 +205,8 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
                             intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                             startForBackResult.launch(intent)
                         },
                         secondButtonText = stringResource(id = R.string.exit),
@@ -230,6 +234,7 @@ private fun TextItem(label: Int, value: String, icon: Int) {
     NormalTextField(label = ResourceProvider.instance.getStringResource(label),
         value = TextFieldValue(text = newValue),
         onValueChange = { },
+        height = 60.0,
         enabled = false,
         icon = {
             Image(

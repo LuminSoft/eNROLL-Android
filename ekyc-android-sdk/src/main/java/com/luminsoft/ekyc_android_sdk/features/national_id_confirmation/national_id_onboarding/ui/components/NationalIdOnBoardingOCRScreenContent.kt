@@ -155,9 +155,11 @@ private fun MainContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (frontNIApproved.value) {
+
             val intent =
                 Intent(activity.applicationContext, DocumentActivity::class.java)
             intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+            intent.putExtra("localCode", EkycSdk.localizationCode.name)
             startForBackResult.launch(intent)
             nationalIdFrontOcrViewModel.scanBack()
         }
@@ -196,6 +198,7 @@ private fun MainContent(
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
                             intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
                             startForResult.launch(intent)
                         },
                         secondButtonText = stringResource(id = R.string.exit),
@@ -211,8 +214,7 @@ private fun MainContent(
                     }
                 }
             }
-        }
-        else if (customerData.value != null) {
+        } else if (customerData.value != null) {
             if (customerData.value!!.fullNameEn != null)
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
@@ -232,6 +234,7 @@ private fun MainContent(
                     NormalTextField(
                         label = ResourceProvider.instance.getStringResource(R.string.nameEn),
                         value = userNameValue.value,
+                        height = 60.0,
                         icon = {
                             Image(
                                 painterResource(R.drawable.user_icon),
@@ -296,6 +299,7 @@ private fun MainContent(
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
                         intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                        intent.putExtra("localCode", EkycSdk.localizationCode.name)
                         startForResult.launch(intent)
                     },
                     textColor = MaterialTheme.colorScheme.primary,
@@ -324,6 +328,7 @@ private fun TextItem(label: Int, value: String, icon: Int) {
         value = TextFieldValue(text = value),
         onValueChange = { },
         enabled = false,
+        height = 60.0,
         icon = {
             Image(
                 painterResource(icon),
