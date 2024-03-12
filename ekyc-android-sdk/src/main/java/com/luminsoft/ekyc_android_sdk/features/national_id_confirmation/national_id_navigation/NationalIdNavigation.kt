@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingFrontConfirmationScreen
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingPrescanScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingPreScanScreen
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 
 const val nationalIdOnBoardingPreScanScreen = "nationalIdOnBoardingPreScanScreen"
@@ -24,7 +24,7 @@ fun NavGraphBuilder.nationalIdRouter(
 ) {
 
     composable(route = nationalIdOnBoardingPreScanScreen) {
-        NationalIdOnBoardingPrescanScreen(
+        NationalIdOnBoardingPreScanScreen(
             navController = navController,
             onBoardingViewModel = remember { onBoardingViewModel }
         )

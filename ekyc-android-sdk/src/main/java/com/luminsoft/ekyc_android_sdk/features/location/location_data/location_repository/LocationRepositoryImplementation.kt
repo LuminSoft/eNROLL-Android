@@ -2,21 +2,20 @@ package com.luminsoft.ekyc_android_sdk.features.location.location_data.location_
 
 
 import arrow.core.Either
+import arrow.core.raise.Null
 import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
-import com.luminsoft.ekyc_android_sdk.core.network.ApiBaseResponse
 import com.luminsoft.ekyc_android_sdk.core.network.BaseResponse
-import com.luminsoft.ekyc_android_sdk.features.location.location_data.location_models.get_token.GetCardsRequest
-import com.luminsoft.ekyc_android_sdk.features.location.location_data.location_models.get_token.TokenizedCardData
+import com.luminsoft.ekyc_android_sdk.features.location.location_data.location_models.get_token.PostLocationRequestModel
 
 import com.luminsoft.ekyc_android_sdk.features.location.location_domain.repository.LocationRepository
 import com.luminsoft.ekyc_android_sdk.features.location.location_data.location_remote_data_source.LocationRemoteDataSource
 
-class LocationRepositoryImplementation(private val locationRemoteDataSource: LocationRemoteDataSource):
+class LocationRepositoryImplementation(private val locationRemoteDataSource: LocationRemoteDataSource) :
     LocationRepository {
-    override suspend fun getCards(request: GetCardsRequest): Either<SdkFailure, ArrayList<TokenizedCardData>> {
-        return when (val response = locationRemoteDataSource.getCards(request)) {
+    override suspend fun postLocation(request: PostLocationRequestModel): Either<SdkFailure, Null> {
+        return when (val response = locationRemoteDataSource.postLocation(request)) {
             is BaseResponse.Success -> {
-                Either.Right((response.data as ApiBaseResponse<ArrayList<TokenizedCardData>>).data)
+                Either.Right(null)
             }
 
             is BaseResponse.Error -> {

@@ -1,12 +1,11 @@
-@file:Suppress("DEPRECATION")
-
 package com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.ui.components
 
 import android.Manifest
-import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Looper
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -28,10 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,23 +40,22 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
+import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
+import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk.googleApiKey
+import com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.view_model.LocationDetails
 import com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
+import com.luminsoft.ekyc_android_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.ekyc_android_sdk.ui_components.components.ButtonView
+import com.luminsoft.ekyc_android_sdk.ui_components.components.DialogView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.EkycItemView
+import com.luminsoft.ekyc_android_sdk.ui_components.components.LoadingView
 import org.koin.androidx.compose.koinViewModel
 
-
-var fusedLocationClient: FusedLocationProviderClient? = null
-private var locationCallback: LocationCallback? = null
 
 @Composable
 fun LocationOnBoardingScreenContent(
@@ -71,21 +65,11 @@ fun LocationOnBoardingScreenContent(
     val context = LocalContext.current
     val activity = context.findActivity()
     val gotLocation = locationOnBoardingViewModel.gotLocation.collectAsState()
-    var currentLocation by remember {
-        mutableStateOf(LocationDetails(0.toDouble(), 0.toDouble()))
-    }
+    val loading = locationOnBoardingViewModel.loading.collectAsState()
+    val failure = locationOnBoardingViewModel.failure.collectAsState()
+    val currentLocation = locationOnBoardingViewModel.currentLocation.collectAsState()
 
-    fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
-    locationCallback = object : LocationCallback() {
-        override fun onLocationResult(p0: LocationResult) {
-            for (lo in p0.locations) {
-                // Update UI with location data
-                currentLocation = LocationDetails(lo.latitude, lo.longitude)
-                locationCallback?.let { fusedLocationClient?.removeLocationUpdates(it) }
 
-            }
-        }
-    }
 
 
     BackGroundView(navController = navController, showAppBar = false) {
@@ -97,7 +81,7 @@ fun LocationOnBoardingScreenContent(
             val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
             if (areGranted) {
 //                    locationRequired = true
-                startLocationUpdates()
+                locationOnBoardingViewModel.startLocationUpdates()
                 Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
@@ -107,48 +91,105 @@ fun LocationOnBoardingScreenContent(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-        if (!gotLocation.value) Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-        ) {
-            EkycItemView(R.drawable.step_00_location, R.string.getLocationText)
-            ButtonView(
-                onClick = {
-                    if (permissions.all {
-                            ContextCompat.checkSelfPermission(
-                                context,
-                                it
-                            ) == PackageManager.PERMISSION_GRANTED
-                        }) {
-                        // Get the location
-                        startLocationUpdates()
-                        locationOnBoardingViewModel.gotLocation.value = true
-                    } else {
-                        launcherMultiplePermissions.launch(permissions)
+        if (loading.value) LoadingView()
+        else if (!failure.value?.message.isNullOrEmpty()) {
+            if (failure.value is AuthFailure) {
+                failure.value?.let {
+                    DialogView(
+                        bottomSheetStatus = BottomSheetStatus.ERROR,
+                        text = it.message,
+                        buttonText = stringResource(id = R.string.exit),
+                        onPressedButton = {
+                            activity.finish()
+                            EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+
+                        },
+                    ) {
+                        activity.finish()
+                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+
                     }
-                },
-                stringResource(id = R.string.start),
-                modifier = Modifier.padding(horizontal = 20.dp),
-            )
-            Spacer(
-                modifier = Modifier
-                    .safeContentPadding()
-                    .height(10.dp)
-            )
+                }
+            } else {
+                failure.value?.let {
+                    DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                        text = it.message,
+                        buttonText = stringResource(id = R.string.retry),
+                        onPressedButton = {
+                            locationOnBoardingViewModel.callPostLocation()
+                        },
+                        secondButtonText = stringResource(id = R.string.exit),
+                        onPressedSecondButton = {
+                            activity.finish()
+                            EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
 
-
-        }
+                        }) {
+                        activity.finish()
+                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+                    }
+                }
+            }
+        } else if (!gotLocation.value)
+            RequestLocation(
+                permissions,
+                context,
+                locationOnBoardingViewModel,
+                launcherMultiplePermissions,
+                activity
+            )
         else
-            GotLocation(currentLocation)
+            GotLocation(currentLocation.value!!, locationOnBoardingViewModel)
     }
 
 }
 
 @Composable
-private fun GotLocation(currentLocation: LocationDetails) {
+private fun RequestLocation(
+    permissions: Array<String>,
+    context: Context,
+    locationOnBoardingViewModel: LocationOnBoardingViewModel,
+    launcherMultiplePermissions: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
+    activity: Activity
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+    ) {
+        EkycItemView(R.drawable.step_00_location, R.string.getLocationText)
+        ButtonView(
+            onClick = {
+                if (permissions.all {
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            it
+                        ) == PackageManager.PERMISSION_GRANTED
+                    }) {
+                    locationOnBoardingViewModel.requestLocation(activity = activity)
+                } else {
+                    launcherMultiplePermissions.launch(permissions)
+                }
+            },
+            stringResource(id = R.string.start),
+            modifier = Modifier.padding(horizontal = 20.dp),
+        )
+        Spacer(
+            modifier = Modifier
+                .safeContentPadding()
+                .height(10.dp)
+        )
+
+
+    }
+}
+
+@Composable
+private fun GotLocation(
+    currentLocation: LocationDetails,
+    locationOnBoardingViewModel: LocationOnBoardingViewModel
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -219,7 +260,7 @@ private fun GotLocation(currentLocation: LocationDetails) {
 
         ButtonView(
             onClick = {
-
+                locationOnBoardingViewModel.callPostLocation()
             },
             stringResource(id = R.string.continue_to_next),
             modifier = Modifier.padding(horizontal = 20.dp),
@@ -234,20 +275,4 @@ private fun GotLocation(currentLocation: LocationDetails) {
     }
 }
 
-@SuppressLint("MissingPermission")
-fun startLocationUpdates() {
-    locationCallback?.let {
-        val locationRequest = LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-        fusedLocationClient?.requestLocationUpdates(
-            locationRequest,
-            it,
-            Looper.getMainLooper()
-        )
-    }
-}
 
-data class LocationDetails(val latitude: Double, val longitude: Double)
