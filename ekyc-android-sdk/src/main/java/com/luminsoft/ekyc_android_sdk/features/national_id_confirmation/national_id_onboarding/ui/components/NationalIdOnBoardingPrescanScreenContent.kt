@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
@@ -138,6 +139,8 @@ private fun NationalIdOnly(
             onClick = {
                 val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
                 intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                 startForResult.launch(intent)
             },
             stringResource(id = R.string.start),
@@ -168,6 +171,8 @@ private fun PassportOnly(
             onClick = {
                 val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
                 intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                 startForResult.launch(intent)
             },
             stringResource(id = R.string.start),

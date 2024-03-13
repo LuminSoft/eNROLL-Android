@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
@@ -153,21 +154,29 @@ fun NationalIdOnBoardingErrorScreen(
                     when (scanType.value) {
                         FRONT -> {
                             intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                             startForResult.launch(intent)
                         }
 
                         Back -> {
                             intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                             startForBackResult.launch(intent)
                         }
 
                         PASSPORT -> {
                             intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                             startPassportForResult.launch(intent)
                         }
 
                         null -> {
                             intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
                             startForResult.launch(intent)
                         }
                     }

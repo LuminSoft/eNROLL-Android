@@ -144,6 +144,7 @@ fun SettingPasswordOnBoardingScreenContent(
                     value = password.value,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     onValueChange = { password.value = it },
+                    height = 60.0,
                     trailingIcon = {
                         val imageResource = if (passwordVisible)
                             R.drawable.visibility_icon
@@ -179,6 +180,7 @@ fun SettingPasswordOnBoardingScreenContent(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
                     ),
+                    height = 60.0,
                     trailingIcon = {
                         val imageResource = if (rePasswordVisible)
                             R.drawable.visibility_icon
