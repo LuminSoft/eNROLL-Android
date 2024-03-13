@@ -8,5 +8,5 @@ import retrofit2.http.*
 
 interface LocationApi {
     @POST("/api/v1/onboarding/LocationInfo")
-    suspend fun postLocation(@Body request: PostLocationRequestModel): Response<Any>
+    suspend fun postLocation(@Body request: PostLocationRequestModel): Response<String>
 }
