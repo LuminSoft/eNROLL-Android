@@ -3,10 +3,9 @@ package com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.ekyc_android_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
 import com.luminsoft.ekyc_android_sdk.features.email.email_navigation.emailOnBoardingPrescanScreenContent
-import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPrescanScreenContent
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPreScanScreenContent
 import com.luminsoft.ekyc_android_sdk.features.location.location_navigation.locationOnBoardingScreenContent
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPrescanScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.ekyc_android_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.ekyc_android_sdk.features.setting_password.password_navigation.settingPasswordOnBoardingScreenContent
@@ -39,8 +38,8 @@ data class StepModel(
 
     fun stepNameNavigator(): String {
         return when (this.registrationStepId) {
-            1 -> nationalIdOnBoardingPrescanScreen
-            2 -> faceCaptureBoardingPrescanScreenContent
+            1 -> nationalIdOnBoardingPreScanScreen
+            2 -> faceCaptureBoardingPreScanScreenContent
             3 -> phoneNumbersOnBoardingScreenContent
             4 -> emailOnBoardingPrescanScreenContent
             5 -> deviceDataOnBoardingPrescanScreenContent
@@ -48,7 +47,7 @@ data class StepModel(
             7 -> securityQuestionsOnBoardingScreenContent
             8 -> settingPasswordOnBoardingScreenContent
             else -> {
-                nationalIdOnBoardingPrescanScreen
+                nationalIdOnBoardingPreScanScreen
             }
         }
     }
@@ -68,15 +67,15 @@ enum class EkycStepType {
 
     fun getRouteId(): String {
         return when (this) {
-            EkycStepType.PersonalConfirmation -> nationalIdOnBoardingPrescanScreen
-            EkycStepType.SmileLiveness -> faceCaptureBoardingPrescanScreenContent
+            EkycStepType.PersonalConfirmation -> nationalIdOnBoardingPreScanScreen
+            EkycStepType.SmileLiveness -> faceCaptureBoardingPreScanScreenContent
             EkycStepType.PhoneOtp -> phoneNumbersOnBoardingScreenContent
             EkycStepType.EmailOtp -> emailOnBoardingPrescanScreenContent
             EkycStepType.DeviceLocation -> deviceDataOnBoardingPrescanScreenContent
             EkycStepType.SecurityQuestions -> securityQuestionsOnBoardingScreenContent
             EkycStepType.SettingPassword -> settingPasswordOnBoardingScreenContent
             else -> {
-                nationalIdOnBoardingPrescanScreen
+                nationalIdOnBoardingPreScanScreen
             }
         }
     }

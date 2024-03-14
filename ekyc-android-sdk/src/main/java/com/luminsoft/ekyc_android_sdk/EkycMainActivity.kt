@@ -62,22 +62,23 @@ class EkycMainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
 
         setContent {
-            val onBoardingViewModel:OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
+            val onBoardingViewModel: OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
             val navController = rememberNavController()
-            EKYCsDKTheme (dynamicColor = false){
+            EKYCsDKTheme(dynamicColor = false) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()
                 ) {
-                    mainRouter(navController = navController,onBoardingViewModel)
-                    nationalIdRouter(navController = navController,onBoardingViewModel)
+                    mainRouter(navController = navController, onBoardingViewModel)
+                    nationalIdRouter(navController = navController, onBoardingViewModel)
                     deviceDataRouter(navController = navController)
                     emailRouter(navController = navController)
-                    faceCaptureRouter(navController = navController)
+                    faceCaptureRouter(navController = navController, onBoardingViewModel)
                     locationRouter(navController = navController)
                     phoneNumberRouter(navController = navController)
                     securityQuestionsRouter(navController = navController)

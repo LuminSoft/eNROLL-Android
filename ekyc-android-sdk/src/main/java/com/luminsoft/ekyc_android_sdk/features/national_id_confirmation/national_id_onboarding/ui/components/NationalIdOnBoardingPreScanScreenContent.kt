@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @Composable
-fun NationalIdOnBoardingPrescanScreen(
+fun NationalIdOnBoardingPreScanScreen(
     navController: NavController,
     onBoardingViewModel: OnBoardingViewModel
 ) {
