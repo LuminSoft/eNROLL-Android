@@ -214,7 +214,8 @@ private fun MainContent(
                     }
                 }
             }
-        } else if (customerData.value != null) {
+        }
+        else if (customerData.value != null) {
             if (customerData.value!!.fullNameEn != null)
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
