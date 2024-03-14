@@ -1,10 +1,14 @@
 package com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_domain.repository
 
 import arrow.core.Either
+import arrow.core.raise.Null
 import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
-import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_data.face_capture_models.get_token.GetCardsRequest
-import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_data.face_capture_models.get_token.TokenizedCardData
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_data.face_capture_models.SelfieImageApproveRequestModel
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_data.face_capture_models.UploadSelfieData
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_data.face_capture_models.UploadSelfieRequestModel
 
 interface FaceCaptureRepository {
-     suspend fun getCards (request: GetCardsRequest): Either<SdkFailure, ArrayList<TokenizedCardData>>
+     suspend fun faceCaptureUploadSelfie(request: UploadSelfieRequestModel): Either<SdkFailure, UploadSelfieData>
+     suspend fun selfieImageApprove(request: SelfieImageApproveRequestModel): Either<SdkFailure, Null>
+
 }

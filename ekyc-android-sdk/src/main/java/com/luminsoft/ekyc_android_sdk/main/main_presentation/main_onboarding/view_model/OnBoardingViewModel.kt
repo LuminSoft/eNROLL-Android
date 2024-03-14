@@ -40,6 +40,7 @@ class OnBoardingViewModel(
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var currentStepId: MutableStateFlow<Int?> = MutableStateFlow(null)

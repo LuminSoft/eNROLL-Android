@@ -81,7 +81,7 @@ object DotHelper {
 
     }
 
-    private fun getThumbnail(uri: Uri?, activity: Activity): Bitmap {
+     fun getThumbnail(uri: Uri?, activity: Activity): Bitmap {
         val THUMBNAIL_SIZE = 150.0;
         var input: InputStream? = activity.contentResolver.openInputStream(uri!!)
         val onlyBoundsOptions: BitmapFactory.Options = BitmapFactory.Options()

@@ -1,6 +1,5 @@
 package com.luminsoft.ekyc_android_sdk
 
-
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -78,6 +77,7 @@ class EkycMainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             EKYCsDKTheme(dynamicColor = false) {
+            EKYCsDKTheme(dynamicColor = false) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()
@@ -93,10 +93,8 @@ class EkycMainActivity : ComponentActivity() {
                     settingPasswordRouter(navController = navController)
                 }
             }
-
         }
     }
-
 
     private fun getKoin(activity: ComponentActivity): Koin {
         return if (activity is KoinComponent) {
@@ -132,5 +130,4 @@ class EkycMainActivity : ComponentActivity() {
             }
         }
     }
-
 }
