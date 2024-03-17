@@ -39,9 +39,9 @@ class OnBoardingViewModel(
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var currentStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
     var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -50,12 +50,12 @@ class OnBoardingViewModel(
     fun initRequest() {
         loading.value = true
         ui {
-            val udid: String = UUID.randomUUID().toString()
+            val uuid: String = UUID.randomUUID().toString()
             val manufacturer: String = Build.MANUFACTURER
             val deviceModel: String = Build.MODEL
 
             params.value = InitializeRequestUsecaseParams(
-                udid,
+                uuid,
                 manufacturer,
                 deviceModel
             )
@@ -69,7 +69,7 @@ class OnBoardingViewModel(
                 },
                 {
                     loading.value = false
-//                    navController.navigate(nationalIdOnBoardingPrescanScreen)
+//                    navController!!.navigate(nationalIdOnBoardingPreScanScreen)
                     navigateToNextStep()
                 })
 
@@ -122,11 +122,11 @@ class OnBoardingViewModel(
 
     }
 
-    fun removeCurrentStep() {
+    fun removeCurrentStep(id: Int) {
         if (steps.value != null) {
             val stepsSize = steps.value!!.size
             steps.value = steps.value!!.toMutableList().apply {
-                removeIf { x -> x.registrationStepId == currentStepId.value }
+                removeIf { x -> x.registrationStepId == id}
             }.toList()
             val newStepsSize = steps.value!!.size
             if (stepsSize != newStepsSize)

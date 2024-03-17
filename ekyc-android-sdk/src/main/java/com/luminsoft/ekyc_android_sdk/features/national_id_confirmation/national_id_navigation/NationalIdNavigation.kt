@@ -7,10 +7,10 @@ import androidx.navigation.compose.composable
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingFrontConfirmationScreen
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingPrescanScreen
+import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingPreScanScreen
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 
-const val nationalIdOnBoardingPrescanScreen = "nationalIdOnBoardingPrescanScreen"
+const val nationalIdOnBoardingPreScanScreen = "nationalIdOnBoardingPreScanScreen"
 const val nationalIdOnBoardingFrontConfirmationScreen =
     "nationalIdOnBoardingFrontConfirmationScreen"
 const val nationalIdOnBoardingBackConfirmationScreen =
@@ -18,27 +18,13 @@ const val nationalIdOnBoardingBackConfirmationScreen =
 const val nationalIdOnBoardingErrorScreen =
     "nationalIdOnBoardingErrorScreen"
 
-/*
-fun NavController.navigateToNationalIdConfirmation(navOptions: NavOptions? = null) {
-    this.navigate(nationalIdOnBoardingPrescanScreen, navOptions)
-}
-
-fun NavController.nationalIdOnBoardingFrontConfirmationScreen(navOptions: NavOptions? = null) {
-    this.navigate(nationalIdOnBoardingFrontConfirmationScreen, navOptions)
-}
-
-fun NavController.nationalIdOnBoardingBackConfirmationScreen(navOptions: NavOptions? = null) {
-    this.navigate(nationalIdOnBoardingBackConfirmationScreen, navOptions)
-}
-*/
-
 fun NavGraphBuilder.nationalIdRouter(
     navController: NavController,
     onBoardingViewModel: OnBoardingViewModel
 ) {
 
-    composable(route = nationalIdOnBoardingPrescanScreen) {
-        NationalIdOnBoardingPrescanScreen(
+    composable(route = nationalIdOnBoardingPreScanScreen) {
+        NationalIdOnBoardingPreScanScreen(
             navController = navController,
             onBoardingViewModel = remember { onBoardingViewModel }
         )

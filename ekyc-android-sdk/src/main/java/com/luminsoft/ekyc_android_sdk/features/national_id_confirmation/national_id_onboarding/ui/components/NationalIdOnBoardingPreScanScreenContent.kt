@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @Composable
-fun NationalIdOnBoardingPrescanScreen(
+fun NationalIdOnBoardingPreScanScreen(
     navController: NavController,
     onBoardingViewModel: OnBoardingViewModel
 ) {
@@ -86,8 +86,6 @@ fun NationalIdOnBoardingPrescanScreen(
         }
 
     BackGroundView(navController = navController, showAppBar = false) {
-
-        onBoardingViewModel.currentStepId = MutableStateFlow(1)
 
         for (i in organizationRegStepSettings(rememberedViewModel)) {
             when (i.parseRegistrationStepSetting()) {

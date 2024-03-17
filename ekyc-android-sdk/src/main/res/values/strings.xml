@@ -200,8 +200,8 @@
     <string name="choosePersonalConfirmation">Choose personal confirmation method</string>
     <string name="nationalId">National Id</string>
     <string name="passport">Passport</string>
-    <string name="latitude">Latitude:</string>
-    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude: %1$s</string>
+    <string name="longitude">Longitude: %1$s</string>
     <string name="locationSuccessText">Location accessed successfully</string>
     <string name="getLocationText">we are going to grab your current location please click on grab location</string>
     <string name="locationAccessErrorText">You must allow the location and your application wouldn\'t be completed without your location, in-order to allow go to application permission and allow location.</string>
@@ -260,6 +260,4 @@
     <string name="dot_face_auto_capture_instruction_yaw_too_left">Look right</string>
     <string name="dot_face_auto_capture_instruction_yaw_too_right">Look left</string>
     <string name="reScan">Rescan</string>
-    <string name="preference_file_key">preference_file_key</string>
-    <string name="preference_customer_key">preference_customer_key</string>
 </resources>

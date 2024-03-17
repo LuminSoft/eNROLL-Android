@@ -38,12 +38,13 @@ import io.github.cdimascio.dotenv.dotenv
 import java.util.Locale
 import java.util.Random
 
-val dotenv = dotenv {
+var dotenv = dotenv {
     directory = "/assets"
     filename = "env"
 }
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
 var tenantSecret = mutableStateOf(TextFieldValue(text = dotenv["TENANT_SECRET"]))
+var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
 var isArabic = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
@@ -55,14 +56,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activity = LocalContext.current as Activity
             NewcowpayTheme {
-                Column(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 15.dp), verticalArrangement = Arrangement.SpaceBetween) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 15.dp), verticalArrangement = Arrangement.SpaceBetween
+                ) {
                     Column {
                         Spacer(modifier = Modifier.height(20.dp))
                         NormalTextField(
                             label = "Tenant Id",
-                            value =tenantId.value,
+                            value = tenantId.value,
                             onValueChange = {
                                 tenantId.value = it
                             })
@@ -107,9 +110,9 @@ class MainActivity : ComponentActivity() {
                             )
 
                         Button(
-                            border=border,
-                            modifier=modifier,
-                            onClick =  {
+                            border = border,
+                            modifier = modifier,
+                            onClick = {
                                 try {
                                     Ekyc.init(
                                         tenantId.value.text,
@@ -130,6 +133,7 @@ class MainActivity : ComponentActivity() {
 
                                         },
                                         localizationCode = LocalizationCode.EN,
+                                        googleApiKey = googleApiKey.value
                                     )
                                 } catch (e: Exception) {
                                     Log.e("error", e.toString())
@@ -153,9 +157,9 @@ class MainActivity : ComponentActivity() {
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                         Button(
-                            border=border,
-                            modifier=modifier,
-                            onClick =  {
+                            border = border,
+                            modifier = modifier,
+                            onClick = {
                                 try {
                                     Ekyc.init(
                                         tenantId.value.text,
@@ -183,6 +187,7 @@ class MainActivity : ComponentActivity() {
 
                                         },
                                         localizationCode = LocalizationCode.AR,
+                                        googleApiKey = googleApiKey.value
                                     )
                                 } catch (e: Exception) {
                                     Log.e("error", e.toString())
