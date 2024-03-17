@@ -41,7 +41,6 @@ import com.luminsoft.ekyc_android_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.ekyc_android_sdk.ui_components.components.ButtonView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.DialogView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.SpinKitLoadingIndicator
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.compose.koinInject
 
 
@@ -118,8 +117,6 @@ private fun MainContent(
     val failure = faceCaptureViewModel.failure.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = false) {
-
-        onBoardingViewModel.currentStepId = MutableStateFlow(1)
 
         if (loading.value)
             Column(

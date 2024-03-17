@@ -64,19 +64,19 @@ enum class EkycStepType {
     SecurityQuestions,
     SettingPassword;
 
-
-    fun getRouteId(): String {
-        return when (this) {
-            EkycStepType.PersonalConfirmation -> nationalIdOnBoardingPreScanScreen
-            EkycStepType.SmileLiveness -> faceCaptureBoardingPrescanScreenContent
-            EkycStepType.PhoneOtp -> phoneNumbersOnBoardingScreenContent
-            EkycStepType.EmailOtp -> emailOnBoardingPrescanScreenContent
-            EkycStepType.DeviceLocation -> deviceDataOnBoardingPrescanScreenContent
-            EkycStepType.SecurityQuestions -> securityQuestionsOnBoardingScreenContent
-            EkycStepType.SettingPassword -> settingPasswordOnBoardingScreenContent
-            else -> {
-                nationalIdOnBoardingPreScanScreen
-            }
-        }
-    }
+//
+//    fun getRouteId(): String {
+//        return when (this) {
+//            EkycStepType.PersonalConfirmation -> nationalIdOnBoardingPreScanScreen
+//            EkycStepType.SmileLiveness -> faceCaptureBoardingPrescanScreenContent
+//            EkycStepType.PhoneOtp -> phoneNumbersOnBoardingScreenContent
+//            EkycStepType.EmailOtp -> emailOnBoardingPrescanScreenContent
+//            EkycStepType.DeviceLocation -> deviceDataOnBoardingPrescanScreenContent
+//            EkycStepType.SecurityQuestions -> securityQuestionsOnBoardingScreenContent
+//            EkycStepType.SettingPassword -> settingPasswordOnBoardingScreenContent
+//            else -> {
+//                nationalIdOnBoardingPreScanScreen
+//            }
+//        }
+//    }
 }

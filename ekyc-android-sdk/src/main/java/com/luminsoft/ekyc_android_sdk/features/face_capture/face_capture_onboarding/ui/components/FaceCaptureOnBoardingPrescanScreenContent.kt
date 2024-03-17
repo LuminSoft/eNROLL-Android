@@ -20,20 +20,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
-import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPostScanScreenContent
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.ekyc_android_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.ekyc_android_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.ekyc_android_sdk.innovitices.core.DotHelper
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.ButtonView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.EkycItemView
-import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @Composable
@@ -66,8 +62,6 @@ fun FaceCaptureBoardingPreScanScreenContent(
         }
 
     BackGroundView(navController = navController, showAppBar = false) {
-
-        onBoardingViewModel.currentStepId = MutableStateFlow(1)
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

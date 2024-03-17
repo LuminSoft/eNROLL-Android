@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,46 +45,57 @@ import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
 import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk.googleApiKey
+import com.luminsoft.ekyc_android_sdk.features.location.location_domain.usecases.PostLocationUseCase
 import com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.view_model.LocationDetails
 import com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.ekyc_android_sdk.ui_components.components.ButtonView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.DialogView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.EkycItemView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.LoadingView
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 
 @Composable
 fun LocationOnBoardingScreenContent(
-    locationOnBoardingViewModel: LocationOnBoardingViewModel = koinViewModel(),
+    onBoardingViewModel: OnBoardingViewModel,
     navController: NavController,
 ) {
+
+    val postLocationUseCase =
+        PostLocationUseCase(koinInject())
+
+    val locationOnBoardingViewModel =
+        remember {
+            LocationOnBoardingViewModel(
+                postLocationUseCase = postLocationUseCase
+            )
+        }
+    val locationOnBoardingVM = remember { locationOnBoardingViewModel }
+
+
     val context = LocalContext.current
     val activity = context.findActivity()
     val gotLocation = locationOnBoardingViewModel.gotLocation.collectAsState()
     val loading = locationOnBoardingViewModel.loading.collectAsState()
     val failure = locationOnBoardingViewModel.failure.collectAsState()
     val currentLocation = locationOnBoardingViewModel.currentLocation.collectAsState()
-
-
+    val locationSent = locationOnBoardingVM.locationSent.collectAsState()
 
 
     BackGroundView(navController = navController, showAppBar = false) {
-
-//        locationOnBoardingViewModel.currentStepId = MutableStateFlow(1)
+        if (locationSent.value) {
+            onBoardingViewModel.removeCurrentStep(6)
+        }
         val launcherMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissionsMap ->
             val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
             if (areGranted) {
-//                    locationRequired = true
                 locationOnBoardingViewModel.startLocationUpdates()
-                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
         val permissions = arrayOf(
@@ -151,6 +162,7 @@ private fun RequestLocation(
     launcherMultiplePermissions: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
     activity: Activity
 ) {
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
@@ -200,9 +212,10 @@ private fun GotLocation(
         Spacer(modifier = Modifier.fillMaxHeight(0.15f))
 
         if (googleApiKey.isNotEmpty()) Image(
-            painter = rememberAsyncImagePainter("https://maps.googleapis.com/maps/api/staticmap?center=&${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=1200x400&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"),
+            painter = rememberAsyncImagePainter("https://maps.googleapis.com/maps/api/staticmap?center=&${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"),
             contentDescription = null,
-            modifier = Modifier.fillMaxWidth(1f)
+            Modifier.size(400.dp, 200.dp)
+
         )
         else
             Image(

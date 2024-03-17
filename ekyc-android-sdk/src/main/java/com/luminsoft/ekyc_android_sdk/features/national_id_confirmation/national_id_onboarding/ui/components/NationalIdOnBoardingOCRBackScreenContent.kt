@@ -105,7 +105,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (backNIApproved.value) {
-            onBoardingViewModel.removeCurrentStep()
+            onBoardingViewModel.removeCurrentStep(1)
         }
 
         if (loading.value) Column(

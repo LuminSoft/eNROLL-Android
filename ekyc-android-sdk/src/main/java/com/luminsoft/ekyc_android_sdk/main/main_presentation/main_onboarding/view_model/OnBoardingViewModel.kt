@@ -11,7 +11,6 @@ import com.luminsoft.ekyc_android_sdk.core.network.RetroClient
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ui
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
-import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.ekyc_android_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.ekyc_android_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
@@ -43,7 +42,6 @@ class OnBoardingViewModel(
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var currentStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
     var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -52,12 +50,12 @@ class OnBoardingViewModel(
     fun initRequest() {
         loading.value = true
         ui {
-            val udid: String = UUID.randomUUID().toString()
+            val uuid: String = UUID.randomUUID().toString()
             val manufacturer: String = Build.MANUFACTURER
             val deviceModel: String = Build.MODEL
 
             params.value = InitializeRequestUsecaseParams(
-                udid,
+                uuid,
                 manufacturer,
                 deviceModel
             )
@@ -124,11 +122,11 @@ class OnBoardingViewModel(
 
     }
 
-    fun removeCurrentStep() {
+    fun removeCurrentStep(id: Int) {
         if (steps.value != null) {
             val stepsSize = steps.value!!.size
             steps.value = steps.value!!.toMutableList().apply {
-                removeIf { x -> x.registrationStepId == currentStepId.value }
+                removeIf { x -> x.registrationStepId == id}
             }.toList()
             val newStepsSize = steps.value!!.size
             if (stepsSize != newStepsSize)

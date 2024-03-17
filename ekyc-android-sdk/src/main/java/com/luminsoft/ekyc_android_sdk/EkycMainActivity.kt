@@ -49,7 +49,6 @@ import org.koin.core.context.startKoin
 @Suppress("DEPRECATION")
 class EkycMainActivity : ComponentActivity() {
     val onBoardingViewModel: OnBoardingViewModel by viewModel()
-    val locationOnBoardingViewModel: LocationOnBoardingViewModel by viewModel()
     val authViewModel: AuthViewModel by viewModel()
 
     private fun setupServices() {
@@ -72,11 +71,9 @@ class EkycMainActivity : ComponentActivity() {
 
         setContent {
             val onBoardingViewModel: OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
-            val locationOnBoardingViewModel: LocationOnBoardingViewModel =
-                koinViewModel<LocationOnBoardingViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(dynamicColor = false) {
+
             EKYCsDKTheme(dynamicColor = false) {
                 NavHost(
                     navController = navController,
@@ -86,8 +83,11 @@ class EkycMainActivity : ComponentActivity() {
                     nationalIdRouter(navController = navController, onBoardingViewModel)
                     deviceDataRouter(navController = navController)
                     emailRouter(navController = navController)
-                    faceCaptureRouter(navController = navController)
-                    locationRouter(navController = navController, locationOnBoardingViewModel)
+                    faceCaptureRouter(navController = navController, onBoardingViewModel)
+                    locationRouter(
+                        navController = navController,
+                        onBoardingViewModel
+                    )
                     phoneNumberRouter(navController = navController)
                     securityQuestionsRouter(navController = navController)
                     settingPasswordRouter(navController = navController)
