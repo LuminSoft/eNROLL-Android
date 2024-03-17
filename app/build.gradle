@@ -11,8 +11,8 @@ android {
         applicationId "com.innovitics.azinvest"
         minSdk 24
         targetSdk 33
-        versionCode 3
-        versionName "1.0.02"
+        versionCode 4
+        versionName "1.0.03"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

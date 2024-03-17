@@ -115,8 +115,13 @@ private fun MainContent(
     val loading = faceCaptureViewModel.loading.collectAsState()
     val uploadSelfieData = faceCaptureViewModel.uploadSelfieData.collectAsState()
     val failure = faceCaptureViewModel.failure.collectAsState()
+    val selfieImageApproved = faceCaptureViewModel.selfieImageApproved.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = false) {
+
+        if (selfieImageApproved.value) {
+            onBoardingViewModel.removeCurrentStep(2)
+        }
 
         if (loading.value)
             Column(
