@@ -205,7 +205,7 @@
     <string name="longitude">خط العرض: %1$s</string>
     <string name="locationSuccessText">لقد تم تسجيل موقعك الحالي</string>
     <string name="getLocationText">لاكمال عملية التسجيل سوف نحتاج الموقع الحالي ، يرجى النقر على الحصول على الموقع</string>
-    <string name="locationAccessErrorText">يجب أن تسمح بالموقع ولن تكتمل تطبيقك بدون موقعك ، من أجل السماح بالانتقال إلى الصلاحيات التطبيق والسماح بالموقع.</string>
+    <string name="locationAccessErrorText">يجب أن تسمح بالموقع ولن تكتمل تطبيقك بدون موقعك ، من أجل السماح بالانتقال إلى صلاحيات التطبيق والسماح بالموقع.</string>
     <string name="getLocationButtonText">الحصول على الموقع</string>
     <string name="retry">اعادة محاولة</string>
     <string name="navigation_destination_document_auto_capture">Document Auto Capture</string>
