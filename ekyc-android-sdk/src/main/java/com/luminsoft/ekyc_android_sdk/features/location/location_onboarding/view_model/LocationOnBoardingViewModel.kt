@@ -28,6 +28,7 @@ class LocationOnBoardingViewModel(
 
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var gotLocation: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var permissionDenied: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var currentLocation: MutableStateFlow<LocationDetails?> = MutableStateFlow(null)
 
     var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)

@@ -3,7 +3,11 @@ package com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.ui.
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -84,6 +88,7 @@ fun LocationOnBoardingScreenContent(
     val failure = locationOnBoardingViewModel.failure.collectAsState()
     val currentLocation = locationOnBoardingViewModel.currentLocation.collectAsState()
     val locationSent = locationOnBoardingVM.locationSent.collectAsState()
+    val permissionDenied = locationOnBoardingVM.permissionDenied.collectAsState()
 
 
     BackGroundView(navController = navController, showAppBar = false) {
@@ -95,7 +100,11 @@ fun LocationOnBoardingScreenContent(
         ) { permissionsMap ->
             val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
             if (areGranted) {
+                locationOnBoardingVM.permissionDenied.value = false
                 locationOnBoardingViewModel.startLocationUpdates()
+            } else {
+                locationOnBoardingVM.permissionDenied.value = true
+                Log.d("permissionsMap", "denied")
             }
         }
         val permissions = arrayOf(
@@ -140,6 +149,14 @@ fun LocationOnBoardingScreenContent(
                     }
                 }
             }
+        } else if (permissionDenied.value) {
+            PermissionDenied(
+                permissions,
+                context,
+                locationOnBoardingViewModel,
+                launcherMultiplePermissions,
+                activity,
+            )
         } else if (!gotLocation.value)
             RequestLocation(
                 permissions,
@@ -195,6 +212,65 @@ private fun RequestLocation(
 
 
     }
+}
+
+@Composable
+private fun PermissionDenied(
+    permissions: Array<String>,
+    context: Context,
+    locationOnBoardingViewModel: LocationOnBoardingViewModel,
+    launcherMultiplePermissions: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
+    activity: Activity
+) {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+    ) {
+        EkycItemView(R.drawable.invalid_location_permission, R.string.locationAccessErrorText)
+        ButtonView(
+            onClick = {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", context.packageName, null)
+                intent.data = uri
+                activity.startActivity(intent)
+
+            },
+            stringResource(id = R.string.settings),
+            color = Color.White,
+            borderColor = MaterialTheme.colorScheme.primary,
+            textColor = MaterialTheme.colorScheme.primary
+        )
+
+        ButtonView(
+            onClick = {
+                if (permissions.all {
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            it
+                        ) == PackageManager.PERMISSION_GRANTED
+                    }) {
+                    locationOnBoardingViewModel.permissionDenied.value = false
+                    locationOnBoardingViewModel.requestLocation(activity = activity)
+                } else {
+                    launcherMultiplePermissions.launch(permissions)
+                }
+            },
+            stringResource(id = R.string.getLocationButtonText),
+            modifier = Modifier.padding(horizontal = 20.dp),
+        )
+        Spacer(
+            modifier = Modifier
+                .safeContentPadding()
+                .height(10.dp)
+        )
+
+
+    }
+
 }
 
 @Composable
