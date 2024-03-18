@@ -47,15 +47,13 @@ class FaceCaptureOnBoardingPostScanViewModel(
 
             response.fold(
                 {
-                    failure.value = it
+                    uploadSelfieData.value = UploadSelfieData(photoMatched = false)
                     loading.value = false
                 },
                 { s ->
                     s.let { it1 ->
                         uploadSelfieData.value = it1
                         loading.value = false
-                        Log.e("uploadSelfieData", uploadSelfieData.toString())
-
                     }
                 })
         }

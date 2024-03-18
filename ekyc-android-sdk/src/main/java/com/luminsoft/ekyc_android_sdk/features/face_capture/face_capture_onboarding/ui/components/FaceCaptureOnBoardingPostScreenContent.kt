@@ -42,7 +42,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
@@ -214,19 +216,21 @@ private fun MainContent(
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
                 ) {
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+
+                    ErrorAnimationExtracted(faceImage, position, smileImage, position1)
+                    Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+                    androidx.compose.material3.Text(
+                        text = stringResource(id = R.string.facesNotMatch),
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+
                     ButtonView(
                         onClick = {
-                            val intent =
-                                Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
-                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
-                            startForResult.launch(intent)
+                            faceCaptureViewModel.callApproveSelfieImage()
                         },
-                        textColor = MaterialTheme.colorScheme.primary,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        borderColor = MaterialTheme.colorScheme.primary,
-                        title = stringResource(id = R.string.initFail)
+                        title = stringResource(id = R.string.rescan)
                     )
                 }
 
@@ -271,6 +275,49 @@ private fun AnimationExtracted(
                 )
             }
         }
+
+    }
+}
+
+@Composable
+private fun ErrorAnimationExtracted(
+    faceImage: Bitmap?,
+    position: Animatable<Offset, AnimationVector2D>,
+    smileImage: Bitmap?,
+    position1: Animatable<Offset, AnimationVector2D>
+) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(0.8f)
+        ) {
+
+            Image(
+                bitmap = faceImage!!.asImageBitmap(),
+                contentDescription = "some useful description",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+                    .border(2.dp, Color.Red, shape = CircleShape)
+                    .clip(CircleShape)
+            )
+            androidx.compose.material3.Text(
+                text = "X",
+                color = Color.Red,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp
+            )
+            Image(
+                bitmap = smileImage!!.asImageBitmap(),
+                contentDescription = "some useful description",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+                    .border(2.dp, Color.Red, shape = CircleShape)
+                    .clip(CircleShape)
+            )
+        }
+
 
     }
 }
