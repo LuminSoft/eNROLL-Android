@@ -118,15 +118,13 @@ class OnBoardingViewModel(
                     }
                 })
         }
-
-
     }
 
     fun removeCurrentStep(id: Int) {
         if (steps.value != null) {
             val stepsSize = steps.value!!.size
             steps.value = steps.value!!.toMutableList().apply {
-                removeIf { x -> x.registrationStepId == id}
+                removeIf { x -> x.registrationStepId == id }
             }.toList()
             val newStepsSize = steps.value!!.size
             if (stepsSize != newStepsSize)

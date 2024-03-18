@@ -19,6 +19,7 @@ import com.luminsoft.ekyc_android_sdk.features.device_data.device_data_navigatio
 import com.luminsoft.ekyc_android_sdk.features.email.email_di.emailModule
 import com.luminsoft.ekyc_android_sdk.features.email.email_navigation.emailRouter
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_di.faceCaptureModule
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPostScanScreenContent
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureRouter
 import com.luminsoft.ekyc_android_sdk.features.location.location_di.locationModule
 import com.luminsoft.ekyc_android_sdk.features.location.location_navigation.locationRouter

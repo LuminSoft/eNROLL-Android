@@ -77,16 +77,11 @@ class FaceCaptureOnBoardingPostScanViewModel(
 
             response.fold(
                 {
-//                    failure.value = it
-//                    loading.value = false
-                    selfieImageApproved.value = true
-
-
+                    failure.value = it
+                    loading.value = false
                 },
                 {
-                    loading.value = false
                     selfieImageApproved.value = true
-
                 })
         }
 
