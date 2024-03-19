@@ -2,14 +2,18 @@ package com.luminsoft.ekyc_android_sdk.features.location.location_onboarding.ui.
 
 import android.Manifest
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +48,13 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
 import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
@@ -90,6 +101,15 @@ fun LocationOnBoardingScreenContent(
     val locationSent = locationOnBoardingVM.locationSent.collectAsState()
     val permissionDenied = locationOnBoardingVM.permissionDenied.collectAsState()
 
+    val settingResultRequest = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { activityResult ->
+        if (activityResult.resultCode == RESULT_OK)
+            Log.d("appDebug", "Accepted")
+        else {
+            Log.d("appDebug", "Denied")
+        }
+    }
 
     BackGroundView(navController = navController, showAppBar = false) {
         if (locationSent.value) {
@@ -163,7 +183,8 @@ fun LocationOnBoardingScreenContent(
                 context,
                 locationOnBoardingViewModel,
                 launcherMultiplePermissions,
-                activity
+                activity,
+                settingResultRequest
             )
         else
             GotLocation(currentLocation.value!!, locationOnBoardingViewModel)
@@ -177,7 +198,8 @@ private fun RequestLocation(
     context: Context,
     locationOnBoardingViewModel: LocationOnBoardingViewModel,
     launcherMultiplePermissions: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
-    activity: Activity
+    activity: Activity,
+    settingResultRequest: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>
 ) {
 
     Column(
@@ -196,7 +218,15 @@ private fun RequestLocation(
                             it
                         ) == PackageManager.PERMISSION_GRANTED
                     }) {
-                    locationOnBoardingViewModel.requestLocation(activity = activity)
+                    checkLocationSetting(
+                        context = context,
+                        onDisabled = { intentSenderRequest ->
+                            settingResultRequest.launch(intentSenderRequest)
+                        },
+                        onEnabled = {
+                            locationOnBoardingViewModel.requestLocation(activity = activity)
+                        }
+                    )
                 } else {
                     launcherMultiplePermissions.launch(permissions)
                 }
@@ -359,9 +389,44 @@ private fun GotLocation(
                 .safeContentPadding()
                 .height(10.dp)
         )
-
-
     }
+
+
 }
 
 
+private fun checkLocationSetting(
+    context: Context,
+    onDisabled: (IntentSenderRequest) -> Unit,
+    onEnabled: () -> Unit
+) {
+
+    val locationRequest = LocationRequest.create().apply {
+        interval = 1000
+        fastestInterval = 1000
+        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    val client: SettingsClient = LocationServices.getSettingsClient(context)
+    val builder: LocationSettingsRequest.Builder = LocationSettingsRequest
+        .Builder()
+        .addLocationRequest(locationRequest)
+
+    val gpsSettingTask: Task<LocationSettingsResponse> =
+        client.checkLocationSettings(builder.build())
+
+    gpsSettingTask.addOnSuccessListener { onEnabled() }
+    gpsSettingTask.addOnFailureListener { exception ->
+        if (exception is ResolvableApiException) {
+            try {
+                val intentSenderRequest = IntentSenderRequest
+                    .Builder(exception.resolution)
+                    .build()
+                onDisabled(intentSenderRequest)
+            } catch (sendEx: IntentSender.SendIntentException) {
+                // ignore here
+            }
+        }
+    }
+
+}
