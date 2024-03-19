@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import arrow.core.raise.Null
+import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.ekyc_android_sdk.core.failures.NIFailure
 import com.luminsoft.ekyc_android_sdk.core.failures.SdkFailure
 import com.luminsoft.ekyc_android_sdk.core.utils.ui
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
@@ -61,9 +63,19 @@ class NationalIdBackOcrViewModel(
                 },
                 { s ->
                     s.let { it1 ->
-                        customerData.value = it1
+
+                        if (it1.gender == null) {
+                            failure.value =
+                                NIFailure(R.string.genderRequired)
+                        } else if (it1.profession == null) {
+                            failure.value =
+                                NIFailure(R.string.professionRequired)
+                        } else {
+                            customerData.value = it1
+                            Log.e("customerData", customerData.toString())
+                        }
                         loading.value = false
-                        Log.e("customerData", customerData.toString())
+
                     }
                 })
         }

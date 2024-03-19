@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
+import com.luminsoft.ekyc_android_sdk.core.failures.NIFailure
 import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.ResourceProvider
@@ -179,44 +180,80 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 )
             }
         } else if (!failure.value?.message.isNullOrEmpty()) {
-            if (failure.value is AuthFailure) {
-                failure.value?.let {
-                    DialogView(
-                        bottomSheetStatus = BottomSheetStatus.ERROR,
-                        text = it.message,
-                        buttonText = stringResource(id = R.string.exit),
-                        onPressedButton = {
+            when (failure.value) {
+                is AuthFailure -> {
+                    failure.value?.let {
+                        DialogView(
+                            bottomSheetStatus = BottomSheetStatus.ERROR,
+                            text = it.message,
+                            buttonText = stringResource(id = R.string.exit),
+                            onPressedButton = {
+                                activity.finish()
+                                EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+
+                            },
+                        ) {
                             activity.finish()
                             EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
 
-                        },
-                    ) {
-                        activity.finish()
-                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
-
+                        }
                     }
                 }
-            } else {
-                failure.value?.let {
-                    DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
-                        text = it.message,
-                        buttonText = stringResource(id = R.string.retry),
-                        onPressedButton = {
-                            val intent =
-                                Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
 
-                            startForBackResult.launch(intent)
-                        },
-                        secondButtonText = stringResource(id = R.string.exit),
-                        onPressedSecondButton = {
+                is NIFailure -> {
+                    failure.value?.let {
+                        DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                            text = context.getString(it.strInt),
+                            buttonText = stringResource(id = R.string.retry),
+                            onPressedButton = {
+                                val intent =
+                                    Intent(
+                                        activity.applicationContext,
+                                        DocumentActivity::class.java
+                                    )
+                                intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
+                                startForBackResult.launch(intent)
+                            },
+                            secondButtonText = stringResource(id = R.string.exit),
+                            onPressedSecondButton = {
+                                activity.finish()
+                                EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+
+                            }) {
                             activity.finish()
                             EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+                        }
+                    }
+                }
 
-                        }) {
-                        activity.finish()
-                        EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+
+                else -> {
+                    failure.value?.let {
+                        DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                            text = it.message,
+                            buttonText = stringResource(id = R.string.retry),
+                            onPressedButton = {
+                                val intent =
+                                    Intent(
+                                        activity.applicationContext,
+                                        DocumentActivity::class.java
+                                    )
+                                intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
+                                startForBackResult.launch(intent)
+                            },
+                            secondButtonText = stringResource(id = R.string.exit),
+                            onPressedSecondButton = {
+                                activity.finish()
+                                EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+
+                            }) {
+                            activity.finish()
+                            EkycSdk.ekycCallback?.error(EKYCFailedModel(it.message, it))
+                        }
                     }
                 }
             }

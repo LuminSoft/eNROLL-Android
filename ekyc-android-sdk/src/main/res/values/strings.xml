@@ -63,6 +63,8 @@
     <string name="incorrectTryAgain">Error! Please try again</string>
     <string name="cancel">Cancel</string>
     <string name="profession">Occupation</string>
+    <string name="professionRequired">Profession is Required</string>
+    <string name="genderRequired">Gender is Required</string>
     <string name="status">Status</string>
     <string name="religion">Religion</string>
     <string name="sex">Gender</string>

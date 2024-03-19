@@ -193,6 +193,8 @@
     <string name="noDocumentTypeBeforeSmileLiveness">لا يوجد تأكيد بطاقة قبل مطابقة الصورة</string>
     <string name="nameEn">الإسم بالإنجليزية</string>
     <string name="nameAr">الإسم بالعربي</string>
+    <string name="professionRequired">المهنة مطلوبة</string>
+    <string name="genderRequired">النوع مطلوب</string>
     <string name="passportDocumentNumber">رقم جواز السفر</string>
     <string name="documentCode">كود جواز السفر</string>
     <string name="issuingAuthority">جهة الإصدار</string>
