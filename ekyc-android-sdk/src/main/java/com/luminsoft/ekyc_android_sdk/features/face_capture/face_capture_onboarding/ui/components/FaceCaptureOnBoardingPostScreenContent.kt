@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.AnimationVector2D
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.VectorConverter
@@ -36,15 +37,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.core.failures.AuthFailure
@@ -53,12 +54,14 @@ import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
 import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_domain.usecases.FaceCaptureUseCase
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_domain.usecases.SelfieImageApproveUseCase
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPostScanScreenContent
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_onboarding.view_model.FaceCaptureOnBoardingPostScanViewModel
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.ekyc_android_sdk.innovitices.activities.DocumentActivity
+import com.luminsoft.ekyc_android_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.ekyc_android_sdk.innovitices.core.DotHelper
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
@@ -109,15 +112,21 @@ fun FaceCaptureBoardingPostScanScreenContent(
                     val smileImageBitmap =
                         DotHelper.getThumbnail(smileImageUri, activity)
                     rememberedViewModel.smileImage.value = smileImageBitmap
-                    navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
+                    navController.navigate(faceCaptureBoardingPostScanScreenContent)
                 } catch (e: Exception) {
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.FRONT
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
+            } else if (it.resultCode == 19 || it.resultCode == 8) {
+                onBoardingViewModel.errorMessage.value =
+                    context.getString(R.string.timeoutException)
+                navController.navigate(faceCaptureOnBoardingErrorScreen)
             }
         }
+
+
 
     MainContent(
         navController,
@@ -137,6 +146,8 @@ private fun MainContent(
     startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     faceCaptureOnBoardingPostScanViewModel: FaceCaptureOnBoardingPostScanViewModel
 ) {
+    val context = LocalContext.current
+
     val faceCaptureViewModel = remember { faceCaptureOnBoardingPostScanViewModel }
     val faceImage = remember { onBoardingViewModel.faceImage.value }
     val smileImage = remember { onBoardingViewModel.smileImage.value }
@@ -149,6 +160,7 @@ private fun MainContent(
     val endPosition = Offset(0f, 100f)
     val endPosition1 = Offset(-0f, 100f)
     val position = remember { Animatable(startPosition, Offset.VectorConverter) }
+    val scale = remember { Animatable(initialValue = 0f) }
     val startPosition1 = Offset(-400f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
     LaunchedEffect(endPosition) {
@@ -163,6 +175,16 @@ private fun MainContent(
     LaunchedEffect(endPosition1) {
         position1.animateTo(
             targetValue = endPosition1,
+            animationSpec = tween(
+                durationMillis = 6000,
+                easing = LinearOutSlowInEasing
+            )
+        )
+    }
+
+    LaunchedEffect(scale) {
+        scale.animateTo(
+            targetValue = 1f,
             animationSpec = tween(
                 durationMillis = 6000,
                 easing = LinearOutSlowInEasing
@@ -216,9 +238,9 @@ private fun MainContent(
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
                 ) {
-                    Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+                    Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
-                    ErrorAnimationExtracted(faceImage, position, smileImage, position1)
+                    ErrorAnimationExtracted(faceImage, smileImage, scale)
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.facesNotMatch),
@@ -228,12 +250,32 @@ private fun MainContent(
 
                     ButtonView(
                         onClick = {
-                            faceCaptureViewModel.callApproveSelfieImage()
+                            val intent =
+                                Intent(
+                                    activity.applicationContext,
+                                    SmileLivenessActivity::class.java
+                                )
+                            startForResult.launch(intent)
                         },
                         title = stringResource(id = R.string.rescan)
                     )
-                }
+                    Spacer(modifier = Modifier.height(20.dp))
 
+                    ButtonView(
+                        onClick = {
+                            activity.finish()
+                            EkycSdk.ekycCallback?.error(
+                                EKYCFailedModel(
+                                    context.getString(R.string.facesNotMatch)
+                                )
+                            )
+                        },
+                        title = stringResource(id = R.string.exit),
+                        textColor = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        borderColor = MaterialTheme.colorScheme.primary,
+                    )
+                }
         }
     }
 
@@ -282,43 +324,43 @@ private fun AnimationExtracted(
 @Composable
 private fun ErrorAnimationExtracted(
     faceImage: Bitmap?,
-    position: Animatable<Offset, AnimationVector2D>,
     smileImage: Bitmap?,
-    position1: Animatable<Offset, AnimationVector2D>
+    scale: Animatable<Float, AnimationVector1D>,
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(0.8f)
-        ) {
 
-            Image(
-                bitmap = faceImage!!.asImageBitmap(),
-                contentDescription = "some useful description",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .border(2.dp, Color.Red, shape = CircleShape)
-                    .clip(CircleShape)
-            )
-            androidx.compose.material3.Text(
-                text = "X",
-                color = Color.Red,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp
-            )
-            Image(
-                bitmap = smileImage!!.asImageBitmap(),
-                contentDescription = "some useful description",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .border(2.dp, Color.Red, shape = CircleShape)
-                    .clip(CircleShape)
-            )
-        }
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth(0.7f)
+    ) {
+        Image(
+            bitmap = faceImage!!.asImageBitmap(),
+            contentDescription = "some useful description",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(120.dp)
+                .border(2.dp, Color.Red, shape = CircleShape)
+                .clip(CircleShape)
+                .scale(scale = scale.value)
+        )
+        Image(
+            painterResource(R.drawable.error_sign),
+            contentDescription = "some useful description",
+            modifier = Modifier
+                .size(30.dp)
+                .scale(scale = scale.value)
+        )
 
+        Image(
+            bitmap = smileImage!!.asImageBitmap(),
+            contentDescription = "some useful description",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(120.dp)
+                .border(2.dp, Color.Red, shape = CircleShape)
+                .clip(CircleShape)
+                .scale(scale = scale.value)
 
+        )
     }
 }
 
@@ -354,9 +396,7 @@ private fun FailureExtract(
                 buttonText = stringResource(id = R.string.retry),
                 onPressedButton = {
                     val intent =
-                        Intent(activity.applicationContext, DocumentActivity::class.java)
-                    intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
-                    intent.putExtra("localCode", EkycSdk.localizationCode.name)
+                        Intent(activity.applicationContext, SmileLivenessActivity::class.java)
                     startForResult.launch(intent)
                 },
                 secondButtonText = stringResource(id = R.string.exit),

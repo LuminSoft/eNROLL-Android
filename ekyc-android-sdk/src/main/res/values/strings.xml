@@ -111,7 +111,7 @@
     <string name="facePreCapTitle">Face matching</string>
     <string name="documentPreScanTitle">Scan ID</string>
     <string name="passportPreScanTitle">Scan Passport</string>
-    <string name="timeoutExeption">Could not capture, please try again</string>
+    <string name="timeoutException">Could not capture, please try again</string>
     <string name="isFrontSideWhileBackScan">Please scan the back side of the ID</string>
     <string name="intro1">To complete the registration process, a valid national ID must be available</string>
     <string name="device_location">To complete the registration process, you should give location access to the app</string>

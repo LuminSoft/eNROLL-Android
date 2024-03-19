@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPostScanScreenContent
+import com.luminsoft.ekyc_android_sdk.features.face_capture.face_capture_navigation.faceCaptureOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.ekyc_android_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
@@ -58,6 +59,10 @@ fun FaceCaptureBoardingPreScanScreenContent(
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
+            } else if (it.resultCode == 19 || it.resultCode == 8) {
+                onBoardingViewModel.errorMessage.value =
+                    context.getString(R.string.timeoutException)
+                navController.navigate(faceCaptureOnBoardingErrorScreen)
             }
         }
 
