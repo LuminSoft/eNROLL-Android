@@ -27,7 +27,7 @@ class ServerFailure(apiErrorResponse: ApiErrorResponse) :
 
 class NIFailure(strIntInput: Int) :
     ConnectionFailure {
-    override val message: String = ""
+    override val message: String = "NIFailure"
     override val strInt: Int = strIntInput
 
 }

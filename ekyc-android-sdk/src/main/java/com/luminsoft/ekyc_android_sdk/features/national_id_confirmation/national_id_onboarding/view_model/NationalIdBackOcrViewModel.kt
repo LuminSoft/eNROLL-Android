@@ -67,6 +67,7 @@ class NationalIdBackOcrViewModel(
                         if (it1.gender == null) {
                             failure.value =
                                 NIFailure(R.string.genderRequired)
+                            failure
                         } else if (it1.profession == null) {
                             failure.value =
                                 NIFailure(R.string.professionRequired)
