@@ -1,0 +1,10 @@
+package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_remote_data_source
+
+import com.luminsoft.enroll_sdk.core.network.BaseResponse
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_approve.PersonalConfirmationApproveRequest
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.PersonalConfirmationUploadImageRequest
+
+interface  NationalIdConfirmationRemoteDataSource  {
+    suspend fun personalConfirmationUploadImage(request: PersonalConfirmationUploadImageRequest): BaseResponse<Any>
+    suspend fun personalConfirmationApprove(request: PersonalConfirmationApproveRequest): BaseResponse<Any>
+}

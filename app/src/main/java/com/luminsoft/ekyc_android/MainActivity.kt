@@ -25,23 +25,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.luminsoft.ekyc_android_sdk.sdk.Ekyc
+import com.luminsoft.enroll_sdk.sdk.eNROLL
 import com.luminsoft.ekyc_android.theme.NewcowpayTheme
-import com.luminsoft.ekyc_android_sdk.core.models.EKYCCallback
-import com.luminsoft.ekyc_android_sdk.core.models.EkycEnvironment
-import com.luminsoft.ekyc_android_sdk.core.models.EkycMode
-import com.luminsoft.ekyc_android_sdk.core.models.LocalizationCode
-import com.luminsoft.ekyc_android_sdk.core.models.EKYCFailedModel
-import com.luminsoft.ekyc_android_sdk.core.models.PaymentSuccessModel
-import com.luminsoft.ekyc_android_sdk.ui_components.components.NormalTextField
+import com.luminsoft.enroll_sdk.core.models.EnrollCallback
+import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
+import com.luminsoft.enroll_sdk.core.models.EnrollMode
+import com.luminsoft.enroll_sdk.core.models.LocalizationCode
+import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
+import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import io.github.cdimascio.dotenv.dotenv
 import java.util.Locale
 import java.util.Random
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename = "env"
-    filename = "env_org1"
+    filename = "env"
+//    filename = "env_org1"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -116,20 +116,20 @@ class MainActivity : ComponentActivity() {
                             modifier = modifier,
                             onClick = {
                                 try {
-                                    Ekyc.init(
+                                    eNROLL.init(
                                         tenantId.value.text,
                                         tenantSecret.value.text,
-                                        EkycMode.ONBOARDING,
-                                        EkycEnvironment.STAGING,
-                                        ekycCallback = object :
-                                            EKYCCallback {
-                                            override fun success(paymentSuccessModel: PaymentSuccessModel) {
+                                        EnrollMode.ONBOARDING,
+                                        EnrollEnvironment.STAGING,
+                                        EnrollCallback = object :
+                                            EnrollCallback {
+                                            override fun success(paymentSuccessModel: EnrollSuccessModel) {
                                                 text.value =
-                                                    "payment method: ${paymentSuccessModel.paymentMethodName} \nReference number: ${paymentSuccessModel.paymentReferenceId}"
+                                                    "eNROLL Message: ${paymentSuccessModel.enrollMessage}"
                                             }
 
-                                            override fun error(paymentFailedModel: EKYCFailedModel) {
-                                                text.value = paymentFailedModel.failureMessage
+                                            override fun error(enrollFailedModel: EnrollFailedModel) {
+                                                text.value = enrollFailedModel.failureMessage
 
                                             }
 
@@ -141,7 +141,7 @@ class MainActivity : ComponentActivity() {
                                     Log.e("error", e.toString())
                                 }
                                 try {
-                                    Ekyc.launch(activity)
+                                    eNROLL.launch(activity)
                                 } catch (e: Exception) {
                                     Log.e("error", e.toString())
                                 }
@@ -152,7 +152,7 @@ class MainActivity : ComponentActivity() {
 
                             ) {
                             Text(
-                                text = "Launch EKYC",
+                                text = "Launch eNROLL",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
@@ -163,26 +163,19 @@ class MainActivity : ComponentActivity() {
                             modifier = modifier,
                             onClick = {
                                 try {
-                                    Ekyc.init(
+                                    eNROLL.init(
                                         tenantId.value.text,
                                         tenantSecret.value.text,
-                                        EkycMode.ONBOARDING,
-                                        EkycEnvironment.STAGING,
-                                        ekycCallback = object :
-                                            EKYCCallback {
-                                            override fun success(paymentSuccessModel: PaymentSuccessModel) {
-//                                        if (paymentSuccessModel is PaymentSuccessModel.FawrySuccessModel) {
-//                                            Log.e("SuccessFawry", paymentSuccessModel.paymentMethodName)
-//                                        } else if (paymentSuccessModel is PaymentSuccessModel.CreditCardSuccessModel) {
-//                                            Log.e("SuccessCard", paymentSuccessModel.paymentReferenceId)
-//                                            Log.e("SuccessCard", paymentSuccessModel.paymentMethodName)
-//                                        }
-//                                        Log.e("SuccessCard", paymentSuccessModel.toString())
+                                        EnrollMode.ONBOARDING,
+                                        EnrollEnvironment.STAGING,
+                                        EnrollCallback = object :
+                                            EnrollCallback {
+                                            override fun success(enrollSuccessModel: EnrollSuccessModel) {
                                                 text.value =
-                                                    "payment method: ${paymentSuccessModel.paymentMethodName} \nReference number: ${paymentSuccessModel.paymentReferenceId}"
+                                                    "eNROLL Message: ${enrollSuccessModel.enrollMessage}"
                                             }
 
-                                            override fun error(paymentFailedModel: EKYCFailedModel) {
+                                            override fun error(paymentFailedModel: EnrollFailedModel) {
                                                 text.value = paymentFailedModel.failureMessage
 
                                             }
@@ -195,7 +188,7 @@ class MainActivity : ComponentActivity() {
                                     Log.e("error", e.toString())
                                 }
                                 try {
-                                    Ekyc.launch(activity)
+                                    eNROLL.launch(activity)
                                 } catch (e: Exception) {
                                     Log.e("error", e.toString())
                                 }

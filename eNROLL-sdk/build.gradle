@@ -1,0 +1,121 @@
+
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.luminsoft.ekyc_android_sdk'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+            debuggable true
+            versionNameSuffix '.debug'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix '.debug'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.1'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+
+}
+
+dependencies {
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+
+    implementation("io.arrow-kt:arrow-core:1.2.0")
+    implementation "com.google.accompanist:accompanist-pager:0.24.2-alpha"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
+    implementation "com.airbnb.android:lottie-compose:6.0.1"
+    implementation "com.innovatrics.dot:dot-document:3.4.1"
+    implementation "com.innovatrics.dot:dot-face-detection-fast:4.8.2"
+    implementation "com.innovatrics.dot:dot-face-expression-neutral:4.8.2"
+    implementation "com.innovatrics.dot:dot-face-passive-liveness:4.8.2"
+    implementation "com.innovatrics.dot:dot-nfc:2.2.2"
+    implementation "com.innovatrics.dot:dot-face-verification:4.8.2"
+    implementation 'com.gemalto.jp2:jp2-android:1.0.3'
+
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.compose.material:material-icons-core:1.5.4"
+
+    implementation "com.google.android.gms:play-services-location:21.2.0"
+
+    //region retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.8.0"
+    //endregion
+
+    implementation "io.insert-koin:koin-core:3.4.3"
+    implementation "io.insert-koin:koin-android:3.4.3"
+    implementation "io.insert-koin:koin-test:3.4.3"
+    implementation "io.insert-koin:koin-androidx-compose:3.4.3"
+
+    implementation 'androidx.compose.ui:ui:1.5.0'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3:1.1.1'
+    implementation "io.coil-kt:coil-compose:2.2.2"
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.7.2'
+    implementation 'androidx.navigation:navigation-compose:2.7.2'
+
+    implementation("io.arrow-kt:arrow-core:1.2.0")
+
+//    implementation(project(":ekyc-android-sdk:libs:main"))
+//    implementation(project(":ekyc-android-sdk:libs:core"))
+//
+//    implementation(project(":ekyc-android-sdk:libs:ui-components"))
+//    implementation(project(":ekyc-android-sdk:libs:features:email"))
+//    implementation(project(":ekyc-android-sdk:libs:features:phone-numbers"))
+//    implementation(project(":ekyc-android-sdk:libs:features:face-capture"))
+//    implementation(project(":ekyc-android-sdk:libs:features:device-data"))
+//    implementation(project(":ekyc-android-sdk:libs:features:location"))
+//    implementation(project(":ekyc-android-sdk:libs:features:national-id-confirmation"))
+//    implementation(project(":ekyc-android-sdk:libs:features:security-questions"))
+//    implementation(project(":ekyc-android-sdk:libs:features:setting-password"))
+}
