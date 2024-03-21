@@ -1,5 +1,6 @@
 package com.luminsoft.ekyc_android_sdk.core.network
 
+import com.luminsoft.ekyc_android_sdk.core.sdk.EkycSdk
 import com.luminsoft.ekyc_android_sdk.core.utils.WifiService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -22,9 +23,11 @@ object RetroClient {
     fun setToken(token: String) {
         RetroClient.token = token
     }
+
     fun setBaseUrl(url: String) {
         baseUrl = url
     }
+
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -66,11 +69,13 @@ class AuthInterceptor() : Interceptor {
         }
         builder.addHeader("Content-Type", "application/json")
         builder.addHeader("Accept", "application/json")
+        builder.addHeader("Accept-Language", EkycSdk.localizationCode.name)
         req = builder.build()
         return chain.proceed(req)
     }
 }
-class ConnectivityInterceptor: Interceptor {
+
+class ConnectivityInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!WifiService.instance.isOnline()) {
             throw NoConnectionException("No internet connection")
@@ -79,6 +84,7 @@ class ConnectivityInterceptor: Interceptor {
         }
     }
 }
+
 class NoConnectionException : IOException {
     constructor() : super()
     constructor(message: String) : super(message)

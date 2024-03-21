@@ -59,6 +59,7 @@ fun FaceCaptureOnBoardingErrorScreen(
                     rememberedViewModel.smileImage.value = smileImageBitmap
                     navController.navigate(faceCaptureBoardingPostScanScreenContent)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.FRONT
                     navController.navigate(nationalIdOnBoardingErrorScreen)

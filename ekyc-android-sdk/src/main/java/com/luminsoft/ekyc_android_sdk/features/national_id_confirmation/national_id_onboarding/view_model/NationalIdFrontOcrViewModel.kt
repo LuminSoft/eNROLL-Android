@@ -39,6 +39,10 @@ class NationalIdFrontOcrViewModel(
         frontNIApproved.value = false
     }
 
+    fun resetFailure() {
+        failure.value = null
+    }
+
     init {
         sendFrontImage()
     }

@@ -38,6 +38,10 @@ class NationalIdBackOcrViewModel(
         approveBack()
     }
 
+    fun resetFailure() {
+        failure.value = null
+    }
+
     init {
         sendBackImage()
     }

@@ -76,6 +76,13 @@ class OnBoardingViewModel(
         }
     }
 
+    fun enableLoading() {
+        loading.value = true
+    }
+    fun disableLoading() {
+        loading.value = false
+    }
+
     init {
         generateToken()
     }

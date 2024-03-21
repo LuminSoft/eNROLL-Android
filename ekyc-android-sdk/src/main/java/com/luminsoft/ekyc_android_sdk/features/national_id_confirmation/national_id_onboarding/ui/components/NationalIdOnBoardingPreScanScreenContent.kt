@@ -35,7 +35,6 @@ import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.vie
 import com.luminsoft.ekyc_android_sdk.ui_components.components.BackGroundView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.ButtonView
 import com.luminsoft.ekyc_android_sdk.ui_components.components.EkycItemView
-import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @Composable
@@ -59,6 +58,7 @@ fun NationalIdOnBoardingPreScanScreen(
                         facialDocumentModel.documentImage
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.FRONT
                     navController.navigate(nationalIdOnBoardingErrorScreen)
@@ -90,7 +90,7 @@ fun NationalIdOnBoardingPreScanScreen(
         for (i in organizationRegStepSettings(rememberedViewModel)) {
             when (i.parseRegistrationStepSetting()) {
                 RegistrationStepSetting.nationalIdOnly -> {
-                    NationalIdOnly(activity, startForResult)
+                    NationalIdOnly(activity, startForResult, rememberedViewModel)
                 }
 
                 RegistrationStepSetting.passportOnly -> {
@@ -98,12 +98,12 @@ fun NationalIdOnBoardingPreScanScreen(
                 }
 
                 RegistrationStepSetting.nationalIdOrPassport -> {
-                    NationalIdOnly(activity, startForResult)
+                    NationalIdOnly(activity, startForResult, rememberedViewModel)
 
                 }
 
                 RegistrationStepSetting.nationalIdAndPassport -> {
-                    NationalIdOnly(activity, startForResult)
+                    NationalIdOnly(activity, startForResult, rememberedViewModel)
 
                 }
 
@@ -123,7 +123,8 @@ private fun organizationRegStepSettings(rememberedViewModel: OnBoardingViewModel
 @Composable
 private fun NationalIdOnly(
     activity: Activity,
-    startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>
+    startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
+    rememberedViewModel: OnBoardingViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -135,6 +136,7 @@ private fun NationalIdOnly(
         EkycItemView(R.drawable.step_01_national_id, R.string.documentPreScanContent)
         ButtonView(
             onClick = {
+                rememberedViewModel.enableLoading()
                 val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
                 intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
                 intent.putExtra("localCode", EkycSdk.localizationCode.name)

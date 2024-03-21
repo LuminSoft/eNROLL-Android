@@ -90,6 +90,7 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
             val documentFrontUri = it.data?.data
             if (documentFrontUri != null) {
                 try {
+                    onBoardingViewModel.enableLoading()
                     val facialDocumentModel =
                         DotHelper.documentDetectFace(documentFrontUri, activity)
                     onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
@@ -97,6 +98,7 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                         facialDocumentModel.documentImage
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.FRONT
                     navController.navigate(nationalIdOnBoardingErrorScreen)
@@ -116,6 +118,7 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                         nonFacialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.Back
                     navController.navigate(nationalIdOnBoardingErrorScreen)
@@ -155,7 +158,6 @@ private fun MainContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (frontNIApproved.value) {
-
             val intent =
                 Intent(activity.applicationContext, DocumentActivity::class.java)
             intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
@@ -195,6 +197,8 @@ private fun MainContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
+                            nationalIdFrontOcrViewModel.resetFailure()
+                            onBoardingViewModel.enableLoading()
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
                             intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
@@ -214,8 +218,7 @@ private fun MainContent(
                     }
                 }
             }
-        }
-        else if (customerData.value != null) {
+        } else if (customerData.value != null) {
             if (customerData.value!!.fullNameEn != null)
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
@@ -285,6 +288,7 @@ private fun MainContent(
 
                 ButtonView(
                     onClick = {
+                        onBoardingViewModel.enableLoading()
                         if (customerData.value!!.fullNameEn != null && englishNameValidation() == null)
                             nationalIdFrontOcrViewModel.callApproveFront(userNameValue.value.text)
                         else if (customerData.value!!.fullNameEn == null)
@@ -297,6 +301,7 @@ private fun MainContent(
 
                 ButtonView(
                     onClick = {
+                        onBoardingViewModel.enableLoading()
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
                         intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)

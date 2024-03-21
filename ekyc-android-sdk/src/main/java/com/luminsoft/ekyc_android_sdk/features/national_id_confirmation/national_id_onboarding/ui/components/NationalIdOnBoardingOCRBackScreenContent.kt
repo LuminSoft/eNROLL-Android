@@ -89,12 +89,14 @@ fun NationalIdOnBoardingBackConfirmationScreen(
             val documentBackUri = it.data?.data
             if (documentBackUri != null) {
                 try {
+                    onBoardingViewModel.disableLoading()
                     val nonFacialDocumentModel =
                         DotHelper.documentNonFacial(documentBackUri, activity)
                     onBoardingViewModel.nationalIdBackImage.value =
                         nonFacialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.Back
                     navController.navigate(nationalIdOnBoardingErrorScreen)
@@ -159,6 +161,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
 
                 ButtonView(
                     onClick = {
+                        onBoardingViewModel.enableLoading()
                         nationalIdBackOcrViewModel.callApproveBack()
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
@@ -166,6 +169,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
 
                 ButtonView(
                     onClick = {
+                        onBoardingViewModel.enableLoading()
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
                         intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
@@ -206,6 +210,8 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                             text = context.getString(it.strInt),
                             buttonText = stringResource(id = R.string.retry),
                             onPressedButton = {
+                                nationalIdBackOcrViewModel.resetFailure()
+                                onBoardingViewModel.enableLoading()
                                 val intent =
                                     Intent(
                                         activity.applicationContext,
@@ -228,13 +234,14 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                     }
                 }
 
-
                 else -> {
                     failure.value?.let {
                         DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
                             text = it.message,
                             buttonText = stringResource(id = R.string.retry),
                             onPressedButton = {
+                                nationalIdBackOcrViewModel.resetFailure()
+                                onBoardingViewModel.enableLoading()
                                 val intent =
                                     Intent(
                                         activity.applicationContext,

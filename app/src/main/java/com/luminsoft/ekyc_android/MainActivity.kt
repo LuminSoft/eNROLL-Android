@@ -40,8 +40,10 @@ import java.util.Random
 
 var dotenv = dotenv {
     directory = "/assets"
-    filename = "env"
+//    filename = "env"
+    filename = "env_org1"
 }
+
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
 var tenantSecret = mutableStateOf(TextFieldValue(text = dotenv["TENANT_SECRET"]))
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
@@ -217,8 +219,6 @@ class MainActivity : ComponentActivity() {
 
             }
         }
-
-
     }
 
     fun setLocale(lang: String?) {

@@ -23,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
@@ -38,6 +37,7 @@ import com.luminsoft.ekyc_android_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.ekyc_android_sdk.innovitices.core.DotHelper
 import com.luminsoft.ekyc_android_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.ekyc_android_sdk.ui_components.components.ButtonView
+import com.luminsoft.ekyc_android_sdk.ui_components.components.LoadingView
 
 
 @Composable
@@ -50,6 +50,7 @@ fun NationalIdOnBoardingErrorScreen(
     val activity = context.findActivity()
     val errorMessage = onBoardingViewModel.errorMessage.collectAsState()
     val scanType = onBoardingViewModel.scanType.collectAsState()
+    val loading = onBoardingViewModel.loading.collectAsState()
 
     val startForResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -63,6 +64,7 @@ fun NationalIdOnBoardingErrorScreen(
                         facialDocumentModel.documentImage
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.FRONT
                     navController.navigate(nationalIdOnBoardingErrorScreen)
@@ -82,6 +84,7 @@ fun NationalIdOnBoardingErrorScreen(
                         nonFacialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.Back
                     navController.navigate(nationalIdOnBoardingErrorScreen)
@@ -103,6 +106,7 @@ fun NationalIdOnBoardingErrorScreen(
                         facialDocumentModel.documentImage
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
+                    onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
                     onBoardingViewModel.scanType.value = ScanType.Back
                     navController.navigate(nationalIdOnBoardingErrorScreen)
@@ -118,75 +122,79 @@ fun NationalIdOnBoardingErrorScreen(
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 30.dp)
+        if (loading.value) LoadingView()
+        else
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 30.dp)
 
-        ) {
-            Spacer(modifier = Modifier.fillMaxHeight(0.25f))
-            Image(
-                painterResource(R.drawable.invalid_ni_icon),
-                contentDescription = "",
-                contentScale = ContentScale.FillHeight,
-                modifier = Modifier.fillMaxHeight(0.35f)
-            )
-            Spacer(modifier = Modifier.height(30.dp))
-            errorMessage.value?.let { Text(text = it) }
-            Spacer(modifier = Modifier.fillMaxHeight(0.35f))
+            ) {
+                Spacer(modifier = Modifier.fillMaxHeight(0.25f))
+                Image(
+                    painterResource(R.drawable.invalid_ni_icon),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier.fillMaxHeight(0.35f)
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                errorMessage.value?.let { Text(text = it) }
+                Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
-            ButtonView(
-                onClick = {
-                    activity.finish()
-                    EkycSdk.ekycCallback?.error(
-                        EKYCFailedModel(
-                            errorMessage.value!!, errorMessage
+                ButtonView(
+                    onClick = {
+                        activity.finish()
+                        EkycSdk.ekycCallback?.error(
+                            EKYCFailedModel(
+                                errorMessage.value!!, errorMessage
+                            )
                         )
-                    )
-                }, title = stringResource(id = R.string.exit)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+                    }, title = stringResource(id = R.string.exit)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
-            ButtonView(
-                onClick = {
-                    val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
-                    when (scanType.value) {
-                        FRONT -> {
-                            intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
-                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
+                ButtonView(
+                    onClick = {
+                        rememberedViewModel.enableLoading()
+                        val intent =
+                            Intent(activity.applicationContext, DocumentActivity::class.java)
+                        when (scanType.value) {
+                            FRONT -> {
+                                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                                intent.putExtra("localCode", EkycSdk.localizationCode.name)
 
-                            startForResult.launch(intent)
+                                startForResult.launch(intent)
+                            }
+
+                            Back -> {
+                                intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
+                                startForBackResult.launch(intent)
+                            }
+
+                            PASSPORT -> {
+                                intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                                intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
+                                startPassportForResult.launch(intent)
+                            }
+
+                            null -> {
+                                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                                intent.putExtra("localCode", EkycSdk.localizationCode.name)
+
+                                startForResult.launch(intent)
+                            }
                         }
-
-                        Back -> {
-                            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
-
-                            startForBackResult.launch(intent)
-                        }
-
-                        PASSPORT -> {
-                            intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
-                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
-
-                            startPassportForResult.launch(intent)
-                        }
-
-                        null -> {
-                            intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
-                            intent.putExtra("localCode", EkycSdk.localizationCode.name)
-
-                            startForResult.launch(intent)
-                        }
-                    }
-                },
-                textColor = MaterialTheme.colorScheme.primary,
-                color = MaterialTheme.colorScheme.onPrimary,
-                borderColor = MaterialTheme.colorScheme.primary,
-                title = stringResource(id = R.string.reScan)
-            )
-        }
+                    },
+                    textColor = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    borderColor = MaterialTheme.colorScheme.primary,
+                    title = stringResource(id = R.string.reScan)
+                )
+            }
 
     }
 
