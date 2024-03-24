@@ -26,7 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.luminsoft.enroll_sdk.sdk.eNROLL
-import com.luminsoft.ekyc_android.theme.NewcowpayTheme
+import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -40,8 +40,8 @@ import java.util.Random
 
 var dotenv = dotenv {
     directory = "/assets"
-    filename = "env"
-//    filename = "env_org1"
+//    filename = "env"
+    filename = "env_org1"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         setLocale("en")
         setContent {
             val activity = LocalContext.current as Activity
-            NewcowpayTheme {
+            EnrollTheme {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -123,9 +123,9 @@ class MainActivity : ComponentActivity() {
                                         EnrollEnvironment.STAGING,
                                         EnrollCallback = object :
                                             EnrollCallback {
-                                            override fun success(paymentSuccessModel: EnrollSuccessModel) {
+                                            override fun success(enrollSuccessModel: EnrollSuccessModel) {
                                                 text.value =
-                                                    "eNROLL Message: ${paymentSuccessModel.enrollMessage}"
+                                                    "eNROLL Message: ${enrollSuccessModel.enrollMessage}"
                                             }
 
                                             override fun error(enrollFailedModel: EnrollFailedModel) {
@@ -175,8 +175,8 @@ class MainActivity : ComponentActivity() {
                                                     "eNROLL Message: ${enrollSuccessModel.enrollMessage}"
                                             }
 
-                                            override fun error(paymentFailedModel: EnrollFailedModel) {
-                                                text.value = paymentFailedModel.failureMessage
+                                            override fun error(enrollFailedModel: EnrollFailedModel) {
+                                                text.value = enrollFailedModel.failureMessage
 
                                             }
 
