@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_mode
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
+import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 
 
 @Composable
@@ -45,6 +47,7 @@ fun NationalIdOnBoardingPreScanScreen(
     val rememberedViewModel = remember { onBoardingViewModel }
     val context = LocalContext.current
     val activity = context.findActivity()
+    val loading = onBoardingViewModel.loading.collectAsState()
 
     val startForResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -86,32 +89,38 @@ fun NationalIdOnBoardingPreScanScreen(
         }
 
     BackGroundView(navController = navController, showAppBar = false) {
+        if (loading.value) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) { SpinKitLoadingIndicator() }
+        } else
+            for (i in organizationRegStepSettings(rememberedViewModel)) {
+                when (i.parseRegistrationStepSetting()) {
+                    RegistrationStepSetting.nationalIdOnly -> {
+                        NationalIdOnly(activity, startForResult, rememberedViewModel)
+                    }
 
-        for (i in organizationRegStepSettings(rememberedViewModel)) {
-            when (i.parseRegistrationStepSetting()) {
-                RegistrationStepSetting.nationalIdOnly -> {
-                    NationalIdOnly(activity, startForResult, rememberedViewModel)
-                }
+                    RegistrationStepSetting.passportOnly -> {
+                        PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                    }
 
-                RegistrationStepSetting.passportOnly -> {
-                    PassportOnly(activity, startPassportForResult)
-                }
+                    RegistrationStepSetting.nationalIdOrPassport -> {
+                        NationalIdOnly(activity, startForResult, rememberedViewModel)
 
-                RegistrationStepSetting.nationalIdOrPassport -> {
-                    NationalIdOnly(activity, startForResult, rememberedViewModel)
+                    }
 
-                }
+                    RegistrationStepSetting.nationalIdAndPassport -> {
+                        NationalIdOnly(activity, startForResult, rememberedViewModel)
 
-                RegistrationStepSetting.nationalIdAndPassport -> {
-                    NationalIdOnly(activity, startForResult, rememberedViewModel)
+                    }
 
-                }
-
-                else -> {
-                    continue
+                    else -> {
+                        continue
+                    }
                 }
             }
-        }
 
     }
 
@@ -157,7 +166,8 @@ private fun NationalIdOnly(
 @Composable
 private fun PassportOnly(
     activity: Activity,
-    startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>
+    startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
+    rememberedViewModel: OnBoardingViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -169,6 +179,8 @@ private fun PassportOnly(
         EnrollItemView(R.drawable.step_01_passport, R.string.passportPreScanContent)
         ButtonView(
             onClick = {
+                rememberedViewModel.enableLoading()
+
                 val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
                 intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
