@@ -32,7 +32,7 @@ object eNROLL {
         EnrollSDK.googleApiKey = googleApiKey!!
         EnrollSDK.localizationCode = localizationCode
         EnrollSDK.enrollCallback = EnrollCallback
-        EnrollSDK.ekycMode = EnrollMode
+        EnrollSDK.enrollMode = EnrollMode
     }
 
     fun launch(

@@ -115,7 +115,7 @@ class EnrollMainActivity : ComponentActivity() {
     }
 
     private fun getStartingRoute(): String {
-        return when (EnrollSDK.ekycMode) {
+        return when (EnrollSDK.enrollMode) {
             EnrollMode.ONBOARDING -> {
                 splashScreenOnBoardingContent
             }

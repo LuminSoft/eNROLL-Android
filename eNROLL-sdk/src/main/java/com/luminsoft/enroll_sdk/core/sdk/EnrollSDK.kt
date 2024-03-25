@@ -16,20 +16,20 @@ object EnrollSDK {
     var environment = EnrollEnvironment.STAGING
     var localizationCode = LocalizationCode.EN
     var enrollCallback: EnrollCallback? = null
-    lateinit var ekycMode: EnrollMode
+    lateinit var enrollMode: EnrollMode
 
     private fun getBaseUrl(): String {
         return when (environment) {
-            EnrollEnvironment.STAGING -> "http://197.44.231.206"
-//            EkycEnvironment.STAGING -> "http://197.168.1.39"
-            EnrollEnvironment.PRODUCTION -> "https://ekyc.nasps.org.eg"
+//            EnrollEnvironment.STAGING -> "http://197.44.231.206"
+            EnrollEnvironment.STAGING -> "http://197.168.1.39"
+            EnrollEnvironment.PRODUCTION -> "https://enroll.nasps.org.eg"
         }
     }
 
     fun getApisUrl(): String {
         return if (environment == EnrollEnvironment.STAGING)
             getBaseUrl() + ":4800"
-        else getBaseUrl() + ":4800"
+        else getBaseUrl() + ":7400"
     }
 
 
