@@ -2,7 +2,7 @@ package com.luminsoft.enroll_sdk.features.location.location_data.location_models
 
 import com.google.gson.annotations.SerializedName
 
-data class PostLocationResponseModel(
+data class BasicResponseModel(
 
     @SerializedName("status") var status: Int? = null
 
