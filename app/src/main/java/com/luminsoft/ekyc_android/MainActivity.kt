@@ -120,7 +120,7 @@ class MainActivity : ComponentActivity() {
                                         tenantId.value.text,
                                         tenantSecret.value.text,
                                         EnrollMode.ONBOARDING,
-                                        EnrollEnvironment.STAGING,
+                                        EnrollEnvironment.PRODUCTION,
                                         EnrollCallback = object :
                                             EnrollCallback {
                                             override fun success(enrollSuccessModel: EnrollSuccessModel) {

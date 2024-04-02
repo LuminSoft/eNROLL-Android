@@ -11,6 +11,7 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
@@ -119,7 +120,8 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
-                            navController!!.navigate(onBoardingScreenContent)
+                            navController!!.navigate(phoneNumbersOnBoardingScreenContent)
+//                            navController!!.navigate(onBoardingScreenContent)
                         })
 
                     }

@@ -38,6 +38,7 @@ fun NormalTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
     painter: Painter? = null,
     height: Double = 45.0,
+    width: Float = 1.0f,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     enabled: Boolean = true,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -71,7 +72,7 @@ fun NormalTextField(
             value = value,
             onValueChange =onValueChange,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(width)
                 .height(height.dp),
             textStyle = MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.primary,

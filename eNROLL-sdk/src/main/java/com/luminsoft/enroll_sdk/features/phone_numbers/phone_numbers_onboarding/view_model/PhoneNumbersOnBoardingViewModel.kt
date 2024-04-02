@@ -20,6 +20,7 @@ class PhoneNumbersOnBoardingViewModel(
 
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var showDropdown: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var countries: MutableStateFlow<List<GetCountriesResponseModel>?> = MutableStateFlow(null)
     private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
