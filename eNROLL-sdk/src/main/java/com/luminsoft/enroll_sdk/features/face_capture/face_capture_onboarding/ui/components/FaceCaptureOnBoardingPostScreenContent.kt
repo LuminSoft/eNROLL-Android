@@ -149,7 +149,7 @@ private fun MainContent(
     val context = LocalContext.current
 
     val faceCaptureViewModel = remember { faceCaptureOnBoardingPostScanViewModel }
-    val faceImage = remember { onBoardingViewModel.faceImage.value }
+//    val faceImage = remember { onBoardingViewModel.faceImage.value }
     val smileImage = remember { onBoardingViewModel.smileImage.value }
 
     val loading = faceCaptureViewModel.loading.collectAsState()
@@ -216,7 +216,9 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
-                    AnimationExtracted(faceImage, position, smileImage, position1)
+                    //TODO
+//                    AnimationExtracted(faceImage, position, smileImage, position1)
+                    AnimationExtracted(smileImage, position, smileImage, position1)
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.ekycSuccessfullyDone),
@@ -240,7 +242,9 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
-                    ErrorAnimationExtracted(faceImage, smileImage, scale)
+                    //TODO
+//                    ErrorAnimationExtracted(faceImage, smileImage, scale)
+                    ErrorAnimationExtracted(smileImage, smileImage, scale)
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.facesNotMatch),

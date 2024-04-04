@@ -92,10 +92,10 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                 try {
                     onBoardingViewModel.enableLoading()
                     val facialDocumentModel =
-                        DotHelper.documentDetectFace(documentFrontUri, activity)
-                    onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
+                        DotHelper.documentNonFacial(documentFrontUri, activity)
+//                    onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
                     onBoardingViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImage
+                        facialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()

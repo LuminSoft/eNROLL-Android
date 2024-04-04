@@ -40,8 +40,8 @@ import java.util.Random
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename = "env"
-    filename = "env_org1"
+    filename = "env"
+//    filename = "env_org1"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
