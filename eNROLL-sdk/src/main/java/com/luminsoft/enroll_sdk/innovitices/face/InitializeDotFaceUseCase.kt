@@ -1,8 +1,8 @@
 package com.luminsoft.enroll_sdk.innovitices.face
 
 import android.content.Context
-import com.innovatrics.dot.face.DotFace
-import com.innovatrics.dot.face.DotFaceConfiguration
+import com.innovatrics.dot.face.DotFaceLibrary
+import com.innovatrics.dot.face.DotFaceLibraryConfiguration
 import com.innovatrics.dot.face.detection.fast.DotFaceDetectionFastModule
 import com.innovatrics.dot.face.expressionneutral.DotFaceExpressionNeutralModule
 import com.innovatrics.dot.face.modules.DotFaceModule
@@ -15,14 +15,14 @@ import java.io.InputStream
 
 
 class InitializeDotFaceUseCase(
-    private val dotFace: DotFace = DotFace.getInstance(),
+    private val dotFace: DotFaceLibrary = DotFaceLibrary.getInstance(),
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
-    suspend operator fun invoke(context: Context, listener: DotFace.InitializationListener) = withContext(ioDispatcher) {
+    suspend operator fun invoke(context: Context, listener: DotFaceLibrary.InitializationListener) = withContext(ioDispatcher) {
         val license = readLicense(context)
         val modules = createModules()
-        val configuration = DotFaceConfiguration.Builder(context, license, modules).build()
+        val configuration = DotFaceLibraryConfiguration.Builder(context, license, modules).build()
         dotFace.initializeAsync(configuration, listener)
     }
 
@@ -38,7 +38,7 @@ class InitializeDotFaceUseCase(
             )
         )
         val size: Int = ins.available()
-        var byteArray = ByteArray(size)
+        val byteArray = ByteArray(size)
         ins.read(byteArray)
 
         return byteArray
