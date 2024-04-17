@@ -324,7 +324,9 @@ private fun setCustomerId(
     onBoardingViewModel: OnBoardingViewModel,
     customerData: State<CustomerData?>
 ) {
-    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.customerId.value = "1111"
+//    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.facePhotoPath.value = customerData.value?.photo
 }
 
 @Composable
