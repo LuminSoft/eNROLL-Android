@@ -12,7 +12,7 @@ data class NationalIDConfirmationResponse(
 
 data class CustomerData(
 
-    @SerializedName("customerId") var customerId: String? = null,
+//    @SerializedName("customerId") var customerId: String? = null,
     @SerializedName("idFrontScan") var idFrontScan: String? = null,
     @SerializedName("idBackScan") var idBackScan: String? = null,
     @SerializedName("photo") var photo: String? = null,

@@ -36,10 +36,10 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
-    var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
@@ -80,6 +80,7 @@ class OnBoardingViewModel(
     fun enableLoading() {
         loading.value = true
     }
+
     fun disableLoading() {
         loading.value = false
     }
@@ -129,16 +130,22 @@ class OnBoardingViewModel(
         }
     }
 
-    fun removeCurrentStep(id: Int) {
+    fun removeCurrentStep(id: Int): Boolean {
         if (steps.value != null) {
             val stepsSize = steps.value!!.size
             steps.value = steps.value!!.toMutableList().apply {
                 removeIf { x -> x.registrationStepId == id }
             }.toList()
             val newStepsSize = steps.value!!.size
-            if (stepsSize != newStepsSize)
-                navigateToNextStep()
+            if (stepsSize != newStepsSize) {
+                return if (steps.value!!.isNotEmpty()) {
+                    navigateToNextStep()
+                    false
+                } else
+                    true
+            }
         }
+        return false
     }
 
     private fun navigateToNextStep() {

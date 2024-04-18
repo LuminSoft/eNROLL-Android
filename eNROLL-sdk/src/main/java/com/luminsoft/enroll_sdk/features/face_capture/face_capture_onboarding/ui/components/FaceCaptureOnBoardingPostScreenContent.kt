@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
@@ -149,53 +150,75 @@ private fun MainContent(
     val context = LocalContext.current
 
     val faceCaptureViewModel = remember { faceCaptureOnBoardingPostScanViewModel }
-    val faceImage = remember { onBoardingViewModel.faceImage.value }
     val smileImage = remember { onBoardingViewModel.smileImage.value }
+    val facePhotoPath = remember { onBoardingViewModel.facePhotoPath.value }
 
     val loading = faceCaptureViewModel.loading.collectAsState()
     val uploadSelfieData = faceCaptureViewModel.uploadSelfieData.collectAsState()
     val failure = faceCaptureViewModel.failure.collectAsState()
     val selfieImageApproved = faceCaptureViewModel.selfieImageApproved.collectAsState()
-    val startPosition = Offset(400f, 100f)
+    val startPosition = Offset(250f, 100f)
     val endPosition = Offset(0f, 100f)
     val endPosition1 = Offset(-0f, 100f)
     val position = remember { Animatable(startPosition, Offset.VectorConverter) }
     val scale = remember { Animatable(initialValue = 0f) }
-    val startPosition1 = Offset(-400f, 100f)
+    val startPosition1 = Offset(-250f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
-    LaunchedEffect(endPosition) {
-        position.animateTo(
-            targetValue = endPosition,
-            animationSpec = tween(
-                durationMillis = 6000,
-                easing = LinearOutSlowInEasing
-            )
-        )
-    }
-    LaunchedEffect(endPosition1) {
-        position1.animateTo(
-            targetValue = endPosition1,
-            animationSpec = tween(
-                durationMillis = 6000,
-                easing = LinearOutSlowInEasing
-            )
-        )
-    }
+    val faceImageBaseUrl = "http://197.168.1.39:4600/api/v1/ApplicantProfile/GetImage?path="
 
-    LaunchedEffect(scale) {
-        scale.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = 6000,
-                easing = LinearOutSlowInEasing
+    if (!loading.value) {
+        LaunchedEffect(endPosition) {
+            position.animateTo(
+                targetValue = endPosition,
+                animationSpec = tween(
+                    durationMillis = 7000,
+                    delayMillis = 10,
+                    easing = LinearOutSlowInEasing
+                )
             )
-        )
+        }
+        LaunchedEffect(endPosition1) {
+            position1.animateTo(
+                targetValue = endPosition1,
+                animationSpec = tween(
+                    durationMillis = 7000,
+                    delayMillis = 10,
+                    easing = LinearOutSlowInEasing
+                )
+            )
+        }
+
+        LaunchedEffect(scale) {
+            scale.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(
+                    durationMillis = 7000,
+                    delayMillis = 10,
+                    easing = LinearOutSlowInEasing
+                )
+            )
+        }
     }
 
     BackGroundView(navController = navController, showAppBar = false) {
 
         if (selfieImageApproved.value) {
-            onBoardingViewModel.removeCurrentStep(2)
+            val isEmpty = onBoardingViewModel.removeCurrentStep(2)
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
+                        )
+                    },
+                )
         }
 
         if (loading.value)
@@ -216,7 +239,15 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
-                    AnimationExtracted(faceImage, position, smileImage, position1)
+                    //TODO
+//                    AnimationExtracted(faceImage, position, smileImage, position1)
+                    AnimationExtracted(
+                        position,
+                        smileImage,
+                        position1,
+                        facePhotoPath,
+                        faceImageBaseUrl
+                    )
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.ekycSuccessfullyDone),
@@ -240,7 +271,9 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
-                    ErrorAnimationExtracted(faceImage, smileImage, scale)
+                    //TODO
+//                    ErrorAnimationExtracted(faceImage, smileImage, scale)
+                    ErrorAnimationExtracted(smileImage, scale, facePhotoPath, faceImageBaseUrl)
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.facesNotMatch),
@@ -284,10 +317,11 @@ private fun MainContent(
 
 @Composable
 private fun AnimationExtracted(
-    faceImage: Bitmap?,
     position: Animatable<Offset, AnimationVector2D>,
     smileImage: Bitmap?,
-    position1: Animatable<Offset, AnimationVector2D>
+    position1: Animatable<Offset, AnimationVector2D>,
+    facePhotoPath: String?,
+    faceImageBaseUrl: String,
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -295,9 +329,9 @@ private fun AnimationExtracted(
             modifier = Modifier.fillMaxWidth()
         ) {
             Box {
-                Image(
-                    bitmap = faceImage!!.asImageBitmap(),
-                    contentDescription = "some useful description",
+                AsyncImage(
+                    model = faceImageBaseUrl + facePhotoPath!!,
+                    contentDescription = "face Photo Path",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(150.dp)
@@ -323,18 +357,20 @@ private fun AnimationExtracted(
 
 @Composable
 private fun ErrorAnimationExtracted(
-    faceImage: Bitmap?,
     smileImage: Bitmap?,
     scale: Animatable<Float, AnimationVector1D>,
+    facePhotoPath: String?,
+    faceImageBaseUrl: String,
 ) {
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(0.7f)
     ) {
-        Image(
-            bitmap = faceImage!!.asImageBitmap(),
-            contentDescription = "some useful description",
+
+        AsyncImage(
+            model = faceImageBaseUrl + facePhotoPath!!,
+            contentDescription = "face Photo Path",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(120.dp)

@@ -5,9 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
-import com.innovatrics.android.commons.Logger
 import com.innovatrics.commons.android.RawImageUtils
 import com.innovatrics.commons.img.RawBGRImage
+import com.innovatrics.dot.core.Logger
 import com.innovatrics.dot.face.detection.DetectedFace
 import com.innovatrics.dot.face.detection.FaceDetectorFactory
 import com.innovatrics.dot.face.image.BgrRawImageFactory

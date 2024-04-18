@@ -108,7 +108,22 @@ fun NationalIdOnBoardingBackConfirmationScreen(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (backNIApproved.value) {
-            onBoardingViewModel.removeCurrentStep(1)
+            val isEmpty = onBoardingViewModel.removeCurrentStep(1)
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
+                        )
+                    },
+                )
         }
 
         if (loading.value) Column(

@@ -262,4 +262,10 @@
     <string name="dot_face_auto_capture_instruction_pitch_too_low">أرفع ذقنك</string>
     <string name="dot_face_auto_capture_instruction_yaw_too_left">أنظر يمينا</string>
     <string name="dot_face_auto_capture_instruction_yaw_too_right">أنظر يسارا</string>
+    <string name="dot_document_auto_capture_instruction_document_does_not_fit_placeholder">ضع الوثيقة في المنتصف</string>
+    <string name="dot_document_auto_capture_instruction_document_not_detected">مسح الوثيقة</string>
+    <string name="dot_document_auto_capture_instruction_document_out_of_bounds">ضع الوثيقة في المنتصف</string>
+    <string name="dot_document_auto_capture_instruction_hotspots_score_too_high">تجنب الانعكاسات</string>
+    <string name="dot_document_auto_capture_instruction_mrz_not_present">امسح مستندًا صالحًا للقراءة آليًا</string>
+    <string name="dot_document_auto_capture_instruction_size_too_small">اقترب</string>
 </resources>

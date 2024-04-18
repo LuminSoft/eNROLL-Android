@@ -262,4 +262,10 @@
     <string name="dot_face_auto_capture_instruction_yaw_too_left">Look right</string>
     <string name="dot_face_auto_capture_instruction_yaw_too_right">Look left</string>
     <string name="reScan">Rescan</string>
+    <string name="dot_document_auto_capture_instruction_document_does_not_fit_placeholder">Center document</string>
+    <string name="dot_document_auto_capture_instruction_document_not_detected">Scan document</string>
+    <string name="dot_document_auto_capture_instruction_document_out_of_bounds">Center document</string>
+    <string name="dot_document_auto_capture_instruction_hotspots_score_too_high">Avoid reflections</string>
+    <string name="dot_document_auto_capture_instruction_mrz_not_present">Scan valid machine readable document</string>
+    <string name="dot_document_auto_capture_instruction_size_too_small">Move closer</string>
 </resources>

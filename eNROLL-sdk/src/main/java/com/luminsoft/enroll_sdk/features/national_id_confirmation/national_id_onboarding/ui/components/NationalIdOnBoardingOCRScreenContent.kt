@@ -92,10 +92,10 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                 try {
                     onBoardingViewModel.enableLoading()
                     val facialDocumentModel =
-                        DotHelper.documentDetectFace(documentFrontUri, activity)
-                    onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
+                        DotHelper.documentNonFacial(documentFrontUri, activity)
+//                    onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
                     onBoardingViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImage
+                        facialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()
@@ -324,7 +324,9 @@ private fun setCustomerId(
     onBoardingViewModel: OnBoardingViewModel,
     customerData: State<CustomerData?>
 ) {
-    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.customerId.value = "1111"
+//    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.facePhotoPath.value = customerData.value?.photo
 }
 
 @Composable

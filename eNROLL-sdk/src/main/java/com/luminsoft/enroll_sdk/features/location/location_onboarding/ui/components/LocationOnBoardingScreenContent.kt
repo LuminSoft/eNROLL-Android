@@ -113,7 +113,22 @@ fun LocationOnBoardingScreenContent(
 
     BackGroundView(navController = navController, showAppBar = false) {
         if (locationSent.value) {
-            onBoardingViewModel.removeCurrentStep(6)
+            val isEmpty = onBoardingViewModel.removeCurrentStep(6)
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
+                        )
+                    },
+                )
         }
         val launcherMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
