@@ -121,8 +121,7 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
-                            navController!!.navigate(phoneNumbersOnBoardingScreenContent)
-//                            navController!!.navigate(onBoardingScreenContent)
+                            navController!!.navigate(onBoardingScreenContent)
                         })
 
                     }

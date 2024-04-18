@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components
 
-
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -38,11 +37,11 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.PhoneInfoUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.PhoneSendOtpUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.validateOtpPhoneNumberScreenContent
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.PhoneNumbersOnBoardingViewModel
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.userNameValue
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ValidateOtpPhoneUseCase
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.ValidateOtpPhoneNumbersViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -54,60 +53,39 @@ import org.koin.compose.koinInject
 
 
 @Composable
-fun PhoneNumbersOnBoardingScreenContent(
+fun ValidateOtpPhoneNumberScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
     navController: NavController,
 ) {
 
-    val phoneInfoUseCase =
-        PhoneInfoUseCase(koinInject())
+    val validateOtpPhoneUseCase =
+        ValidateOtpPhoneUseCase(koinInject())
 
-    val phoneSendOtpUseCase =
-        PhoneSendOtpUseCase(koinInject())
-
-    val phoneNumbersOnBoardingViewModel =
+    val validateOtpPhoneNumbersViewModel =
         remember {
-            PhoneNumbersOnBoardingViewModel(
-                phoneInfoUseCase = phoneInfoUseCase,
-                phoneSendOtpUseCase = phoneSendOtpUseCase
+            ValidateOtpPhoneNumbersViewModel(
+                validateOtpPhoneUseCase = validateOtpPhoneUseCase
             )
         }
-    val phoneNumbersOnBoardingVM = remember { phoneNumbersOnBoardingViewModel }
+    val phoneNumbersOnBoardingVM = remember { validateOtpPhoneNumbersViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
-    val loading = phoneNumbersOnBoardingViewModel.loading.collectAsState()
-    val phoneNumberSentSuccessfully =
-        phoneNumbersOnBoardingViewModel.phoneNumberSentSuccessfully.collectAsState()
-    val failure = phoneNumbersOnBoardingViewModel.failure.collectAsState()
+    val loading = validateOtpPhoneNumbersViewModel.loading.collectAsState()
+    val otpApproved =
+        validateOtpPhoneNumbersViewModel.otpApproved.collectAsState()
+    val failure = validateOtpPhoneNumbersViewModel.failure.collectAsState()
 
     var phoneNumber: String by rememberSaveable { mutableStateOf("") }
     var phoneCode: String by rememberSaveable { mutableStateOf("") }
     var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
     var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
-    var isClicked by mutableStateOf(false)
 
 
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (isClicked) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.WARNING,
-                text = stringResource(id = R.string.phoneOtpContentConfirmationMessage) + fullPhoneNumber,
-                buttonText = stringResource(id = R.string.continue_to_next),
-                secondButtonText = stringResource(id = R.string.cancel),
-                onPressedButton = {
-                    phoneNumbersOnBoardingVM.callPhoneInfo(phoneCode.replace("+", ""), phoneNumber)
-
-                },
-                onPressedSecondButton = {
-                    activity.finish()
-                }
-            )
-        }
-
-        if (phoneNumberSentSuccessfully.value) {
-            navController.navigate(validateOtpPhoneNumberScreenContent)
+        if (otpApproved.value) {
+            navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -160,9 +138,50 @@ fun PhoneNumbersOnBoardingScreenContent(
                     painterResource(R.drawable.step_03_phone),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.3f)
+                    modifier = Modifier.fillMaxHeight(0.2f)
                 )
+                /*
+                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
 
+                                    Row(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .height(75.dp)
+                                    ) {
+                                        DropdownList(
+                                            itemList = countries.value!!,
+                                            selectedIndex = selectedIndex,
+                                            modifier = Modifier.fillMaxWidth(0.3f),
+                                            validateOtpPhoneNumbersViewModel
+                                        )
+
+                                        Spacer(modifier = Modifier.width(20.dp))
+                                        NormalTextField(
+                                            label = ResourceProvider.instance.getStringResource(R.string.type_your_phoneNumber),
+                                            value = userNameValue.value,
+                                            width = 1f,
+                                            height = 60.0,
+                                            icon = {
+                                                Image(
+                                                    painterResource(R.drawable.user_icon),
+                                                    contentDescription = "",
+                                                    modifier = Modifier
+                                                        .height(50.dp)
+                                                )
+                                            },
+                                            onValueChange = {
+                                                userNameValue.value = it
+                //                            userHasModifiedText.value = true
+                                            },
+                                            keyboardOptions = KeyboardOptions(
+                                                imeAction = ImeAction.Done,
+                                            ),
+                //                        error = phoneNumberValidation(),
+                                        )
+
+
+                                    }
+                                }*/
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -192,28 +211,66 @@ fun PhoneNumbersOnBoardingScreenContent(
                         label = {
                             Text(
                                 ResourceProvider.instance.getStringResource(R.string.phoneNumber),
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.primary
                             )
                         },
                     )
                 }
+                /*   Box() {
+                       if (showDropdown.value) {
+                           Popup(
+                               alignment = Alignment.TopCenter,
+                               properties = PopupProperties(
+                                   excludeFromSystemGesture = true,
+                               ),
+                               // to dismiss on click outside
+                               onDismissRequest = {
+                                   validateOtpPhoneNumbersViewModel.showDropdown.value = false
+                               }
+                           ) {
 
+                               Column(
+                                   modifier = Modifier
+                                       .fillMaxHeight(0.5f)
+                                       .fillMaxWidth(0.4f)
+   //                            .heightIn(max = 90.dp)
+                                       .verticalScroll(state = scrollState),
+   //                            .border(width = 1.dp, color = Color.Gray),
+                                   horizontalAlignment = Alignment.CenterHorizontally,
+                               ) {
 
-                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                                   countries.value!!.onEachIndexed { index, item ->
+                                       if (index != 0) {
+                                           Divider(thickness = 1.dp, color = Color.Black)
+                                       }
+                                       Box(
+                                           modifier = Modifier
+                                               .background(Color.White)
+                                               .fillMaxWidth()
+                                               .padding(bottom = 7.dp, top = 7.dp)
+                                               .clickable {
+                                                   selectedIndex = index
+                                                   validateOtpPhoneNumbersViewModel.showDropdown.value =
+                                                       !validateOtpPhoneNumbersViewModel.showDropdown.value
+                                               },
+                                           contentAlignment = Alignment.Center
+                                       ) {
+                                           Text(text = item.name + " +" + item.code, fontSize = 10.sp)
+                                       }
+                                   }
 
-                Text(
-                    text = stringResource(id = R.string.sendPhoneOtpContent),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 12.sp
-                )
+                               }
+                           }
+                       }
+                   }*/
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
                 ButtonView(
                     isEnabled = isNumberValid,
                     onClick = {
-                        isClicked = true
-                    }, title = stringResource(id = R.string.confirmAndContinue)
+                    }, title = stringResource(id = R.string.continue_to_next)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -221,4 +278,28 @@ fun PhoneNumbersOnBoardingScreenContent(
         }
     }
 
+}
+
+private fun phoneNumberValidation() = when {
+
+    userNameValue.value.text.isEmpty() -> {
+        ResourceProvider.instance.getStringResource(R.string.required_english_name)
+    }
+
+    userNameValue.value.text.length < 2 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_min)
+    }
+
+    userNameValue.value.text.length > 150 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_max)
+    }
+
+    !Regex("^[A-Za-z-. ]+\$").matches(
+        userNameValue.value.text
+    ) -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_english_name)
+
+    }
+
+    else -> null
 }

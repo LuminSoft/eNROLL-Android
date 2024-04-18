@@ -137,6 +137,7 @@
     <string name="type_your_password">Enter password</string>
     <string name="type_your_confirm_password">Confirm password</string>
     <string name="type_your_phoneNumber">Enter your phone number</string>
+    <string name="phoneNumber">Phone Number</string>
     <string name="confirmAndContinue">Confirm and continue</string>
     <string name="sendEmailOtpContent">An OTP will be sent to the email you entered, please copy and paste it upon request</string>
     <string name="sendPhoneOtpContent">An OTP will be sent to the number you entered above</string>

@@ -134,6 +134,7 @@
     <string name="type_your_password">أدخل كلمة المرور</string>
     <string name="type_your_confirm_password">أدخل تأكيد كلمة المرور</string>
     <string name="type_your_phoneNumber">أدخل رقم المحمول</string>
+    <string name="phoneNumber">رقم المحمول</string>
     <string name="confirmAndContinue">تأكيد ومتابعـة</string>
     <string name="sendEmailOtpContent">سوف يتم إرسال رمز التحقق إلى البريد الذي تم إدخاله، برجاءنسخ الرمز ولصقه عند الطلب</string>
     <string name="sendPhoneOtpContent">سوف يتم إرسال رمز التحقق إلى الرقم المدخل أعلاه</string>
