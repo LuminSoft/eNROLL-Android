@@ -55,10 +55,10 @@ fun NationalIdOnBoardingPreScanScreen(
             if (documentFrontUri != null) {
                 try {
                     val facialDocumentModel =
-                        DotHelper.documentDetectFace(documentFrontUri, activity)
-                    rememberedViewModel.faceImage.value = facialDocumentModel.faceImage
+                        DotHelper.documentNonFacial(documentFrontUri, activity)
+//                    rememberedViewModel.faceImage.value = facialDocumentModel.faceImage
                     rememberedViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImage
+                        facialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()
@@ -76,10 +76,10 @@ fun NationalIdOnBoardingPreScanScreen(
             if (documentFrontUri != null) {
                 try {
                     val facialDocumentModel =
-                        DotHelper.documentDetectFace(documentFrontUri, activity)
-                    rememberedViewModel.faceImage.value = facialDocumentModel.faceImage
+                        DotHelper.documentNonFacial(documentFrontUri, activity)
+//                    rememberedViewModel.faceImage.value = facialDocumentModel.faceImage
                     rememberedViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImage
+                        facialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
                     //TODO handle error

@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.ui_components.theme.errorColor
 import com.luminsoft.enroll_sdk.ui_components.theme.successColor
@@ -69,14 +70,18 @@ fun DialogView(
                             .height(200.dp)
                             .fillMaxWidth(),
                     )
-                    Column (modifier = Modifier
-                        .fillMaxWidth(),  horizontalAlignment = Alignment.CenterHorizontally,verticalArrangement = Arrangement.Top){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Top
+                    ) {
                         Spacer(modifier = Modifier.height(20.dp))
                         Image(
                             painterResource(getImageId(bottomSheetStatus)),
                             contentDescription = "",
 
-                        )
+                            )
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -84,15 +89,20 @@ fun DialogView(
                     text = text,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium,
+                    fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp)){
-                    Box (modifier = Modifier
+                Row(
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)){
+                        .padding(horizontal = 5.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
                         ButtonView(
                             onClick = {
                                 onPressedButton()
@@ -101,22 +111,24 @@ fun DialogView(
                             color = getColor(bottomSheetStatus = bottomSheetStatus)
                         )
                     }
-                    if(secondButtonText != null && onPressedSecondButton != null){
+                    if (secondButtonText != null && onPressedSecondButton != null) {
                         Spacer(modifier = Modifier.width(10.dp))
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)){
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                        ) {
 
-                        ButtonView(
-                            onClick = {
-                                onPressedSecondButton()
-                            },
-                            title = secondButtonText,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            borderColor = getColor(bottomSheetStatus = bottomSheetStatus),
-                            textColor = getColor(bottomSheetStatus = bottomSheetStatus)
-                        )
-                    }
+                            ButtonView(
+                                onClick = {
+                                    onPressedSecondButton()
+                                },
+                                title = secondButtonText,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                borderColor = getColor(bottomSheetStatus = bottomSheetStatus),
+                                textColor = getColor(bottomSheetStatus = bottomSheetStatus)
+                            )
+                        }
                     }
                 }
 
@@ -161,5 +173,5 @@ fun getImageId(bottomSheetStatus: BottomSheetStatus): Int {
 
 enum class BottomSheetStatus {
 
-    SUCCESS, ERROR , WARNING
+    SUCCESS, ERROR, WARNING
 }

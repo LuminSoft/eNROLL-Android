@@ -11,6 +11,8 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.validateOtpPhoneNumberScreenContent
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
@@ -35,10 +37,12 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
+    var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
-    var faceImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
@@ -69,7 +73,7 @@ class OnBoardingViewModel(
                 },
                 {
                     loading.value = false
-//                    navController!!.navigate(nationalIdOnBoardingPreScanScreen)
+//                    navController!!.navigate(validateOtpPhoneNumberScreenContent)
                     navigateToNextStep()
                 })
 
@@ -79,6 +83,7 @@ class OnBoardingViewModel(
     fun enableLoading() {
         loading.value = true
     }
+
     fun disableLoading() {
         loading.value = false
     }
@@ -127,16 +132,22 @@ class OnBoardingViewModel(
         }
     }
 
-    fun removeCurrentStep(id: Int) {
+    fun removeCurrentStep(id: Int): Boolean {
         if (steps.value != null) {
             val stepsSize = steps.value!!.size
             steps.value = steps.value!!.toMutableList().apply {
                 removeIf { x -> x.registrationStepId == id }
             }.toList()
             val newStepsSize = steps.value!!.size
-            if (stepsSize != newStepsSize)
-                navigateToNextStep()
+            if (stepsSize != newStepsSize) {
+                return if (steps.value!!.isNotEmpty()) {
+                    navigateToNextStep()
+                    false
+                } else
+                    true
+            }
         }
+        return false
     }
 
     private fun navigateToNextStep() {

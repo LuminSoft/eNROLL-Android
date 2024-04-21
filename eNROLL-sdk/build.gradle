@@ -69,12 +69,12 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     implementation "com.airbnb.android:lottie-compose:6.0.1"
-    implementation "com.innovatrics.dot:dot-document:3.4.1"
-    implementation "com.innovatrics.dot:dot-face-detection-fast:4.8.2"
-    implementation "com.innovatrics.dot:dot-face-expression-neutral:4.8.2"
-    implementation "com.innovatrics.dot:dot-face-passive-liveness:4.8.2"
-    implementation "com.innovatrics.dot:dot-nfc:2.2.2"
-    implementation "com.innovatrics.dot:dot-face-verification:4.8.2"
+    implementation "com.innovatrics.dot:dot-document:5.5.1"
+    implementation "com.innovatrics.dot:dot-face-detection-fast:5.0.0"
+    implementation "com.innovatrics.dot:dot-face-expression-neutral:5.0.0"
+    implementation "com.innovatrics.dot:dot-face-passive-liveness:5.0.0"
+    implementation "com.innovatrics.dot:dot-nfc:5.0.0"
+    implementation "com.innovatrics.dot:dot-face-verification:5.0.0"
     implementation 'com.gemalto.jp2:jp2-android:1.0.3'
 
     implementation 'androidx.activity:activity-ktx:1.8.2'
@@ -103,8 +103,12 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.2.2"
     implementation 'androidx.navigation:navigation-runtime-ktx:2.7.2'
     implementation 'androidx.navigation:navigation-compose:2.7.2'
+//    implementation 'com.github.togisoft:jetpack_compose_country_code_picker:1.1.4'
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
+
+    implementation("com.github.jump-sdk:jetpack_compose_country_code_picker_emoji:2.2.7")
+
 
 //    implementation(project(":ekyc-android-sdk:libs:main"))
 //    implementation(project(":ekyc-android-sdk:libs:core"))

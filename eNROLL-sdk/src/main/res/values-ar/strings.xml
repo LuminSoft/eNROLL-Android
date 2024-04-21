@@ -134,6 +134,7 @@
     <string name="type_your_password">أدخل كلمة المرور</string>
     <string name="type_your_confirm_password">أدخل تأكيد كلمة المرور</string>
     <string name="type_your_phoneNumber">أدخل رقم المحمول</string>
+    <string name="phoneNumber">رقم المحمول</string>
     <string name="confirmAndContinue">تأكيد ومتابعـة</string>
     <string name="sendEmailOtpContent">سوف يتم إرسال رمز التحقق إلى البريد الذي تم إدخاله، برجاءنسخ الرمز ولصقه عند الطلب</string>
     <string name="sendPhoneOtpContent">سوف يتم إرسال رمز التحقق إلى الرقم المدخل أعلاه</string>
@@ -206,6 +207,7 @@
     <string name="latitude">خط الطول: %1$s</string>
     <string name="longitude">خط العرض: %1$s</string>
     <string name="locationSuccessText">لقد تم تسجيل موقعك الحالي</string>
+    <string name="youAddedTheFollowingPhoneNumbers">لقد قمت بإضافة أرقام الهواتف التالية</string>
     <string name="getLocationText">لاكمال عملية التسجيل سوف نحتاج الموقع الحالي ، يرجى النقر على الحصول على الموقع</string>
     <string name="locationAccessErrorText">يجب أن تسمح بالموقع ولن تكتمل تطبيقك بدون موقعك ، من أجل السماح بالانتقال إلى صلاحيات التطبيق والسماح بالموقع.</string>
     <string name="getLocationButtonText">الحصول على الموقع</string>
@@ -262,4 +264,13 @@
     <string name="dot_face_auto_capture_instruction_pitch_too_low">أرفع ذقنك</string>
     <string name="dot_face_auto_capture_instruction_yaw_too_left">أنظر يمينا</string>
     <string name="dot_face_auto_capture_instruction_yaw_too_right">أنظر يسارا</string>
+    <string name="dot_document_auto_capture_instruction_document_does_not_fit_placeholder">ضع الوثيقة في المنتصف</string>
+    <string name="dot_document_auto_capture_instruction_document_not_detected">مسح الوثيقة</string>
+    <string name="dot_document_auto_capture_instruction_document_out_of_bounds">ضع الوثيقة في المنتصف</string>
+    <string name="dot_document_auto_capture_instruction_hotspots_score_too_high">تجنب الانعكاسات</string>
+    <string name="dot_document_auto_capture_instruction_mrz_not_present">امسح مستندًا صالحًا للقراءة آليًا</string>
+    <string name="dot_document_auto_capture_instruction_size_too_small">اقترب</string>
+    <string name="make_default">جعل الافتراضي</string>
+    <string name="addPhoneNumber">إضافة رقم هاتف</string>
+
 </resources>
