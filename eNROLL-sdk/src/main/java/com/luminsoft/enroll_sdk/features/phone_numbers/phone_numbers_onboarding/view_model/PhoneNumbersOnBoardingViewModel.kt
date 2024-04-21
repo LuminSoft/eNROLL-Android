@@ -23,7 +23,6 @@ class PhoneNumbersOnBoardingViewModel(
     private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
 
 
-
     fun callPhoneInfo(phoneCode: String, phoneNumber: String) {
         phoneInfoCall(phoneCode, phoneNumber)
     }
@@ -63,7 +62,7 @@ class PhoneNumbersOnBoardingViewModel(
                     loading.value = false
                 },
                 {
-                    loading.value = false
+//                    loading.value = false
                     phoneNumberSentSuccessfully.value = true
 
                 })

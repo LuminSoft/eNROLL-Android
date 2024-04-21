@@ -103,7 +103,7 @@ class NationalIdBackOcrViewModel(
                     loading.value = false
                 },
                 {
-                    loading.value = false
+//                    loading.value = false
                     backNIApproved.value = true
                 })
         }

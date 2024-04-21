@@ -75,7 +75,7 @@ class MultiplePhoneNumbersViewModel(
                 },
                 {
                     phoneNumbersApproved.value = true
-                    loading.value = false
+//                    loading.value = false
                 })
         }
 

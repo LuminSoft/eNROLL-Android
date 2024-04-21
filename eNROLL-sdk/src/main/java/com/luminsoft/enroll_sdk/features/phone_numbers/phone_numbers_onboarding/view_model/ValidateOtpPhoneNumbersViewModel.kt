@@ -49,7 +49,7 @@ class ValidateOtpPhoneNumbersViewModel(
                 },
                 {
                     otpApproved.value = true
-                    loading.value = false
+//                    loading.value = false
                 })
         }
 

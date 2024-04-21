@@ -98,7 +98,7 @@ class NationalIdFrontOcrViewModel(
 
                 },
                 {
-                    loading.value = false
+//                    loading.value = false
                     frontNIApproved.value = true
 
                 })
