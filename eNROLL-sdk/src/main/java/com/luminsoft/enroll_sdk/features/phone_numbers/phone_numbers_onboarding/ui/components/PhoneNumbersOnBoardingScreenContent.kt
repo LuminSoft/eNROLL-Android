@@ -97,11 +97,14 @@ fun PhoneNumbersOnBoardingScreenContent(
                 buttonText = stringResource(id = R.string.continue_to_next),
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedButton = {
+                    phoneNumbersOnBoardingViewModel.loading.value = true
+                    onBoardingViewModel.currentPhoneNumber.value = phoneNumber
+                    isClicked = false
                     phoneNumbersOnBoardingVM.callPhoneInfo(phoneCode.replace("+", ""), phoneNumber)
 
                 },
                 onPressedSecondButton = {
-                    activity.finish()
+                    isClicked = false
                 }
             )
         }
@@ -166,11 +169,17 @@ fun PhoneNumbersOnBoardingScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    if (onBoardingViewModel.currentPhoneNumber.value != null) {
+                        phoneCode = onBoardingViewModel.currentPhoneNumberCode.value!!
+                        phoneNumber = onBoardingViewModel.currentPhoneNumber.value!!
+                        fullPhoneNumber = phoneCode + phoneNumber
+                    }
                     TogiCountryCodePicker(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp),
-                        initialCountryPhoneCode = "+20",
+                        initialCountryPhoneCode = onBoardingViewModel.currentPhoneNumberCode.value,
+                        initialPhoneNumber = onBoardingViewModel.currentPhoneNumber.value,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
                             disabledBorderColor = MaterialTheme.colorScheme.primary,
@@ -186,8 +195,11 @@ fun PhoneNumbersOnBoardingScreenContent(
                             Log.d("CCP", "onValueChange: $code $phone -> $isValid")
                             phoneNumber = phone
                             phoneCode = code
+                            onBoardingViewModel.currentPhoneNumberCode.value = code
                             fullPhoneNumber = code + phone
                             isNumberValid = isValid
+                            if (!isValid)
+                                onBoardingViewModel.currentPhoneNumber.value = null
                         },
                         label = {
                             Text(
@@ -210,7 +222,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
                 ButtonView(
-                    isEnabled = isNumberValid,
+                    isEnabled = onBoardingViewModel.currentPhoneNumber.value != null || isNumberValid,
                     onClick = {
                         isClicked = true
                     }, title = stringResource(id = R.string.confirmAndContinue)

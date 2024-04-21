@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_api
 
-import com.luminsoft.enroll_sdk.core.network.ApiBaseResponse
 import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.countries_code.GetCountriesResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.make_default.MakeDefaultRequestModel
@@ -28,9 +27,9 @@ interface PhoneNumbersApi {
     suspend fun validateOTP(@Body request: ValidateOTPRequestModel): Response<BasicResponseModel>
 
     @GET("/api/v1/onboarding/PhoneInfo/GetVerifiedPhones")
-    suspend fun getVerifiedPhones(): Response<ApiBaseResponse<ArrayList<GetVerifiedPhonesResponseModel>>>
+    suspend fun getVerifiedPhones(): Response<List<GetVerifiedPhonesResponseModel>>
 
-    @POST("/api/v1/onboarding/PhoneInfo/MakeDefault")
+    @POST("/api/v1/onboarding/PhoneInfo/SetDefault")
     suspend fun makeDefault(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
 }

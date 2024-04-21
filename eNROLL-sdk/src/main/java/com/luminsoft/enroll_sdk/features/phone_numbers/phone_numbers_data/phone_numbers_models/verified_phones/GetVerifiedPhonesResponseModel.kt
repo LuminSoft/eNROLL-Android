@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 open class GetVerifiedPhonesResponseModel {
 
-    @SerializedName("id")
-    internal var id: Int? = null
-
     @SerializedName("phoneNumber")
     internal var phoneNumber: String? = null
 

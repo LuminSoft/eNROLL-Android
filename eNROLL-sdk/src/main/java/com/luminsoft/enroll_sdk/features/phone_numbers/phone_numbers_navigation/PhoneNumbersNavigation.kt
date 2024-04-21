@@ -31,7 +31,7 @@ fun NavGraphBuilder.phoneNumberRouter(
     composable(route = validateOtpPhoneNumberScreenContent) {
         ValidateOtpPhoneNumberScreenContent(
             navController = navController,
-            onBoardingViewModel = onBoardingViewModel
+            onBoardingViewModel = onBoardingViewModel,
         )
     }
 }

@@ -4,7 +4,6 @@ package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone
 import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
-import com.luminsoft.enroll_sdk.core.network.ApiBaseResponse
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.countries_code.GetCountriesResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.make_default.MakeDefaultRequestModel
@@ -82,12 +81,11 @@ class PhoneNumbersRepositoryImplementation(private val phoneNumbersRemoteDataSou
         }
     }
 
-    override suspend fun getVerifiedPhones(): Either<SdkFailure, ArrayList<GetVerifiedPhonesResponseModel>> {
+    override suspend fun getVerifiedPhones(): Either<SdkFailure, List<GetVerifiedPhonesResponseModel>> {
         return when (val response = phoneNumbersRemoteDataSource.getVerifiedPhones()) {
             is BaseResponse.Success -> {
-                Either.Right((response.data as ApiBaseResponse<ArrayList<GetVerifiedPhonesResponseModel>>).data)
+                Either.Right((response.data as List<GetVerifiedPhonesResponseModel>))
             }
-
             is BaseResponse.Error -> {
                 Either.Left(response.error)
             }

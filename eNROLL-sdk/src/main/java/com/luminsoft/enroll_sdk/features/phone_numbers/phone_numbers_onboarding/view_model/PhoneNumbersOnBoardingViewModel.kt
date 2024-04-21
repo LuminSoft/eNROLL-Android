@@ -23,6 +23,7 @@ class PhoneNumbersOnBoardingViewModel(
     private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
 
 
+
     fun callPhoneInfo(phoneCode: String, phoneNumber: String) {
         phoneInfoCall(phoneCode, phoneNumber)
     }
@@ -51,6 +52,7 @@ class PhoneNumbersOnBoardingViewModel(
     }
 
     private fun sendOtpCall() {
+        loading.value = true
         ui {
             val response: Either<SdkFailure, Null> =
                 phoneSendOtpUseCase.call(null)

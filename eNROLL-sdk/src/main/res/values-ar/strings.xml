@@ -207,6 +207,7 @@
     <string name="latitude">خط الطول: %1$s</string>
     <string name="longitude">خط العرض: %1$s</string>
     <string name="locationSuccessText">لقد تم تسجيل موقعك الحالي</string>
+    <string name="youAddedTheFollowingPhoneNumbers">لقد قمت بإضافة أرقام الهواتف التالية</string>
     <string name="getLocationText">لاكمال عملية التسجيل سوف نحتاج الموقع الحالي ، يرجى النقر على الحصول على الموقع</string>
     <string name="locationAccessErrorText">يجب أن تسمح بالموقع ولن تكتمل تطبيقك بدون موقعك ، من أجل السماح بالانتقال إلى صلاحيات التطبيق والسماح بالموقع.</string>
     <string name="getLocationButtonText">الحصول على الموقع</string>
@@ -269,4 +270,7 @@
     <string name="dot_document_auto_capture_instruction_hotspots_score_too_high">تجنب الانعكاسات</string>
     <string name="dot_document_auto_capture_instruction_mrz_not_present">امسح مستندًا صالحًا للقراءة آليًا</string>
     <string name="dot_document_auto_capture_instruction_size_too_small">اقترب</string>
+    <string name="make_default">جعل الافتراضي</string>
+    <string name="addPhoneNumber">إضافة رقم هاتف</string>
+
 </resources>

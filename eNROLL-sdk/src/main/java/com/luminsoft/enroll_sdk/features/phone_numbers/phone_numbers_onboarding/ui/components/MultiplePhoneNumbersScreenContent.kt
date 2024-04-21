@@ -1,34 +1,35 @@
 package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components
 
-import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -36,11 +37,13 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
-import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.userNameValue
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ApprovePhonesUseCase
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MakeDefaultPhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MultiplePhoneUseCase
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.MultiplePhoneNumbersViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -48,7 +51,6 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
-import com.togitech.ccp.component.TogiCountryCodePicker
 import org.koin.compose.koinInject
 
 
@@ -61,13 +63,22 @@ fun MultiplePhoneNumbersScreenContent(
     val multiplePhoneUseCase =
         MultiplePhoneUseCase(koinInject())
 
+    val approvePhonesUseCase =
+        ApprovePhonesUseCase(koinInject())
+
+    val makeDefaultPhoneUseCase =
+        MakeDefaultPhoneUseCase(koinInject())
+
     val multiplePhoneNumbersViewModel =
         remember {
             MultiplePhoneNumbersViewModel(
-                multiplePhoneUseCase = multiplePhoneUseCase
+                multiplePhoneUseCase = multiplePhoneUseCase,
+                approvePhonesUseCase = approvePhonesUseCase,
+                makeDefaultPhoneUseCase = makeDefaultPhoneUseCase
+
             )
         }
-    val phoneNumbersOnBoardingVM = remember { multiplePhoneNumbersViewModel }
+    val multiplePhoneNumbersVM = remember { multiplePhoneNumbersViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -75,17 +86,28 @@ fun MultiplePhoneNumbersScreenContent(
     val phoneNumbersApproved =
         multiplePhoneNumbersViewModel.phoneNumbersApproved.collectAsState()
     val failure = multiplePhoneNumbersViewModel.failure.collectAsState()
-
-    var phoneNumber: String by rememberSaveable { mutableStateOf("") }
-    var phoneCode: String by rememberSaveable { mutableStateOf("") }
-    var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
-    var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
+    val verifiedPhones = multiplePhoneNumbersViewModel.verifiedPhones.collectAsState()
 
 
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (phoneNumbersApproved.value) {
-            navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
+            val isEmpty = onBoardingViewModel.removeCurrentStep(3)
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
+                        )
+                    },
+                )
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -125,7 +147,7 @@ fun MultiplePhoneNumbersScreenContent(
                     }
                 }
             }
-        } else {
+        } else if (!verifiedPhones.value.isNullOrEmpty()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -140,139 +162,35 @@ fun MultiplePhoneNumbersScreenContent(
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
-                /*
-                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-
-                                    Row(
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .height(75.dp)
-                                    ) {
-                                        DropdownList(
-                                            itemList = countries.value!!,
-                                            selectedIndex = selectedIndex,
-                                            modifier = Modifier.fillMaxWidth(0.3f),
-                                            multiplePhoneNumbersViewModel
-                                        )
-
-                                        Spacer(modifier = Modifier.width(20.dp))
-                                        NormalTextField(
-                                            label = ResourceProvider.instance.getStringResource(R.string.type_your_phoneNumber),
-                                            value = userNameValue.value,
-                                            width = 1f,
-                                            height = 60.0,
-                                            icon = {
-                                                Image(
-                                                    painterResource(R.drawable.user_icon),
-                                                    contentDescription = "",
-                                                    modifier = Modifier
-                                                        .height(50.dp)
-                                                )
-                                            },
-                                            onValueChange = {
-                                                userNameValue.value = it
-                //                            userHasModifiedText.value = true
-                                            },
-                                            keyboardOptions = KeyboardOptions(
-                                                imeAction = ImeAction.Done,
-                                            ),
-                //                        error = phoneNumberValidation(),
-                                        )
-
-
-                                    }
-                                }*/
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    TogiCountryCodePicker(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp),
-                        initialCountryPhoneCode = "+20",
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            disabledBorderColor = MaterialTheme.colorScheme.primary,
-                            errorBorderColor = MaterialTheme.colorScheme.error,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                            errorLabelColor = MaterialTheme.colorScheme.error,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary,
-                            disabledLabelColor = MaterialTheme.colorScheme.primary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        onValueChange = { (code, phone), isValid ->
-                            Log.d("CCP", "onValueChange: $code $phone -> $isValid")
-                            phoneNumber = phone
-                            phoneCode = code
-                            fullPhoneNumber = code + phone
-                            isNumberValid = isValid
-                        },
-                        label = {
-                            Text(
-                                ResourceProvider.instance.getStringResource(R.string.phoneNumber),
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                    )
+                Text(text = stringResource(id = R.string.youAddedTheFollowingPhoneNumbers))
+                LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
+                    items(verifiedPhones.value!!.size) { index ->
+                        phoneItem(verifiedPhones.value!![index], multiplePhoneNumbersVM)
+                    }
                 }
-                /*   Box() {
-                       if (showDropdown.value) {
-                           Popup(
-                               alignment = Alignment.TopCenter,
-                               properties = PopupProperties(
-                                   excludeFromSystemGesture = true,
-                               ),
-                               // to dismiss on click outside
-                               onDismissRequest = {
-                                   multiplePhoneNumbersViewModel.showDropdown.value = false
-                               }
-                           ) {
-
-                               Column(
-                                   modifier = Modifier
-                                       .fillMaxHeight(0.5f)
-                                       .fillMaxWidth(0.4f)
-   //                            .heightIn(max = 90.dp)
-                                       .verticalScroll(state = scrollState),
-   //                            .border(width = 1.dp, color = Color.Gray),
-                                   horizontalAlignment = Alignment.CenterHorizontally,
-                               ) {
-
-                                   countries.value!!.onEachIndexed { index, item ->
-                                       if (index != 0) {
-                                           Divider(thickness = 1.dp, color = Color.Black)
-                                       }
-                                       Box(
-                                           modifier = Modifier
-                                               .background(Color.White)
-                                               .fillMaxWidth()
-                                               .padding(bottom = 7.dp, top = 7.dp)
-                                               .clickable {
-                                                   selectedIndex = index
-                                                   multiplePhoneNumbersViewModel.showDropdown.value =
-                                                       !multiplePhoneNumbersViewModel.showDropdown.value
-                                               },
-                                           contentAlignment = Alignment.Center
-                                       ) {
-                                           Text(text = item.name + " +" + item.code, fontSize = 10.sp)
-                                       }
-                                   }
-
-                               }
-                           }
-                       }
-                   }*/
-
-                Spacer(modifier = Modifier.fillMaxHeight(0.35f))
+                Spacer(modifier = Modifier.height(20.dp))
+                ButtonView(
+                    isEnabled = verifiedPhones.value!!.size < 5,
+                    onClick = {
+                        onBoardingViewModel.currentPhoneNumber.value = null
+                        navController.navigate(phoneNumbersOnBoardingScreenContent)
+                    },
+                    title = stringResource(id = R.string.addPhoneNumber),
+                    textColor = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    borderColor = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonView(
-                    isEnabled = isNumberValid,
                     onClick = {
-                        phoneNumbersOnBoardingVM.callPhoneInfo()
-                    }, title = stringResource(id = R.string.continue_to_next)
+                        multiplePhoneNumbersVM.callApprovePhones()
+                    },
+                    title = stringResource(id = R.string.confirmAndContinue)
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
 
             }
@@ -281,26 +199,94 @@ fun MultiplePhoneNumbersScreenContent(
 
 }
 
-private fun phoneNumberValidation() = when {
+@Composable
+private fun phoneItem(
+    model: GetVerifiedPhonesResponseModel,
+    multiplePhoneNumbersVM: MultiplePhoneNumbersViewModel
+) {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(
+            1.dp,
+            if (model.isDefault!!) MaterialTheme.colorScheme.inverseSurface else Color.White
+        ),
+        backgroundColor = if (model.isDefault!!) MaterialTheme.colorScheme.inversePrimary else Color.White,
+        modifier = Modifier
+            .padding(top = 5.dp)
+            .padding(top = 0.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.width(15.dp))
+                Image(
+                    painterResource(R.drawable.mobile_icon),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .height(50.dp)
+                )
+                Spacer(modifier = Modifier.width(15.dp))
+                Text(
+                    text = model.phoneNumber!!,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            if (model.isDefault!!)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painterResource(R.drawable.active_phone),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .height(50.dp)
+                    )
+                    Spacer(modifier = Modifier.width(15.dp))
 
-    userNameValue.value.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.required_english_name)
+                }
+            else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box {
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .background(
+                                    MaterialTheme.colorScheme.inverseOnSurface,
+                                    shape = RoundedCornerShape(15.dp)
+                                ),
+
+                            )
+                        Text(
+                            text = stringResource(id = R.string.make_default),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .padding(horizontal = 5.dp)
+                                .clickable(enabled = true) {
+                                    multiplePhoneNumbersVM.callMakeDefaultPhone(model.phoneNumber!!)
+                                },
+                            fontSize = 10.sp
+
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Image(
+                        painterResource(R.drawable.error_icon),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .height(50.dp)
+                    )
+                    Spacer(modifier = Modifier.width(15.dp))
+                }
+            }
+        }
+
     }
-
-    userNameValue.value.text.length < 2 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_min)
-    }
-
-    userNameValue.value.text.length > 150 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_max)
-    }
-
-    !Regex("^[A-Za-z-. ]+\$").matches(
-        userNameValue.value.text
-    ) -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name)
-
-    }
-
-    else -> null
 }

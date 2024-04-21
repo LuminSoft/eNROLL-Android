@@ -28,17 +28,28 @@ fun ButtonView(
     modifier: Modifier = Modifier,
 ) {
     var buttonColor = color
-    var border :BorderStroke?= null
+    var textColorF = textColor
+    var borderColorF = borderColor
+    var border: BorderStroke? = null
     var modifier = modifier
 
-    if(!isEnabled){
-        buttonColor=color.copy(alpha = 0.5f)
-    }
-    if(borderColor != null){
-        border = BorderStroke(1.dp, borderColor)
+    if (!isEnabled) {
+        buttonColor = color.copy(alpha = 0.5f)
     }
 
-     modifier = Modifier
+    if (!isEnabled) {
+        textColorF = textColor.copy(alpha = 0.5f)
+    }
+
+    if (borderColorF != null) {
+        if (!isEnabled) {
+            borderColorF = borderColor!!.copy(alpha = 0.5f)
+        }
+        border = BorderStroke(1.dp, borderColorF)
+
+    }
+
+    modifier = Modifier
         .fillMaxWidth()
         .height(height.dp)
 
@@ -53,11 +64,14 @@ fun ButtonView(
         contentPadding = PaddingValues(0.dp),
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = buttonColor, disabledContainerColor = buttonColor) ,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = buttonColor,
+            disabledContainerColor = buttonColor
+        ),
 
 
         ) {
-        Text(text = title,style = MaterialTheme.typography.titleMedium,color= textColor)
+        Text(text = title, style = MaterialTheme.typography.titleMedium, color = textColorF)
 
     }
 }

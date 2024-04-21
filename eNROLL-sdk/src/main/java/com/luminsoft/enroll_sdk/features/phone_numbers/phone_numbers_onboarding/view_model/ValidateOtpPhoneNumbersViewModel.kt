@@ -5,12 +5,14 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.PhoneSendOtpUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ValidateOtpPhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ValidateOtpPhoneUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ValidateOtpPhoneNumbersViewModel(
-    private val validateOtpPhoneUseCase: ValidateOtpPhoneUseCase
+    private val validateOtpPhoneUseCase: ValidateOtpPhoneUseCase,
+    private val phoneSendOtpUseCase: PhoneSendOtpUseCase
 ) :
     ViewModel() {
 
@@ -23,6 +25,10 @@ class ValidateOtpPhoneNumbersViewModel(
 
     fun callValidateOtp(otp: String) {
         validateOtp(otp)
+    }
+
+    fun callSendOtp() {
+        sendOtpCall()
     }
 
 
@@ -43,6 +49,26 @@ class ValidateOtpPhoneNumbersViewModel(
                 },
                 {
                     otpApproved.value = true
+                    loading.value = false
+                })
+        }
+
+
+    }
+
+
+    private fun sendOtpCall() {
+        loading.value = true
+        ui {
+            val response: Either<SdkFailure, Null> =
+                phoneSendOtpUseCase.call(null)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
                     loading.value = false
                 })
         }

@@ -1,33 +1,39 @@
 package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,10 +43,11 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.userNameValue
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.PhoneSendOtpUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ValidateOtpPhoneUseCase
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.multiplePhoneNumbersScreenContent
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.ValidateOtpPhoneNumbersViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -48,8 +55,9 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
-import com.togitech.ccp.component.TogiCountryCodePicker
+import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
+import kotlin.time.Duration.Companion.seconds
 
 
 @Composable
@@ -60,11 +68,14 @@ fun ValidateOtpPhoneNumberScreenContent(
 
     val validateOtpPhoneUseCase =
         ValidateOtpPhoneUseCase(koinInject())
+    val phoneSendOtpUseCase =
+        PhoneSendOtpUseCase(koinInject())
 
     val validateOtpPhoneNumbersViewModel =
         remember {
             ValidateOtpPhoneNumbersViewModel(
-                validateOtpPhoneUseCase = validateOtpPhoneUseCase
+                validateOtpPhoneUseCase = validateOtpPhoneUseCase,
+                phoneSendOtpUseCase = phoneSendOtpUseCase
             )
         }
     val phoneNumbersOnBoardingVM = remember { validateOtpPhoneNumbersViewModel }
@@ -76,16 +87,22 @@ fun ValidateOtpPhoneNumberScreenContent(
         validateOtpPhoneNumbersViewModel.otpApproved.collectAsState()
     val failure = validateOtpPhoneNumbersViewModel.failure.collectAsState()
 
-    var phoneNumber: String by rememberSaveable { mutableStateOf("") }
-    var phoneCode: String by rememberSaveable { mutableStateOf("") }
-    var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
-    var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
+    val otpValue = remember { mutableStateOf("") }
 
+    var counter by remember { mutableStateOf(0) }
 
-
+    var ticks by remember { mutableStateOf(60) }
+    var ticksF by remember { mutableStateOf(1.0f) }
+    LaunchedEffect(counter) {
+        while (ticks > 0) {
+            delay(1.seconds)
+            ticks--
+            ticksF -= 0.016666668f
+        }
+    }
     BackGroundView(navController = navController, showAppBar = true) {
         if (otpApproved.value) {
-            navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
+            navController.navigate(multiplePhoneNumbersScreenContent)
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -108,21 +125,15 @@ fun ValidateOtpPhoneNumberScreenContent(
                 }
             } else {
                 failure.value?.let {
-                    DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                    DialogView(
+                        bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = it.message,
-                        buttonText = stringResource(id = R.string.retry),
+                        buttonText = stringResource(id = R.string.cancel),
                         onPressedButton = {
-//                            phoneNumbersOnBoardingVM.callGetCountries()
+                            validateOtpPhoneNumbersViewModel.failure.value = null
+                            otpValue.value = ""
                         },
-                        secondButtonText = stringResource(id = R.string.exit),
-                        onPressedSecondButton = {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
-                        }) {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-                    }
+                    )
                 }
             }
         } else {
@@ -135,171 +146,121 @@ fun ValidateOtpPhoneNumberScreenContent(
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 Image(
-                    painterResource(R.drawable.step_03_phone),
+                    painterResource(R.drawable.validate_otp),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.2f)
+                    modifier = Modifier.fillMaxHeight(0.25f)
                 )
-                /*
-                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
-                                    Row(
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .height(75.dp)
-                                    ) {
-                                        DropdownList(
-                                            itemList = countries.value!!,
-                                            selectedIndex = selectedIndex,
-                                            modifier = Modifier.fillMaxWidth(0.3f),
-                                            validateOtpPhoneNumbersViewModel
-                                        )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        ResourceProvider.instance.getStringResource(R.string.otpSendTo),
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(7.dp))
+                    Text(
+                        onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
+                    Spacer(modifier = Modifier.width(7.dp))
+                    Box {
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .background(
+                                    MaterialTheme.colorScheme.onSecondary,
+                                    shape = RoundedCornerShape(0.dp)
+                                ),
 
-                                        Spacer(modifier = Modifier.width(20.dp))
-                                        NormalTextField(
-                                            label = ResourceProvider.instance.getStringResource(R.string.type_your_phoneNumber),
-                                            value = userNameValue.value,
-                                            width = 1f,
-                                            height = 60.0,
-                                            icon = {
-                                                Image(
-                                                    painterResource(R.drawable.user_icon),
-                                                    contentDescription = "",
-                                                    modifier = Modifier
-                                                        .height(50.dp)
-                                                )
-                                            },
-                                            onValueChange = {
-                                                userNameValue.value = it
-                //                            userHasModifiedText.value = true
-                                            },
-                                            keyboardOptions = KeyboardOptions(
-                                                imeAction = ImeAction.Done,
-                                            ),
-                //                        error = phoneNumberValidation(),
-                                        )
+                            )
+                        Text(
+                            ResourceProvider.instance.getStringResource(R.string.edit),
+                            fontSize = 10.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(horizontal = 5.dp)
+                                .clickable(enabled = true) {
+                                    navController.navigate(phoneNumbersOnBoardingScreenContent)
+                                }
+                        )
+                    }
 
-
-                                    }
-                                }*/
-                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+                }
+                Spacer(modifier = Modifier.height(30.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    TogiCountryCodePicker(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp),
-                        initialCountryPhoneCode = "+20",
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            disabledBorderColor = MaterialTheme.colorScheme.primary,
-                            errorBorderColor = MaterialTheme.colorScheme.error,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                            errorLabelColor = MaterialTheme.colorScheme.error,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary,
-                            disabledLabelColor = MaterialTheme.colorScheme.primary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        onValueChange = { (code, phone), isValid ->
-                            Log.d("CCP", "onValueChange: $code $phone -> $isValid")
-                            phoneNumber = phone
-                            phoneCode = code
-                            fullPhoneNumber = code + phone
-                            isNumberValid = isValid
-                        },
-                        label = {
-                            Text(
-                                ResourceProvider.instance.getStringResource(R.string.phoneNumber),
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        },
+                    OtpInputField(
+                        otp = otpValue,
+                        count = 6,
                     )
                 }
-                /*   Box() {
-                       if (showDropdown.value) {
-                           Popup(
-                               alignment = Alignment.TopCenter,
-                               properties = PopupProperties(
-                                   excludeFromSystemGesture = true,
-                               ),
-                               // to dismiss on click outside
-                               onDismissRequest = {
-                                   validateOtpPhoneNumbersViewModel.showDropdown.value = false
-                               }
-                           ) {
-
-                               Column(
-                                   modifier = Modifier
-                                       .fillMaxHeight(0.5f)
-                                       .fillMaxWidth(0.4f)
-   //                            .heightIn(max = 90.dp)
-                                       .verticalScroll(state = scrollState),
-   //                            .border(width = 1.dp, color = Color.Gray),
-                                   horizontalAlignment = Alignment.CenterHorizontally,
-                               ) {
-
-                                   countries.value!!.onEachIndexed { index, item ->
-                                       if (index != 0) {
-                                           Divider(thickness = 1.dp, color = Color.Black)
-                                       }
-                                       Box(
-                                           modifier = Modifier
-                                               .background(Color.White)
-                                               .fillMaxWidth()
-                                               .padding(bottom = 7.dp, top = 7.dp)
-                                               .clickable {
-                                                   selectedIndex = index
-                                                   validateOtpPhoneNumbersViewModel.showDropdown.value =
-                                                       !validateOtpPhoneNumbersViewModel.showDropdown.value
-                                               },
-                                           contentAlignment = Alignment.Center
-                                       ) {
-                                           Text(text = item.name + " +" + item.code, fontSize = 10.sp)
-                                       }
-                                   }
-
-                               }
-                           }
-                       }
-                   }*/
-
+                Spacer(modifier = Modifier.height(15.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = R.string.timerOtpMessage),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 10.sp
+                    )
+                    timer(ticksF, ticks)
+                    Text(
+                        text = stringResource(id = R.string.second),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 10.sp
+                    )
+                }
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
-
                 ButtonView(
-                    isEnabled = isNumberValid,
+                    isEnabled = otpValue.value.length == 6,
                     onClick = {
-                    }, title = stringResource(id = R.string.continue_to_next)
+                        phoneNumbersOnBoardingVM.callValidateOtp(otpValue.value)
+                    },
+                    title = stringResource(id = R.string.confirmAndContinue)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                ButtonView(
+                    isEnabled = ticks == 0,
+                    onClick = {
+                        phoneNumbersOnBoardingVM.callSendOtp()
+                        ticks = 60
+                        ticksF = 1.0f
+                        counter++
+                    },
+                    title = stringResource(id = R.string.resend),
+                    textColor = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    borderColor = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
             }
         }
     }
-
 }
 
-private fun phoneNumberValidation() = when {
-
-    userNameValue.value.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.required_english_name)
+@Composable
+private fun timer(ticksF: Float, ticks: Int) {
+    Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator(
+            progress = 1f,
+            modifier = Modifier.size(30.dp),
+            color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f),
+            strokeWidth = 3.dp
+        )
+        CircularProgressIndicator(
+            progress = ticksF,
+            modifier = Modifier.size(30.dp),
+            strokeWidth = 3.dp,
+            color = MaterialTheme.colorScheme.onSecondary
+        )
+        Text(
+            text = ticks.toString(),
+            color = MaterialTheme.colorScheme.onSecondary,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 12.sp
+        )
     }
-
-    userNameValue.value.text.length < 2 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_min)
-    }
-
-    userNameValue.value.text.length > 150 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_max)
-    }
-
-    !Regex("^[A-Za-z-. ]+\$").matches(
-        userNameValue.value.text
-    ) -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name)
-
-    }
-
-    else -> null
 }
+

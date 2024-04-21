@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 open class MakeDefaultRequestModel {
 
-    @SerializedName("phoneInfoId")
-    internal var phoneInfoId: Int? = null
+    @SerializedName("phoneNumber")
+    internal var phoneNumber: String? = null
 
 }
