@@ -1,4 +1,4 @@
-package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components
+package com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -30,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -37,13 +38,13 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ApproveMailsUseCase
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MakeDefaultMailUseCase
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MultipleMailUseCase
+import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
+import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.MultipleMailsViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ApprovePhonesUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MakeDefaultPhoneUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MultiplePhoneUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.MultiplePhoneNumbersViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -54,44 +55,44 @@ import org.koin.compose.koinInject
 
 
 @Composable
-fun MultiplePhoneNumbersScreenContent(
+fun MultipleMailsScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
     navController: NavController,
 ) {
 
-    val multiplePhoneUseCase =
-        MultiplePhoneUseCase(koinInject())
+    val multipleMailUseCase =
+        MultipleMailUseCase(koinInject())
 
-    val approvePhonesUseCase =
-        ApprovePhonesUseCase(koinInject())
+    val approveMailsUseCase =
+        ApproveMailsUseCase(koinInject())
 
-    val makeDefaultPhoneUseCase =
-        MakeDefaultPhoneUseCase(koinInject())
+    val makeDefaultMailUseCase =
+        MakeDefaultMailUseCase(koinInject())
 
-    val multiplePhoneNumbersViewModel =
+    val multipleMailsViewModel =
         remember {
-            MultiplePhoneNumbersViewModel(
-                multiplePhoneUseCase = multiplePhoneUseCase,
-                approvePhonesUseCase = approvePhonesUseCase,
-                makeDefaultPhoneUseCase = makeDefaultPhoneUseCase
+            MultipleMailsViewModel(
+                multipleMailUseCase = multipleMailUseCase,
+                approveMailsUseCase = approveMailsUseCase,
+                makeDefaultMailUseCase = makeDefaultMailUseCase
 
             )
         }
-    val multiplePhoneNumbersVM = remember { multiplePhoneNumbersViewModel }
+    val multipleMailsVM = remember { multipleMailsViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
-    val loading = multiplePhoneNumbersViewModel.loading.collectAsState()
-    val phoneNumbersApproved =
-        multiplePhoneNumbersViewModel.phoneNumbersApproved.collectAsState()
-    val failure = multiplePhoneNumbersViewModel.failure.collectAsState()
-    val verifiedPhones = multiplePhoneNumbersViewModel.verifiedPhones.collectAsState()
+    val loading = multipleMailsViewModel.loading.collectAsState()
+    val mailsApproved =
+        multipleMailsViewModel.mailsApproved.collectAsState()
+    val failure = multipleMailsViewModel.failure.collectAsState()
+    val verifiedMails = multipleMailsViewModel.verifiedMails.collectAsState()
 
 
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (phoneNumbersApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(3)
+        if (mailsApproved.value) {
+            val isEmpty = onBoardingViewModel.removeCurrentStep(4)
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -135,7 +136,7 @@ fun MultiplePhoneNumbersScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
-//                            phoneNumbersOnBoardingVM.callGetCountries()
+                            //TODO
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -150,7 +151,7 @@ fun MultiplePhoneNumbersScreenContent(
                     }
                 }
             }
-        } else if (!verifiedPhones.value.isNullOrEmpty()) {
+        } else if (!verifiedMails.value.isNullOrEmpty()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -160,7 +161,7 @@ fun MultiplePhoneNumbersScreenContent(
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 Image(
-                    painterResource(R.drawable.step_03_phone),
+                    painterResource(R.drawable.step_04_email),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
@@ -168,25 +169,26 @@ fun MultiplePhoneNumbersScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
-                    text = stringResource(id = R.string.youAddedTheFollowingPhoneNumbers),
+                    text = stringResource(id = R.string.youAddedTheFollowingMails),
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
                 LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
-                    items(verifiedPhones.value!!.size) { index ->
-                        phoneItem(verifiedPhones.value!![index], multiplePhoneNumbersVM)
+                    items(verifiedMails.value!!.size) { index ->
+                        mailItem(verifiedMails.value!![index], multipleMailsVM)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 ButtonView(
-                    isEnabled = verifiedPhones.value!!.size < 5,
+                    isEnabled = verifiedMails.value!!.size < 5,
                     onClick = {
-                        onBoardingViewModel.currentPhoneNumber.value = null
-                        onBoardingViewModel.isNotFirstPhone.value = true
-                        navController.navigate(phoneNumbersOnBoardingScreenContent)
+                        onBoardingViewModel.currentMail.value = null
+                        onBoardingViewModel.isNotFirstMail.value = true
+                        mailValue.value = TextFieldValue()
+                        navController.navigate(mailsOnBoardingScreenContent)
                     },
-                    title = stringResource(id = R.string.addPhoneNumber),
+                    title = stringResource(id = R.string.addMail),
                     textColor = MaterialTheme.colorScheme.primary,
                     color = MaterialTheme.colorScheme.onPrimary,
                     borderColor = MaterialTheme.colorScheme.primary,
@@ -195,7 +197,7 @@ fun MultiplePhoneNumbersScreenContent(
 
                 ButtonView(
                     onClick = {
-                        multiplePhoneNumbersVM.callApprovePhones()
+                        multipleMailsVM.callApproveMails()
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
@@ -209,9 +211,9 @@ fun MultiplePhoneNumbersScreenContent(
 }
 
 @Composable
-private fun phoneItem(
-    model: GetVerifiedPhonesResponseModel,
-    multiplePhoneNumbersVM: MultiplePhoneNumbersViewModel
+private fun mailItem(
+    model: GetVerifiedMailsResponseModel,
+    multipleMailsVM: MultipleMailsViewModel
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
@@ -234,15 +236,16 @@ private fun phoneItem(
             ) {
                 Spacer(modifier = Modifier.width(15.dp))
                 Image(
-                    painterResource(R.drawable.mobile_icon),
+                    painterResource(R.drawable.mail_icon),
                     contentDescription = "",
                     modifier = Modifier
                         .height(50.dp)
                 )
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
-                    text = model.phoneNumber!!,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = model.email!!,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 12.sp
                 )
             }
             if (model.isDefault!!)
@@ -278,9 +281,9 @@ private fun phoneItem(
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
-                                    multiplePhoneNumbersVM.callMakeDefaultPhone(model.phoneNumber!!)
+                                    multipleMailsVM.callMakeDefaultMail(model.email!!)
                                 },
-                            fontSize = 10.sp
+                            fontSize = 8.sp
 
                         )
                     }

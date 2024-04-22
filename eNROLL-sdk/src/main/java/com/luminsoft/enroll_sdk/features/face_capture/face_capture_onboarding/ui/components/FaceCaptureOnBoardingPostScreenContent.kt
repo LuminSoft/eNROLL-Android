@@ -296,6 +296,8 @@ private fun MainContent(
 
                     ButtonView(
                         onClick = {
+                            onBoardingViewModel.currentMail.value = null
+                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(
                                 EnrollFailedModel(
@@ -437,6 +439,7 @@ private fun FailureExtract(
                 },
                 secondButtonText = stringResource(id = R.string.exit),
                 onPressedSecondButton = {
+
                     activity.finish()
                     EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 

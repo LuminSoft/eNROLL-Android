@@ -111,6 +111,7 @@ fun SettingPasswordOnBoardingScreenContent(
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
+
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 

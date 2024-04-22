@@ -81,7 +81,7 @@ class EnrollMainActivity : ComponentActivity() {
                     mainRouter(navController = navController, onBoardingViewModel)
                     nationalIdRouter(navController = navController, onBoardingViewModel)
                     deviceDataRouter(navController = navController)
-                    emailRouter(navController = navController)
+                    emailRouter(navController = navController, onBoardingViewModel)
                     faceCaptureRouter(navController = navController, onBoardingViewModel)
                     locationRouter(
                         navController = navController,
