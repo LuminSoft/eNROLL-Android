@@ -9,6 +9,7 @@
     <string name="signInTitle">تسجيل الدخول</string>
     <string name="fullName">الاسم بالكامل</string>
     <string name="mail">البريد الإلكتروني</string>
+    <string name="addMail">إضافة البريد الإلكتروني</string>
     <string name="mobileNumber">رقم الهاتف</string>
     <string name="confirmPassword">تأكيد كلمة المرور</string>
     <string name="errorEmptyPassword">من فضلك أدخل كلمة المرور</string>
@@ -208,10 +209,12 @@
     <string name="longitude">خط العرض: %1$s</string>
     <string name="locationSuccessText">لقد تم تسجيل موقعك الحالي</string>
     <string name="youAddedTheFollowingPhoneNumbers">لقد قمت بإضافة أرقام الهواتف التالية</string>
+    <string name="youAddedTheFollowingMails">لقد قمت بإضافة عناوين البريد الاكتروني التالية</string>
     <string name="getLocationText">لاكمال عملية التسجيل سوف نحتاج الموقع الحالي ، يرجى النقر على الحصول على الموقع</string>
     <string name="locationAccessErrorText">يجب أن تسمح بالموقع ولن تكتمل تطبيقك بدون موقعك ، من أجل السماح بالانتقال إلى صلاحيات التطبيق والسماح بالموقع.</string>
     <string name="getLocationButtonText">الحصول على الموقع</string>
     <string name="retry">اعادة محاولة</string>
+    <string name="wrongOtpFiveTimes">لقد أدخلت رمز التحقق خطأ لـ 5 مرات</string>sdf
     <string name="navigation_destination_document_auto_capture">Document Auto Capture</string>
     <string name="navigation_destination_face_auto_capture">Face Auto Capture</string>
     <string name="navigation_destination_home">Home</string>

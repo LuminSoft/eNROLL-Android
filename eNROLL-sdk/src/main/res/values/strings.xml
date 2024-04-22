@@ -55,7 +55,8 @@
     <string name="EKYC">Digital setting</string>
     <string name="name">Name</string>
     <string name="address">Address</string>
-    <string name="addPhoneNumber">Add phone Number</string>
+    <string name="addPhoneNumber">Add phone number</string>
+    <string name="addMail">Add Mail</string>
     <string name="state">City</string>
     <string name="nationalIdNumber">National ID</string>
     <string name="dateOfBirth">Date of birth</string>
@@ -63,6 +64,7 @@
     <string name="allCorrect">Correct Data</string>
     <string name="incorrectTryAgain">Error! Please try again</string>
     <string name="cancel">Cancel</string>
+    <string name="wrongOtpFiveTimes">You Entered wrong OTP for 5 times</string>
     <string name="profession">Occupation</string>
     <string name="professionRequired">Profession is Required</string>
     <string name="genderRequired">Gender is Required</string>
@@ -146,8 +148,8 @@
     <string name="confirm">Confirm</string>
     <string name="sendEmailOtp">Verify mail</string>
     <string name="sendPhoneOtp">Verify mobile number</string>
-    <string name="emailOtpContentConfirmationMessage">Are you sure you want to send the OTP to this email?</string>
-    <string name="phoneOtpContentConfirmationMessage">Are you sure you want to send the OTP to this number?</string>
+    <string name="emailOtpContentConfirmationMessage">Are you sure you want to send the OTP to this email? </string>
+    <string name="phoneOtpContentConfirmationMessage">Are you sure you want to send the OTP to this number? </string>
     <string name="invalid_phone_number">Invalid mobile number</string>
     <string name="invalid_english_name">Invalid english name</string>
     <string name="invalid_english_name_min">English name must be more than 2 characters</string>
@@ -162,6 +164,7 @@
     <string name="emailOtpMessage">Didn\'t receive the OTP? It will be sent in</string>
     <string name="second">Seconds</string>
     <string name="youAddedTheFollowingPhoneNumbers">You added the following phone numbers</string>
+    <string name="youAddedTheFollowingMails">You added the following mails</string>
     <string name="resend">Resend</string>
     <string name="otpSendTo">OTP has been sent to your number</string>
     <string name="emailOtpSendTo">OTP has been sent to your mail</string>

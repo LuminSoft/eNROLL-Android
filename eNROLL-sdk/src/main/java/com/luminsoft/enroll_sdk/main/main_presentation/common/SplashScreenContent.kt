@@ -72,6 +72,7 @@ fun SplashScreenContent(
                     text = it.message,
                     buttonText = stringResource(id = R.string.exit),
                     onPressedButton = {
+
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message,it))
 

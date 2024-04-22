@@ -2,7 +2,6 @@ package com.luminsoft.enroll_sdk.features.email.email_di
 
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor
 import com.luminsoft.enroll_sdk.core.network.RetroClient
-import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.GetSavedCardsUseCase
 import com.luminsoft.enroll_sdk.features.email.email_data.email_api.EmailApi
 import com.luminsoft.enroll_sdk.features.email.email_data.email_remote_data_source.EmailRemoteDataSource
 import com.luminsoft.enroll_sdk.features.email.email_data.email_remote_data_source.EmailRemoteDataSourceImpl
@@ -11,9 +10,7 @@ import com.luminsoft.enroll_sdk.features.email.email_domain.repository.EmailRepo
 import org.koin.dsl.module
 
 val emailModule = module{
-    single {
-        GetSavedCardsUseCase(get())
-    }
+
     single<EmailRemoteDataSource> {
         EmailRemoteDataSourceImpl(get(),get())
     }

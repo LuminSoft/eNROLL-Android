@@ -179,6 +179,8 @@ private fun MainContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
+                            onBoardingViewModel.currentMail.value = null
+                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
@@ -207,6 +209,8 @@ private fun MainContent(
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
+                            onBoardingViewModel.currentMail.value = null
+                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 

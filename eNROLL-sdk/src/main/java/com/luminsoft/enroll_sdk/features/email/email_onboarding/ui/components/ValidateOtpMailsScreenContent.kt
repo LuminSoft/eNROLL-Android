@@ -1,4 +1,4 @@
-package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components
+package com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,12 +44,13 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ValidateOtpMailUseCase
+import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
+import com.luminsoft.enroll_sdk.features.email.email_navigation.multipleMailsScreenContent
+import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.ValidateOtpMailsViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.PhoneSendOtpUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ValidateOtpPhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.multiplePhoneNumbersScreenContent
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.ValidateOtpPhoneNumbersViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -62,32 +63,32 @@ import kotlin.time.Duration.Companion.seconds
 
 
 @Composable
-fun ValidateOtpPhoneNumberScreenContent(
+fun ValidateOtpMailsScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
     navController: NavController,
 ) {
 
-    val validateOtpPhoneUseCase =
-        ValidateOtpPhoneUseCase(koinInject())
-    val phoneSendOtpUseCase =
-        PhoneSendOtpUseCase(koinInject())
+    val validateOtpMailUseCase =
+        ValidateOtpMailUseCase(koinInject())
+    val mailSendOtpUseCase =
+        MailSendOtpUseCase(koinInject())
 
-    val validateOtpPhoneNumbersViewModel =
+    val validateOtpMailsViewModel =
         remember {
-            ValidateOtpPhoneNumbersViewModel(
-                validateOtpPhoneUseCase = validateOtpPhoneUseCase,
-                phoneSendOtpUseCase = phoneSendOtpUseCase
+            ValidateOtpMailsViewModel(
+                validateOtpMailUseCase = validateOtpMailUseCase,
+                mailSendOtpUseCase = mailSendOtpUseCase
             )
         }
-    val phoneNumbersOnBoardingVM = remember { validateOtpPhoneNumbersViewModel }
+    val mailsOnBoardingVM = remember { validateOtpMailsViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
-    val loading = validateOtpPhoneNumbersViewModel.loading.collectAsState()
-    val wrongOtpTimes = validateOtpPhoneNumbersViewModel.wrongOtpTimes.collectAsState()
+    val loading = validateOtpMailsViewModel.loading.collectAsState()
     val otpApproved =
-        validateOtpPhoneNumbersViewModel.otpApproved.collectAsState()
-    val failure = validateOtpPhoneNumbersViewModel.failure.collectAsState()
+        validateOtpMailsViewModel.otpApproved.collectAsState()
+    val failure = validateOtpMailsViewModel.failure.collectAsState()
+    val wrongOtpTimes = validateOtpMailsViewModel.wrongOtpTimes.collectAsState()
 
     val otpValue = remember { mutableStateOf("") }
 
@@ -104,7 +105,7 @@ fun ValidateOtpPhoneNumberScreenContent(
     }
     BackGroundView(navController = navController, showAppBar = true) {
         if (otpApproved.value) {
-            navController.navigate(multiplePhoneNumbersScreenContent)
+            navController.navigate(multipleMailsScreenContent)
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -149,7 +150,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.cancel),
                         onPressedButton = {
-                            validateOtpPhoneNumbersViewModel.failure.value = null
+                            validateOtpMailsViewModel.failure.value = null
                             otpValue.value = ""
                         },
                     )
@@ -160,7 +161,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 10.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
@@ -174,14 +175,14 @@ fun ValidateOtpPhoneNumberScreenContent(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        ResourceProvider.instance.getStringResource(R.string.otpSendTo),
-                        fontSize = 10.sp,
+                        ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
+                        fontSize = 7.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
-                        onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
-                        fontSize = 12.sp,
+                        onBoardingViewModel.currentMail.value!!,
+                        fontSize = 9.sp,
                         color = MaterialTheme.colorScheme.onSecondary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
@@ -197,12 +198,12 @@ fun ValidateOtpPhoneNumberScreenContent(
                             )
                         Text(
                             ResourceProvider.instance.getStringResource(R.string.edit),
-                            fontSize = 8.sp,
+                            fontSize = 7.sp,
                             color = Color.White,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
-                                    navController.navigate(phoneNumbersOnBoardingScreenContent)
+                                    navController.navigate(mailsOnBoardingScreenContent)
                                 }
                         )
                     }
@@ -232,7 +233,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                if (onBoardingViewModel.isNotFirstPhone.value && ticks == 0)
+                if (onBoardingViewModel.isNotFirstMail.value && ticks == 0)
                     Text(
                         text = stringResource(id = R.string.resend),
                         color = MaterialTheme.colorScheme.primary,
@@ -240,7 +241,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
-                                phoneNumbersOnBoardingVM.callSendOtp()
+                                mailsOnBoardingVM.callSendOtp()
                                 ticks = 60
                                 ticksF = 1.0f
                                 counter++
@@ -251,16 +252,16 @@ fun ValidateOtpPhoneNumberScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
-                        phoneNumbersOnBoardingVM.callValidateOtp(otpValue.value)
+                        mailsOnBoardingVM.callValidateOtp(otpValue.value)
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                if (!onBoardingViewModel.isNotFirstPhone.value)
+                if (!onBoardingViewModel.isNotFirstMail.value)
                     ButtonView(
                         isEnabled = ticks == 0,
                         onClick = {
-                            phoneNumbersOnBoardingVM.callSendOtp()
+                            mailsOnBoardingVM.callSendOtp()
                             ticks = 60
                             ticksF = 1.0f
                             counter++

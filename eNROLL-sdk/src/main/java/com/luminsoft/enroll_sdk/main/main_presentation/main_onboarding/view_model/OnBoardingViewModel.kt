@@ -39,6 +39,7 @@ class OnBoardingViewModel(
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var currentMail: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
@@ -47,6 +48,9 @@ class OnBoardingViewModel(
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
+    var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var isNotFirstMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }

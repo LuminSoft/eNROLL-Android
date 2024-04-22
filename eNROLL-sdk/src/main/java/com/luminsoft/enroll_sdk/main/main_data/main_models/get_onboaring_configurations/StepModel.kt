@@ -2,7 +2,7 @@ package com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_config
 
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
-import com.luminsoft.enroll_sdk.features.email.email_navigation.emailOnBoardingPrescanScreenContent
+import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPreScanScreenContent
 import com.luminsoft.enroll_sdk.features.location.location_navigation.locationOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
@@ -41,7 +41,7 @@ data class StepModel(
             1 -> nationalIdOnBoardingPreScanScreen
             2 -> faceCaptureBoardingPreScanScreenContent
             3 -> phoneNumbersOnBoardingScreenContent
-            4 -> emailOnBoardingPrescanScreenContent
+            4 -> mailsOnBoardingScreenContent
             5 -> deviceDataOnBoardingPrescanScreenContent
             6 -> locationOnBoardingScreenContent
             7 -> securityQuestionsOnBoardingScreenContent

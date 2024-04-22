@@ -1,35 +1,32 @@
-package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components
+package com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components
 
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -38,69 +35,69 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailInfoUseCase
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
+import com.luminsoft.enroll_sdk.features.email.email_navigation.validateOtpMailsScreenContent
+import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.MailsOnBoardingViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.PhoneInfoUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.PhoneSendOtpUseCase
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.validateOtpPhoneNumberScreenContent
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.PhoneNumbersOnBoardingViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
-import com.togitech.ccp.component.TogiCountryCodePicker
+import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import org.koin.compose.koinInject
 
+var mailValue = mutableStateOf(TextFieldValue())
 
 @Composable
-fun PhoneNumbersOnBoardingScreenContent(
+fun MailsOnBoardingScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
     navController: NavController,
 ) {
 
-    val phoneInfoUseCase =
-        PhoneInfoUseCase(koinInject())
+    val mailInfoUseCase =
+        MailInfoUseCase(koinInject())
 
-    val phoneSendOtpUseCase =
-        PhoneSendOtpUseCase(koinInject())
+    val mailSendOtpUseCase =
+        MailSendOtpUseCase(koinInject())
 
-    val phoneNumbersOnBoardingViewModel =
+    val mailsOnBoardingViewModel =
         remember {
-            PhoneNumbersOnBoardingViewModel(
-                phoneInfoUseCase = phoneInfoUseCase,
-                phoneSendOtpUseCase = phoneSendOtpUseCase
+            MailsOnBoardingViewModel(
+                mailInfoUseCase = mailInfoUseCase,
+                mailSendOtpUseCase = mailSendOtpUseCase
             )
         }
-    val phoneNumbersOnBoardingVM = remember { phoneNumbersOnBoardingViewModel }
+    val mailsOnBoardingVM = remember { mailsOnBoardingViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
-    val loading = phoneNumbersOnBoardingViewModel.loading.collectAsState()
-    val phoneNumberSentSuccessfully =
-        phoneNumbersOnBoardingViewModel.phoneNumberSentSuccessfully.collectAsState()
-    val failure = phoneNumbersOnBoardingViewModel.failure.collectAsState()
+    val loading = mailsOnBoardingViewModel.loading.collectAsState()
+    val mailSentSuccessfully =
+        mailsOnBoardingViewModel.mailSentSuccessfully.collectAsState()
+    val failure = mailsOnBoardingViewModel.failure.collectAsState()
 
-    var phoneNumber: String by rememberSaveable { mutableStateOf("") }
-    var phoneCode: String by rememberSaveable { mutableStateOf("") }
-    var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
-    var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
+//    var mail: String by rememberSaveable { mutableStateOf(TextFieldValue()) }
+//    var isMailValid: Boolean by rememberSaveable { mutableStateOf(false) }
     var isClicked by mutableStateOf(false)
 
+    val userHasModifiedText = remember { mutableStateOf(false) }
 
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (isClicked) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.WARNING,
-                text = stringResource(id = R.string.phoneOtpContentConfirmationMessage) + fullPhoneNumber,
+                text = stringResource(id = R.string.emailOtpContentConfirmationMessage) + mailValue.value.text,
                 buttonText = stringResource(id = R.string.continue_to_next),
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedButton = {
-                    phoneNumbersOnBoardingViewModel.loading.value = true
-                    onBoardingViewModel.currentPhoneNumber.value = phoneNumber
+                    mailsOnBoardingViewModel.loading.value = true
+                    onBoardingViewModel.currentMail.value = mailValue.value.text
                     isClicked = false
-                    phoneNumbersOnBoardingVM.callPhoneInfo(phoneCode.replace("+", ""), phoneNumber)
+                    mailsOnBoardingVM.callMailInfo(mailValue.value.text)
 
                 },
                 onPressedSecondButton = {
@@ -109,8 +106,8 @@ fun PhoneNumbersOnBoardingScreenContent(
             )
         }
 
-        if (phoneNumberSentSuccessfully.value) {
-            navController.navigate(validateOtpPhoneNumberScreenContent)
+        if (mailSentSuccessfully.value) {
+            navController.navigate(validateOtpMailsScreenContent)
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -139,7 +136,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.cancel),
                         onPressedButton = {
-                            phoneNumbersOnBoardingViewModel.failure.value = null
+                            mailsOnBoardingViewModel.failure.value = null
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -164,7 +161,7 @@ fun PhoneNumbersOnBoardingScreenContent(
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 Image(
-                    painterResource(R.drawable.step_03_phone),
+                    painterResource(R.drawable.step_04_email),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.3f)
@@ -172,63 +169,43 @@ fun PhoneNumbersOnBoardingScreenContent(
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    if (onBoardingViewModel.currentPhoneNumber.value != null) {
-                        phoneCode = onBoardingViewModel.currentPhoneNumberCode.value!!
-                        phoneNumber = onBoardingViewModel.currentPhoneNumber.value!!
-                        fullPhoneNumber = phoneCode + phoneNumber
-                    }
-                    TogiCountryCodePicker(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp),
-                        initialCountryPhoneCode = onBoardingViewModel.currentPhoneNumberCode.value,
-                        initialPhoneNumber = onBoardingViewModel.currentPhoneNumber.value,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            disabledBorderColor = MaterialTheme.colorScheme.primary,
-                            errorBorderColor = MaterialTheme.colorScheme.error,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                            errorLabelColor = MaterialTheme.colorScheme.error,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary,
-                            disabledLabelColor = MaterialTheme.colorScheme.primary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        onValueChange = { (code, phone), isValid ->
-                            Log.d("CCP", "onValueChange: $code $phone -> $isValid")
-                            phoneNumber = phone
-                            phoneCode = code
-                            onBoardingViewModel.currentPhoneNumberCode.value = code
-                            fullPhoneNumber = code + phone
-                            isNumberValid = isValid
-                            if (!isValid)
-                                onBoardingViewModel.currentPhoneNumber.value = null
-                        },
-                        label = {
-                            Text(
-                                ResourceProvider.instance.getStringResource(R.string.phoneNumber),
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                    )
-                }
-
+                NormalTextField(
+                    label = ResourceProvider.instance.getStringResource(R.string.mailFormatError),
+                    value = mailValue.value,
+                    height = 60.0,
+                    icon = {
+                        Image(
+                            painterResource(R.drawable.mail_icon),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .height(50.dp)
+                        )
+                    },
+                    onValueChange = {
+                        mailValue.value = it
+                        userHasModifiedText.value = true
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Email
+                    ),
+                    error = englishNameValidation(onBoardingViewModel),
+                )
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
 
                 Text(
-                    text = stringResource(id = R.string.sendPhoneOtpContent),
+                    text = stringResource(id = R.string.sendEmailOtpContent),
                     color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
                 ButtonView(
-                    isEnabled = onBoardingViewModel.currentPhoneNumber.value != null || isNumberValid,
                     onClick = {
-                        isClicked = true
+                        if (englishNameValidation(onBoardingViewModel) == null)
+                            isClicked = true
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -237,4 +214,21 @@ fun PhoneNumbersOnBoardingScreenContent(
         }
     }
 
+}
+
+private fun englishNameValidation(onBoardingViewModel: OnBoardingViewModel) = when {
+
+    mailValue.value.text.isEmpty() -> {
+        onBoardingViewModel.currentMail.value = null
+        ResourceProvider.instance.getStringResource(R.string.required_email)
+    }
+
+    !Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}").matches(
+        mailValue.value.text
+    ) -> {
+        onBoardingViewModel.currentMail.value = null
+        ResourceProvider.instance.getStringResource(R.string.invalid_email)
+    }
+
+    else -> null
 }
