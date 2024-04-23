@@ -161,7 +161,7 @@ fun ValidateOtpMailsScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = 2.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
@@ -176,13 +176,13 @@ fun ValidateOtpMailsScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
-                        fontSize = 7.sp,
+                        fontSize = 8.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         onBoardingViewModel.currentMail.value!!,
-                        fontSize = 9.sp,
+                        fontSize = 10.sp,
                         color = MaterialTheme.colorScheme.onSecondary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
@@ -198,7 +198,7 @@ fun ValidateOtpMailsScreenContent(
                             )
                         Text(
                             ResourceProvider.instance.getStringResource(R.string.edit),
-                            fontSize = 7.sp,
+                            fontSize = 8.sp,
                             color = Color.White,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
@@ -273,7 +273,7 @@ fun ValidateOtpMailsScreenContent(
                     ) else
                     ButtonView(
                         onClick = {
-                            navController.navigate(multiplePhoneNumbersScreenContent)
+                            navController.navigate(multipleMailsScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
                         textColor = MaterialTheme.colorScheme.primary,
