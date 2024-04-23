@@ -118,7 +118,6 @@ fun MultipleMailsScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            onBoardingViewModel.currentMail.value = null
                             onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
@@ -140,7 +139,6 @@ fun MultipleMailsScreenContent(
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
-                            onBoardingViewModel.currentMail.value = null
                             onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
@@ -183,9 +181,8 @@ fun MultipleMailsScreenContent(
                 ButtonView(
                     isEnabled = verifiedMails.value!!.size < 5,
                     onClick = {
-                        onBoardingViewModel.currentMail.value = null
                         onBoardingViewModel.isNotFirstMail.value = true
-                        mailValue.value = TextFieldValue()
+                        onBoardingViewModel.mailValue.value = TextFieldValue()
                         navController.navigate(mailsOnBoardingScreenContent)
                     },
                     title = stringResource(id = R.string.addMail),

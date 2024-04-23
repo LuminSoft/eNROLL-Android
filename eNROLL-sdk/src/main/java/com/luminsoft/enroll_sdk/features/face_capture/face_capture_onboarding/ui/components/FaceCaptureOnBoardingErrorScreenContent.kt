@@ -100,8 +100,6 @@ fun FaceCaptureOnBoardingErrorScreen(
 
             ButtonView(
                 onClick = {
-                    onBoardingViewModel.currentMail.value = null
-                    onBoardingViewModel.currentPhoneNumber.value = null
                     activity.finish()
                     EnrollSDK.enrollCallback?.error(
                         EnrollFailedModel(

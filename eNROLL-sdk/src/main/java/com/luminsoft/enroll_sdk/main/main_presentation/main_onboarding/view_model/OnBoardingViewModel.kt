@@ -2,6 +2,8 @@ package com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_mod
 
 import android.graphics.Bitmap
 import android.os.Build
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
@@ -39,8 +41,8 @@ class OnBoardingViewModel(
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
-    var currentMail: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
+    var mailValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
     var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
@@ -155,6 +157,8 @@ class OnBoardingViewModel(
     }
 
     private fun navigateToNextStep() {
+        mailValue.value = TextFieldValue()
+        currentPhoneNumber.value = null
         navController!!.navigate(steps.value!!.first().stepNameNavigator())
     }
 }

@@ -25,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +48,6 @@ import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import org.koin.compose.koinInject
 
-var mailValue = mutableStateOf(TextFieldValue())
 
 @Composable
 fun MailsOnBoardingScreenContent(
@@ -71,6 +69,7 @@ fun MailsOnBoardingScreenContent(
             )
         }
     val mailsOnBoardingVM = remember { mailsOnBoardingViewModel }
+    val mailValue = onBoardingViewModel.mailValue.collectAsState()
 
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -90,15 +89,14 @@ fun MailsOnBoardingScreenContent(
         if (isClicked) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.WARNING,
-                text = stringResource(id = R.string.emailOtpContentConfirmationMessage) + mailValue.value.text,
+                text = stringResource(id = R.string.emailOtpContentConfirmationMessage) + mailValue.value?.text,
                 buttonText = stringResource(id = R.string.continue_to_next),
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedButton = {
                     mailsOnBoardingViewModel.loading.value = true
-                    onBoardingViewModel.currentMail.value = mailValue.value.text
+//                    onBoardingViewModel.currentMail.value = mailValue.value.text
                     isClicked = false
-                    mailsOnBoardingVM.callMailInfo(mailValue.value.text)
-
+                    mailsOnBoardingVM.callMailInfo(mailValue.value!!.text)
                 },
                 onPressedSecondButton = {
                     isClicked = false
@@ -118,8 +116,6 @@ fun MailsOnBoardingScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            onBoardingViewModel.currentMail.value = null
-                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
@@ -140,8 +136,6 @@ fun MailsOnBoardingScreenContent(
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
-                            onBoardingViewModel.currentMail.value = null
-                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
@@ -171,7 +165,7 @@ fun MailsOnBoardingScreenContent(
 
                 NormalTextField(
                     label = ResourceProvider.instance.getStringResource(R.string.mailFormatError),
-                    value = mailValue.value,
+                    value = mailValue.value!!,
                     height = 60.0,
                     icon = {
                         Image(
@@ -182,7 +176,7 @@ fun MailsOnBoardingScreenContent(
                         )
                     },
                     onValueChange = {
-                        mailValue.value = it
+                        onBoardingViewModel.mailValue.value = it
                         userHasModifiedText.value = true
                     },
                     keyboardOptions = KeyboardOptions(
@@ -218,15 +212,13 @@ fun MailsOnBoardingScreenContent(
 
 private fun englishNameValidation(onBoardingViewModel: OnBoardingViewModel) = when {
 
-    mailValue.value.text.isEmpty() -> {
-        onBoardingViewModel.currentMail.value = null
+    onBoardingViewModel.mailValue.value!!.text.isEmpty() -> {
         ResourceProvider.instance.getStringResource(R.string.required_email)
     }
 
     !Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}").matches(
-        mailValue.value.text
+        onBoardingViewModel.mailValue.value!!.text
     ) -> {
-        onBoardingViewModel.currentMail.value = null
         ResourceProvider.instance.getStringResource(R.string.invalid_email)
     }
 

@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,6 @@ import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingS
 import com.luminsoft.enroll_sdk.features.email.email_navigation.multipleMailsScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.ValidateOtpMailsViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.multiplePhoneNumbersScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -116,8 +116,6 @@ fun ValidateOtpMailsScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            onBoardingViewModel.currentMail.value = null
-                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
@@ -135,8 +133,6 @@ fun ValidateOtpMailsScreenContent(
                         text = stringResource(id = R.string.wrongOtpFiveTimes),
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            onBoardingViewModel.currentMail.value = null
-                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
@@ -181,7 +177,7 @@ fun ValidateOtpMailsScreenContent(
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
-                        onBoardingViewModel.currentMail.value!!,
+                        onBoardingViewModel.mailValue.value!!.text,
                         fontSize = 10.sp,
                         color = MaterialTheme.colorScheme.onSecondary
                     )
@@ -252,6 +248,7 @@ fun ValidateOtpMailsScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
+                        onBoardingViewModel.mailValue.value = TextFieldValue()
                         mailsOnBoardingVM.callValidateOtp(otpValue.value)
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
@@ -273,6 +270,7 @@ fun ValidateOtpMailsScreenContent(
                     ) else
                     ButtonView(
                         onClick = {
+                            onBoardingViewModel.mailValue.value = TextFieldValue()
                             navController.navigate(multipleMailsScreenContent)
                         },
                         title = stringResource(id = R.string.skip),

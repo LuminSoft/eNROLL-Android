@@ -115,8 +115,6 @@ fun ValidateOtpPhoneNumberScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            onBoardingViewModel.currentMail.value = null
-                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
@@ -134,8 +132,6 @@ fun ValidateOtpPhoneNumberScreenContent(
                         text = stringResource(id = R.string.wrongOtpFiveTimes),
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            onBoardingViewModel.currentMail.value = null
-                            onBoardingViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
@@ -179,11 +175,12 @@ fun ValidateOtpPhoneNumberScreenContent(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
-                    Text(
-                        onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
+                    if (onBoardingViewModel.currentPhoneNumber.value != null)
+                        Text(
+                            onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
                     Spacer(modifier = Modifier.width(7.dp))
                     Box {
                         Box(
@@ -251,6 +248,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
+                        onBoardingViewModel.currentPhoneNumber.value = null
                         phoneNumbersOnBoardingVM.callValidateOtp(otpValue.value)
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
@@ -272,6 +270,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                     ) else
                     ButtonView(
                         onClick = {
+                            onBoardingViewModel.currentPhoneNumber.value = null
                             navController.navigate(multiplePhoneNumbersScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
