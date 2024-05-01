@@ -180,7 +180,7 @@
     <string name="required_password">مطلوب كلمة مرور</string>
     <string name="required_confirm_password">مطلوب كلمة تأكيد المرور</string>
     <string name="required_english_name">الاسم باللغه الانجليزيه مطلوب</string>
-    <string name="required_arabic_name">يوجد خطأ في بطاقة الرقم القومي</string>
+    <string name="required_arabic_name">لاسم باللغه العربية مطلوب</string>
     <string name="save_mobile_device">يوجد خطأ في جواز السفر</string>
     <string name="nationalIdError">يوجد خطأ في بطاقة الرقم القومي</string>
     <string name="passportError">يوجد خطأ في جواز السفر</string>

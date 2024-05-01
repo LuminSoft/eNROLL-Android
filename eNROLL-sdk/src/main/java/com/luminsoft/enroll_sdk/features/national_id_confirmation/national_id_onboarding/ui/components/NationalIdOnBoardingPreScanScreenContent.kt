@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.features.face_capture.face_capture_navigation.faceCaptureOnBoardingErrorScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
@@ -57,7 +58,6 @@ fun NationalIdOnBoardingPreScanScreen(
                 try {
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-//                    rememberedViewModel.faceImage.value = facialDocumentModel.faceImage
                     rememberedViewModel.nationalIdFrontImage.value =
                         facialDocumentModel.documentImageBase64
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
@@ -68,8 +68,12 @@ fun NationalIdOnBoardingPreScanScreen(
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
-            } else {
-
+            } else if (it.resultCode == 19 || it.resultCode == 8) {
+                onBoardingViewModel.disableLoading()
+                onBoardingViewModel.errorMessage.value =
+                    context.getString(R.string.timeoutException)
+                onBoardingViewModel.scanType.value = ScanType.FRONT
+                navController.navigate(nationalIdOnBoardingErrorScreen)
             }
         }
 
@@ -91,6 +95,12 @@ fun NationalIdOnBoardingPreScanScreen(
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
+            } else if (it.resultCode == 19 || it.resultCode == 8) {
+                onBoardingViewModel.disableLoading()
+                onBoardingViewModel.errorMessage.value =
+                    context.getString(R.string.timeoutException)
+                onBoardingViewModel.scanType.value = ScanType.PASSPORT
+                navController.navigate(nationalIdOnBoardingErrorScreen)
             }
         }
 

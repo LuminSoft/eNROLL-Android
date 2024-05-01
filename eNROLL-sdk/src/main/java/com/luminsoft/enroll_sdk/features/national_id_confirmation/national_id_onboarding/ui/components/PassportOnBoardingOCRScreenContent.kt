@@ -55,7 +55,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import org.koin.compose.koinInject
 
-var userNameEnValue = mutableStateOf(TextFieldValue())
+var userNameArValue = mutableStateOf(TextFieldValue())
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -104,6 +104,12 @@ fun PassportOnBoardingConfirmationScreen(
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
+            } else if (it.resultCode == 19 || it.resultCode == 8) {
+                onBoardingViewModel.disableLoading()
+                onBoardingViewModel.errorMessage.value =
+                    context.getString(R.string.timeoutException)
+                onBoardingViewModel.scanType.value = ScanType.PASSPORT
+                navController.navigate(nationalIdOnBoardingErrorScreen)
             }
         }
 
@@ -188,7 +194,7 @@ private fun MainContent(
                             onBoardingViewModel.enableLoading()
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                            intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
@@ -206,9 +212,9 @@ private fun MainContent(
                 }
             }
         } else if (customerData.value != null) {
-            if (customerData.value!!.fullNameEn != null)
+            if (customerData.value!!.fullNameAr != null)
                 if (!userHasModifiedText.value) {
-                    userNameEnValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
+                    userNameArValue.value = TextFieldValue(customerData.value!!.fullNameAr!!)
                 }
             setCustomerId(onBoardingViewModel, customerData)
             Column(
@@ -234,7 +240,7 @@ private fun MainContent(
                 if (customerData.value!!.fullNameAr != null)
                     NormalTextField(
                         label = ResourceProvider.instance.getStringResource(R.string.nameAr),
-                        value = userNameEnValue.value,
+                        value = userNameArValue.value,
                         height = 60.0,
                         icon = {
                             Image(
@@ -253,13 +259,13 @@ private fun MainContent(
                             )
                         },
                         onValueChange = {
-                            userNameEnValue.value = it
+                            userNameArValue.value = it
                             userHasModifiedText.value = true
                         },
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                         ),
-                        error = englishNameValidation(),
+                        error = arabicNameValidation(),
                     )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
@@ -314,9 +320,9 @@ private fun MainContent(
                 ButtonView(
                     onClick = {
                         onBoardingViewModel.enableLoading()
-                        if (customerData.value!!.fullNameEn != null && englishNameValidation() == null)
-                            passportOcrVMOcrViewModel.callApproveFront(userNameEnValue.value.text)
-                        else if (customerData.value!!.fullNameEn == null)
+                        if (customerData.value!!.fullNameAr != null && arabicNameValidation() == null)
+                            passportOcrVMOcrViewModel.callApproveFront(userNameArValue.value.text)
+                        else if (customerData.value!!.fullNameAr == null)
                             passportOcrVMOcrViewModel.callApproveFront("")
 
                     },
@@ -382,24 +388,24 @@ private fun TextItem(label: Int, value: String, icon: Int) {
 }
 
 
-private fun englishNameValidation() = when {
+private fun arabicNameValidation() = when {
 
-    userNameEnValue.value.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.required_english_name)
+    userNameArValue.value.text.isEmpty() -> {
+        ResourceProvider.instance.getStringResource(R.string.required_arabic_name)
     }
 
-    userNameEnValue.value.text.length < 2 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_min)
+    userNameArValue.value.text.length < 2 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_arabic_name_min)
     }
 
-    userNameEnValue.value.text.length > 150 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_max)
+    userNameArValue.value.text.length > 150 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_arabic_name_max)
     }
 
-    !Regex("^[A-Za-z-. ]+\$").matches(
-        userNameEnValue.value.text
+    !Regex("^[\\u0621-\\u064A-. ]+\$").matches(
+        userNameArValue.value.text
     ) -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name)
+        ResourceProvider.instance.getStringResource(R.string.invalid_arabic_name)
 
     }
 

@@ -30,8 +30,8 @@ class PassportOcrViewModel(
     var navController: NavController? = null
 
 
-    fun callApproveFront(englishName: String) {
-        approveFront(englishName)
+    fun callApproveFront(arabicName: String) {
+        approveFront(arabicName)
     }
 
     fun scanBack() {
@@ -75,13 +75,13 @@ class PassportOcrViewModel(
 
     }
 
-    private fun approveFront(englishName: String) {
+    private fun approveFront(arabicName: String) {
         loading.value = true
         ui {
             if (customerData.value!!.fullNameEn != null)
                 params.value = PersonalConfirmationApproveUseCaseParams(
                     scanType = ScanType.PASSPORT,
-                    fullNameEn = englishName,
+                    fullNameAr = arabicName,
                     familyNameEn = "",
                     firstNameEn = ""
                 )
