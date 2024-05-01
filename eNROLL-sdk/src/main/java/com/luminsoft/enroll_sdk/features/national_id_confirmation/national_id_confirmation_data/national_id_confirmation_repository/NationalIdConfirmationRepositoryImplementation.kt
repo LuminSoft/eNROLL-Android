@@ -10,6 +10,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.NationalIDConfirmationResponse
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.PersonalConfirmationUploadImageRequest
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_remote_data_source.NationalIdConfirmationRemoteDataSource
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.repository.NationalIdConfirmationRepository
 
@@ -20,11 +21,14 @@ class NationalIdConfirmationRepositoryImplementation(private val nationalIdConfi
         return when (val response =
             nationalIdConfirmationRemoteDataSource.personalConfirmationUploadImage(request)) {
             is BaseResponse.Success -> {
-                val response = response.data as NationalIDConfirmationResponse
-                if (response.isSuccess!!) {
-                    Either.Right(response.customerData!!)
+                val nationalIDConfirmationResponse = response.data as NationalIDConfirmationResponse
+                if (nationalIDConfirmationResponse.isSuccess!!) {
+                    if (request.scanType == ScanType.PASSPORT)
+                        Either.Right(nationalIDConfirmationResponse.passportData!!)
+                    else
+                        Either.Right(nationalIDConfirmationResponse.customerData!!)
                 } else {
-                    Either.Left(NetworkFailure(mes = response.message!!))
+                    Either.Left(NetworkFailure(mes = nationalIDConfirmationResponse.message!!))
                 }
             }
 

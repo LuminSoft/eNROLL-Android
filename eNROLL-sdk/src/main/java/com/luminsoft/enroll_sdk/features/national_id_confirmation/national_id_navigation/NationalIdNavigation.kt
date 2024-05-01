@@ -8,11 +8,14 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_on
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingErrorScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingFrontConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.NationalIdOnBoardingPreScanScreen
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.PassportOnBoardingConfirmationScreen
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 
 const val nationalIdOnBoardingPreScanScreen = "nationalIdOnBoardingPreScanScreen"
 const val nationalIdOnBoardingFrontConfirmationScreen =
     "nationalIdOnBoardingFrontConfirmationScreen"
+const val passportOnBoardingConfirmationScreen =
+    "passportOnBoardingConfirmationScreen"
 const val nationalIdOnBoardingBackConfirmationScreen =
     "nationalIdOnBoardingBackConfirmationScreen"
 const val nationalIdOnBoardingErrorScreen =
@@ -31,6 +34,12 @@ fun NavGraphBuilder.nationalIdRouter(
     }
     composable(route = nationalIdOnBoardingFrontConfirmationScreen) {
         NationalIdOnBoardingFrontConfirmationScreen(
+            navController = navController,
+            onBoardingViewModel = onBoardingViewModel
+        )
+    }
+    composable(route = passportOnBoardingConfirmationScreen) {
+        PassportOnBoardingConfirmationScreen(
             navController = navController,
             onBoardingViewModel = onBoardingViewModel
         )

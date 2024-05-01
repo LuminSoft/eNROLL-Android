@@ -29,6 +29,7 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.passportOnBoardingConfirmationScreen
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.RegistrationStepSetting
@@ -78,9 +79,9 @@ fun NationalIdOnBoardingPreScanScreen(
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
 //                    rememberedViewModel.faceImage.value = facialDocumentModel.faceImage
-                    rememberedViewModel.nationalIdFrontImage.value =
+                    rememberedViewModel.passportImage.value =
                         facialDocumentModel.documentImageBase64
-                    navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
+                    navController.navigate(passportOnBoardingConfirmationScreen)
                 } catch (e: Exception) {
                     //TODO handle error
                     println(e.message)
