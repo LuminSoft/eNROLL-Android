@@ -7,7 +7,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.PersonalConfirmationUploadImageRequest
 
-interface NationalIdConfirmationRepository {
+    interface NationalIdConfirmationRepository {
     suspend fun personalConfirmationUploadImage(request: PersonalConfirmationUploadImageRequest): Either<SdkFailure, CustomerData>
     suspend fun personalConfirmationApprove(request: PersonalConfirmationApproveRequest): Either<SdkFailure, Null>
 }

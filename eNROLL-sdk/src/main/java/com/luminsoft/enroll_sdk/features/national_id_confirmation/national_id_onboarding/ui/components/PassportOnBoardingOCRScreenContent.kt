@@ -11,11 +11,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -40,10 +41,9 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationApproveUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model.NationalIdFrontOcrViewModel
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.passportOnBoardingConfirmationScreen
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model.PassportOcrViewModel
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -55,17 +55,17 @@ import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import org.koin.compose.koinInject
 
-var userNameValue = mutableStateOf(TextFieldValue())
+var userNameArValue = mutableStateOf(TextFieldValue())
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun NationalIdOnBoardingFrontConfirmationScreen(
+fun PassportOnBoardingConfirmationScreen(
     navController: NavController,
     onBoardingViewModel: OnBoardingViewModel
 ) {
     val context = LocalContext.current
     val activity = context.findActivity()
-    val document = onBoardingViewModel.nationalIdFrontImage.collectAsState()
+    val document = onBoardingViewModel.passportImage.collectAsState()
 
     val personalConfirmationUploadImageUseCase =
         PersonalConfirmationUploadImageUseCase(koinInject())
@@ -73,10 +73,10 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
     val personalConfirmationApproveUseCase =
         PersonalConfirmationApproveUseCase(koinInject())
 
-    val nationalIdFrontOcrVM =
+    val passportOcrVM =
         document.value?.let {
             remember {
-                NationalIdFrontOcrViewModel(
+                PassportOcrViewModel(
                     personalConfirmationUploadImageUseCase,
                     personalConfirmationApproveUseCase,
                     it
@@ -93,13 +93,14 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                     onBoardingViewModel.enableLoading()
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-                    onBoardingViewModel.nationalIdFrontImage.value =
+                    onBoardingViewModel.passportImage.value =
                         facialDocumentModel.documentImageBase64
-                    navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
+                    navController.navigate(passportOnBoardingConfirmationScreen)
+
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
-                    onBoardingViewModel.scanType.value = ScanType.FRONT
+                    onBoardingViewModel.scanType.value = ScanType.PASSPORT
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
@@ -107,44 +108,16 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                 onBoardingViewModel.disableLoading()
                 onBoardingViewModel.errorMessage.value =
                     context.getString(R.string.timeoutException)
-                onBoardingViewModel.scanType.value = ScanType.FRONT
+                onBoardingViewModel.scanType.value = ScanType.PASSPORT
                 navController.navigate(nationalIdOnBoardingErrorScreen)
             }
         }
-
-    val startForBackResult =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            val documentBackUri = it.data?.data
-            if (documentBackUri != null) {
-                try {
-                    val nonFacialDocumentModel =
-                        DotHelper.documentNonFacial(documentBackUri, activity)
-                    onBoardingViewModel.nationalIdBackImage.value =
-                        nonFacialDocumentModel.documentImageBase64
-                    navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
-                } catch (e: Exception) {
-                    onBoardingViewModel.disableLoading()
-                    onBoardingViewModel.errorMessage.value = e.message
-                    onBoardingViewModel.scanType.value = ScanType.Back
-                    navController.navigate(nationalIdOnBoardingErrorScreen)
-                    println(e.message)
-                }
-            } else if (it.resultCode == 19 || it.resultCode == 8) {
-                onBoardingViewModel.disableLoading()
-                onBoardingViewModel.errorMessage.value =
-                    context.getString(R.string.timeoutException)
-                onBoardingViewModel.scanType.value = ScanType.Back
-                navController.navigate(nationalIdOnBoardingErrorScreen)
-            }
-        }
-
 
 
     MainContent(
         navController,
-        nationalIdFrontOcrVM!!,
+        passportOcrVM!!,
         activity,
-        startForBackResult,
         startForResult,
         onBoardingViewModel
     )
@@ -153,28 +126,37 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
 @Composable
 private fun MainContent(
     navController: NavController,
-    nationalIdFrontOcrVM: NationalIdFrontOcrViewModel,
+    passportOcrVM: PassportOcrViewModel,
     activity: Activity,
-    startForBackResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     onBoardingViewModel: OnBoardingViewModel,
 ) {
-    val nationalIdFrontOcrViewModel = remember { nationalIdFrontOcrVM }
+    val passportOcrVMOcrViewModel = remember { passportOcrVM }
 
-    val customerData = nationalIdFrontOcrViewModel.customerData.collectAsState()
-    val loading = nationalIdFrontOcrViewModel.loading.collectAsState()
-    val frontNIApproved = nationalIdFrontOcrViewModel.frontNIApproved.collectAsState()
-    val failure = nationalIdFrontOcrViewModel.failure.collectAsState()
+    val customerData = passportOcrVMOcrViewModel.customerData.collectAsState()
+    val loading = passportOcrVMOcrViewModel.loading.collectAsState()
+    val passportApproved = passportOcrVMOcrViewModel.passportApproved.collectAsState()
+    val failure = passportOcrVMOcrViewModel.failure.collectAsState()
     val userHasModifiedText = remember { mutableStateOf(false) }
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (frontNIApproved.value) {
-            val intent =
-                Intent(activity.applicationContext, DocumentActivity::class.java)
-            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-            intent.putExtra("localCode", EnrollSDK.localizationCode.name)
-            startForBackResult.launch(intent)
-            nationalIdFrontOcrViewModel.scanBack()
+        if (passportApproved.value) {
+            val isEmpty = onBoardingViewModel.removeCurrentStep(1)
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
+                        )
+                    },
+                )
         }
         if (loading.value)
             Column(
@@ -208,11 +190,11 @@ private fun MainContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
-                            nationalIdFrontOcrViewModel.resetFailure()
+                            passportOcrVMOcrViewModel.resetFailure()
                             onBoardingViewModel.enableLoading()
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                            intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
@@ -230,25 +212,35 @@ private fun MainContent(
                 }
             }
         } else if (customerData.value != null) {
-            if (customerData.value!!.fullNameEn != null)
+            if (customerData.value!!.fullNameAr != null)
                 if (!userHasModifiedText.value) {
-                    userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
+                    userNameArValue.value = TextFieldValue(customerData.value!!.fullNameAr!!)
                 }
             setCustomerId(onBoardingViewModel, customerData)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+
                     .padding(horizontal = 20.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                TextItem(R.string.nameAr, customerData.value!!.fullName!!, R.drawable.user_icon)
-                if (customerData.value!!.fullNameEn != null) Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.nameEn,
+                    customerData.value!!.fullNameEn!!,
+                    R.drawable.user_icon
+                )
+                if (customerData.value!!.fullNameAr != null) Spacer(
+                    modifier = Modifier.height(
+                        10.dp
+                    )
+                )
 
-                if (customerData.value!!.fullNameEn != null)
+                if (customerData.value!!.fullNameAr != null)
                     NormalTextField(
-                        label = ResourceProvider.instance.getStringResource(R.string.nameEn),
-                        value = userNameValue.value,
+                        label = ResourceProvider.instance.getStringResource(R.string.nameAr),
+                        value = userNameArValue.value,
                         height = 60.0,
                         icon = {
                             Image(
@@ -267,25 +259,19 @@ private fun MainContent(
                             )
                         },
                         onValueChange = {
-                            userNameValue.value = it
+                            userNameArValue.value = it
                             userHasModifiedText.value = true
                         },
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                         ),
-                        error = englishNameValidation(),
+                        error = arabicNameValidation(),
                     )
-                if (customerData.value!!.address != null) Spacer(modifier = Modifier.height(10.dp))
-                if (customerData.value!!.address != null) TextItem(
-                    R.string.address,
-                    customerData.value!!.address!!,
-                    R.drawable.address_icon
-                )
-                if (customerData.value!!.state != null) Spacer(modifier = Modifier.height(10.dp))
-                if (customerData.value!!.state != null) TextItem(
-                    R.string.state,
-                    customerData.value!!.state!!,
-                    R.drawable.address_icon
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.gender,
+                    customerData.value!!.gender!!,
+                    R.drawable.gender_icon
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
@@ -295,25 +281,49 @@ private fun MainContent(
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
-                    R.string.nationalIdNumber,
-                    customerData.value!!.idNumber!!,
-                    R.drawable.id_card_icon
+                    R.string.passportDocumentNumber,
+                    customerData.value!!.documentNumber!!,
+                    R.drawable.passport_icon
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
-                    R.string.factoryNumber,
-                    customerData.value!!.documentNumber!!,
+                    R.string.dateOfExpiry,
+                    customerData.value!!.expirationDate!!.split("T")[0],
+                    R.drawable.calendar_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.issuingAuthority,
+                    customerData.value!!.issuingAuthority!!,
+                    R.drawable.issuing_authurity_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.nationality,
+                    customerData.value!!.nationality!!,
+                    R.drawable.nationality_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.documentCode,
+                    customerData.value!!.documentCode!!,
                     R.drawable.factory_num_icon
                 )
-                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+                Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.visualZone,
+                    customerData.value!!.visualZone!!,
+                    R.drawable.factory_num_icon
+                )
+                Spacer(modifier = Modifier.height(50.dp))
 
                 ButtonView(
                     onClick = {
                         onBoardingViewModel.enableLoading()
-                        if (customerData.value!!.fullNameEn != null && englishNameValidation() == null)
-                            nationalIdFrontOcrViewModel.callApproveFront(userNameValue.value.text)
-                        else if (customerData.value!!.fullNameEn == null)
-                            nationalIdFrontOcrViewModel.callApproveFront("")
+                        if (customerData.value!!.fullNameAr != null && arabicNameValidation() == null)
+                            passportOcrVMOcrViewModel.callApproveFront(userNameArValue.value.text)
+                        else if (customerData.value!!.fullNameAr == null)
+                            passportOcrVMOcrViewModel.callApproveFront("")
 
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
@@ -325,7 +335,7 @@ private fun MainContent(
                         onBoardingViewModel.enableLoading()
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                        intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
                         intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                         startForResult.launch(intent)
                     },
@@ -334,6 +344,8 @@ private fun MainContent(
                     borderColor = MaterialTheme.colorScheme.primary,
                     title = stringResource(id = R.string.reScan)
                 )
+                Spacer(modifier = Modifier.height(100.dp))
+
             }
         }
 
@@ -352,42 +364,48 @@ private fun setCustomerId(
 
 @Composable
 private fun TextItem(label: Int, value: String, icon: Int) {
-    NormalTextField(
-        label = ResourceProvider.instance.getStringResource(label),
-        value = TextFieldValue(text = value),
+    val newValue: String = if (label == R.string.gender) {
+        if (value == "M") ResourceProvider.instance.getStringResource(R.string.male)
+        else ResourceProvider.instance.getStringResource(R.string.female)
+    } else value
+
+    val height: Double = if (label == R.string.visualZone)
+        120.0
+    else
+        60.0
+
+    NormalTextField(label = ResourceProvider.instance.getStringResource(label),
+        value = TextFieldValue(text = newValue),
         onValueChange = { },
+        height = height,
         enabled = false,
-        height = 60.0,
+        singleLine = false,
         icon = {
             Image(
-                painterResource(icon),
-                contentDescription = "",
-                modifier = Modifier
-                    .height(50.dp)
+                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp)
             )
-        }
-    )
+        })
 }
 
 
-private fun englishNameValidation() = when {
+private fun arabicNameValidation() = when {
 
-    userNameValue.value.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.required_english_name)
+    userNameArValue.value.text.isEmpty() -> {
+        ResourceProvider.instance.getStringResource(R.string.required_arabic_name)
     }
 
-    userNameValue.value.text.length < 2 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_min)
+    userNameArValue.value.text.length < 2 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_arabic_name_min)
     }
 
-    userNameValue.value.text.length > 150 -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name_max)
+    userNameArValue.value.text.length > 150 -> {
+        ResourceProvider.instance.getStringResource(R.string.invalid_arabic_name_max)
     }
 
-    !Regex("^[A-Za-z-. ]+\$").matches(
-        userNameValue.value.text
+    !Regex("^[\\u0621-\\u064A-. ]+\$").matches(
+        userNameArValue.value.text
     ) -> {
-        ResourceProvider.instance.getStringResource(R.string.invalid_english_name)
+        ResourceProvider.instance.getStringResource(R.string.invalid_arabic_name)
 
     }
 

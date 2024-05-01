@@ -6,13 +6,11 @@ data class NationalIDConfirmationResponse(
 
     @SerializedName("isSuccess") var isSuccess: Boolean? = null,
     @SerializedName("message") var message: String? = null,
-    @SerializedName("customerData") var customerData: CustomerData? = CustomerData()
-
+    @SerializedName("passportData") var passportData: CustomerData? = CustomerData(),
+    @SerializedName("customerData") var customerData: CustomerData? = CustomerData(),
 )
 
 data class CustomerData(
-
-//    @SerializedName("customerId") var customerId: String? = null,
     @SerializedName("idFrontScan") var idFrontScan: String? = null,
     @SerializedName("idBackScan") var idBackScan: String? = null,
     @SerializedName("photo") var photo: String? = null,
@@ -38,5 +36,11 @@ data class CustomerData(
     @SerializedName("nationality") var nationality: String? = null,
     @SerializedName("detectedAge") var detectedAge: String? = null,
     @SerializedName("detectedGender") var detectedGender: String? = null,
+    @SerializedName("fullNameAr") var fullNameAr: String? = null,
+    @SerializedName("firstNameAr") var firstNameAr: String? = null,
+    @SerializedName("familyNameAr") var familyNameAr: String? = null,
+    @SerializedName("documentCode") var documentCode: String? = null,
+    @SerializedName("issuingAuthority") var issuingAuthority: String? = null,
+    @SerializedName("visualZone") var visualZone: String? = null,
     @SerializedName("expirationDate") var expirationDate: String? = null
 )

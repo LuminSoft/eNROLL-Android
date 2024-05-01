@@ -41,6 +41,7 @@ fun NormalTextField(
     width: Float = 1.0f,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     enabled: Boolean = true,
+    singleLine: Boolean = true,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -76,7 +77,8 @@ fun NormalTextField(
                 .height(height.dp),
             textStyle = MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+
             ),
             cursorBrush = SolidColor(error?.let { MaterialTheme.colorScheme.error }
                 ?: MaterialTheme.colorScheme.primary),
@@ -84,7 +86,7 @@ fun NormalTextField(
             keyboardOptions = keyboardOptions,
             keyboardActions =keyboardActions,
             interactionSource = interactionSource,
-            singleLine = true,
+            singleLine = singleLine,
             enabled = enabled,
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(

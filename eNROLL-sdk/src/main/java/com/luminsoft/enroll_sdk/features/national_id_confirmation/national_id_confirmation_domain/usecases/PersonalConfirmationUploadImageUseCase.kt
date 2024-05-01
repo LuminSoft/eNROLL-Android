@@ -10,20 +10,22 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.repository.NationalIdConfirmationRepository
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 
-class PersonalConfirmationUploadImageUseCase  (private  val nationalIdConfirmationRepository: NationalIdConfirmationRepository):
+class PersonalConfirmationUploadImageUseCase(private val nationalIdConfirmationRepository: NationalIdConfirmationRepository) :
     UseCase<Either<SdkFailure, CustomerData>, PersonalConfirmationUploadImageUseCaseParams> {
 
     override suspend fun call(params: PersonalConfirmationUploadImageUseCaseParams): Either<SdkFailure, CustomerData> {
         val personalConfirmationUploadImageRequest = PersonalConfirmationUploadImageRequest()
         personalConfirmationUploadImageRequest.image = DotHelper.bitmapToBase64(params.image)
-        personalConfirmationUploadImageRequest.customerId =params.customerId
-        personalConfirmationUploadImageRequest.scanType =params.scanType
-       return nationalIdConfirmationRepository.personalConfirmationUploadImage(personalConfirmationUploadImageRequest)
+        personalConfirmationUploadImageRequest.customerId = params.customerId
+        personalConfirmationUploadImageRequest.scanType = params.scanType
+        return nationalIdConfirmationRepository.personalConfirmationUploadImage(
+            personalConfirmationUploadImageRequest
+        )
     }
 }
 
 data class PersonalConfirmationUploadImageUseCaseParams(
-    val image:Bitmap,
+    val image: Bitmap,
     val scanType: ScanType,
     val customerId: String? = null,
-    )
+)

@@ -102,6 +102,12 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
+            }else if (it.resultCode == 19 || it.resultCode == 8) {
+                onBoardingViewModel.disableLoading()
+                onBoardingViewModel.errorMessage.value =
+                    context.getString(R.string.timeoutException)
+                onBoardingViewModel.scanType.value = ScanType.Back
+                navController.navigate(nationalIdOnBoardingErrorScreen)
             }
         }
 
