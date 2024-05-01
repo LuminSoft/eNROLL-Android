@@ -275,8 +275,18 @@ private fun MainContent(
                         ),
                         error = englishNameValidation(),
                     )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(R.string.address, customerData.value!!.address!!, R.drawable.address_icon)
+                if (customerData.value!!.address != null) Spacer(modifier = Modifier.height(10.dp))
+                if (customerData.value!!.address != null) TextItem(
+                    R.string.address,
+                    customerData.value!!.address!!,
+                    R.drawable.address_icon
+                )
+                if (customerData.value!!.state != null) Spacer(modifier = Modifier.height(10.dp))
+                if (customerData.value!!.state != null) TextItem(
+                    R.string.state,
+                    customerData.value!!.state!!,
+                    R.drawable.address_icon
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
                     R.string.birthDate,
