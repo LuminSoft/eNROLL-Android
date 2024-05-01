@@ -1,7 +1,7 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_api
 
 
-import arrow.core.raise.Null
+import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_approve.PersonalConfirmationApproveRequest
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.NationalIDConfirmationResponse
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.PersonalConfirmationUploadImageRequest
@@ -26,6 +26,6 @@ interface NationalIdConfirmationApi {
     suspend fun passportUploadImage(@Body request: PersonalConfirmationUploadImageRequest): Response<NationalIDConfirmationResponse>
 
     @POST("/api/v1/onboarding/Passport/Approve")
-    suspend fun passportApprove(@Body request: PersonalConfirmationApproveRequest): Response<Null>
+    suspend fun passportApprove(@Body request: PersonalConfirmationApproveRequest): Response<BasicResponseModel>
 
 }

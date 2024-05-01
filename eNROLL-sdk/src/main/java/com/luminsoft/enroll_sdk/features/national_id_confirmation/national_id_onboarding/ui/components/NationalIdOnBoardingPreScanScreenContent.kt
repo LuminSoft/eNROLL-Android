@@ -68,6 +68,8 @@ fun NationalIdOnBoardingPreScanScreen(
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
+            } else {
+
             }
         }
 
@@ -83,7 +85,10 @@ fun NationalIdOnBoardingPreScanScreen(
                         facialDocumentModel.documentImageBase64
                     navController.navigate(passportOnBoardingConfirmationScreen)
                 } catch (e: Exception) {
-                    //TODO handle error
+                    onBoardingViewModel.disableLoading()
+                    onBoardingViewModel.errorMessage.value = e.message
+                    onBoardingViewModel.scanType.value = ScanType.PASSPORT
+                    navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
             }

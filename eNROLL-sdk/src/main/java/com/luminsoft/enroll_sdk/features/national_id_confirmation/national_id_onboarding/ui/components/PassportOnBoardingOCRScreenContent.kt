@@ -11,11 +11,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -40,9 +41,8 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationApproveUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.passportOnBoardingConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model.PassportOcrViewModel
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
@@ -93,47 +93,25 @@ fun PassportOnBoardingConfirmationScreen(
                     onBoardingViewModel.enableLoading()
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-//                    onBoardingViewModel.faceImage.value = facialDocumentModel.faceImage
-                    onBoardingViewModel.nationalIdFrontImage.value =
+                    onBoardingViewModel.passportImage.value =
                         facialDocumentModel.documentImageBase64
-                    navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
+                    navController.navigate(passportOnBoardingConfirmationScreen)
+
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()
                     onBoardingViewModel.errorMessage.value = e.message
-                    onBoardingViewModel.scanType.value = ScanType.FRONT
+                    onBoardingViewModel.scanType.value = ScanType.PASSPORT
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
             }
         }
-
-    val startForBackResult =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            val documentBackUri = it.data?.data
-            if (documentBackUri != null) {
-                try {
-                    val nonFacialDocumentModel =
-                        DotHelper.documentNonFacial(documentBackUri, activity)
-                    onBoardingViewModel.nationalIdBackImage.value =
-                        nonFacialDocumentModel.documentImageBase64
-                    navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
-                } catch (e: Exception) {
-                    onBoardingViewModel.disableLoading()
-                    onBoardingViewModel.errorMessage.value = e.message
-                    onBoardingViewModel.scanType.value = ScanType.Back
-                    navController.navigate(nationalIdOnBoardingErrorScreen)
-                    println(e.message)
-                }
-            }
-        }
-
 
 
     MainContent(
         navController,
         passportOcrVM!!,
         activity,
-        startForBackResult,
         startForResult,
         onBoardingViewModel
     )
@@ -144,7 +122,6 @@ private fun MainContent(
     navController: NavController,
     passportOcrVM: PassportOcrViewModel,
     activity: Activity,
-    startForBackResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     onBoardingViewModel: OnBoardingViewModel,
 ) {
@@ -152,18 +129,28 @@ private fun MainContent(
 
     val customerData = passportOcrVMOcrViewModel.customerData.collectAsState()
     val loading = passportOcrVMOcrViewModel.loading.collectAsState()
-    val frontNIApproved = passportOcrVMOcrViewModel.frontNIApproved.collectAsState()
+    val passportApproved = passportOcrVMOcrViewModel.passportApproved.collectAsState()
     val failure = passportOcrVMOcrViewModel.failure.collectAsState()
     val userHasModifiedText = remember { mutableStateOf(false) }
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (frontNIApproved.value) {
-            val intent =
-                Intent(activity.applicationContext, DocumentActivity::class.java)
-            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-            intent.putExtra("localCode", EnrollSDK.localizationCode.name)
-            startForBackResult.launch(intent)
-            passportOcrVMOcrViewModel.scanBack()
+        if (passportApproved.value) {
+            val isEmpty = onBoardingViewModel.removeCurrentStep(1)
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
+                        )
+                    },
+                )
         }
         if (loading.value)
             Column(
@@ -228,11 +215,21 @@ private fun MainContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+
                     .padding(horizontal = 20.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                TextItem(R.string.nameEn, customerData.value!!.fullNameEn!!, R.drawable.user_icon)
-                if (customerData.value!!.fullNameAr != null) Spacer(modifier = Modifier.height(10.dp))
+                TextItem(
+                    R.string.nameEn,
+                    customerData.value!!.fullNameEn!!,
+                    R.drawable.user_icon
+                )
+                if (customerData.value!!.fullNameAr != null) Spacer(
+                    modifier = Modifier.height(
+                        10.dp
+                    )
+                )
 
                 if (customerData.value!!.fullNameAr != null)
                     NormalTextField(
@@ -265,7 +262,11 @@ private fun MainContent(
                         error = englishNameValidation(),
                     )
                 Spacer(modifier = Modifier.height(10.dp))
-                TextItem(R.string.address, customerData.value!!.gender!!, R.drawable.gender_icon)
+                TextItem(
+                    R.string.gender,
+                    customerData.value!!.gender!!,
+                    R.drawable.gender_icon
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
                     R.string.birthDate,
@@ -274,41 +275,41 @@ private fun MainContent(
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
-                    R.string.documentNumber,
+                    R.string.passportDocumentNumber,
                     customerData.value!!.documentNumber!!,
-                    R.drawable.id_card_icon
+                    R.drawable.passport_icon
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
                     R.string.dateOfExpiry,
-                    customerData.value!!.expirationDate!!,
+                    customerData.value!!.expirationDate!!.split("T")[0],
                     R.drawable.calendar_icon
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
-                    R.string.dateOfExpiry,
+                    R.string.issuingAuthority,
                     customerData.value!!.issuingAuthority!!,
-                    R.drawable.calendar_icon
+                    R.drawable.issuing_authurity_icon
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
-                    R.string.dateOfExpiry,
+                    R.string.nationality,
                     customerData.value!!.nationality!!,
-                    R.drawable.calendar_icon
+                    R.drawable.nationality_icon
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
-                    R.string.dateOfExpiry,
+                    R.string.documentCode,
                     customerData.value!!.documentCode!!,
-                    R.drawable.calendar_icon
+                    R.drawable.factory_num_icon
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TextItem(
-                    R.string.dateOfExpiry,
+                    R.string.visualZone,
                     customerData.value!!.visualZone!!,
-                    R.drawable.calendar_icon
+                    R.drawable.factory_num_icon
                 )
-                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+                Spacer(modifier = Modifier.height(50.dp))
 
                 ButtonView(
                     onClick = {
@@ -328,7 +329,7 @@ private fun MainContent(
                         onBoardingViewModel.enableLoading()
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                        intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
                         intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                         startForResult.launch(intent)
                     },
@@ -337,6 +338,8 @@ private fun MainContent(
                     borderColor = MaterialTheme.colorScheme.primary,
                     title = stringResource(id = R.string.reScan)
                 )
+                Spacer(modifier = Modifier.height(100.dp))
+
             }
         }
 
@@ -355,21 +358,27 @@ private fun setCustomerId(
 
 @Composable
 private fun TextItem(label: Int, value: String, icon: Int) {
-    NormalTextField(
-        label = ResourceProvider.instance.getStringResource(label),
-        value = TextFieldValue(text = value),
+    val newValue: String = if (label == R.string.gender) {
+        if (value == "M") ResourceProvider.instance.getStringResource(R.string.male)
+        else ResourceProvider.instance.getStringResource(R.string.female)
+    } else value
+
+    val height: Double = if (label == R.string.visualZone)
+        120.0
+    else
+        60.0
+
+    NormalTextField(label = ResourceProvider.instance.getStringResource(label),
+        value = TextFieldValue(text = newValue),
         onValueChange = { },
+        height = height,
         enabled = false,
-        height = 60.0,
+        singleLine = false,
         icon = {
             Image(
-                painterResource(icon),
-                contentDescription = "",
-                modifier = Modifier
-                    .height(50.dp)
+                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp)
             )
-        }
-    )
+        })
 }
 
 

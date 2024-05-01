@@ -23,7 +23,7 @@ class PassportOcrViewModel(
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    var frontNIApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var passportApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var customerData: MutableStateFlow<CustomerData?> = MutableStateFlow(null)
@@ -36,7 +36,7 @@ class PassportOcrViewModel(
 
     fun scanBack() {
         loading.value = true
-        frontNIApproved.value = false
+        passportApproved.value = false
     }
 
     fun resetFailure() {
@@ -80,13 +80,13 @@ class PassportOcrViewModel(
         ui {
             if (customerData.value!!.fullNameEn != null)
                 params.value = PersonalConfirmationApproveUseCaseParams(
-                    scanType = ScanType.FRONT,
+                    scanType = ScanType.PASSPORT,
                     fullNameEn = englishName,
                     familyNameEn = "",
                     firstNameEn = ""
                 )
             else
-                params.value = PersonalConfirmationApproveUseCaseParams(scanType = ScanType.FRONT)
+                params.value = PersonalConfirmationApproveUseCaseParams(scanType = ScanType.PASSPORT)
 
             val response: Either<SdkFailure, Null> =
                 personalConfirmationApproveUseCase.call(params.value as PersonalConfirmationApproveUseCaseParams)
@@ -99,7 +99,7 @@ class PassportOcrViewModel(
                 },
                 {
 //                    loading.value = false
-                    frontNIApproved.value = true
+                    passportApproved.value = true
 
                 })
         }
