@@ -35,6 +35,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingBackConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model.NationalIdBackOcrViewModel
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
@@ -82,6 +83,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
     val loading = nationalIdBackOcrViewModel.loading.collectAsState()
     val failure = nationalIdBackOcrViewModel.failure.collectAsState()
     val backNIApproved = nationalIdBackOcrViewModel.backNIApproved.collectAsState()
+    val isPassportAndMail = onBoardingViewModel.isPassportAndMail.collectAsState()
 
 
     val startForBackResult =
@@ -102,7 +104,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                     navController.navigate(nationalIdOnBoardingErrorScreen)
                     println(e.message)
                 }
-            }else if (it.resultCode == 19 || it.resultCode == 8) {
+            } else if (it.resultCode == 19 || it.resultCode == 8) {
                 onBoardingViewModel.disableLoading()
                 onBoardingViewModel.errorMessage.value =
                     context.getString(R.string.timeoutException)
@@ -114,22 +116,28 @@ fun NationalIdOnBoardingBackConfirmationScreen(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (backNIApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(1)
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+            if (isPassportAndMail.value) {
+                onBoardingViewModel.disableLoading()
+                onBoardingViewModel.isPassportAndMailFinal.value = true
+                navController.navigate(nationalIdOnBoardingPreScanScreen)
+            } else {
+                val isEmpty = onBoardingViewModel.removeCurrentStep(1)
+                if (isEmpty)
+                    DialogView(
+                        bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                        text = stringResource(id = R.string.successfulRegistration),
+                        buttonText = stringResource(id = R.string.continue_to_next),
+                        onPressedButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(
+                                EnrollFailedModel(
+                                    activity.getString(R.string.successfulRegistration),
+                                    activity.getString(R.string.successfulRegistration)
+                                )
                             )
-                        )
-                    },
-                )
+                        },
+                    )
+            }
         }
 
         if (loading.value) Column(

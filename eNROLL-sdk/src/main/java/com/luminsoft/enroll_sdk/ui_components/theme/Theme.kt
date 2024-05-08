@@ -26,7 +26,9 @@ private val LightColorScheme = lightColorScheme(
     error = errorColor,
     inversePrimary = defaultColor,
     inverseSurface = defaultBorderColor,
-    inverseOnSurface = defaultTextColor
+    inverseOnSurface = defaultTextColor,
+    onSecondaryContainer = onSecondaryContainer,
+    onBackground = onBackground
 
 )
 private val DarkColorScheme = darkColorScheme(
@@ -40,7 +42,9 @@ private val DarkColorScheme = darkColorScheme(
     error = errorColor,
     inversePrimary = defaultColor,
     inverseSurface = defaultBorderColor,
-    inverseOnSurface = defaultTextColor
+    inverseOnSurface = defaultTextColor,
+    onSecondaryContainer = onSecondaryContainer,
+    onBackground = onBackground
 )
 
 @Composable
