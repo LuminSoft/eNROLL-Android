@@ -22,3 +22,7 @@ data class OrganizationRegStepSettings (
 enum class RegistrationStepSetting {
     nationalIdOnly, passportOnly, nationalIdOrPassport, nationalIdAndPassport, translateNationalID
 }
+
+enum class ChooseStep {
+    NationalId, Passport
+}
