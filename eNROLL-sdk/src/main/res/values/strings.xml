@@ -206,6 +206,7 @@
     <string name="nationality">Nationality</string>
     <string name="visualZone">MRZ</string>
     <string name="choosePersonalConfirmation">Choose personal confirmation method</string>
+    <string name="arabic_name_must_contain_space">Arabic name must be at least 2 names with a space</string>
     <string name="nationalId">National Id</string>
     <string name="passport">Passport</string>
     <string name="latitude">Latitude: %1$s</string>

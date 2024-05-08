@@ -150,6 +150,7 @@
     <string name="invalid_english_name_min">الاسم باللغه الانجليزيه يجب الا يقل عن ٢ حرف</string>
     <string name="invalid_english_name_max">الاسم باللغه الانجليزيه يجب الا يزيد عن ١٥٠ حرف</string>
     <string name="invalid_arabic_name">الاسم باللغة العربية غير صحيح</string>
+    <string name="arabic_name_must_contain_space">الاسم باللغة العربية يجب ان يتكون من اسمين علي الاقل بينهما مسافه</string>
     <string name="invalid_arabic_name_min">الاسم باللغة العربية يجب الا يقل عن ٢ حرف</string>
     <string name="invalid_arabic_name_max">الاسم باللغة العربية يجب الا يزيد عن ١٥٠ حرف</string>
     <string name="required_phone_number">مطلوب رقم هاتف</string>

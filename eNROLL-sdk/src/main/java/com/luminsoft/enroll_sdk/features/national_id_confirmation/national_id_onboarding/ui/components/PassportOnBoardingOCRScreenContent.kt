@@ -11,6 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -221,130 +222,145 @@ private fun MainContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-
                     .padding(horizontal = 20.dp)
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                TextItem(
-                    R.string.nameEn,
-                    customerData.value!!.fullNameEn!!,
-                    R.drawable.user_icon
-                )
-                if (customerData.value!!.fullNameAr != null) Spacer(
-                    modifier = Modifier.height(
-                        10.dp
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(0.72f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    TextItem(
+                        R.string.nameEn,
+                        customerData.value!!.fullNameEn!!,
+                        R.drawable.user_icon,
+                        80.0
                     )
-                )
+                    if (customerData.value!!.fullNameAr != null) Spacer(
+                        modifier = Modifier.height(
+                            10.dp
+                        )
+                    )
 
-                if (customerData.value!!.fullNameAr != null)
-                    NormalTextField(
-                        label = ResourceProvider.instance.getStringResource(R.string.nameAr),
-                        value = userNameArValue.value,
-                        height = 60.0,
-                        icon = {
-                            Image(
-                                painterResource(R.drawable.user_icon),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .height(50.dp)
-                            )
-                        },
-                        trailingIcon = {
-                            Image(
-                                painterResource(R.drawable.edit_icon),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .height(50.dp)
-                            )
-                        },
-                        onValueChange = {
-                            userNameArValue.value = it
-                            userHasModifiedText.value = true
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                        ),
-                        error = arabicNameValidation(),
+                    if (customerData.value!!.fullNameAr != null)
+                        NormalTextField(
+                            label = ResourceProvider.instance.getStringResource(R.string.nameAr),
+                            value = userNameArValue.value,
+                            height = 60.0,
+                            icon = {
+                                Image(
+                                    painterResource(R.drawable.user_icon),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .height(50.dp)
+                                )
+                            },
+                            trailingIcon = {
+                                Image(
+                                    painterResource(R.drawable.edit_icon),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .height(50.dp)
+                                )
+                            },
+                            onValueChange = {
+                                userNameArValue.value = it
+                                userHasModifiedText.value = true
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                            ),
+                            error = arabicNameValidation(),
+                        )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.gender,
+                        customerData.value!!.gender!!,
+                        R.drawable.gender_icon,
+                        60.0
                     )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.gender,
-                    customerData.value!!.gender!!,
-                    R.drawable.gender_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.birthDate,
-                    customerData.value!!.birthdate!!.split("T")[0],
-                    R.drawable.calendar_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.passportDocumentNumber,
-                    customerData.value!!.documentNumber!!,
-                    R.drawable.passport_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.dateOfExpiry,
-                    customerData.value!!.expirationDate!!.split("T")[0],
-                    R.drawable.calendar_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.issuingAuthority,
-                    customerData.value!!.issuingAuthority!!,
-                    R.drawable.issuing_authurity_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.nationality,
-                    customerData.value!!.nationality!!,
-                    R.drawable.nationality_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.documentCode,
-                    customerData.value!!.documentCode!!,
-                    R.drawable.factory_num_icon
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextItem(
-                    R.string.visualZone,
-                    customerData.value!!.visualZone!!,
-                    R.drawable.factory_num_icon
-                )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.birthDate,
+                        customerData.value!!.birthdate!!.split("T")[0],
+                        R.drawable.calendar_icon,
+                        60.0
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.passportDocumentNumber,
+                        customerData.value!!.documentNumber!!,
+                        R.drawable.passport_icon,
+                        60.0
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.dateOfExpiry,
+                        customerData.value!!.expirationDate!!.split("T")[0],
+                        R.drawable.calendar_icon,
+                        60.0
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.issuingAuthority,
+                        customerData.value!!.issuingAuthority!!,
+                        R.drawable.issuing_authurity_icon,
+                        60.0
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.nationality,
+                        customerData.value!!.nationality!!,
+                        R.drawable.nationality_icon,
+                        60.0
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.documentCode,
+                        customerData.value!!.documentCode!!,
+                        R.drawable.factory_num_icon,
+                        60.0
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextItem(
+                        R.string.visualZone,
+                        customerData.value!!.visualZone!!,
+                        R.drawable.factory_num_icon,
+                        120.0
+                    )
+                }
                 Spacer(modifier = Modifier.height(50.dp))
 
-                ButtonView(
-                    onClick = {
-                        onBoardingViewModel.enableLoading()
-                        if (customerData.value!!.fullNameAr != null && arabicNameValidation() == null)
-                            passportOcrVMOcrViewModel.callApproveFront(userNameArValue.value.text)
-                        else if (customerData.value!!.fullNameAr == null)
-                            passportOcrVMOcrViewModel.callApproveFront("")
+                Column {
+                    ButtonView(
+                        onClick = {
+                            onBoardingViewModel.enableLoading()
+                            if (customerData.value!!.fullNameAr != null && arabicNameValidation() == null)
+                                passportOcrVMOcrViewModel.callApproveFront(userNameArValue.value.text)
+                            else if (customerData.value!!.fullNameAr == null)
+                                passportOcrVMOcrViewModel.callApproveFront("")
 
-                    },
-                    title = stringResource(id = R.string.confirmAndContinue)
-                )
-                Spacer(modifier = Modifier.height(15.dp))
+                        },
+                        title = stringResource(id = R.string.confirmAndContinue)
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
 
-                ButtonView(
-                    onClick = {
-                        onBoardingViewModel.enableLoading()
-                        val intent =
-                            Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
-                        intent.putExtra("localCode", EnrollSDK.localizationCode.name)
-                        startForResult.launch(intent)
-                    },
-                    textColor = MaterialTheme.colorScheme.primary,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    borderColor = MaterialTheme.colorScheme.primary,
-                    title = stringResource(id = R.string.reScan)
-                )
-                Spacer(modifier = Modifier.height(100.dp))
+                    ButtonView(
+                        onClick = {
+                            onBoardingViewModel.enableLoading()
+                            val intent =
+                                Intent(activity.applicationContext, DocumentActivity::class.java)
+                            intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                            intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+                            startForResult.launch(intent)
+                        },
+                        textColor = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        borderColor = MaterialTheme.colorScheme.primary,
+                        title = stringResource(id = R.string.reScan)
+                    )
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
 
             }
         }
@@ -363,16 +379,12 @@ private fun setCustomerId(
 }
 
 @Composable
-private fun TextItem(label: Int, value: String, icon: Int) {
+private fun TextItem(label: Int, value: String, icon: Int, height: Double) {
     val newValue: String = if (label == R.string.gender) {
         if (value == "M") ResourceProvider.instance.getStringResource(R.string.male)
         else ResourceProvider.instance.getStringResource(R.string.female)
     } else value
 
-    val height: Double = if (label == R.string.visualZone)
-        120.0
-    else
-        60.0
 
     NormalTextField(label = ResourceProvider.instance.getStringResource(label),
         value = TextFieldValue(text = newValue),
@@ -407,6 +419,10 @@ private fun arabicNameValidation() = when {
     ) -> {
         ResourceProvider.instance.getStringResource(R.string.invalid_arabic_name)
 
+    }
+
+    !userNameArValue.value.text.trim().contains(" ") -> {
+        ResourceProvider.instance.getStringResource(R.string.arabic_name_must_contain_space)
     }
 
     else -> null
