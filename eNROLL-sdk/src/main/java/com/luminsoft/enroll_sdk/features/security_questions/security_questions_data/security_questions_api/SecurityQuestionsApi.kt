@@ -1,13 +1,15 @@
 package com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_api
 
-
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.get_token.TokenizedCardData
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.get_token.GetCardsRequest
+import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
+import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.SecurityQuestionsRequestModel
 
 import retrofit2.Response
 import retrofit2.http.*
 
 interface SecurityQuestionsApi {
-    @POST("/payment/GetCreditCardDetails")
-    suspend fun getCards(@Body request : GetCardsRequest): Response<com.luminsoft.enroll_sdk.core.network.ApiBaseResponse<ArrayList<TokenizedCardData>>>
+    @GET("/api/v1/onboarding/SecurityQuestionsInfo")
+    suspend fun getSecurityQuestions(): Response<List<GetSecurityQuestionsResponseModel>>
+
+    @POST("/api/v1/onboarding/SecurityQuestionsInfo")
+    suspend fun postSecurityQuestions(@Body request: /*List<SecurityQuestionsRequestModel>*/String): Response<List<GetSecurityQuestionsResponseModel>>
 }

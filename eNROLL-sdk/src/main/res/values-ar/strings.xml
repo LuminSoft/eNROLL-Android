@@ -275,5 +275,8 @@
     <string name="dot_document_auto_capture_instruction_size_too_small">اقترب</string>
     <string name="make_default">جعل الافتراضي</string>
     <string name="addPhoneNumber">إضافة رقم هاتف</string>
+    <string name="youMustChooseThreeQuestions">يجب إختيار 3 أسئلة أمان لإتمام عملية التسجيل بنجاح</string>
+    <string name="chooseAQuestions">إختر سؤال</string>
+    <string name="answer">الاجابه</string>
 
 </resources>
