@@ -27,8 +27,7 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = defaultColor,
     inverseSurface = defaultBorderColor,
     inverseOnSurface = defaultTextColor,
-    onTertiary = unselectedDotColor
-    inverseOnSurface = defaultTextColor,
+    onTertiary = unselectedDotColor,
     onSecondaryContainer = onSecondaryContainer,
     onBackground = onBackground
 
@@ -45,9 +44,7 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = defaultColor,
     inverseSurface = defaultBorderColor,
     inverseOnSurface = defaultTextColor,
-    onTertiary = unselectedDotColor
-
-    inverseOnSurface = defaultTextColor,
+    onTertiary = unselectedDotColor,
     onSecondaryContainer = onSecondaryContainer,
     onBackground = onBackground
 )
