@@ -65,6 +65,8 @@ import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import org.koin.compose.koinInject
 
 
+var answerValidate = mutableStateOf(false)
+
 @Composable
 fun SecurityQuestionsOnBoardingScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
@@ -99,6 +101,8 @@ fun SecurityQuestionsOnBoardingScreenContent(
         onBoardingViewModel.selectedSecurityQuestions.collectAsState()
     val securityQuestions = onBoardingViewModel.securityQuestionsList.collectAsState()
     val securityQuestionsAPI = onBoardingViewModel.securityQuestions.collectAsState()
+    val selectQuestionError = securityQuestionsViewModel.selectQuestionError.collectAsState()
+    val answerError = securityQuestionsViewModel.answerError.collectAsState()
 
 
 
@@ -146,7 +150,7 @@ fun SecurityQuestionsOnBoardingScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
-//                            phoneNumbersOnBoardingVM.callGetCountries()
+                            securityQuestionsOnBoardingVM.getSecurityQuestions()
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -199,30 +203,35 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     securityQuestions.value,
                     securityQuestionsViewModel,
                     selectedQuestion,
-                    onBoardingViewModel
+                    onBoardingViewModel,
+                    selectQuestionError
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
-                answerTextField(answer, securityQuestionsOnBoardingVM)
+                AnswerTextField(answer, securityQuestionsOnBoardingVM, answerError)
                 Spacer(modifier = Modifier.fillMaxHeight(0.4f))
 
                 ButtonView(
                     onClick = {
-                        val securityQuestionModel = GetSecurityQuestionsResponseModel()
-                        securityQuestionModel.question = selectedQuestion.value!!.question
-                        securityQuestionModel.id = selectedQuestion.value!!.id
-                        securityQuestionModel.answer = answer.value.text
+                        answerValidate.value = true
+                        securityQuestionsOnBoardingVM.onChangeValue(securityQuestionsOnBoardingVM.answer.value)
+                        if (selectedQuestion.value != null) {
+                            val securityQuestionModel = GetSecurityQuestionsResponseModel()
+                            securityQuestionModel.question = selectedQuestion.value!!.question
+                            securityQuestionModel.id = selectedQuestion.value!!.id
+                            securityQuestionModel.answer = answer.value.text
 
-                        onBoardingViewModel.selectedSecurityQuestions.value.add(
-                            securityQuestionModel
-                        )
-                        onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
+                            onBoardingViewModel.selectedSecurityQuestions.value.add(
+                                securityQuestionModel
+                            )
+                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
 
-                        if (selectedSecurityQuestions.value.size < 3)
-                            navController.navigate(securityQuestionsOnBoardingScreenContent)
-                        else
-                            securityQuestionsOnBoardingVM.postSecurityQuestionsCall()
-
+                            if (selectedSecurityQuestions.value.size < 3)
+                                navController.navigate(securityQuestionsOnBoardingScreenContent)
+                            else
+                                securityQuestionsOnBoardingVM.postSecurityQuestionsCall()
+                        } else
+                            securityQuestionsViewModel.selectQuestionError.value = true
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
@@ -235,29 +244,40 @@ fun SecurityQuestionsOnBoardingScreenContent(
 }
 
 @Composable
-private fun answerTextField(
+private fun AnswerTextField(
     answer: State<TextFieldValue>,
-    securityQuestionsOnBoardingVM: SecurityQuestionsOnBoardingViewModel
+    securityQuestionsOnBoardingVM: SecurityQuestionsOnBoardingViewModel,
+    answerError: State<String?>
 ) {
-    TextField(
-        value = answer.value,
-        onValueChange = { securityQuestionsOnBoardingVM.answer.value = it },
-        modifier = Modifier
-            .fillMaxWidth(),
-        placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
-        colors = textFieldColors(),
-        leadingIcon = {
-            Image(
-                painterResource(R.drawable.answer_icon),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = "",
+    Column {
+        TextField(
+            value = answer.value,
+            onValueChange = {
+                securityQuestionsOnBoardingVM.onChangeValue(it)
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            colors = textFieldColors(),
+            leadingIcon = {
+                Image(
+                    painterResource(R.drawable.answer_icon),
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = "",
+                )
+            },
+            textStyle = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 12.sp,
+                color = Color.Black
             )
-        },
-        textStyle = MaterialTheme.typography.titleLarge.copy(
-            fontSize = 12.sp,
-            color = Color.Black
         )
-    )
+        if (answerError.value != null)
+            Text(
+                answerError.value!!,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.labelSmall
+            )
+    }
 }
 
 @Composable
@@ -265,11 +285,11 @@ fun DropdownList(
     value: List<GetSecurityQuestionsResponseModel>,
     securityQuestionsViewModel: SecurityQuestionsOnBoardingViewModel,
     selectedQuestion: State<GetSecurityQuestionsResponseModel?>,
-    onBoardingViewModel: OnBoardingViewModel
+    onBoardingViewModel: OnBoardingViewModel,
+    selectQuestionError: State<Boolean>,
 ) {
 
     var mExpanded by remember { mutableStateOf(false) }
-
     val selectedText = if (selectedQuestion.value != null) selectedQuestion.value!!.question else ""
     val icon = if (mExpanded)
         Icons.Filled.KeyboardArrowUp
@@ -313,6 +333,12 @@ fun DropdownList(
                 color = Color.Black
             )
         )
+        if (selectQuestionError.value)
+            Text(
+                text = stringResource(id = R.string.required_question),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.labelSmall
+            )
 
         MaterialTheme {
             DropdownMenu(
@@ -335,6 +361,7 @@ fun DropdownList(
                             securityQuestionsViewModel.selectedQuestion.value =
                                 onBoardingViewModel.securityQuestions.value?.first { it == label }
                             mExpanded = false
+                            securityQuestionsViewModel.selectQuestionError.value = false
                         })
                 }
             }
@@ -407,5 +434,6 @@ fun Step(
         )
     }
 }
+
 
 

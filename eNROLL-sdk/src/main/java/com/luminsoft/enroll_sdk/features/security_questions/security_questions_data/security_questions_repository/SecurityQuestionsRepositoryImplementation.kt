@@ -26,7 +26,7 @@ class SecurityQuestionsRepositoryImplementation(private val securityQuestionsRem
         }
     }
 
-    override suspend fun postSecurityQuestions(request: /*List<SecurityQuestionsRequestModel>*/String): Either<SdkFailure, Null> {
+    override suspend fun postSecurityQuestions(request: List<SecurityQuestionsRequestModel>): Either<SdkFailure, Null> {
         return when (val response =
             securityQuestionsRemoteDataSource.postSecurityQuestions(request)) {
             is BaseResponse.Success -> {

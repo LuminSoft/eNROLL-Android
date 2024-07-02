@@ -121,6 +121,7 @@
     <string name="intro3">لإكمال عملية التسجيل يجب توافر رقم محمول مسجل باسم المستخدم</string>
     <string name="intro4">يجب إدخال بريدك الإلكتروني الخاص لإكمال عملية التسجيل وتوثيق حسابك</string>
     <string name="intro5">إنشاء كلمة المرور الخاصة بالتطبيق</string>
+    <string name="intro7">يجب إختيار 3 أسئلة أمان لإتمام عملية التسجيل بنجاح</string>
     <string name="done">تـم</string>
     <string name="skip">تخطـي</string>
     <string name="isBackSideWhileFrontScanMessage">يرجى مسح الوجة الأمامي للبطاقة</string>
@@ -278,5 +279,9 @@
     <string name="youMustChooseThreeQuestions">يجب إختيار 3 أسئلة أمان لإتمام عملية التسجيل بنجاح</string>
     <string name="chooseAQuestions">إختر سؤال</string>
     <string name="answer">الاجابه</string>
+    <string name="required_question">من فضلك أختر سؤال</string>
+    <string name="required_answer">حقل مطلوب</string>
+    <string name="errorEmptyAnswer">من فضلك أدخل الاجابه</string>
+    <string name="errorMaxLengthAnswer">يجب ألا تزيد الاجابه عن 150 حرف</string>
 
 </resources>

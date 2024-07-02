@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_api
 
+import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.SecurityQuestionsRequestModel
 
@@ -11,5 +12,5 @@ interface SecurityQuestionsApi {
     suspend fun getSecurityQuestions(): Response<List<GetSecurityQuestionsResponseModel>>
 
     @POST("/api/v1/onboarding/SecurityQuestionsInfo")
-    suspend fun postSecurityQuestions(@Body request: /*List<SecurityQuestionsRequestModel>*/String): Response<List<GetSecurityQuestionsResponseModel>>
+    suspend fun postSecurityQuestions(@Body request: List<@JvmSuppressWildcards SecurityQuestionsRequestModel>): Response<BasicResponseModel>
 }

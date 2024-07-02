@@ -8,6 +8,6 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 
 interface SecurityQuestionsRepository {
     suspend fun getSecurityQuestions(): Either<SdkFailure, List<GetSecurityQuestionsResponseModel>>
-    suspend fun postSecurityQuestions(request: /*List<SecurityQuestionsRequestModel>*/String): Either<SdkFailure, Null>
+    suspend fun postSecurityQuestions(request: List<SecurityQuestionsRequestModel>): Either<SdkFailure, Null>
 
 }

@@ -3,7 +3,6 @@ package com.luminsoft.enroll_sdk.main.main_navigation
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.luminsoft.enroll_sdk.features.setting_password.password_onboarding.ui.components.SettingPasswordOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.common.SplashScreenContent
@@ -15,9 +14,6 @@ const val splashScreenAuthContent = "splashScreenAuthContent"
 const val onBoardingScreenContent = "onBoardingScreenContent"
 const val passwordScreenContent = "passwordScreenContent"
 
-fun NavController.navigateToMain(navOptions: NavOptions? = null) {
-    this.navigate(splashScreenOnBoardingContent, navOptions)
-}
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.mainRouter(
@@ -28,9 +24,6 @@ fun NavGraphBuilder.mainRouter(
     composable(route = splashScreenOnBoardingContent) {
         SplashScreenContent(onBoardingViewModel, navController = navController)
     }
-//    composable(route = splashScreenAuthContent) {
-//        SplashScreenContent(koinViewModel<AuthViewModel>(),navController=navController)
-//    }
     composable(route = onBoardingScreenContent) {
         OnboardingScreenContent(onBoardingViewModel, navController = navController)
     }

@@ -6,5 +6,5 @@ import retrofit2.http.Body
 
 interface SecurityQuestionsRemoteDataSource {
     suspend fun getSecurityQuestions(): BaseResponse<Any>
-    suspend fun postSecurityQuestions(@Body request: /*List<SecurityQuestionsRequestModel>*/String): BaseResponse<Any>
+    suspend fun postSecurityQuestions(@Body request: List<SecurityQuestionsRequestModel>): BaseResponse<Any>
 }

@@ -14,12 +14,14 @@ sealed class OnBoardingPage(
         stringValue = "PersonalConfirmationPage",
         text = R.string.intro1
     )
-    data object PassportOnlyPage: OnBoardingPage(
+
+    data object PassportOnlyPage : OnBoardingPage(
         image = R.drawable.step_01_passport,
         stringValue = "PersonalConfirmationPage",
         text = R.string.introPassport
     )
-    data object NationalIdOrPassportPage: OnBoardingPage(
+
+    data object NationalIdOrPassportPage : OnBoardingPage(
         image = R.drawable.step_01_national_id_or_passport,
         stringValue = "PersonalConfirmationPage",
         text = R.string.introPassportOrNI
@@ -48,11 +50,13 @@ sealed class OnBoardingPage(
         stringValue = "DeviceLocationPage",
         text = R.string.device_location
     )
+
     data object SecurityQuestionsPage : OnBoardingPage(
         image = R.drawable.step_06_security_questions,
         stringValue = "SecurityQuestionsPage",
-        text = R.string.intro3
+        text = R.string.intro7
     )
+
     data object SettingPasswordPage : OnBoardingPage(
         image = R.drawable.step_07_password,
         stringValue = "SettingPasswordPage",

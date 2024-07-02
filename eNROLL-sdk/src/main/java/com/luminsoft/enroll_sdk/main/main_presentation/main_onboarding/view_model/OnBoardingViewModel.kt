@@ -2,7 +2,6 @@ package com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_mod
 
 import android.graphics.Bitmap
 import android.os.Build
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -13,10 +12,7 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.validateOtpPhoneNumberScreenContent
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
@@ -88,8 +84,7 @@ class OnBoardingViewModel(
                 },
                 {
                     loading.value = false
-                    navController!!.navigate(securityQuestionsOnBoardingScreenContent)
-//                    navigateToNextStep()
+                    navigateToNextStep()
                 })
 
         }
@@ -110,12 +105,11 @@ class OnBoardingViewModel(
     private fun generateToken() {
         loading.value = true
         ui {
-//            delay(2000)
-            val udid: String = UUID.randomUUID().toString()
+            val uuid: String = UUID.randomUUID().toString()
             params.value = GenerateOnboardingSessionTokenUsecaseParams(
                 EnrollSDK.tenantId,
                 EnrollSDK.tenantSecret,
-                udid
+                uuid
             )
 
             val response: Either<SdkFailure, String> =
@@ -131,9 +125,9 @@ class OnBoardingViewModel(
                         token.value = it1
                         RetroClient.setToken(it1)
                         params.value = GetOnboardingStepConfigurationsUsecaseParams()
-                        val response: Either<SdkFailure, List<StepModel>> =
+                        val responseData: Either<SdkFailure, List<StepModel>> =
                             getOnboardingStepConfigurationsUsecase.call(params.value as GetOnboardingStepConfigurationsUsecaseParams)
-                        response.fold({
+                        responseData.fold({
                             failure.value = it
                             loading.value = false
                         }, { list ->

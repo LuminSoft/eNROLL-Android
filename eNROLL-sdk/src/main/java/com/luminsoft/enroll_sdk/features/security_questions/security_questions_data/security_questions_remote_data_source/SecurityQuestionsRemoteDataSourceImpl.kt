@@ -13,15 +13,12 @@ class SecurityQuestionsRemoteDataSourceImpl(
     SecurityQuestionsRemoteDataSource {
 
     override suspend fun getSecurityQuestions(): BaseResponse<Any> {
-
         return network.apiRequest { securityQuestionsApi.getSecurityQuestions() }
-
     }
 
-    override suspend fun postSecurityQuestions(request: /*List<SecurityQuestionsRequestModel>*/String): BaseResponse<Any> {
+    override suspend fun postSecurityQuestions(request: List<SecurityQuestionsRequestModel>): BaseResponse<Any> {
         return network.apiRequest { securityQuestionsApi.postSecurityQuestions(request) }
     }
-
 }
 
 
