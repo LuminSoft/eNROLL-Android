@@ -126,6 +126,7 @@
     <string name="intro3">To complete the registration process, a mobile number registered in the user\'s name must be available</string>
     <string name="intro4">You must enter your own email to complete the registration process and verify your account</string>
     <string name="intro5">Application password</string>
+    <string name="intro7">You must select 3 security questions that you must answer.</string>
     <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="isBackSideWhileFrontScanMessage">Please scan the front side of the ID</string>
@@ -276,4 +277,12 @@
     <string name="dot_document_auto_capture_instruction_mrz_not_present">Scan valid machine readable document</string>
     <string name="dot_document_auto_capture_instruction_size_too_small">Move closer</string>
     <string name="make_default">Make default</string>
+    <string name="youMustChooseThreeQuestions">You must choose 3 questions</string>
+    <string name="chooseAQuestions">Choose a question</string>
+    <string name="answer">Answer</string>
+    <string name="required_question">Required Question</string>
+    <string name="required_answer">Required Answer</string>
+    <string name="errorEmptyAnswer">Please enter your answer</string>
+    <string name="errorMaxLengthAnswer">Answer must not be more than 150 characters</string>
+
 </resources>

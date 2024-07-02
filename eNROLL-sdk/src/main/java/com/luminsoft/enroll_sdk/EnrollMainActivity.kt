@@ -91,7 +91,10 @@ class EnrollMainActivity : ComponentActivity() {
                         navController = navController,
                         onBoardingViewModel = onBoardingViewModel
                     )
-                    securityQuestionsRouter(navController = navController)
+                    securityQuestionsRouter(
+                        navController = navController,
+                        onBoardingViewModel = onBoardingViewModel
+                    )
                     settingPasswordRouter(navController = navController)
                 }
             }

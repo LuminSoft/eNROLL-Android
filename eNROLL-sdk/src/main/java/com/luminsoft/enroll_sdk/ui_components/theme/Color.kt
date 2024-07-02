@@ -17,6 +17,7 @@ val textColor = Color(0xff004194)
 val defaultColor = Color(0xffF6F9FF)
 val defaultBorderColor = Color(0xff0054BF)
 val defaultTextColor = Color(0xff5791DB)
+val unselectedDotColor = Color(0xffEBEBEB)
 val onSecondaryContainer = Color(0xffDFE5F2)
 val onBackground = Color(0xffFCFDFF)
 

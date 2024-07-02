@@ -37,17 +37,17 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 
 @Composable
 fun SplashScreenContent(
-    viewModel : OnBoardingViewModel,
-    navController:NavController,
+    viewModel: OnBoardingViewModel,
+    navController: NavController,
 ) {
-    val loading = viewModel.loading.collectAsState()
+//    val loading = viewModel.loading.collectAsState()
     val failure = viewModel.failure.collectAsState()
-    val steps = viewModel.steps.collectAsState()
-    val context = LocalContext.current
+//    val steps = viewModel.steps.collectAsState()
+//    val context = LocalContext.current
     val activity = LocalContext.current as Activity
     viewModel.navController = navController
 
-    Surface (modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painterResource(R.drawable.splash_screen),
@@ -56,15 +56,21 @@ fun SplashScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
             )
-            Column (horizontalAlignment = Alignment.CenterHorizontally,verticalArrangement = Arrangement.Center ,  modifier = Modifier
-                .fillMaxSize() ){
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
                 Spacer(modifier = Modifier.height(100.dp))
-                ComposeLottieAnimation(modifier = Modifier
-                    .size(150.dp))
+                ComposeLottieAnimation(
+                    modifier = Modifier
+                        .size(150.dp)
+                )
             }
         }
     }
-     if (!failure.value?.message.isNullOrEmpty()) {
+    if (!failure.value?.message.isNullOrEmpty()) {
         if (failure.value is AuthFailure) {
             failure.value?.let {
                 DialogView(
@@ -74,13 +80,13 @@ fun SplashScreenContent(
                     onPressedButton = {
 
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message,it))
+                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                     },
                 )
                 {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message,it))
+                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                 }
             }
@@ -96,18 +102,19 @@ fun SplashScreenContent(
                     secondButtonText = stringResource(id = R.string.exit),
                     onPressedSecondButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message,it))
+                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                     }
                 )
                 {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message,it))
+                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
                 }
             }
         }
     }
 }
+
 @Composable
 fun ComposeLottieAnimation(modifier: Modifier) {
 
