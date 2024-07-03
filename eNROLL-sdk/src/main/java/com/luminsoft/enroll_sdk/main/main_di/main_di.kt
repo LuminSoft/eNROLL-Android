@@ -11,7 +11,6 @@ import com.luminsoft.enroll_sdk.main.main_domain.repository.MainRepository
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
-import com.luminsoft.enroll_sdk.main.main_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -45,8 +44,4 @@ val mainModule = module {
     viewModel {
         LocationOnBoardingViewModel(get())
     }
-    viewModel {
-        AuthViewModel(get())
-    }
-
 }

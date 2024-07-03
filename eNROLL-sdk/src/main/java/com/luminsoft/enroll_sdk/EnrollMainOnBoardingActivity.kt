@@ -32,10 +32,9 @@ import com.luminsoft.enroll_sdk.features.setting_password.password_di.passwordMo
 import com.luminsoft.enroll_sdk.features.setting_password.password_navigation.settingPasswordRouter
 import com.luminsoft.enroll_sdk.main.main_di.mainModule
 import com.luminsoft.enroll_sdk.main.main_navigation.mainRouter
-import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
-import com.luminsoft.enroll_sdk.main.main_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -46,9 +45,8 @@ import org.koin.core.context.startKoin
 
 
 @Suppress("DEPRECATION")
-class EnrollMainActivity : ComponentActivity() {
+class EnrollMainOnBoardingActivity : ComponentActivity() {
     val onBoardingViewModel: OnBoardingViewModel by viewModel()
-    val authViewModel: AuthViewModel by viewModel()
 
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
@@ -65,7 +63,7 @@ class EnrollMainActivity : ComponentActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
 
         setContent {
@@ -122,17 +120,17 @@ class EnrollMainActivity : ComponentActivity() {
 
     private fun getStartingRoute(): String {
         return when (EnrollSDK.enrollMode) {
-            EnrollMode.ONBOARDING -> {
+            EnrollMode.ONBOARDING ->
                 splashScreenOnBoardingContent
-            }
 
-            EnrollMode.AUTH -> {
+
+            EnrollMode.AUTH ->
                 splashScreenAuthContent
-            }
 
-            else -> {
+
+            else ->
                 return splashScreenOnBoardingContent
-            }
+
         }
     }
 }

@@ -11,6 +11,8 @@ object EnrollSDK {
     var tenantId = ""
     var googleApiKey = ""
     var tenantSecret = ""
+    var applicantId = ""
+    var levelOfTrustToken = ""
 
     // this info related to sdk initiation
     var environment = EnrollEnvironment.STAGING

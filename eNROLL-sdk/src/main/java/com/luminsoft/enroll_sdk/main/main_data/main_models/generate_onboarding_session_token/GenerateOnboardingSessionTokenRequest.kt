@@ -13,4 +13,10 @@ open class GenerateOnboardingSessionTokenRequest {
     @SerializedName("deviceId")
     internal var deviceId: String? = null
 
+    @SerializedName("applicantId")
+    internal var applicantId: String? = null
+
+    @SerializedName("levelOfTrutToken")
+    internal var levelOfTrustToken: String? = null
+
 }
