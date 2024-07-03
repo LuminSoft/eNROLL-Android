@@ -284,5 +284,6 @@
     <string name="required_answer">حقل مطلوب</string>
     <string name="errorEmptyAnswer">من فضلك أدخل الاجابه</string>
     <string name="errorMaxLengthAnswer">يجب ألا تزيد الاجابه عن 150 حرف</string>
+    <string name="successfulAuthentication">تم التحقق الحساب بنجاح</string>
 
 </resources>

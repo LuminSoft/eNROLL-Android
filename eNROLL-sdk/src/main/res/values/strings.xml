@@ -284,5 +284,6 @@
     <string name="required_answer">Required Answer</string>
     <string name="errorEmptyAnswer">Please enter your answer</string>
     <string name="errorMaxLengthAnswer">Answer must not be more than 150 characters</string>
+    <string name="successfulAuthentication">Account successfully authenticated</string>
 
 </resources>

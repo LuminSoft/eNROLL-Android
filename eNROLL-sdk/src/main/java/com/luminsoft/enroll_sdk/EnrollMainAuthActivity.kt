@@ -15,13 +15,8 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
-import com.luminsoft.enroll_sdk.features.email.email_di.emailModule
-import com.luminsoft.enroll_sdk.features.face_capture.face_capture_di.faceCaptureModule
-import com.luminsoft.enroll_sdk.features.location.location_di.locationModule
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_di.phoneNumbersModule
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_di.securityQuestionsModule
-import com.luminsoft.enroll_sdk.features.setting_password.password_di.passwordModule
+import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_di.passwordAuthModule
+import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.mainAuthRouter
@@ -86,7 +81,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
 //                        navController = navController,
 //                        authViewModel = authViewModel
 //                    )
-//                    settingPasswordRouter(navController = navController)
+                    passwordAuthRouter(navController = navController)
                 }
             }
         }
@@ -100,7 +95,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 modules(sdkModule)
                 modules(mainAuthModule)
                 modules(deviceDataModule)
-                modules(passwordModule)
+                modules(passwordAuthModule)
 //                modules(faceCaptureModule)
 //                modules(locationModule)
 //                modules(nationalIdConfirmationModule)

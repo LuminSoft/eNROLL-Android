@@ -7,6 +7,7 @@ import com.luminsoft.enroll_sdk.features.location.location_navigation.locationOn
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
+import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthScreenContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.settingPasswordOnBoardingScreenContent
 
 
@@ -39,7 +40,7 @@ data class StepAuthModel(
             1 -> nationalIdOnBoardingPreScanScreen
             2 -> faceCaptureBoardingPreScanScreenContent
             3 -> phoneNumbersOnBoardingScreenContent
-            4 -> settingPasswordOnBoardingScreenContent
+            4 -> passwordAuthScreenContent
             5 -> deviceDataOnBoardingPrescanScreenContent
             6 -> locationOnBoardingScreenContent
             7 -> securityQuestionsOnBoardingScreenContent
