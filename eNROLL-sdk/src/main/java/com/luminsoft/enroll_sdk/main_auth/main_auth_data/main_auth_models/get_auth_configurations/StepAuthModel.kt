@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
 import com.luminsoft.enroll_sdk.features.location.location_navigation.locationOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
-import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_navigation.mailAuthScreenContent
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_navigation.phoneAuthScreenContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.settingPasswordOnBoardingScreenContent
 
 
@@ -39,7 +39,7 @@ data class StepAuthModel(
         return when (this.authenticationStepId) {
             1 -> nationalIdOnBoardingPreScanScreen
             2 -> mailAuthScreenContent
-            3 -> phoneNumbersOnBoardingScreenContent
+            3 -> phoneAuthScreenContent
             4 -> passwordAuthScreenContent
             5 -> deviceDataOnBoardingPrescanScreenContent
             6 -> locationOnBoardingScreenContent

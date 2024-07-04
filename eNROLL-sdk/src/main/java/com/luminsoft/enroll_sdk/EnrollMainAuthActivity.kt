@@ -19,6 +19,8 @@ import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_di.mailAuthMod
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_navigation.mailAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_di.passwordAuthModule
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthRouter
+import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_di.phoneAuthModule
+import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_navigation.phoneAuthRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.mainAuthRouter
@@ -59,7 +61,6 @@ class EnrollMainAuthActivity : ComponentActivity() {
             val authViewModel: AuthViewModel = koinViewModel<AuthViewModel>()
             val navController = rememberNavController()
 
-
             EKYCsDKTheme(dynamicColor = false) {
                 NavHost(
                     navController = navController,
@@ -67,6 +68,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 ) {
                     mainAuthRouter(navController = navController, authViewModel)
                     passwordAuthRouter(navController = navController, authViewModel)
+                    phoneAuthRouter(navController = navController, authViewModel)
                     mailAuthRouter(navController = navController, authViewModel)
                 }
             }
@@ -83,6 +85,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 modules(deviceDataModule)
                 modules(passwordAuthModule)
                 modules(mailAuthModule)
+                modules(phoneAuthModule)
             }.koin
         }
     }
