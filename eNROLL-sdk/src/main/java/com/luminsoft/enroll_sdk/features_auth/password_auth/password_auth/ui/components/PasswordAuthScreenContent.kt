@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,26 +36,40 @@ import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
-import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth.view_model.PasswordAuthViewModel
+import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_domain.usecases.PasswordAuthUseCase
+import com.luminsoft.enroll_sdk.main_auth.main_auth_data.main_auth_models.get_auth_configurations.EkycStepAuthType
+import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 var password = mutableStateOf(TextFieldValue())
 var validate = mutableStateOf(false)
 
 @Composable
 fun PasswordAuthScreenContent(
-    passwordAuthViewModel: PasswordAuthViewModel = koinViewModel(),
+    authViewModel: AuthViewModel,
     navController: NavController
 ) {
+
+    val passwordAuthUseCase =
+        PasswordAuthUseCase(koinInject())
+
+    val passwordAuthViewModel =
+        remember {
+            PasswordAuthViewModel(
+                passwordAuthUseCase = passwordAuthUseCase
+            )
+        }
+
+
     val context = LocalContext.current
     val activity = context.findActivity()
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -63,19 +78,22 @@ fun PasswordAuthScreenContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                text = stringResource(id = R.string.successfulAuthentication),
-                buttonText = stringResource(id = R.string.continue_to_next),
-                onPressedButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        enrollSuccessModel = EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication)
+            val isEmpty = authViewModel.removeCurrentStep(EkycStepAuthType.Password.getStepId())
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulAuthentication),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulAuthentication),
+                                activity.getString(R.string.successfulAuthentication)
+                            )
                         )
-                    )
-                },
-            )
+                    },
+                )
         } else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {

@@ -4,10 +4,11 @@ import com.luminsoft.enroll_sdk.features.email.email_data.email_models.validate_
 import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface MailAuthApi {
-    @POST("/api/v1/authentication/EmailOtpAuthentication/SendEmailOtp")
+    @GET("/api/v1/authentication/EmailOtpAuthentication/SendEmailOtp")
     suspend fun sendMailAuthOtp(): Response<BasicResponseModel>
 
     @POST("/api/v1/authentication/EmailOtpAuthentication/VerifyEmailOtp")

@@ -8,13 +8,13 @@ import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_data.mail_auth
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_data.mail_auth_remote_data_source.MailAuthRemoteDataSourceImpl
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_data.mail_auth_repository.MailAuthRepositoryImplementation
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.repository.MailAuthRepository
-import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.usecases.MailAuthUseCase
+import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.usecases.MailAuthSendOTPUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val mailAuthModule = module {
     single {
-        MailAuthUseCase(get())
+        MailAuthSendOTPUseCase(get())
     }
     single<MailAuthRemoteDataSource> {
         MailAuthRemoteDataSourceImpl(get(), get())
@@ -30,7 +30,7 @@ val mailAuthModule = module {
         ).create(MailAuthApi::class.java)
     }
     viewModel {
-        MailAuthViewModel(get())
+        MailAuthViewModel(get(), get())
     }
 
 

@@ -6,44 +6,79 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
-import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.usecases.MailAuthUseCase
-import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_domain.usecases.PasswordAuthUseCase
-import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_domain.usecases.PasswordAuthUseCaseParams
+import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.usecases.MailAuthSendOTPUseCase
+import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.usecases.ValidateOtpMailAuthUseCase
+import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.usecases.ValidateOtpMailAuthUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class MailAuthViewModel(private val mailAuthUseCase: MailAuthUseCase) :
+class MailAuthViewModel(
+    private val mailAuthSendOTPUseCase: MailAuthSendOTPUseCase,
+    private val validateOtpMailAuthUseCase: ValidateOtpMailAuthUseCase
+) :
     ViewModel() {
+    var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var passwordApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var navController: NavController? = null
+    var otpApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
 
-    fun callVerifyPassword(password: String) {
-        verifyPassword(password)
+    init {
+        sendOtpCall()
     }
 
-    private fun verifyPassword(password: String) {
-        isButtonLoading.value = true
+    fun callValidateOtp(otp: String) {
+        validateOtp(otp)
+    }
+
+    fun callSendOtp() {
+        sendOtpCall()
+    }
+
+    private fun sendOtpCall() {
+        loading.value = true
         ui {
-
-            params.value = PasswordAuthUseCaseParams(password = password)
-
             val response: Either<SdkFailure, Null> =
-                mailAuthUseCase.call(params.value as PasswordAuthUseCaseParams)
+                mailAuthSendOTPUseCase.call(null)
 
             response.fold(
                 {
                     failure.value = it
-                    isButtonLoading.value = false
-
+                    loading.value = false
                 },
                 {
-                    isButtonLoading.value = false
-                    passwordApproved.value = true
-
+                    loading.value = false
+//                    mailSentSuccessfully.value = true
                 })
         }
+
+
     }
+
+    private fun validateOtp(otp: String) {
+        loading.value = true
+        ui {
+            params.value =
+                ValidateOtpMailAuthUseCaseParams(
+                    otp = otp
+                )
+            val response: Either<SdkFailure, Null> =
+                validateOtpMailAuthUseCase.call(params.value as ValidateOtpMailAuthUseCaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    otpApproved.value = true
+                    loading.value = false
+                })
+        }
+
+
+    }
+
+
 }
