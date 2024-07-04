@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
@@ -105,9 +106,8 @@ fun MailAuthScreenContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulAuthentication),
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
                                 activity.getString(R.string.successfulAuthentication)
                             )
                         )
@@ -124,12 +124,10 @@ fun MailAuthScreenContent(
                         onPressedButton = {
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
                         },
                     ) {
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
                     }
                 }
             } else {
@@ -141,7 +139,6 @@ fun MailAuthScreenContent(
                         onPressedButton = {
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
                         },
                     )
                 }

@@ -15,6 +15,8 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
+import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_di.locationAuthModule
+import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_navigation.locationAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_di.mailAuthModule
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_navigation.mailAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_di.passwordAuthModule
@@ -36,8 +38,6 @@ import org.koin.core.context.startKoin
 
 @Suppress("DEPRECATION")
 class EnrollMainAuthActivity : ComponentActivity() {
-    //    val authViewModel: OnBoardingViewModel by viewModel()
-//    val authViewModel: AuthViewModel by viewModel()
 
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
@@ -70,6 +70,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                     passwordAuthRouter(navController = navController, authViewModel)
                     phoneAuthRouter(navController = navController, authViewModel)
                     mailAuthRouter(navController = navController, authViewModel)
+                    locationAuthRouter(navController = navController, authViewModel)
                 }
             }
         }
@@ -86,6 +87,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 modules(passwordAuthModule)
                 modules(mailAuthModule)
                 modules(phoneAuthModule)
+                modules(locationAuthModule)
             }.koin
         }
     }
