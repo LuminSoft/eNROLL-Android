@@ -58,7 +58,7 @@ fun SettingPasswordOnBoardingScreenContent(
     val passwordApproved = passwordOnBoardingViewModel.passwordApproved.collectAsState()
     val failure = passwordOnBoardingViewModel.failure.collectAsState()
     val password = passwordOnBoardingViewModel.password.collectAsState()
-    val confirmPassword = passwordOnBoardingViewModel.password.collectAsState()
+    val confirmPassword = passwordOnBoardingViewModel.confirmPassword.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
