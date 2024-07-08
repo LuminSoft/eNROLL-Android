@@ -60,6 +60,7 @@ var dotenv = dotenv {
 //    filename = "env_org1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
+//    filename = "env_azimut_production"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -212,7 +213,7 @@ class MainActivity : ComponentActivity() {
                 applicationId.value.text,
                 levelOfTrustToken.value.text,
                 if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
-                EnrollEnvironment.STAGING,
+                EnrollEnvironment.PRODUCTION,
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
