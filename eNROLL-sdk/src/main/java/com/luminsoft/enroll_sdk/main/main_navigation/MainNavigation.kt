@@ -10,7 +10,6 @@ import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.ui.compon
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 
 const val splashScreenOnBoardingContent = "splashScreenOnBoardingContent"
-const val splashScreenAuthContent = "splashScreenAuthContent"
 const val onBoardingScreenContent = "onBoardingScreenContent"
 const val passwordScreenContent = "passwordScreenContent"
 
@@ -28,6 +27,6 @@ fun NavGraphBuilder.mainRouter(
         OnboardingScreenContent(onBoardingViewModel, navController = navController)
     }
     composable(route = passwordScreenContent) {
-        SettingPasswordOnBoardingScreenContent(navController = navController)
+        SettingPasswordOnBoardingScreenContent(onBoardingViewModel, navController = navController)
     }
 }

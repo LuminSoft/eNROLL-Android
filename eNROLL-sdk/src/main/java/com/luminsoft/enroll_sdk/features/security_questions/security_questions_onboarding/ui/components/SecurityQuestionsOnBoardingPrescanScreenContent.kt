@@ -56,6 +56,7 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.PostSecurityQuestionsUseCase
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_onboarding.view_model.SecurityQuestionsOnBoardingViewModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -108,7 +109,8 @@ fun SecurityQuestionsOnBoardingScreenContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (securityQuestionsApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(7)
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.SecurityQuestions.getStepId())
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,

@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,19 +38,32 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features.setting_password.password_domain.usecases.OnboardingSettingPasswordUseCase
 import com.luminsoft.enroll_sdk.features.setting_password.password_onboarding.view_model.PasswordOnBoardingViewModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
+import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun SettingPasswordOnBoardingScreenContent(
-    passwordOnBoardingViewModel: PasswordOnBoardingViewModel = koinViewModel(),
+    onBoardingViewModel: OnBoardingViewModel,
     navController: NavController
 ) {
+
+    val setPasswordUseCase =
+        OnboardingSettingPasswordUseCase(koinInject())
+    val passwordOnBoardingViewModel =
+        remember {
+            PasswordOnBoardingViewModel(
+                setPasswordUseCase = setPasswordUseCase
+            )
+        }
+
     val context = LocalContext.current
     val activity = context.findActivity()
 
@@ -62,21 +76,23 @@ fun SettingPasswordOnBoardingScreenContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                text = stringResource(id = R.string.successfulRegistration),
-                buttonText = stringResource(id = R.string.continue_to_next),
-                onPressedButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulRegistration),
-                            activity.getString(R.string.successfulRegistration)
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.SettingPassword.getStepId())
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
                         )
-                    )
-
-                },
-            )
+                    },
+                )
         } else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {

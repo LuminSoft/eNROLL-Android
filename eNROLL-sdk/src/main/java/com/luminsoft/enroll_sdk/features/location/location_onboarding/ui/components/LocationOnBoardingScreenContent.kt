@@ -64,6 +64,7 @@ import com.luminsoft.enroll_sdk.features.location.location_domain.usecases.PostL
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationDetails
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -113,7 +114,8 @@ fun LocationOnBoardingScreenContent(
 
     BackGroundView(navController = navController, showAppBar = false) {
         if (locationSent.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(6)
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.DeviceLocation.getStepId())
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
