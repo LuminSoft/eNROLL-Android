@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <application android:usesCleartextTraffic="true">
+    <application>
         <activity
             android:name="com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity"
             android:exported="true"
