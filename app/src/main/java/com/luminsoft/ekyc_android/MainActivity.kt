@@ -213,7 +213,7 @@ class MainActivity : ComponentActivity() {
                 applicationId.value.text,
                 levelOfTrustToken.value.text,
                 if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
-                EnrollEnvironment.STAGING,
+                EnrollEnvironment.PRODUCTION,
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {

@@ -31,7 +31,7 @@ object EnrollSDK {
     fun getApisUrl(): String {
         return if (environment == EnrollEnvironment.STAGING)
             getBaseUrl() + ":4800"
-        else getBaseUrl() + ":7400"
+        else getBaseUrl() + ":7400/OnBoarding"
     }
 
 
