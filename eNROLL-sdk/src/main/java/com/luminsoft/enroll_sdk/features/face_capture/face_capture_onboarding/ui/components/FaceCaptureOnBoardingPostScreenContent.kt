@@ -165,8 +165,7 @@ private fun MainContent(
     val scale = remember { Animatable(initialValue = 0f) }
     val startPosition1 = Offset(-250f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
-    val faceImageBaseUrl = "http://197.168.1.39:4600/api/v1/ApplicantProfile/GetImage?path="
-    //TODO change face image base url
+    val faceImageBaseUrl = "${EnrollSDK.getImageUrl()}api/v1/ApplicantProfile/GetImage?path="
 
     if (!loading.value) {
         LaunchedEffect(endPosition) {
@@ -242,8 +241,7 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
-                    //TODO
-//                    AnimationExtracted(faceImage, position, smileImage, position1)
+
                     AnimationExtracted(
                         position,
                         smileImage,
@@ -274,8 +272,6 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
-                    //TODO
-//                    ErrorAnimationExtracted(faceImage, smileImage, scale)
                     ErrorAnimationExtracted(smileImage, scale, facePhotoPath, faceImageBaseUrl)
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
@@ -371,16 +367,22 @@ private fun ErrorAnimationExtracted(
         modifier = Modifier.fillMaxWidth(0.7f)
     ) {
 
-        AsyncImage(
-            model = faceImageBaseUrl + facePhotoPath!!,
-            contentDescription = "face Photo Path",
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .size(120.dp)
-                .border(2.dp, Color.Red, shape = CircleShape)
-                .clip(CircleShape)
                 .scale(scale = scale.value)
-        )
+        ) {
+            AsyncImage(
+
+                model = faceImageBaseUrl + facePhotoPath!!,
+                contentDescription = "face Photo Path",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(120.dp)
+                    .border(2.dp, Color.Red, shape = CircleShape)
+                    .clip(CircleShape)
+            )
+        }
         Image(
             painterResource(R.drawable.error_sign),
             contentDescription = "some useful description",
@@ -389,17 +391,22 @@ private fun ErrorAnimationExtracted(
                 .scale(scale = scale.value)
         )
 
-        Image(
-            bitmap = smileImage!!.asImageBitmap(),
-            contentDescription = "some useful description",
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .size(120.dp)
-                .border(2.dp, Color.Red, shape = CircleShape)
-                .clip(CircleShape)
                 .scale(scale = scale.value)
+        ) {
+            Image(
 
-        )
+                bitmap = smileImage!!.asImageBitmap(),
+                contentDescription = "some useful description",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(120.dp)
+                    .border(2.dp, Color.Red, shape = CircleShape)
+                    .clip(CircleShape)
+            )
+        }
     }
 }
 
