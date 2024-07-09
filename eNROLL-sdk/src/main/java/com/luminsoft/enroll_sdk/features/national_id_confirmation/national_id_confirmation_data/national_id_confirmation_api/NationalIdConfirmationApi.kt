@@ -10,22 +10,22 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface NationalIdConfirmationApi {
-    @POST("/api/v1/onboarding/NationalId/UploadFrontImage")
+    @POST("api/v1/onboarding/NationalId/UploadFrontImage")
     suspend fun nationalIdUploadFrontImage(@Body request: PersonalConfirmationUploadImageRequest): Response<NationalIDConfirmationResponse>
 
-    @POST("/api/v1/onboarding/NationalId/ApproveFrontImage")
+    @POST("api/v1/onboarding/NationalId/ApproveFrontImage")
     suspend fun nationalIdApproveFront(@Body request: PersonalConfirmationApproveRequest): Response<String>
 
-    @POST("/api/v1/onboarding/NationalId/UploadBackImage")
+    @POST("api/v1/onboarding/NationalId/UploadBackImage")
     suspend fun nationalIdUploadBackImage(@Body request: PersonalConfirmationUploadImageRequest): Response<NationalIDConfirmationResponse>
 
-    @POST("/api/v1/onboarding/NationalId/ApproveBackImage")
+    @POST("api/v1/onboarding/NationalId/ApproveBackImage")
     suspend fun nationalIdApproveBackImage(@Body request: PersonalConfirmationApproveRequest): Response<String>
 
-    @POST("/api/v1/onboarding/Passport/UploadPassportImage")
+    @POST("api/v1/onboarding/Passport/UploadPassportImage")
     suspend fun passportUploadImage(@Body request: PersonalConfirmationUploadImageRequest): Response<NationalIDConfirmationResponse>
 
-    @POST("/api/v1/onboarding/Passport/Approve")
+    @POST("api/v1/onboarding/Passport/Approve")
     suspend fun passportApprove(@Body request: PersonalConfirmationApproveRequest): Response<BasicResponseModel>
 
 }

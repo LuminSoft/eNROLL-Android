@@ -166,6 +166,7 @@ private fun MainContent(
     val startPosition1 = Offset(-250f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
     val faceImageBaseUrl = "http://197.168.1.39:4600/api/v1/ApplicantProfile/GetImage?path="
+    //TODO change face image base url
 
     if (!loading.value) {
         LaunchedEffect(endPosition) {

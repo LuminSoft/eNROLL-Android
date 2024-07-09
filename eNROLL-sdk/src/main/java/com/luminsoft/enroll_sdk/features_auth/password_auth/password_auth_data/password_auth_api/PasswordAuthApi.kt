@@ -7,6 +7,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface PasswordAuthApi {
-    @POST("/api/v1/authentication/PasswordAuthentication/VerifyPassword")
+    @POST("api/v1/authentication/PasswordAuthentication/VerifyPassword")
     suspend fun verifyPassword(@Body request: SetPasswordRequest): Response<BasicResponseModel>
 }

@@ -1,7 +1,7 @@
 package com.luminsoft.ekyc_android
 
 import android.app.Activity
-import android.content.res.Configuration
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,6 +44,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.core.content.edit
 import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
@@ -52,7 +55,7 @@ import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import io.github.cdimascio.dotenv.dotenv
-import java.util.Locale
+
 
 var dotenv = dotenv {
     directory = "/assets"
@@ -69,19 +72,56 @@ var applicationId = mutableStateOf(TextFieldValue(text = dotenv["APPLICATION_ID"
 var levelOfTrustToken = mutableStateOf(TextFieldValue(text = dotenv["LEVEL_OF_TRUST_TOKEN"]))
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
 var isArabic = mutableStateOf(false)
+var isProduction = mutableStateOf(false)
+var isRememberMe = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
+
     var text = mutableStateOf("")
+    private var tenantIdText = mutableStateOf(TextFieldValue())
+    private var tenantSecretText = mutableStateOf(TextFieldValue())
+    private var applicationIdText = mutableStateOf(TextFieldValue())
+    private var levelOfTrustTokenText = mutableStateOf(TextFieldValue())
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLocale("en")
+//        setLocale("en")
+
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        tenantIdText.value =
+            TextFieldValue(text = sharedPref.getString("tenantId", tenantId.value.text)!!)
+
+        tenantSecretText.value =
+            TextFieldValue(
+                text = sharedPref.getString(
+                    "tenantSecret",
+                    tenantSecret.value.text
+                )!!
+            )
+        applicationIdText.value =
+            TextFieldValue(
+                text = sharedPref.getString(
+                    "applicationId",
+                    applicationId.value.text
+                )!!
+            )
+        levelOfTrustTokenText.value =
+            TextFieldValue(
+                text = sharedPref.getString(
+                    "levelOfTrustToken",
+                    levelOfTrustToken.value.text
+                )!!
+            )
+
         setContent {
             val activity = LocalContext.current as Activity
 
-            val itemList = listOf<String>("Onboarding", "Auth")
+            val itemList = listOf("Onboarding", "Auth")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
+
+
 
             EnrollTheme {
                 Column(
@@ -93,29 +133,34 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(20.dp))
                         NormalTextField(
                             label = "Tenant Id",
-                            value = tenantId.value,
+                            value = tenantIdText.value,
                             onValueChange = {
-                                tenantId.value = it
+                                tenantIdText.value = it
                             })
                         NormalTextField(
                             label = "Tenant Secret",
-                            value = tenantSecret.value,
+                            value = tenantSecretText.value,
                             onValueChange = {
-                                tenantSecret.value = it
+                                tenantSecretText.value = it
                             })
                         NormalTextField(
                             label = "Application Id",
-                            value = applicationId.value,
+                            value = applicationIdText.value,
                             onValueChange = {
-                                applicationId.value = it
+                                applicationIdText.value = it
                             })
                         NormalTextField(
                             label = "Level Of Trust Token",
-                            value = levelOfTrustToken.value,
+                            value = levelOfTrustTokenText.value,
                             onValueChange = {
-                                levelOfTrustToken.value = it
+                                levelOfTrustTokenText.value = it
                             })
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        ArabicCheckbox()
+                        ProductionCheckbox()
+                        RememberMeCheckbox()
+                        Spacer(modifier = Modifier.height(20.dp))
 
                         DropdownList(
                             itemList = itemList,
@@ -123,26 +168,6 @@ class MainActivity : ComponentActivity() {
                             modifier = buttonModifier,
                             onItemClick = { selectedIndex = it })
 
-
-//                        Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-//                            Text("Is Arabic?")
-//                            Switch(
-//                                modifier = Modifier.scale(0.8f),
-//                                checked = isArabic.value,
-//                                colors = SwitchDefaults.colors(
-//                                    checkedThumbColor = MaterialTheme.colorScheme.primary,
-//                                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-//                                    uncheckedThumbColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-//                                    uncheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-//                                    uncheckedBorderColor = Color.Unspecified,
-//                                    checkedBorderColor = Color.Unspecified,
-//
-//                                    ),
-//                                onCheckedChange = {
-//                                    isArabic.value = it
-//                                },
-//                            )
-//                        }
 
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(text.value)
@@ -160,7 +185,7 @@ class MainActivity : ComponentActivity() {
                             border = border,
                             modifier = modifier,
                             onClick = {
-                                initEnroll(activity, LocalizationCode.EN, selectedIndex)
+                                initEnroll(activity, selectedIndex)
                             },
                             contentPadding = PaddingValues(0.dp),
                             shape = RoundedCornerShape(12.dp),
@@ -174,25 +199,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         Spacer(modifier = Modifier.height(20.dp))
-                        Button(
-                            border = border,
-                            modifier = modifier,
-                            onClick = {
-                                initEnroll(activity, LocalizationCode.AR, selectedIndex)
-                            },
-                            contentPadding = PaddingValues(0.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
 
-                            ) {
-                            Text(
-                                text = "ابدا",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(20.dp))
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
@@ -203,17 +210,27 @@ class MainActivity : ComponentActivity() {
 
     private fun initEnroll(
         activity: Activity,
-        localizationCode: LocalizationCode,
         selectedIndex: Int
     ) {
+        if (isRememberMe.value) {
+            getPreferences(Context.MODE_PRIVATE).edit {
+                putString("tenantId", tenantIdText.value.text)
+                putString("tenantSecret", tenantSecretText.value.text)
+                putString("applicationId", applicationIdText.value.text)
+                putString("levelOfTrustToken", levelOfTrustTokenText.value.text)
+                apply()
+            }
+        } else {
+            getPreferences(Context.MODE_PRIVATE).edit().clear().apply()
+        }
         try {
             eNROLL.init(
-                tenantId.value.text,
-                tenantSecret.value.text,
-                applicationId.value.text,
-                levelOfTrustToken.value.text,
+                tenantIdText.value.text,
+                tenantSecretText.value.text,
+                applicationIdText.value.text,
+                levelOfTrustTokenText.value.text,
                 if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
-                EnrollEnvironment.STAGING,
+                if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
@@ -227,7 +244,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                 },
-                localizationCode = localizationCode,
+                localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value
             )
         } catch (e: Exception) {
@@ -239,20 +256,6 @@ class MainActivity : ComponentActivity() {
             Log.e("error", e.toString())
         }
     }
-
-    private fun setLocale(lang: String?) {
-        val locale = lang?.let { Locale(it) }
-        if (locale != null) {
-            Locale.setDefault(locale)
-        }
-        val config: Configuration = baseContext.resources.configuration
-        config.setLocale(locale)
-        baseContext.resources.updateConfiguration(
-            config,
-            baseContext.resources.displayMetrics
-        )
-    }
-
 
     @Composable
     fun DropdownList(
@@ -287,7 +290,7 @@ class MainActivity : ComponentActivity() {
             }
 
             // dropdown list
-            Box() {
+            Box {
                 if (showDropdown) {
                     Popup(
                         alignment = Alignment.TopCenter,
@@ -331,4 +334,43 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    @Composable
+    fun ArabicCheckbox() {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = isArabic.value,
+                onCheckedChange = { isChecked -> isArabic.value = isChecked }
+            )
+            Text("is Arabic")
+        }
+    }
 }
+
+@Composable
+fun ProductionCheckbox() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = isProduction.value,
+            onCheckedChange = { isChecked -> isProduction.value = isChecked }
+        )
+        Text("is Production")
+    }
+}
+
+@Composable
+fun RememberMeCheckbox() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = isRememberMe.value,
+            onCheckedChange = { isChecked -> isRememberMe.value = isChecked }
+        )
+        Text("Remember Me")
+    }
+}
+
