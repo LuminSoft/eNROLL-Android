@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -251,11 +252,21 @@ private fun AnswerTextField(
     securityQuestionsOnBoardingVM: SecurityQuestionsOnBoardingViewModel,
     answerError: State<String?>
 ) {
+    val maxChar = 150
+
     Column {
         TextField(
             value = answer.value,
             onValueChange = {
-                securityQuestionsOnBoardingVM.onChangeValue(it)
+                if (it.text.length <= maxChar)
+                    securityQuestionsOnBoardingVM.onChangeValue(it)
+            },
+            supportingText = {
+                Text(
+                    text = "${answer.value.text.length} / $maxChar",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End,
+                )
             },
             modifier = Modifier
                 .fillMaxWidth(),
