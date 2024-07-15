@@ -105,6 +105,7 @@ fun LocationAuthScreenContent(
                     text = stringResource(id = R.string.successfulAuthentication),
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
+                        locationAuthVM.locationSent.value = false
                         activity.finish()
                         EnrollSDK.enrollCallback?.success(
                             EnrollSuccessModel(
@@ -113,7 +114,9 @@ fun LocationAuthScreenContent(
                         )
                     },
                 )
-        } else if (loading.value) LoadingView()
+        }
+        else if (loading.value)
+            LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
@@ -134,24 +137,22 @@ fun LocationAuthScreenContent(
                 }
             } else {
                 failure.value?.let {
-                    DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                    DialogView(
+                        bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = it.message,
-                        buttonText = stringResource(id = R.string.retry),
+                        buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            locationAuthViewModel.callPostLocation()
-                        },
-                        secondButtonText = stringResource(id = R.string.exit),
-                        onPressedSecondButton = {
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
-                        }) {
+                        },
+                    ) {
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
                     }
                 }
             }
-        } else if (permissionDenied.value) {
+        }
+        else if (permissionDenied.value) {
             permissionDenied(context, activity)
         } else if (!gotLocation.value)
             checkRequest(
