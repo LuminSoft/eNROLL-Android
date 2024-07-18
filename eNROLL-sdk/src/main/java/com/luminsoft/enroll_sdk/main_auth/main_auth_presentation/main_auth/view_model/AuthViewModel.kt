@@ -159,7 +159,8 @@ class AuthViewModel(
                     false
                 } else
                     true
-            }
+            } else if (newStepsSize == 0)
+                return true
         }
         return false
     }

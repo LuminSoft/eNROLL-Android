@@ -8,9 +8,9 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface SecurityQuestionsApi {
-    @GET("/api/v1/onboarding/SecurityQuestionsInfo")
+    @GET("api/v1/onboarding/SecurityQuestionsInfo")
     suspend fun getSecurityQuestions(): Response<List<GetSecurityQuestionsResponseModel>>
 
-    @POST("/api/v1/onboarding/SecurityQuestionsInfo")
+    @POST("api/v1/onboarding/SecurityQuestionsInfo")
     suspend fun postSecurityQuestions(@Body request: List<@JvmSuppressWildcards SecurityQuestionsRequestModel>): Response<BasicResponseModel>
 }

@@ -44,6 +44,7 @@ import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usec
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MultiplePhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.view_model.MultiplePhoneNumbersViewModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -91,7 +92,7 @@ fun MultiplePhoneNumbersScreenContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (phoneNumbersApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(3)
+            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.PhoneOtp.getStepId())
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,

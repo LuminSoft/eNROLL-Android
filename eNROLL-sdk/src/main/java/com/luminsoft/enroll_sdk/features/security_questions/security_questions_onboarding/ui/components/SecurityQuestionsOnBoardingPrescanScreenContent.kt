@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -56,6 +57,7 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.PostSecurityQuestionsUseCase
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_onboarding.view_model.SecurityQuestionsOnBoardingViewModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -108,7 +110,8 @@ fun SecurityQuestionsOnBoardingScreenContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (securityQuestionsApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(7)
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.SecurityQuestions.getStepId())
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -249,11 +252,21 @@ private fun AnswerTextField(
     securityQuestionsOnBoardingVM: SecurityQuestionsOnBoardingViewModel,
     answerError: State<String?>
 ) {
+    val maxChar = 150
+
     Column {
         TextField(
             value = answer.value,
             onValueChange = {
-                securityQuestionsOnBoardingVM.onChangeValue(it)
+                if (it.text.length <= maxChar)
+                    securityQuestionsOnBoardingVM.onChangeValue(it)
+            },
+            supportingText = {
+                Text(
+                    text = "${answer.value.text.length} / $maxChar",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End,
+                )
             },
             modifier = Modifier
                 .fillMaxWidth(),

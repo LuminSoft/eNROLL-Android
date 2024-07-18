@@ -11,25 +11,25 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface PhoneNumbersApi {
-    @GET("/api/v1/Lookups/Countries")
+    @GET("api/v1/Lookups/Countries")
     suspend fun getCountries(): Response<List<GetCountriesResponseModel>>
 
-    @POST("/api/v1/onboarding/PhoneInfo")
+    @POST("api/v1/onboarding/PhoneInfo")
     suspend fun phoneInfo(@Body request: PhoneInfoRequestModel): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/PhoneInfo/SendOtp")
+    @POST("api/v1/onboarding/PhoneInfo/SendOtp")
     suspend fun sendOTP(): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/PhoneInfo/Approve")
+    @POST("api/v1/onboarding/PhoneInfo/Approve")
     suspend fun approvePhones(): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/PhoneInfo/ValidateOTP")
+    @POST("api/v1/onboarding/PhoneInfo/ValidateOTP")
     suspend fun validateOTP(@Body request: ValidateOTPRequestModel): Response<BasicResponseModel>
 
-    @GET("/api/v1/onboarding/PhoneInfo/GetVerifiedPhones")
+    @GET("api/v1/onboarding/PhoneInfo/GetVerifiedPhones")
     suspend fun getVerifiedPhones(): Response<List<GetVerifiedPhonesResponseModel>>
 
-    @POST("/api/v1/onboarding/PhoneInfo/SetDefault")
+    @POST("api/v1/onboarding/PhoneInfo/SetDefault")
     suspend fun makeDefault(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
 }

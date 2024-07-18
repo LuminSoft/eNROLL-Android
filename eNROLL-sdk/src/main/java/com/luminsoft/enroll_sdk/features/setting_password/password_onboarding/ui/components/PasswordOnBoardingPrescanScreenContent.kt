@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -39,23 +38,32 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features.setting_password.password_domain.usecases.OnboardingSettingPasswordUseCase
 import com.luminsoft.enroll_sdk.features.setting_password.password_onboarding.view_model.PasswordOnBoardingViewModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
+import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-import org.koin.androidx.compose.koinViewModel
-
-var password = mutableStateOf(TextFieldValue())
-var confirmPassword = mutableStateOf(TextFieldValue())
-var validate = mutableStateOf(false)
+import org.koin.compose.koinInject
 
 @Composable
 fun SettingPasswordOnBoardingScreenContent(
-    passwordOnBoardingViewModel: PasswordOnBoardingViewModel = koinViewModel(),
+    onBoardingViewModel: OnBoardingViewModel,
     navController: NavController
 ) {
+
+    val setPasswordUseCase =
+        OnboardingSettingPasswordUseCase(koinInject())
+    val passwordOnBoardingViewModel =
+        remember {
+            PasswordOnBoardingViewModel(
+                setPasswordUseCase = setPasswordUseCase
+            )
+        }
+
     val context = LocalContext.current
     val activity = context.findActivity()
 
@@ -63,24 +71,28 @@ fun SettingPasswordOnBoardingScreenContent(
     var rePasswordVisible by rememberSaveable { mutableStateOf(false) }
     val passwordApproved = passwordOnBoardingViewModel.passwordApproved.collectAsState()
     val failure = passwordOnBoardingViewModel.failure.collectAsState()
+    val password = passwordOnBoardingViewModel.password.collectAsState()
+    val confirmPassword = passwordOnBoardingViewModel.confirmPassword.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                text = stringResource(id = R.string.successfulRegistration),
-                buttonText = stringResource(id = R.string.continue_to_next),
-                onPressedButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulRegistration),
-                            activity.getString(R.string.successfulRegistration)
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.SettingPassword.getStepId())
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
                         )
-                    )
-
-                },
-            )
+                    },
+                )
         } else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
@@ -144,7 +156,7 @@ fun SettingPasswordOnBoardingScreenContent(
                     label = ResourceProvider.instance.getStringResource(R.string.password),
                     value = password.value,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    onValueChange = { password.value = it },
+                    onValueChange = { passwordOnBoardingViewModel.password.value = it },
                     height = 60.0,
                     trailingIcon = {
                         val imageResource = if (passwordVisible)
@@ -167,7 +179,7 @@ fun SettingPasswordOnBoardingScreenContent(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next,
                     ),
-                    error = passwordValidation(),
+                    error = passwordOnBoardingViewModel.passwordValidation(),
 
                     )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -175,7 +187,7 @@ fun SettingPasswordOnBoardingScreenContent(
                 NormalTextField(
                     label = ResourceProvider.instance.getStringResource(R.string.confirmPassword),
                     value = confirmPassword.value,
-                    onValueChange = { confirmPassword.value = it },
+                    onValueChange = { passwordOnBoardingViewModel.confirmPassword.value = it },
                     visualTransformation = if (rePasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
@@ -200,13 +212,13 @@ fun SettingPasswordOnBoardingScreenContent(
                                 .size(20.dp)
                         )
                     },
-                    error = confirmPasswordValidation(),
+                    error = passwordOnBoardingViewModel.confirmPasswordValidation(),
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                 ButtonView(
                     onClick = {
-                        validate.value = true
-                        if (passwordValidation() == null && confirmPasswordValidation() == null) {
+                        passwordOnBoardingViewModel.validate.value = true
+                        if (passwordOnBoardingViewModel.passwordValidation() == null && passwordOnBoardingViewModel.confirmPasswordValidation() == null) {
                             passwordOnBoardingViewModel.callSetPassword(password.value.text)
                         }
                     },
@@ -219,52 +231,4 @@ fun SettingPasswordOnBoardingScreenContent(
 }
 
 
-private fun passwordValidation() = when {
-    !validate.value -> {
-        null
-    }
-
-    password.value.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.errorEmptyPassword)
-    }
-
-    password.value.text.length < 6 -> {
-        ResourceProvider.instance.getStringResource(R.string.errorLengthPassword)
-    }
-
-    password.value.text.length > 128 -> {
-        ResourceProvider.instance.getStringResource(R.string.errorMaxLengthPassword)
-    }
-
-    !Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\u0021-\\u002F \\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E])[A-Za-z\\d\\u0021-\\u002F\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E]{6,128}\$").matches(
-        password.value.text
-    ) -> {
-        ResourceProvider.instance.getStringResource(R.string.errorFormatPassword)
-
-    }
-
-    else -> null
-}
-
-
-private fun confirmPasswordValidation() = when {
-    !validate.value -> {
-        null
-    }
-
-    confirmPassword.value.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.required_confirm_password)
-    }
-
-    passwordValidation() != null -> {
-        ResourceProvider.instance.getStringResource(R.string.enterValidPasswordFirst)
-    }
-
-    password.value != confirmPassword.value -> {
-        ResourceProvider.instance.getStringResource(R.string.confirmPasswordError)
-    }
-
-
-    else -> null
-}
 

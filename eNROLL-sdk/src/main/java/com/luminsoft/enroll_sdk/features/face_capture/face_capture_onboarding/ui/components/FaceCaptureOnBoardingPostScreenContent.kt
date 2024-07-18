@@ -63,6 +63,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_na
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -164,7 +165,7 @@ private fun MainContent(
     val scale = remember { Animatable(initialValue = 0f) }
     val startPosition1 = Offset(-250f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
-    val faceImageBaseUrl = "http://197.168.1.39:4600/api/v1/ApplicantProfile/GetImage?path="
+    val faceImageBaseUrl = "${EnrollSDK.getImageUrl()}api/v1/ApplicantProfile/GetImage?path="
 
     if (!loading.value) {
         LaunchedEffect(endPosition) {
@@ -203,7 +204,8 @@ private fun MainContent(
     BackGroundView(navController = navController, showAppBar = false) {
 
         if (selfieImageApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(2)
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.SmileLiveness.getStepId())
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -239,8 +241,7 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
-                    //TODO
-//                    AnimationExtracted(faceImage, position, smileImage, position1)
+
                     AnimationExtracted(
                         position,
                         smileImage,
@@ -271,8 +272,6 @@ private fun MainContent(
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
-                    //TODO
-//                    ErrorAnimationExtracted(faceImage, smileImage, scale)
                     ErrorAnimationExtracted(smileImage, scale, facePhotoPath, faceImageBaseUrl)
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
@@ -368,16 +367,22 @@ private fun ErrorAnimationExtracted(
         modifier = Modifier.fillMaxWidth(0.7f)
     ) {
 
-        AsyncImage(
-            model = faceImageBaseUrl + facePhotoPath!!,
-            contentDescription = "face Photo Path",
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .size(120.dp)
-                .border(2.dp, Color.Red, shape = CircleShape)
-                .clip(CircleShape)
                 .scale(scale = scale.value)
-        )
+        ) {
+            AsyncImage(
+
+                model = faceImageBaseUrl + facePhotoPath!!,
+                contentDescription = "face Photo Path",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(120.dp)
+                    .border(2.dp, Color.Red, shape = CircleShape)
+                    .clip(CircleShape)
+            )
+        }
         Image(
             painterResource(R.drawable.error_sign),
             contentDescription = "some useful description",
@@ -386,17 +391,22 @@ private fun ErrorAnimationExtracted(
                 .scale(scale = scale.value)
         )
 
-        Image(
-            bitmap = smileImage!!.asImageBitmap(),
-            contentDescription = "some useful description",
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .size(120.dp)
-                .border(2.dp, Color.Red, shape = CircleShape)
-                .clip(CircleShape)
                 .scale(scale = scale.value)
+        ) {
+            Image(
 
-        )
+                bitmap = smileImage!!.asImageBitmap(),
+                contentDescription = "some useful description",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(120.dp)
+                    .border(2.dp, Color.Red, shape = CircleShape)
+                    .clip(CircleShape)
+            )
+        }
     }
 }
 

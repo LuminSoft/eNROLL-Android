@@ -39,6 +39,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_na
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model.NationalIdBackOcrViewModel
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -121,7 +122,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 onBoardingViewModel.isPassportAndMailFinal.value = true
                 navController.navigate(nationalIdOnBoardingPreScanScreen)
             } else {
-                val isEmpty = onBoardingViewModel.removeCurrentStep(1)
+                val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
                 if (isEmpty)
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.SUCCESS,

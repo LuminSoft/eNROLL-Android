@@ -8,10 +8,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface MailAuthApi {
-    @GET("/api/v1/authentication/EmailOtpAuthentication/SendEmailOtp")
+    @GET("api/v1/authentication/EmailOtpAuthentication/SendEmailOtp")
     suspend fun sendMailAuthOtp(): Response<BasicResponseModel>
 
-    @POST("/api/v1/authentication/EmailOtpAuthentication/VerifyEmailOtp")
+    @POST("api/v1/authentication/EmailOtpAuthentication/VerifyEmailOtp")
     suspend fun validateOTPMailAuth(@Body request: ValidateOTPRequestModel): Response<BasicResponseModel>
 
 }

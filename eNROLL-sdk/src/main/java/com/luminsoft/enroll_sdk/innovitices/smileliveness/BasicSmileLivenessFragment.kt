@@ -8,15 +8,14 @@ import android.os.CountDownTimer
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.luminsoft.enroll_sdk.innovitices.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.innovatrics.dot.face.autocapture.FaceAutoCaptureDetection
 import com.innovatrics.dot.face.liveness.smile.SmileLivenessFragment
+import com.luminsoft.enroll_sdk.innovitices.activities.FaceCaptureActivity
+import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_NO_CAMERA_PERMISSION
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_SUCCESS
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_TIME_OUT
-import com.luminsoft.enroll_sdk.innovitices.activities.FaceCaptureActivity
-import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.enroll_sdk.innovitices.face.DotFaceViewModel
 import com.luminsoft.enroll_sdk.innovitices.face.DotFaceViewModelFactory
 import java.io.File
@@ -25,7 +24,7 @@ import java.io.OutputStream
 
 class BasicSmileLivenessFragment : SmileLivenessFragment() {
 
-    private val mainViewModel: MainViewModel by activityViewModels()
+    //    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var dotFaceViewModel: DotFaceViewModel
     private val smileLivenessViewModel: SmileLivenessViewModel by activityViewModels()
     private val timer = object : CountDownTimer(60000, 60000) {
@@ -33,8 +32,8 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
         }
 
         override fun onFinish() {
-            getActivity()?.setResult(RESULT_TIME_OUT);
-            getActivity()?.finish()
+            activity?.setResult(RESULT_TIME_OUT)
+            activity?.finish()
         }
     }
 
@@ -47,7 +46,7 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
     private fun setupDotFaceViewModel() {
         val dotFaceViewModelFactory = DotFaceViewModelFactory(requireActivity().application)
         dotFaceViewModel =
-            ViewModelProvider(this, dotFaceViewModelFactory).get(DotFaceViewModel::class.java)
+            ViewModelProvider(this, dotFaceViewModelFactory)[DotFaceViewModel::class.java]
         dotFaceViewModel.state.observe(viewLifecycleOwner) { state ->
             if (state.isInitialized) {
                 start()
@@ -105,17 +104,17 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
 
 
                 val intent = Intent()
-                val uri: Uri = Uri.fromFile(outfile)
+//                val uri: Uri = Uri.fromFile(outfile)
                 val smileUri: Uri = Uri.fromFile(smileOutfile)
 
 
-                intent.data = uri
+                intent.data = smileUri
                 intent.putExtra(FaceCaptureActivity().OUT_PASSIVE_LIVENESS_RESULT_SCORE, 1.0)
                 intent.putExtra(
                     FaceCaptureActivity().OUT_PASSIVE_LIVENESS_RESULT_DEPENDENCIES_FULFILLED,
                     true
                 )
-                intent.putExtra(SmileLivenessActivity().OUT_SMILE_LIVENESS_URI, smileUri.toString())
+                intent.putExtra(SmileLivenessActivity().outSmileLivenessUri, smileUri.toString())
 
                 requireActivity().setResult(RESULT_SUCCESS, intent)
                 requireActivity().finish()
@@ -124,8 +123,8 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
     }
 
     override fun onNoCameraPermission() {
-        getActivity()?.setResult(RESULT_NO_CAMERA_PERMISSION);
-        getActivity()?.finish();
+        activity?.setResult(RESULT_NO_CAMERA_PERMISSION)
+        activity?.finish()
     }
 
     override fun onCriticalFacePresenceLost() {

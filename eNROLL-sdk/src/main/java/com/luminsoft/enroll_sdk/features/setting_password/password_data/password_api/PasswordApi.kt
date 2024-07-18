@@ -7,6 +7,6 @@ import retrofit2.http.*
 
 
 interface PasswordApi {
-    @POST("/api/v1/onboarding/PasswordInfo")
+    @POST("api/v1/onboarding/PasswordInfo")
     suspend fun setPassword(@Body request: SetPasswordRequest): Response<String>
 }

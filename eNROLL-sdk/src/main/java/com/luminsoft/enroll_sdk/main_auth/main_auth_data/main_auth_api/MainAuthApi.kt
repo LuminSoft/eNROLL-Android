@@ -12,12 +12,12 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface MainAuthApi {
-    @POST("/api/v1/Auth/GenerateAuthRequestSessionToken")
+    @POST("api/v1/Auth/GenerateAuthRequestSessionToken")
     suspend fun generateAuthRequestSessionToken(@Body request: GenerateOnboardingSessionTokenRequest): Response<GenerateOnboardingSessionTokenResponse>
 
-    @GET("/api/v1/LevelOfTrust/GetCurrentSessionLevelOfTrustSteps")
+    @GET("api/v1/LevelOfTrust/GetCurrentSessionLevelOfTrustSteps")
     suspend fun getAuthStepsConfigurations(): Response<List<StepAuthModel>>
 
-    @POST("/api/v1/authentication/AuthenticationRequest/InitializeRequest")
+    @POST("api/v1/authentication/AuthenticationRequest/InitializeRequest")
     suspend fun initializeAuthRequest(@Body request: InitializeRequestRequest): Response<InitializeRequestResponse>
 }

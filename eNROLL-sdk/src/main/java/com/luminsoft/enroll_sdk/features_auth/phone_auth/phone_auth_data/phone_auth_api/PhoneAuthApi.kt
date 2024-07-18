@@ -8,10 +8,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface PhoneAuthApi {
-    @GET("/api/v1/authentication/PhoneOtpAuthentication/SendPhoneOtp")
+    @GET("api/v1/authentication/PhoneOtpAuthentication/SendPhoneOtp")
     suspend fun sendPhoneAuthOtp(): Response<BasicResponseModel>
 
-    @POST("/api/v1/authentication/PhoneOtpAuthentication/VerifyPhoneOtp")
+    @POST("api/v1/authentication/PhoneOtpAuthentication/VerifyPhoneOtp")
     suspend fun validateOTPPhoneAuth(@Body request: ValidateOTPRequestModel): Response<BasicResponseModel>
 
 }

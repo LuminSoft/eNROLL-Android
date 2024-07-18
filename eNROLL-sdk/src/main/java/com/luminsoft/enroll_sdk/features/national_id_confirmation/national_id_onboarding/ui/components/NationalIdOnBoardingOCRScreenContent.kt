@@ -203,9 +203,14 @@ private fun MainContent(
                 }
             } else {
                 failure.value?.let {
+                    val msg: String =
+                        if (it.message == "Object reference not set to an instance of an object.")
+                            stringResource(id = R.string.someThingWentWrong)
+                        else
+                            it.message
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.ERROR,
-                        text = it.message,
+                        text = msg,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
                             nationalIdFrontOcrViewModel.resetFailure()

@@ -10,22 +10,22 @@ import retrofit2.http.*
 
 interface EmailApi {
 
-    @POST("/api/v1/onboarding/EmailInfo")
+    @POST("api/v1/onboarding/EmailInfo")
     suspend fun mailInfo(@Body request: MailInfoRequestModel): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/EmailInfo/SendOtp")
+    @POST("api/v1/onboarding/EmailInfo/SendOtp")
     suspend fun sendOTP(): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/EmailInfo/Approve")
+    @POST("api/v1/onboarding/EmailInfo/Approve")
     suspend fun approveMails(): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/EmailInfo/ValidateOTP")
+    @POST("api/v1/onboarding/EmailInfo/ValidateOTP")
     suspend fun validateOTP(@Body request: ValidateOTPRequestModel): Response<BasicResponseModel>
 
-    @GET("/api/v1/onboarding/EmailInfo/GetVerifiedEmails")
+    @GET("api/v1/onboarding/EmailInfo/GetVerifiedEmails")
     suspend fun getVerifiedMails(): Response<List<GetVerifiedMailsResponseModel>>
 
-    @POST("/api/v1/onboarding/EmailInfo/SetDefault")
+    @POST("api/v1/onboarding/EmailInfo/SetDefault")
     suspend fun makeDefault(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
 }

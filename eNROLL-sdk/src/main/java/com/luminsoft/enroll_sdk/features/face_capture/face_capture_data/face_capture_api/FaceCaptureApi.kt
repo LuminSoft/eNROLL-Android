@@ -10,10 +10,10 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface FaceCaptureApi {
-    @POST("/api/v1/onboarding/BiometricTest/UploadSelfieImage")
+    @POST("api/v1/onboarding/BiometricTest/UploadSelfieImage")
     suspend fun uploadSelfie(@Body request: UploadSelfieRequestModel): Response<UploadSelfieResponseModel>
 
-    @POST("/api/v1/onboarding/BiometricTest/Approve")
+    @POST("api/v1/onboarding/BiometricTest/Approve")
     suspend fun selfieApprove(@Body request: SelfieImageApproveRequestModel): Response<BasicResponseModel>
 
 }

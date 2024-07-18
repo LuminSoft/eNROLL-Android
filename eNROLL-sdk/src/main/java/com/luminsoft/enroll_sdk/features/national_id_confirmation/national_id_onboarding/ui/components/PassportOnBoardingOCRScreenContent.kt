@@ -47,6 +47,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_na
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model.PassportOcrViewModel
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -142,7 +143,8 @@ private fun MainContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passportApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(1)
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -186,9 +188,15 @@ private fun MainContent(
                 }
             } else {
                 failure.value?.let {
+                    val msg: String =
+                        if (it.message == "Object reference not set to an instance of an object.")
+                            stringResource(id = R.string.someThingWentWrong)
+                        else
+                            it.message
+
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.ERROR,
-                        text = it.message,
+                        text = msg,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
                             passportOcrVMOcrViewModel.resetFailure()

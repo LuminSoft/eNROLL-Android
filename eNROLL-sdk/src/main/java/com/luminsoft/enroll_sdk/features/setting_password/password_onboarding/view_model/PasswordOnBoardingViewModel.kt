@@ -1,11 +1,14 @@
 package com.luminsoft.enroll_sdk.features.setting_password.password_onboarding.view_model
 
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import arrow.core.raise.Null
+import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.setting_password.password_domain.usecases.OnboardingSettingPasswordUseCase
 import com.luminsoft.enroll_sdk.features.setting_password.password_domain.usecases.PasswordUseCaseParams
@@ -19,6 +22,9 @@ class PasswordOnBoardingViewModel(private val setPasswordUseCase: OnboardingSett
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var navController: NavController? = null
 
+    var password: MutableStateFlow<TextFieldValue> = MutableStateFlow(TextFieldValue())
+    var confirmPassword: MutableStateFlow<TextFieldValue> = MutableStateFlow(TextFieldValue())
+    var validate: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
 
     fun callSetPassword(password: String) {
@@ -51,123 +57,52 @@ class PasswordOnBoardingViewModel(private val setPasswordUseCase: OnboardingSett
     }
 
 
-//    var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-//    var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-//    var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
-//    private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
-//
-//    var cardNumberTextValue = mutableStateOf(TextFieldValue())
-//    var cardNumber = MutableStateFlow<CardNumber?>(null)
-//
-//    var holderNameTextValue = mutableStateOf(TextFieldValue())
-//    var holderName = MutableStateFlow<CardHolderName?>(null)
-//
-//    var expiryDateTextValue = mutableStateOf(TextFieldValue())
-//    var expiryDate = MutableStateFlow<CardExpiryDate?>(null)
-//
-//    var cvvTextValue = mutableStateOf(TextFieldValue())
-//    var cvv = MutableStateFlow<CVV?>(null)
-//
-//    var isTokenization: MutableStateFlow<Boolean> = MutableStateFlow(false)
-//
-//    var feesResponse = MutableStateFlow<GetFeesResponse?>(null)
-//    private var payResponse = MutableStateFlow<PayResponse?>(null)
-//
-//    init {
-//        getFees()
-//    }
-//
-//    private fun getFees() {
-//        loading.value = true
-//        ui {
-//            params.value =
-//                CowpaySDK.paymentInfo?.amount?.let {
-//                    GetFeesUseCaseParams(
-//                        CowpaySDK.merchantCode,
-//                        it, PaymentOption.CreditCard.getId()
-//                    )
-//                }
-//
-//            val response: Either<SdkFailure, GetFeesResponse> =
-//                getFees.call(params.value as GetFeesUseCaseParams)
-//
-//            response.fold(
-//                {
-//                    failure.value = it
-//                    loading.value = false
-//                },
-//                { s ->
-//                    s.let { it1 ->
-//                        feesResponse.value = it1
-//                        loading.value = false
-//                    }
-//                })
-//        }
-//
-//
-//    }
-//
-//    fun pay(navController: NavController) {
-//        isButtonLoading.value = true
-//        ui {
-//            val generateSignatureUseCase = GenerateSignatureUseCase()
-//            val signature = generateSignatureUseCase.call(
-//                GenerateSignatureUseCaseParams(
-//                    CowpaySDK.merchantCode,
-//                    CowpaySDK.paymentInfo!!.merchantReferenceId,
-//                    CowpaySDK.paymentInfo!!.customerMerchantProfileId,
-//                    CowpaySDK.paymentInfo!!.amount,
-//                    CowpaySDK.hashKey
-//                )
-//            )
-//
-//            params.value = PayUseCaseParams(
-//                PaymentOption.CreditCard,
-//                CowpaySDK.paymentInfo?.merchantReferenceId,
-//                CowpaySDK.paymentInfo?.customerMerchantProfileId,
-//                CowpaySDK.paymentInfo?.customerFirstName,
-//                CowpaySDK.paymentInfo?.customerLastName,
-//                CowpaySDK.paymentInfo?.customerEmail,
-//                CowpaySDK.paymentInfo?.customerMobile,
-//                CowpaySDK.paymentInfo?.amount,
-//                signature,
-//                CowpaySDK.paymentInfo?.description,
-//                CowpaySDK.paymentInfo?.isFeesOnCustomer,
-//                CardData(
-//                    cardNumber = cardNumber.value?.value?.fold({ null }, { it.number }),
-//                    cardHolder = holderName.value?.value?.fold({ null }, { it }),
-//                    expiryDate = expiryDate.value?.value?.fold({ null }, { it }),
-//                    cvv = cvv.value?.value?.fold({ null }, { it }),
-//                    isTokenized = isTokenization.value,
-//                    returnUrl3DS = "${getBaseUrl()}:8070/customer-paymentlink/otp-redirect"
-//                )
-//            )
-//
-//            val response: Either<SdkFailure, PayResponse> =
-//                payUseCase.call(params.value as PayUseCaseParams)
-//            response.fold(
-//                {
-//                    failure.value = it
-//                    isButtonLoading.value = false
-//                },
-//                {
-//                    it.let {
-//                        payResponse.value = it
-//                        isButtonLoading.value = false
-//                        navController.currentBackStackEntry?.savedStateHandle?.set("payResponse", it)
-//                        navController.navigate(SdkNavigation.WebViewScreen.route)
-//
-//                    }
-//                })
-//        }
-//    }
-//
-//    fun retry(navController: NavController) {
-//        failure.value = null
-//        if (params.value is GetFeesUseCaseParams) {
-//            getFees()
-//        } else if (params.value is PayUseCaseParams) {
-//            pay(navController)
-//        }
-//    }
+    fun passwordValidation() = when {
+        !validate.value -> {
+            null
+        }
+
+        password.value.text.isEmpty() -> {
+            ResourceProvider.instance.getStringResource(R.string.errorEmptyPassword)
+        }
+
+        password.value.text.length < 6 -> {
+            ResourceProvider.instance.getStringResource(R.string.errorLengthPassword)
+        }
+
+        password.value.text.length > 128 -> {
+            ResourceProvider.instance.getStringResource(R.string.errorMaxLengthPassword)
+        }
+
+        !Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\u0021-\\u002F \\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E])[A-Za-z\\d\\u0021-\\u002F\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E]{6,128}\$").matches(
+            password.value.text
+        ) -> {
+            ResourceProvider.instance.getStringResource(R.string.errorFormatPassword)
+
+        }
+
+        else -> null
+    }
+
+
+    fun confirmPasswordValidation() = when {
+        !validate.value -> {
+            null
+        }
+
+        confirmPassword.value.text.isEmpty() -> {
+            ResourceProvider.instance.getStringResource(R.string.required_confirm_password)
+        }
+
+        passwordValidation() != null -> {
+            ResourceProvider.instance.getStringResource(R.string.enterValidPasswordFirst)
+        }
+
+        password.value != confirmPassword.value -> {
+            ResourceProvider.instance.getStringResource(R.string.confirmPasswordError)
+        }
+
+
+        else -> null
+    }
 }

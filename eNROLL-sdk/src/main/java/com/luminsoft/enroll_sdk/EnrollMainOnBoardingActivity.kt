@@ -8,12 +8,12 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataRouter
 import com.luminsoft.enroll_sdk.features.email.email_di.emailModule
@@ -93,7 +93,10 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                         navController = navController,
                         onBoardingViewModel = onBoardingViewModel
                     )
-                    settingPasswordRouter(navController = navController)
+                    settingPasswordRouter(
+                        navController = navController,
+                        onBoardingViewModel = onBoardingViewModel
+                    )
                 }
             }
         }

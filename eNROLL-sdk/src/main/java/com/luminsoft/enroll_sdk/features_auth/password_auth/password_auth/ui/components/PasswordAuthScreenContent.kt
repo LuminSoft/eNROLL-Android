@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -50,8 +49,6 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import org.koin.compose.koinInject
 
-var password = mutableStateOf(TextFieldValue())
-var validate = mutableStateOf(false)
 
 @Composable
 fun PasswordAuthScreenContent(
@@ -75,6 +72,7 @@ fun PasswordAuthScreenContent(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val passwordApproved = passwordAuthViewModel.passwordApproved.collectAsState()
     val failure = passwordAuthViewModel.failure.collectAsState()
+    val password = passwordAuthViewModel.password.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
@@ -151,7 +149,7 @@ fun PasswordAuthScreenContent(
                     label = ResourceProvider.instance.getStringResource(R.string.password),
                     value = password.value,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    onValueChange = { password.value = it },
+                    onValueChange = { passwordAuthViewModel.password.value = it },
                     height = 60.0,
                     trailingIcon = {
                         val imageResource = if (passwordVisible)
@@ -174,15 +172,14 @@ fun PasswordAuthScreenContent(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
                     ),
-                    error = passwordValidation(),
-
-                    )
+                    error = passwordAuthViewModel.passwordValidation(),
+                )
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                 ButtonView(
                     onClick = {
-                        validate.value = true
-                        if (passwordValidation() == null) {
+                        passwordAuthViewModel.validate.value = true
+                        if (passwordAuthViewModel.passwordValidation() == null) {
                             passwordAuthViewModel.callVerifyPassword(password.value.text)
                         }
                     },
@@ -194,33 +191,6 @@ fun PasswordAuthScreenContent(
 
 }
 
-
-private fun passwordValidation() = when {
-    !validate.value -> {
-        null
-    }
-
-    password.value.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.errorEmptyPassword)
-    }
-
-    password.value.text.length < 6 -> {
-        ResourceProvider.instance.getStringResource(R.string.errorLengthPassword)
-    }
-
-    password.value.text.length > 128 -> {
-        ResourceProvider.instance.getStringResource(R.string.errorMaxLengthPassword)
-    }
-
-    !Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\u0021-\\u002F \\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E])[A-Za-z\\d\\u0021-\\u002F\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E]{6,128}\$").matches(
-        password.value.text
-    ) -> {
-        ResourceProvider.instance.getStringResource(R.string.errorFormatPassword)
-
-    }
-
-    else -> null
-}
 
 
 
