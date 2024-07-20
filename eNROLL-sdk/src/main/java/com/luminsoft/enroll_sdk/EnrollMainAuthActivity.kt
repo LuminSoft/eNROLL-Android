@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import checkIMEIAuthModule
+import checkIMEIAuthRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
@@ -73,6 +75,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                     phoneAuthRouter(navController = navController, authViewModel)
                     mailAuthRouter(navController = navController, authViewModel)
                     locationAuthRouter(navController = navController, authViewModel)
+                    checkIMEIAuthRouter(navController = navController, authViewModel)
                     checkExpiryDateAuthRouter(navController = navController, authViewModel)
                 }
             }
@@ -91,6 +94,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 modules(mailAuthModule)
                 modules(phoneAuthModule)
                 modules(locationAuthModule)
+                modules(checkIMEIAuthModule)
                 modules(checkExpiryDateAuthModule)
             }.koin
         }

@@ -147,13 +147,22 @@ class AuthViewModel(
     }
 
     fun removeCurrentStep(id: Int): Boolean {
+        // Check if 'steps' is not null
         if (steps.value != null) {
+            // Store the initial size of the 'steps' list
             val stepsSize = steps.value!!.size
+
+            // Create a mutable list from 'steps', remove the item with the given ID, and convert back to an immutable list
             steps.value = steps.value!!.toMutableList().apply {
                 removeIf { x -> x.authenticationStepId == id }
             }.toList()
+
+            // Store the new size of the 'steps' list after removal
             val newStepsSize = steps.value!!.size
+
+            // Check if the size of the list has changed (i.e., an item was removed)
             if (stepsSize != newStepsSize) {
+                // If the list is not empty, navigate to the next step and return 'false'
                 return if (steps.value!!.isNotEmpty()) {
                     navigateToNextStep()
                     false
