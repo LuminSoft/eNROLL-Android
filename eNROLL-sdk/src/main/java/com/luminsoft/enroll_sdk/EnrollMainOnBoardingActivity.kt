@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import checkAmlModule
+import checkAmlRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
@@ -85,6 +87,10 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                         navController = navController,
                         onBoardingViewModel
                     )
+                    checkAmlRouter(
+                        navController = navController,
+                        onBoardingViewModel
+                    )
                     phoneNumberRouter(
                         navController = navController,
                         onBoardingViewModel = onBoardingViewModel
@@ -109,6 +115,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             GlobalContext.getOrNull() ?: startKoin {
                 modules(sdkModule)
                 modules(mainModule)
+                modules(checkAmlModule)
                 modules(deviceDataModule)
                 modules(emailModule)
                 modules(faceCaptureModule)
