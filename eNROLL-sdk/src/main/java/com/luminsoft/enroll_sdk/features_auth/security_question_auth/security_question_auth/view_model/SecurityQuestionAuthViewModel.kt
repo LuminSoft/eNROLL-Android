@@ -2,18 +2,16 @@
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import arrow.core.Either
+import arrow.core.raise.Null
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.ui
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_onboarding.ui.components.answerValidate
-import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class SecurityQuestionAuthViewModel(
     private val getSecurityQuestionAuthUseCase: GetSecurityQuestionAuthUseCase,
     private val validateSecurityQuestionUseCase: ValidateSecurityQuestionUseCase,
-    private val authViewModel: AuthViewModel,
 
     ) :
     ViewModel() {
@@ -26,19 +24,14 @@ class SecurityQuestionAuthViewModel(
 
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
 
-    var selectQuestionError: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var answerError: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    var securityQuestion: MutableStateFlow<GetSecurityQuestionAuthResponseModel?> = MutableStateFlow(null)
-
-    //    private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
-
-    var selectedQuestion: MutableStateFlow<GetSecurityQuestionAuthResponseModel?> =
+    var securityQuestion: MutableStateFlow<GetSecurityQuestionAuthResponseModel?> =
         MutableStateFlow(null)
+
 
     var answer: MutableStateFlow<TextFieldValue> =
         MutableStateFlow(TextFieldValue())
-
 
 
     init {
@@ -46,13 +39,11 @@ class SecurityQuestionAuthViewModel(
             getSecurityQuestion()
     }
 
-/*
-    fun postSecurityQuestionsCall() {
-        postSecurityQuestions()
+    fun validateSecurityQuestionsCall() {
+        validateSecurityQuestionsAnswer()
     }
-*/
 
-    fun getSecurityQuestion() {
+    private fun getSecurityQuestion() {
         loading.value = true
         ui {
             val response: Either<SdkFailure, GetSecurityQuestionAuthResponseModel> =
@@ -72,25 +63,17 @@ class SecurityQuestionAuthViewModel(
         }
     }
 
- /*   private fun postSecurityQuestions() {
+
+    private fun validateSecurityQuestionsAnswer() {
         loading.value = true
         ui {
-            val item = SecurityQuestionsRequestModel()
-            item.securityQuestionId = onBoardingViewModel.selectedSecurityQuestions.value[0].id
-            item.answer = onBoardingViewModel.selectedSecurityQuestions.value[0].answer
 
-            val item1 = SecurityQuestionsRequestModel()
-            item1.securityQuestionId = onBoardingViewModel.selectedSecurityQuestions.value[1].id
-            item1.answer = onBoardingViewModel.selectedSecurityQuestions.value[1].answer
-
-            val item2 = SecurityQuestionsRequestModel()
-            item2.securityQuestionId = onBoardingViewModel.selectedSecurityQuestions.value[2].id
-            item2.answer = onBoardingViewModel.selectedSecurityQuestions.value[2].answer
-
-            val listToSent = listOf(item, item1, item2)
+            val securityAnswerModel = SecurityQuestionAuthRequestModel()
+            securityAnswerModel.answer = answer.value.text
+            securityAnswerModel.securityQuestionId = securityQuestion.value?.id
 
             val response: Either<SdkFailure, Null> =
-                postSecurityQuestionsUseCase.call(listToSent)
+                validateSecurityQuestionUseCase.call(securityAnswerModel)
 
             response.fold(
                 {
@@ -98,18 +81,19 @@ class SecurityQuestionAuthViewModel(
                     loading.value = false
                 },
                 {
-                    securityQuestionsApproved.value = true
-//                    loading.value = false
+                    securityQuestionApproved.value = true
+                    loading.value = false
                 })
         }
     }
 
-*/
 
     fun onChangeValue(textFieldValue: TextFieldValue) {
+
         answer.value = textFieldValue
-        answerValidation(textFieldValue.text)
+        answerValidation(textFieldValue.text.trim())
     }
+
 
     private fun answerValidation(value: String) = when {
 

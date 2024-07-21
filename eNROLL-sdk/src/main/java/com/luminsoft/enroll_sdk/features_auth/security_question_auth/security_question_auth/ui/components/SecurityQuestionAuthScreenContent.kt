@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,7 +51,6 @@ var answerValidate = mutableStateOf(false)
 
 @Composable
 fun SecurityQuestionAuthScreenContent(
-
     navController: NavController,
     authViewModel: AuthViewModel,
 ) {
@@ -67,7 +65,6 @@ fun SecurityQuestionAuthScreenContent(
             SecurityQuestionAuthViewModel(
                 getSecurityQuestionAuthUseCase = getSecurityQuestionAuthUseCase,
                 validateSecurityQuestionUseCase = validateSecurityQuestionUseCase,
-                authViewModel = authViewModel
             )
         }
 
@@ -80,11 +77,8 @@ fun SecurityQuestionAuthScreenContent(
     val failure = securityQuestionAuthVM.failure.collectAsState()
     val answer = securityQuestionAuthVM.answer.collectAsState()
     val securityQuestionAPI = securityQuestionAuthVM.securityQuestion.collectAsState()
-    val selectQuestionError = securityQuestionAuthVM.selectQuestionError.collectAsState()
     val answerError = securityQuestionAuthVM.answerError.collectAsState()
-//    val selectedSecurityQuestions = securityQuestionAuthVM.selectedSecurityQuestions.collectAsState()
-//    val securityQuestions = securityQuestionAuthVM.securityQuestionsList.collectAsState()
-//    val selectedQuestion = securityQuestionAuthVM.selectedQuestion.collectAsState()
+
 
 
     BackGroundView(navController = navController, showAppBar = true) {
@@ -139,9 +133,7 @@ fun SecurityQuestionAuthScreenContent(
                     )
                 }
             }
-        }
-
-        else if (!securityQuestionAPI.value?.question.isNullOrEmpty()) {
+        } else if (!securityQuestionAPI.value?.question.isNullOrEmpty()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -208,25 +200,13 @@ fun SecurityQuestionAuthScreenContent(
                     onClick = {
 
 
-/*                        answerValidate.value = true
+                        answerValidate.value = true
                         securityQuestionAuthVM.onChangeValue(securityQuestionAuthVM.answer.value)
-                        if (selectedQuestion.value != null) {
-                            val securityQuestionModel = GetSecurityQuestionsResponseModel()
-                            securityQuestionModel.question = selectedQuestion.value!!.question
-                            securityQuestionModel.id = selectedQuestion.value!!.id
-                            securityQuestionModel.answer = answer.value.text
+                        if (securityQuestionAuthVM.answer.value.text.trim().isNotEmpty()) {
+                            securityQuestionAuthVM.validateSecurityQuestionsCall()
+                        }
 
-                            onBoardingViewModel.selectedSecurityQuestions.value.add(
-                                securityQuestionModel
-                            )
-                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
 
-                            if (selectedSecurityQuestions.value.size < 3)
-                                navController.navigate(securityQuestionsOnBoardingScreenContent)
-                            else
-                                securityQuestionAuthVM.postSecurityQuestionsCall()
-                        } else
-                            securityQuestionsViewModel.selectQuestionError.value = true*/
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
@@ -276,12 +256,15 @@ private fun AnswerTextField(
                 color = Color.Black
             )
         )
-        if (answerError.value != null)
+        if (answerError.value != null) {
+            println(" second answerError.value ${answerError.value}")
             Text(
                 answerError.value!!,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.labelSmall
             )
+        }
+
     }
 }
 

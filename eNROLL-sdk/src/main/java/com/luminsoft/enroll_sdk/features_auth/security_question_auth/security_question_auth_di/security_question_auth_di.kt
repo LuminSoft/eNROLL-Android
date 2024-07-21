@@ -25,7 +25,7 @@ val securityQuestionAuthModule = module {
         ).create(SecurityQuestionAuthApi::class.java)
     }
     viewModel {
-        SecurityQuestionAuthViewModel(get(), get(), get())
+        SecurityQuestionAuthViewModel(get(), get())
     }
 
 }
