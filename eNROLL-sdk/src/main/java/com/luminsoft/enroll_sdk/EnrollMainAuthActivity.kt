@@ -34,6 +34,8 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import securityQuestionAuthModule
+import securityQuestionAuthRouter
 
 
 @Suppress("DEPRECATION")
@@ -71,6 +73,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                     phoneAuthRouter(navController = navController, authViewModel)
                     mailAuthRouter(navController = navController, authViewModel)
                     locationAuthRouter(navController = navController, authViewModel)
+                    securityQuestionAuthRouter(navController = navController, authViewModel)
                 }
             }
         }
@@ -88,6 +91,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 modules(mailAuthModule)
                 modules(phoneAuthModule)
                 modules(locationAuthModule)
+                modules(securityQuestionAuthModule)
             }.koin
         }
     }

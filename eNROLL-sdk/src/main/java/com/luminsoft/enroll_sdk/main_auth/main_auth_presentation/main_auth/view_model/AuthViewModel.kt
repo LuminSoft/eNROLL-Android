@@ -83,10 +83,13 @@ class AuthViewModel(
 
             response.fold(
                 {
+                    println("initRequest $it")
                     failure.value = it
                     loading.value = false
                 },
                 {
+                    println("navigateToNextStep $it")
+
                     loading.value = false
                     navigateToNextStep()
                 })
@@ -135,6 +138,7 @@ class AuthViewModel(
                             failure.value = it
                             loading.value = false
                         }, { list ->
+println("steps ${steps.value} ${list}")
                             steps.value = list
                             loading.value = false
                             initRequest()
@@ -159,12 +163,14 @@ class AuthViewModel(
                     false
                 } else
                     true
-            }
+            } else if (newStepsSize == 0)
+                return true
         }
         return false
     }
 
     private fun navigateToNextStep() {
+        println("navigateToNextStep ${steps.value!!.first()}")
         mailValue.value = TextFieldValue()
         currentPhoneNumber.value = null
         navController!!.navigate(steps.value!!.first().stepAuthNameNavigator())

@@ -1,0 +1,272 @@
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.core.failures.AuthFailure
+import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.main_auth.main_auth_data.main_auth_models.get_auth_configurations.EkycStepAuthType
+import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
+import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
+import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
+import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
+import com.luminsoft.enroll_sdk.ui_components.components.DialogView
+import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import org.koin.compose.koinInject
+
+
+var answerValidate = mutableStateOf(false)
+
+@Composable
+fun SecurityQuestionAuthScreenContent(
+
+    navController: NavController,
+    authViewModel: AuthViewModel,
+) {
+    val getSecurityQuestionAuthUseCase =
+        GetSecurityQuestionAuthUseCase(koinInject())
+
+    val validateSecurityQuestionUseCase =
+        ValidateSecurityQuestionUseCase(koinInject())
+
+    val securityQuestionViewModel =
+        remember {
+            SecurityQuestionAuthViewModel(
+                getSecurityQuestionAuthUseCase = getSecurityQuestionAuthUseCase,
+                validateSecurityQuestionUseCase = validateSecurityQuestionUseCase,
+                authViewModel = authViewModel
+            )
+        }
+
+    val securityQuestionAuthVM = remember { securityQuestionViewModel }
+
+    val context = LocalContext.current
+    val activity = context.findActivity()
+    val loading = securityQuestionAuthVM.loading.collectAsState()
+    val securityQuestionApproved = securityQuestionAuthVM.securityQuestionApproved.collectAsState()
+    val failure = securityQuestionAuthVM.failure.collectAsState()
+//    val selectedQuestion = securityQuestionAuthVM.selectedQuestion.collectAsState()
+    val answer = securityQuestionAuthVM.answer.collectAsState()
+//    val selectedSecurityQuestions = securityQuestionAuthVM.selectedSecurityQuestions.collectAsState()
+//    val securityQuestions = securityQuestionAuthVM.securityQuestionsList.collectAsState()
+    val securityQuestionAPI = securityQuestionAuthVM.securityQuestion.collectAsState()
+    val selectQuestionError = securityQuestionAuthVM.selectQuestionError.collectAsState()
+    val answerError = securityQuestionAuthVM.answerError.collectAsState()
+
+
+
+    BackGroundView(navController = navController, showAppBar = true) {
+        if (securityQuestionApproved.value) {
+            val isEmpty =
+                authViewModel.removeCurrentStep(EkycStepAuthType.SecurityQuestion.getStepId())
+            if (isEmpty)
+                DialogView(
+                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                    text = stringResource(id = R.string.successfulRegistration),
+                    buttonText = stringResource(id = R.string.continue_to_next),
+                    onPressedButton = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                activity.getString(R.string.successfulRegistration),
+                                activity.getString(R.string.successfulRegistration)
+                            )
+                        )
+                    },
+                )
+        }
+        if (loading.value) LoadingView()
+        else if (!failure.value?.message.isNullOrEmpty()) {
+            if (failure.value is AuthFailure) {
+                failure.value?.let {
+                    DialogView(
+                        bottomSheetStatus = BottomSheetStatus.ERROR,
+                        text = it.message,
+                        buttonText = stringResource(id = R.string.exit),
+                        onPressedButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+
+                        },
+                    ) {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+
+                    }
+                }
+            } else {
+                failure.value?.let {
+                    DialogView(
+                        bottomSheetStatus = BottomSheetStatus.ERROR,
+                        text = it.message,
+                        buttonText = stringResource(id = R.string.exit),
+                        onPressedButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                        },
+                    )
+                }
+            }
+        }
+
+        else if (!securityQuestionAPI.value?.question.isNullOrEmpty()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 30.dp)
+
+            ) {
+                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                Image(
+                    painterResource(R.drawable.step_06_security_questions),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier.fillMaxHeight(0.2f)
+                )
+
+                Spacer(modifier = Modifier.fillMaxHeight(0.07f))
+
+                Text(
+                    text = stringResource(id = R.string.youMustChooseThreeQuestions),
+                    fontSize = 12.sp,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+
+                securityQuestionAPI.value?.question?.let {
+                    Text(
+                        text = it,
+                        fontSize = 12.sp,
+                        color = Color.Black
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(20.dp))
+                AnswerTextField(answer, securityQuestionAuthVM, answerError)
+                Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+
+                ButtonView(
+                    onClick = {
+/*                        answerValidate.value = true
+                        securityQuestionAuthVM.onChangeValue(securityQuestionAuthVM.answer.value)
+                        if (selectedQuestion.value != null) {
+                            val securityQuestionModel = GetSecurityQuestionsResponseModel()
+                            securityQuestionModel.question = selectedQuestion.value!!.question
+                            securityQuestionModel.id = selectedQuestion.value!!.id
+                            securityQuestionModel.answer = answer.value.text
+
+                            onBoardingViewModel.selectedSecurityQuestions.value.add(
+                                securityQuestionModel
+                            )
+                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
+
+                            if (selectedSecurityQuestions.value.size < 3)
+                                navController.navigate(securityQuestionsOnBoardingScreenContent)
+                            else
+                                securityQuestionAuthVM.postSecurityQuestionsCall()
+                        } else
+                            securityQuestionsViewModel.selectQuestionError.value = true*/
+                    },
+                    title = stringResource(id = R.string.confirmAndContinue)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun AnswerTextField(
+    answer: State<TextFieldValue>,
+    securityQuestionAuthVM: SecurityQuestionAuthViewModel,
+    answerError: State<String?>
+) {
+    val maxChar = 150
+
+    Column {
+        TextField(
+            value = answer.value,
+            onValueChange = {
+                if (it.text.length <= maxChar)
+                    securityQuestionAuthVM.onChangeValue(it)
+            },
+            supportingText = {
+                Text(
+                    text = "${answer.value.text.length} / $maxChar",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End,
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            colors = textFieldColors(),
+            leadingIcon = {
+                Image(
+                    painterResource(R.drawable.answer_icon),
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = "",
+                )
+            },
+            textStyle = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 12.sp,
+                color = Color.Black
+            )
+        )
+        if (answerError.value != null)
+            Text(
+                answerError.value!!,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.labelSmall
+            )
+    }
+}
+
+
+@Composable
+private fun textFieldColors() = TextFieldDefaults.colors(
+    focusedContainerColor = Color.White,
+    unfocusedContainerColor = Color.White,
+    disabledContainerColor = Color.White,
+    focusedTextColor = Color.Black,
+    unfocusedTextColor = Color.Black,
+    disabledTextColor = Color.Black,
+    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+    disabledIndicatorColor = MaterialTheme.colorScheme.primary,
+)
+
+
+
