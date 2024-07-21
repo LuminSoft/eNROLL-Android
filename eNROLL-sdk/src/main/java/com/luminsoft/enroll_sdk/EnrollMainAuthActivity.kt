@@ -17,6 +17,8 @@ import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_di.faceCaptureAuthModule
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthRouter
+import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_di.checkExpiryDateAuthModule
+import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_navigation.checkExpiryDateAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_di.locationAuthModule
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_navigation.locationAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_di.mailAuthModule
@@ -74,6 +76,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                     mailAuthRouter(navController = navController, authViewModel)
                     locationAuthRouter(navController = navController, authViewModel)
                     faceCaptureAuthRouter(navController = navController, authViewModel)
+                    checkExpiryDateAuthRouter(navController = navController, authViewModel)
                 }
             }
         }
@@ -92,6 +95,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 modules(phoneAuthModule)
                 modules(locationAuthModule)
                 modules(faceCaptureAuthModule)
+                modules(checkExpiryDateAuthModule)
             }.koin
         }
     }
