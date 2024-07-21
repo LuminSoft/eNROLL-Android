@@ -46,7 +46,7 @@ fun CheckAmlOnBoardingScreenContent(
     val amlChecked = checkAmlOnBoardingVM.amlChecked.collectAsState()
 
 
-    BackGroundView(navController = navController, showAppBar = false) {
+    BackGroundView(navController = navController, showAppBar = true) {
         if (amlChecked.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.AmlCheck.getStepId())

@@ -1,4 +1,3 @@
-
 import androidx.lifecycle.ViewModel
 import arrow.core.Either
 import arrow.core.raise.Null
@@ -19,6 +18,10 @@ class CheckAmlOnBoardingViewModel(
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
 
     var amlChecked: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    init {
+        callCheckAml()
+    }
 
 
     fun callCheckAml() {
