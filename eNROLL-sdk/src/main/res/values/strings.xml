@@ -278,6 +278,8 @@
     <string name="dot_document_auto_capture_instruction_size_too_small">Move closer</string>
     <string name="make_default">Make default</string>
     <string name="youMustChooseThreeQuestions">You must choose 3 questions</string>
+    <string name="youMustAnswerSecurityQuestion">You must answer security questions to complete the verification process</string>
+
     <string name="chooseAQuestions">Choose a question</string>
     <string name="answer">Answer</string>
     <string name="required_question">Required Question</string>

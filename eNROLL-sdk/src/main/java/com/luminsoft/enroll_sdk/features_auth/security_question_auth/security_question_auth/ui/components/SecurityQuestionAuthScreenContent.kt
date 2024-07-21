@@ -1,12 +1,17 @@
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -73,14 +78,13 @@ fun SecurityQuestionAuthScreenContent(
     val loading = securityQuestionAuthVM.loading.collectAsState()
     val securityQuestionApproved = securityQuestionAuthVM.securityQuestionApproved.collectAsState()
     val failure = securityQuestionAuthVM.failure.collectAsState()
-//    val selectedQuestion = securityQuestionAuthVM.selectedQuestion.collectAsState()
     val answer = securityQuestionAuthVM.answer.collectAsState()
-//    val selectedSecurityQuestions = securityQuestionAuthVM.selectedSecurityQuestions.collectAsState()
-//    val securityQuestions = securityQuestionAuthVM.securityQuestionsList.collectAsState()
     val securityQuestionAPI = securityQuestionAuthVM.securityQuestion.collectAsState()
     val selectQuestionError = securityQuestionAuthVM.selectQuestionError.collectAsState()
     val answerError = securityQuestionAuthVM.answerError.collectAsState()
-
+//    val selectedSecurityQuestions = securityQuestionAuthVM.selectedSecurityQuestions.collectAsState()
+//    val securityQuestions = securityQuestionAuthVM.securityQuestionsList.collectAsState()
+//    val selectedQuestion = securityQuestionAuthVM.selectedQuestion.collectAsState()
 
 
     BackGroundView(navController = navController, showAppBar = true) {
@@ -156,18 +160,43 @@ fun SecurityQuestionAuthScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
-                    text = stringResource(id = R.string.youMustChooseThreeQuestions),
+                    text = stringResource(id = R.string.youMustAnswerSecurityQuestion),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 securityQuestionAPI.value?.question?.let {
-                    Text(
-                        text = it,
-                        fontSize = 12.sp,
-                        color = Color.Black
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.info_icon),
+                                contentDescription = "",
+                                contentScale = ContentScale.FillBounds,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = it,
+                                fontSize = 12.sp,
+                                color = Color.Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Divider(
+                            color = MaterialTheme.colorScheme.primary,
+                            thickness = 1.2.dp,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
 
 
@@ -177,6 +206,8 @@ fun SecurityQuestionAuthScreenContent(
 
                 ButtonView(
                     onClick = {
+
+
 /*                        answerValidate.value = true
                         securityQuestionAuthVM.onChangeValue(securityQuestionAuthVM.answer.value)
                         if (selectedQuestion.value != null) {

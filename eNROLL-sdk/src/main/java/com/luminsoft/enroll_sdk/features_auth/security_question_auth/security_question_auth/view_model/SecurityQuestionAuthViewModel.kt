@@ -42,7 +42,6 @@ class SecurityQuestionAuthViewModel(
 
 
     init {
-        println("radwan init")
         if (securityQuestion.value == null)
             getSecurityQuestion()
     }
