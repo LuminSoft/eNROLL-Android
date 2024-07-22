@@ -158,6 +158,8 @@
     <string name="invalid_email">بريد إلكتروني غير صحيح</string>
     <string name="required_email">مطلوب بريد إلكتروني</string>
     <string name="timerOtpMessage">لم تستلم رمز التأكيد؟ يمكن إعادة إرساله خلال</string>
+    <string name="emailOtpGuide">برجاء إدخال رمز التحقيق الذي تم إرساله إلى البريد الإلكتروني</string>
+    <string name="smsOtpGuide">برجاء إدخال رمز التحقيق الذي تم إرساله إلى رقم هاتفك</string>
     <string name="emailOtpMessage">لم تستلم رمز التأكيد؟ يمكن إعادة إرساله خلال</string>
     <string name="second">ثانية</string>
     <string name="resend">إعادة إرسـال</string>
