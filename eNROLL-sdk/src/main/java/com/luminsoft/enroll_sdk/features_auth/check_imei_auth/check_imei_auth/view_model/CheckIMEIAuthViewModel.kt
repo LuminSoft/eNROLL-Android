@@ -1,16 +1,18 @@
 
-import android.os.Build
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
 import com.luminsoft.enroll_sdk.core.utils.ui
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.util.UUID
 
 
 class CheckIMEIAuthViewModel(
     private val authCheckIMEIUseCase: AuthCheckIMEIUseCase,
+    private val context: Context
+
 ) :
     ViewModel() {
 
@@ -31,12 +33,10 @@ class CheckIMEIAuthViewModel(
         loading.value = true
         ui {
 
-            val uuid: String = UUID.randomUUID().toString()
-            val deviceModel: String = Build.MODEL
+            val deviceId = DeviceIdentifier.getDeviceId(context)
 
             params.value = CheckIMEIAuthUseCaseParams(
-//uuid,
-deviceModel,
+                deviceId,
                 false
             )
 

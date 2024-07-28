@@ -33,6 +33,7 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.mainAuthRouter
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
@@ -82,20 +83,23 @@ class EnrollMainAuthActivity : ComponentActivity() {
         }
     }
 
-    private fun getKoin(activity: ComponentActivity): Koin {
+    fun getKoin(activity: ComponentActivity): Koin {
         return if (activity is KoinComponent) {
             activity.getKoin()
         } else {
             GlobalContext.getOrNull() ?: startKoin {
-                modules(sdkModule)
-                modules(mainAuthModule)
-                modules(deviceDataModule)
-                modules(passwordAuthModule)
-                modules(mailAuthModule)
-                modules(phoneAuthModule)
-                modules(locationAuthModule)
-                modules(checkIMEIAuthModule)
-                modules(checkExpiryDateAuthModule)
+                androidContext(activity.applicationContext) // Provide the Android context
+                modules(
+                    sdkModule,
+                    mainAuthModule,
+                    deviceDataModule,
+                    passwordAuthModule,
+                    mailAuthModule,
+                    phoneAuthModule,
+                    locationAuthModule,
+                    checkIMEIAuthModule,
+                    checkExpiryDateAuthModule
+                )
             }.koin
         }
     }

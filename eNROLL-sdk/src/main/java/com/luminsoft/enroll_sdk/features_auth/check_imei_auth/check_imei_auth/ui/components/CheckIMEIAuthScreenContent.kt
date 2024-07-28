@@ -24,18 +24,18 @@ fun CheckIMEIAuthScreenContent(
     authViewModel: AuthViewModel,
     navController: NavController,
 ) {
-
+    val context = LocalContext.current
     val authCheckIMEIUseCase =
         AuthCheckIMEIUseCase(koinInject())
 
     val checkIMEIAuthViewModel =
         remember {
-            CheckIMEIAuthViewModel( authCheckIMEIUseCase= authCheckIMEIUseCase)
+            CheckIMEIAuthViewModel( authCheckIMEIUseCase= authCheckIMEIUseCase, context = context)
         }
     val checkIMEIAuthVM = remember { checkIMEIAuthViewModel }
 
 
-    val context = LocalContext.current
+
     val activity = context.findActivity()
     val loading = checkIMEIAuthViewModel.loading.collectAsState()
     val failure = checkIMEIAuthViewModel.failure.collectAsState()

@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.compose.ui.text.input.TextFieldValue
@@ -10,6 +11,7 @@ import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
@@ -29,7 +31,9 @@ import java.util.UUID
 class OnBoardingViewModel(
     private val generateOnboardingSessionToken: GenerateOnboardingSessionTokenUsecase,
     private val getOnboardingStepConfigurationsUsecase: GetOnboardingStepConfigurationsUsecase,
-    private val initializeRequestUsecase: InitializeRequestUsecase
+    private val initializeRequestUsecase: InitializeRequestUsecase,
+    private val context: Context
+
 ) : ViewModel(),
     MainViewModel {
     override var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -70,12 +74,13 @@ class OnBoardingViewModel(
     fun initRequest() {
         loading.value = true
         ui {
-            val uuid: String = UUID.randomUUID().toString()
+
+            val deviceId = DeviceIdentifier.getDeviceId(context)
             val manufacturer: String = Build.MANUFACTURER
             val deviceModel: String = Build.MODEL
 
             params.value = InitializeRequestUsecaseParams(
-                uuid,
+                deviceId,
                 manufacturer,
                 deviceModel
             )
