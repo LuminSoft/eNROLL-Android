@@ -86,24 +86,23 @@ class EnrollMainAuthActivity : ComponentActivity() {
         }
     }
 
-    fun getKoin(activity: ComponentActivity): Koin {
+
+    private fun getKoin(activity: ComponentActivity): Koin {
         return if (activity is KoinComponent) {
             activity.getKoin()
         } else {
             GlobalContext.getOrNull() ?: startKoin {
-                androidContext(activity.applicationContext) // Provide the Android context
-                modules(
-                    sdkModule,
-                    mainAuthModule,
-                    deviceDataModule,
-                    passwordAuthModule,
-                    mailAuthModule,
-                    phoneAuthModule,
-                    locationAuthModule,
-                    checkIMEIAuthModule,
-                    faceCaptureAuthModule,
-                    checkExpiryDateAuthModule
-                )
+                androidContext(activity.applicationContext)
+                modules(sdkModule)
+                modules(mainAuthModule)
+                modules(deviceDataModule)
+                modules(passwordAuthModule)
+                modules(mailAuthModule)
+                modules(phoneAuthModule)
+                modules(locationAuthModule)
+                modules(checkExpiryDateAuthModule)
+                modules(checkIMEIAuthModule)
+                modules(faceCaptureAuthModule)
             }.koin
         }
     }
