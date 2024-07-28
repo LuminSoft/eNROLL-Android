@@ -12,6 +12,7 @@ import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSess
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -39,7 +40,7 @@ val mainModule = module {
         ).create(MainApi::class.java)
     }
     viewModel {
-        OnBoardingViewModel(get(), get(), get())
+        OnBoardingViewModel(get(), get(), get(), context = androidApplication())
     }
     viewModel {
         LocationOnBoardingViewModel(get())

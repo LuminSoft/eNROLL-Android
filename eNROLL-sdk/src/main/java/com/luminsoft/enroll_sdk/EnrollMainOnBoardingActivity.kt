@@ -38,6 +38,7 @@ import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingConte
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.Koin
@@ -113,6 +114,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             activity.getKoin()
         } else {
             GlobalContext.getOrNull() ?: startKoin {
+                androidContext(activity.applicationContext)
                 modules(sdkModule)
                 modules(mainModule)
                 modules(checkAmlModule)

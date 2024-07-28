@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/src/main/assets
+/app/src/main/res/raw/iengine.lic
+assets/env_andrew
+assets/env_radwan

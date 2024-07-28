@@ -9,4 +9,5 @@ import retrofit2.http.POST
 interface LocationAuthApi {
     @POST("api/v1/authentication/CheckLocationWithRange/CheckLocationInfo")
     suspend fun postLocationAuth(@Body request: PostLocationRequestModel): Response<BasicResponseModel>
+
 }

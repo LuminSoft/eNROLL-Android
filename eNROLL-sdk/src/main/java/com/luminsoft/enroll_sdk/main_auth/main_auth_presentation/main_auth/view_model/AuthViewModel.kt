@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.compose.ui.text.input.TextFieldValue
@@ -10,6 +11,7 @@ import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
@@ -23,12 +25,13 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.GetAuthStepC
 import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.InitializeRequestAuthUsecase
 import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.InitializeRequestAuthUsecaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.util.UUID
 
 class AuthViewModel(
     private val generateAuthSessionToken: GenerateAuthSessionTokenUsecase,
     private val getAuthStepConfigurationsUsecase: GetAuthStepConfigurationsUsecase,
-    private val initializeRequestUsecase: InitializeRequestAuthUsecase
+    private val initializeRequestUsecase: InitializeRequestAuthUsecase,
+    private val context: Context
+
 ) : ViewModel(),
     MainViewModel {
     override var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -66,15 +69,18 @@ class AuthViewModel(
         TODO("Not yet implemented")
     }
 
+
+
     fun initRequest() {
         loading.value = true
         ui {
-            val uuid: String = UUID.randomUUID().toString()
+
+            val deviceId = DeviceIdentifier.getDeviceId(context)
             val manufacturer: String = Build.MANUFACTURER
             val deviceModel: String = Build.MODEL
 
             params.value = InitializeRequestAuthUsecaseParams(
-                uuid,
+                deviceId,
                 manufacturer,
                 deviceModel
             )
@@ -147,19 +153,29 @@ class AuthViewModel(
     }
 
     fun removeCurrentStep(id: Int): Boolean {
+        // Check if 'steps' is not null
         if (steps.value != null) {
+            // Store the initial size of the 'steps' list
             val stepsSize = steps.value!!.size
+
+            // Create a mutable list from 'steps', remove the item with the given ID, and convert back to an immutable list
             steps.value = steps.value!!.toMutableList().apply {
                 removeIf { x -> x.authenticationStepId == id }
             }.toList()
+
+            // Store the new size of the 'steps' list after removal
             val newStepsSize = steps.value!!.size
+
+            // Check if the size of the list has changed (i.e., an item was removed)
             if (stepsSize != newStepsSize) {
+                // If the list is not empty, navigate to the next step and return 'false'
                 return if (steps.value!!.isNotEmpty()) {
                     navigateToNextStep()
                     false
                 } else
                     true
-            }
+            } else if (newStepsSize == 0)
+                return true
         }
         return false
     }
