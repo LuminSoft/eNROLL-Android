@@ -155,13 +155,17 @@ fun PhoneAuthScreenContent(
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 Image(
-                    painterResource(R.drawable.validate_otp),
+                    painterResource(R.drawable.validate_sms_otp),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.25f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
-
+                Text(
+                    text = stringResource(id = R.string.smsOtpGuide),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 12.sp
+                )
                 Spacer(modifier = Modifier.height(30.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {

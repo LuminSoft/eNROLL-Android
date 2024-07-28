@@ -162,6 +162,8 @@
     <string name="invalid_email">Invalid mail</string>
     <string name="required_email">Mail is required</string>
     <string name="timerOtpMessage">Didn\'t receive the OTP? It will be sent again</string>
+    <string name="emailOtpGuide">Please enter the verification code sent to your email</string>
+    <string name="smsOtpGuide">Please enter the verification code sent to your phone number</string>
     <string name="emailOtpMessage">Didn\'t receive the OTP? It will be sent in</string>
     <string name="second">Seconds</string>
     <string name="youAddedTheFollowingPhoneNumbers">You added the following phone numbers</string>
