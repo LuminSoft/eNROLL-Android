@@ -161,7 +161,7 @@ fun ValidateOtpPhoneNumberScreenContent(
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 Image(
-                    painterResource(R.drawable.validate_otp),
+                    painterResource(R.drawable.validate_sms_otp),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.25f)
