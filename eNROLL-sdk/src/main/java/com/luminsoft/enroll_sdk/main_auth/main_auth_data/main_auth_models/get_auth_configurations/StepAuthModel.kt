@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main_auth.main_auth_data.main_auth_models.get_auth_configurations
 
+import checkIMEIAuthScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
@@ -44,7 +45,7 @@ data class StepAuthModel(
             4 -> passwordAuthScreenContent
             5 -> deviceDataOnBoardingPrescanScreenContent
             6 -> checkExpiryDateAuthScreenContent
-            7 -> securityQuestionsOnBoardingScreenContent
+            7 -> checkIMEIAuthScreenContent
             8 -> locationAuthScreenContent
             else -> {
                 nationalIdOnBoardingPreScanScreen

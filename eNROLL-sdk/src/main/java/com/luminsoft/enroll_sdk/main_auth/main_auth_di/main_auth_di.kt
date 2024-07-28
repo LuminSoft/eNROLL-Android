@@ -11,6 +11,7 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.GenerateAuth
 import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.GetAuthStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.InitializeRequestAuthUsecase
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -38,7 +39,8 @@ val mainAuthModule = module {
         ).create(MainAuthApi::class.java)
     }
     viewModel {
-        AuthViewModel(get(), get(), get())
+        AuthViewModel(get(), get(), get(), context = androidApplication()
+        )
     }
 //    viewModel {
 //        LocationOnBoardingViewModel(get())

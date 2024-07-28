@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import checkIMEIAuthModule
+import checkIMEIAuthRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
@@ -33,6 +35,7 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.mainAuthRouter
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
@@ -76,26 +79,31 @@ class EnrollMainAuthActivity : ComponentActivity() {
                     mailAuthRouter(navController = navController, authViewModel)
                     locationAuthRouter(navController = navController, authViewModel)
                     faceCaptureAuthRouter(navController = navController, authViewModel)
+                    checkIMEIAuthRouter(navController = navController, authViewModel)
                     checkExpiryDateAuthRouter(navController = navController, authViewModel)
                 }
             }
         }
     }
 
-    private fun getKoin(activity: ComponentActivity): Koin {
+    fun getKoin(activity: ComponentActivity): Koin {
         return if (activity is KoinComponent) {
             activity.getKoin()
         } else {
             GlobalContext.getOrNull() ?: startKoin {
-                modules(sdkModule)
-                modules(mainAuthModule)
-                modules(deviceDataModule)
-                modules(passwordAuthModule)
-                modules(mailAuthModule)
-                modules(phoneAuthModule)
-                modules(locationAuthModule)
-                modules(faceCaptureAuthModule)
-                modules(checkExpiryDateAuthModule)
+                androidContext(activity.applicationContext) // Provide the Android context
+                modules(
+                    sdkModule,
+                    mainAuthModule,
+                    deviceDataModule,
+                    passwordAuthModule,
+                    mailAuthModule,
+                    phoneAuthModule,
+                    locationAuthModule,
+                    checkIMEIAuthModule,
+                    faceCaptureAuthModule,
+                    checkExpiryDateAuthModule
+                )
             }.koin
         }
     }
