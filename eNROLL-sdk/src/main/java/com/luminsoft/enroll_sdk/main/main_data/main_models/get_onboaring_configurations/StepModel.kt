@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations
 
+import checkAmlOnBoardingScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
@@ -30,6 +31,7 @@ data class StepModel(
             6 -> EkycStepType.DeviceLocation
             7 -> EkycStepType.SecurityQuestions
             8 -> EkycStepType.SettingPassword
+            9 -> EkycStepType.AmlCheck
             else -> {
                 EkycStepType.PersonalConfirmation
             }
@@ -46,6 +48,7 @@ data class StepModel(
             6 -> locationOnBoardingScreenContent
             7 -> securityQuestionsOnBoardingScreenContent
             8 -> settingPasswordOnBoardingScreenContent
+            9 -> checkAmlOnBoardingScreenContent
             else -> {
                 nationalIdOnBoardingPreScanScreen
             }
@@ -62,7 +65,8 @@ enum class EkycStepType {
     SaveMobileDevice,
     DeviceLocation,
     SecurityQuestions,
-    SettingPassword;
+    SettingPassword,
+    AmlCheck;
 
     fun getStepId(): Int {
         return when (this) {
@@ -74,6 +78,7 @@ enum class EkycStepType {
             DeviceLocation -> 6
             SecurityQuestions -> 7
             SettingPassword -> 8
+            AmlCheck -> 9
         }
     }
 }
