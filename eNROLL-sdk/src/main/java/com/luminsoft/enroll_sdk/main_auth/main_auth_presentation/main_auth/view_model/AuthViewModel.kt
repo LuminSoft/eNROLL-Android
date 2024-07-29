@@ -93,6 +93,7 @@ class AuthViewModel(
                     loading.value = false
                 },
                 {
+
                     loading.value = false
                     navigateToNextStep()
                 })
