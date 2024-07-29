@@ -88,14 +88,14 @@ fun SecurityQuestionAuthScreenContent(
             if (isEmpty)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
+                    text = stringResource(id = R.string.successfulAuthentication),
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(
                             EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                                activity.getString(R.string.successfulAuthentication),
+                                activity.getString(R.string.successfulAuthentication)
                             )
                         )
                     },
