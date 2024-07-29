@@ -64,7 +64,6 @@ sealed class OnBoardingPage(
     )
 
 
-    // waiting for resources to be added (image , text)
     data object CheckingAmlPage : OnBoardingPage(
         image = R.drawable.step_01_national_id,
         stringValue = "CheckingAmlPage",
