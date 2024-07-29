@@ -127,6 +127,9 @@
     <string name="intro4">You must enter your own email to complete the registration process and verify your account</string>
     <string name="intro5">Application password</string>
     <string name="intro7">You must select 3 security questions that you must answer.</string>
+    <string name="intro8">Your Id will be verified by an anti-money laundering and anti-terrorism authority</string>
+    <string name="start_request">Start Request</string>
+
     <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="isBackSideWhileFrontScanMessage">Please scan the front side of the ID</string>

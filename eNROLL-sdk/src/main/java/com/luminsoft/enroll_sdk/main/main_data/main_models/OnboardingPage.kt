@@ -62,4 +62,12 @@ sealed class OnBoardingPage(
         stringValue = "SettingPasswordPage",
         text = R.string.intro5
     )
+
+
+    // waiting for resources to be added (image , text)
+    data object CheckingAmlPage : OnBoardingPage(
+        image = R.drawable.step_01_national_id,
+        stringValue = "CheckingAmlPage",
+        text = R.string.intro8
+    )
 }
