@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.*
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.main.main_data.main_models.OnBoardingPage
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -39,12 +40,14 @@ fun OnboardingScreenContent(
     viewModel: OnBoardingViewModel,
     navController: NavController,
 
-) {
+    ) {
     val pagerState = rememberPagerState()
     val tutorialViewModel = remember { TutorialViewModel(viewModel.steps) }
     val pages = tutorialViewModel.pages.collectAsState()
     val loading = viewModel.loading.collectAsState()
     BackGroundView(navController = navController, showAppBar = false) {
+        //TODO send the real request id
+        EnrollSDK.enrollCallback?.getRequestId("testRequestId")
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             HorizontalPager(
                 count = pages.value?.size ?: 0,
@@ -55,10 +58,12 @@ fun OnboardingScreenContent(
                     ?.let { PagerScreen(onBoardingPage = it) }
             }
 
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .padding(start = 20.dp, end = 20.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .padding(start = 20.dp, end = 20.dp)
+            ) {
                 HorizontalPagerIndicator(
                     modifier = Modifier.align(Alignment.Center),
                     pagerState = pagerState,
@@ -69,7 +74,7 @@ fun OnboardingScreenContent(
                     activeColor = MaterialTheme.colorScheme.primary,
                     inactiveColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                 )
-                if (pagerState.currentPage != ((pages.value?.size ?: 0)-1))
+                if (pagerState.currentPage != ((pages.value?.size ?: 0) - 1))
                     ClickableText(
                         text = AnnotatedString(stringResource(id = R.string.skip)),
                         style = TextStyle(
@@ -81,14 +86,14 @@ fun OnboardingScreenContent(
                         modifier = Modifier
                             .align(Alignment.CenterStart),
                         onClick = {
-                            if (pagerState.currentPage != ((pages.value?.size ?: 0)-1)) {
+                            if (pagerState.currentPage != ((pages.value?.size ?: 0) - 1)) {
                                 ui {
-                                    pagerState.scrollToPage(((pages.value?.size ?: 0)-1))
+                                    pagerState.scrollToPage(((pages.value?.size ?: 0) - 1))
                                 }
                             }
                         })
-                if(!loading.value) {
-                    if (pagerState.currentPage == ((pages.value?.size ?: 0)-1))
+                if (!loading.value) {
+                    if (pagerState.currentPage == ((pages.value?.size ?: 0) - 1))
                         ClickableText(
                             text = AnnotatedString(stringResource(id = R.string.done)),
                             style = TextStyle(
@@ -104,9 +109,11 @@ fun OnboardingScreenContent(
                                     viewModel.initRequest()
                                 }
                             })
-                }else{
-                    Box (modifier = Modifier
-                        .align(Alignment.CenterEnd)){
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                    ) {
                         SpinKitLoadingIndicator()
                     }
                 }
@@ -134,5 +141,5 @@ fun OnboardingScreenContent(
 
 @Composable
 fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    EnrollItemView(onBoardingPage.image,onBoardingPage.text)
+    EnrollItemView(onBoardingPage.image, onBoardingPage.text)
 }
