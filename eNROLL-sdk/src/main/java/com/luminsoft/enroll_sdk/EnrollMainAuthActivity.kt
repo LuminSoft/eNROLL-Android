@@ -41,6 +41,8 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import securityQuestionAuthModule
+import securityQuestionAuthRouter
 
 
 @Suppress("DEPRECATION")
@@ -78,6 +80,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                     phoneAuthRouter(navController = navController, authViewModel)
                     mailAuthRouter(navController = navController, authViewModel)
                     locationAuthRouter(navController = navController, authViewModel)
+                    securityQuestionAuthRouter(navController = navController, authViewModel)
                     faceCaptureAuthRouter(navController = navController, authViewModel)
                     checkIMEIAuthRouter(navController = navController, authViewModel)
                     checkExpiryDateAuthRouter(navController = navController, authViewModel)
@@ -85,7 +88,6 @@ class EnrollMainAuthActivity : ComponentActivity() {
             }
         }
     }
-
 
     private fun getKoin(activity: ComponentActivity): Koin {
         return if (activity is KoinComponent) {
@@ -103,6 +105,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 modules(checkExpiryDateAuthModule)
                 modules(checkIMEIAuthModule)
                 modules(faceCaptureAuthModule)
+                modules(securityQuestionAuthModule)
             }.koin
         }
     }

@@ -3,6 +3,7 @@ package com.luminsoft.enroll_sdk.main_auth.main_auth_data.main_auth_models.get_a
 import checkIMEIAuthScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
+import com.luminsoft.enroll_sdk.features.location.location_navigation.locationOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthPreScanScreenContent
@@ -11,6 +12,7 @@ import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_naviga
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_navigation.mailAuthScreenContent
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthScreenContent
 import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_navigation.phoneAuthScreenContent
+import securityQuestionAuthScreenContent
 
 
 data class StepAuthModel(
@@ -25,7 +27,7 @@ data class StepAuthModel(
             2 -> EkycStepAuthType.Email
             3 -> EkycStepAuthType.Phone
             4 -> EkycStepAuthType.Password
-            5 -> EkycStepAuthType.SecurityQuestions
+            5 -> EkycStepAuthType.SecurityQuestion
             6 -> EkycStepAuthType.NationalIdExpirationDate
             7 -> EkycStepAuthType.IME
             8 -> EkycStepAuthType.Location
@@ -43,10 +45,11 @@ data class StepAuthModel(
             2 -> mailAuthScreenContent
             3 -> phoneAuthScreenContent
             4 -> passwordAuthScreenContent
-            5 -> deviceDataOnBoardingPrescanScreenContent
+            5 -> securityQuestionAuthScreenContent
             6 -> checkExpiryDateAuthScreenContent
             7 -> checkIMEIAuthScreenContent
             8 -> locationAuthScreenContent
+
             else -> {
                 nationalIdOnBoardingPreScanScreen
             }
@@ -60,7 +63,7 @@ enum class EkycStepAuthType {
     Email,
     Phone,
     Password,
-    SecurityQuestions,
+    SecurityQuestion,
     NationalIdExpirationDate,
     IME,
     Location,
@@ -73,7 +76,7 @@ enum class EkycStepAuthType {
             Email -> 2
             Phone -> 3
             Password -> 4
-            SecurityQuestions -> 5
+            SecurityQuestion -> 5
             NationalIdExpirationDate -> 6
             IME -> 7
             Location -> 8

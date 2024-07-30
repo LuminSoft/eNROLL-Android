@@ -283,6 +283,7 @@
     <string name="make_default">جعل الافتراضي</string>
     <string name="addPhoneNumber">إضافة رقم هاتف</string>
     <string name="youMustChooseThreeQuestions">يجب إختيار 3 أسئلة أمان لإتمام عملية التسجيل بنجاح</string>
+    <string name="youMustAnswerSecurityQuestion">يجب إجابة سؤال الأمان لإتمام عملية التحقق</string>
     <string name="chooseAQuestions">إختر سؤال</string>
     <string name="answer">الاجابه</string>
     <string name="required_question">من فضلك أختر سؤال</string>
