@@ -63,6 +63,7 @@ class TutorialViewModel(val steps: MutableStateFlow<List<StepModel>?>) : ViewMod
             EkycStepType.DeviceLocation -> OnBoardingPage.DeviceLocationPage
             EkycStepType.SecurityQuestions -> OnBoardingPage.SecurityQuestionsPage
             EkycStepType.SettingPassword -> OnBoardingPage.SettingPasswordPage
+            EkycStepType.AmlCheck -> OnBoardingPage.CheckingAmlPage
             else -> {
                 OnBoardingPage.NationalIDOnlyPage
             }

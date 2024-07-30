@@ -122,6 +122,9 @@
     <string name="intro4">يجب إدخال بريدك الإلكتروني الخاص لإكمال عملية التسجيل وتوثيق حسابك</string>
     <string name="intro5">إنشاء كلمة المرور الخاصة بالتطبيق</string>
     <string name="intro7">يجب إختيار 3 أسئلة أمان لإتمام عملية التسجيل بنجاح</string>
+    <string name="intro8">سيتم التحقق من البطاقة من جهة مكافحة غسيل الأموال والإرهاب</string>
+    <string name="start_request">ابدا الفحص</string>
+
     <string name="done">تـم</string>
     <string name="skip">تخطـي</string>
     <string name="isBackSideWhileFrontScanMessage">يرجى مسح الوجة الأمامي للبطاقة</string>
