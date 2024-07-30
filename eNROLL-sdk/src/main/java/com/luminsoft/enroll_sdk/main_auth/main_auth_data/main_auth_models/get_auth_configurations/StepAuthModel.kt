@@ -45,13 +45,11 @@ data class StepAuthModel(
             2 -> mailAuthScreenContent
             3 -> phoneAuthScreenContent
             4 -> passwordAuthScreenContent
-            5 -> deviceDataOnBoardingPrescanScreenContent
+            5 -> securityQuestionAuthScreenContent
             6 -> checkExpiryDateAuthScreenContent
             7 -> checkIMEIAuthScreenContent
-            5 -> securityQuestionAuthScreenContent
-            6 -> locationOnBoardingScreenContent
-            7 -> securityQuestionsOnBoardingScreenContent
             8 -> locationAuthScreenContent
+
             else -> {
                 nationalIdOnBoardingPreScanScreen
             }
