@@ -17,4 +17,5 @@ local.properties
 /app/src/main/res/raw/iengine.lic
 assets/env_andrew
 assets/env_radwan
-app/src/main/assets
+app/src/main/assets/env_andrew
+app/src/main/assets/env_org_1
