@@ -45,9 +45,14 @@ fun OnboardingScreenContent(
     val tutorialViewModel = remember { TutorialViewModel(viewModel.steps) }
     val pages = tutorialViewModel.pages.collectAsState()
     val loading = viewModel.loading.collectAsState()
+    val requestId = viewModel.requestId.collectAsState()
+    val requestCallBackSent = viewModel.requestCallBackSent.collectAsState()
+
     BackGroundView(navController = navController, showAppBar = false) {
-        //TODO send the real request id
-        EnrollSDK.enrollCallback?.getRequestId("testRequestId")
+        if (requestId.value != null && !requestCallBackSent.value) {
+            EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
+            viewModel.changeRequestIdSentValue()
+        }
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             HorizontalPager(
                 count = pages.value?.size ?: 0,

@@ -7,7 +7,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
-import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -17,6 +16,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
@@ -42,6 +42,8 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var requestId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var requestCallBackSent: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -84,7 +86,7 @@ class OnBoardingViewModel(
                 manufacturer,
                 deviceModel
             )
-            val response: Either<SdkFailure, Null> =
+            val response: Either<SdkFailure, InitializeRequestResponse> =
                 initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)
 
             response.fold(
@@ -94,6 +96,7 @@ class OnBoardingViewModel(
                 },
                 {
                     loading.value = false
+                    requestId.value = it.requestId
                     navigateToNextStep()
                 })
 
@@ -177,5 +180,9 @@ class OnBoardingViewModel(
 
     fun navigateToTheSameStep() {
         navController!!.navigate(steps.value!!.first().stepNameNavigator())
+    }
+
+    fun changeRequestIdSentValue() {
+        requestCallBackSent.value = true
     }
 }
