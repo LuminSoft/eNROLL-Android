@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 open class InitializeRequestResponse {
 
-    @SerializedName("value")
+    @SerializedName("requestId")
     var requestId: String? = null
 
 }
