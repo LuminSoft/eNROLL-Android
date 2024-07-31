@@ -60,8 +60,8 @@ import io.github.cdimascio.dotenv.dotenv
 var dotenv = dotenv {
     directory = "/assets"
 //   filename = "env_andrew"
-//    filename = "env_radwan"
-    filename = "env_org_1"
+    filename = "env_radwan"
+//    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
@@ -77,6 +77,7 @@ var levelOfTrustToken = mutableStateOf(TextFieldValue(text = dotenv["LEVEL_OF_TR
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
+var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
@@ -164,6 +165,7 @@ class MainActivity : ComponentActivity() {
                         ArabicCheckbox()
                         ProductionCheckbox()
                         RememberMeCheckbox()
+                        SkipTutorialCheckbox()
                         Spacer(modifier = Modifier.height(20.dp))
 
                         DropdownList(
@@ -249,7 +251,8 @@ class MainActivity : ComponentActivity() {
 
                 },
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
-                googleApiKey = googleApiKey.value
+                googleApiKey = googleApiKey.value,
+                skipTutorial = skipTutorial.value
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
@@ -375,6 +378,20 @@ fun RememberMeCheckbox() {
             onCheckedChange = { isChecked -> isRememberMe.value = isChecked }
         )
         Text("Remember Me")
+    }
+}
+
+
+@Composable
+fun SkipTutorialCheckbox() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = skipTutorial.value,
+            onCheckedChange = { isChecked -> skipTutorial.value = isChecked }
+        )
+        Text("Skip Tutorial")
     }
 }
 

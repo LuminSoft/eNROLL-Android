@@ -23,7 +23,8 @@ object eNROLL {
         environment: EnrollEnvironment = EnrollEnvironment.STAGING,
         localizationCode: LocalizationCode = LocalizationCode.EN,
         enrollCallback: EnrollCallback? = null,
-        googleApiKey: String? = ""
+        googleApiKey: String? = "",
+        skipTutorial: Boolean = false,
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -38,6 +39,7 @@ object eNROLL {
         EnrollSDK.localizationCode = localizationCode
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
+        EnrollSDK.skipTutorial = skipTutorial
     }
 
     fun launch(
