@@ -143,7 +143,12 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
-                            navController!!.navigate(onBoardingScreenContent)
+                            if(EnrollSDK.skipTutorial){
+                                initRequest()
+                            }else{
+                                navController!!.navigate(onBoardingScreenContent)
+                            }
+
                         })
 
                     }
