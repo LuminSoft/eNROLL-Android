@@ -1,5 +1,4 @@
-package com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_auth.view_model
-
+package com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.ui.text.input.TextFieldValue

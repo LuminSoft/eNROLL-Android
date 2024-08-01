@@ -1,4 +1,5 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.common
+
 import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +25,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.main.main_presentation.common.ComposeLottieAnimation
-import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_auth.view_model.UpdateViewModel
+import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 

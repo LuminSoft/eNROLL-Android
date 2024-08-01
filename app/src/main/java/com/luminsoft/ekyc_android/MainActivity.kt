@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activity = LocalContext.current as Activity
 
-            val itemList = listOf("Onboarding", "Auth")
+            val itemList = listOf("Onboarding", "Auth", "Update")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
 
@@ -235,7 +235,7 @@ class MainActivity : ComponentActivity() {
                 tenantSecretText.value.text,
                 applicationIdText.value.text,
                 levelOfTrustTokenText.value.text,
-                if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
+                if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
                 if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {

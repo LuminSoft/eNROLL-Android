@@ -19,7 +19,7 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthC
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRouter
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
-import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_auth.view_model.UpdateViewModel
+import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
