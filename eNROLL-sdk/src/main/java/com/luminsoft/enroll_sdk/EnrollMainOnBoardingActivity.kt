@@ -45,6 +45,8 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import termsConditionsModule
+import termsConditionsRouter
 
 
 @Suppress("DEPRECATION")
@@ -79,6 +81,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = getStartingRoute()
                 ) {
+                    termsConditionsRouter(navController = navController, onBoardingViewModel)
                     mainRouter(navController = navController, onBoardingViewModel)
                     nationalIdRouter(navController = navController, onBoardingViewModel)
                     deviceDataRouter(navController = navController)
@@ -115,6 +118,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
         } else {
             GlobalContext.getOrNull() ?: startKoin {
                 androidContext(activity.applicationContext)
+                modules(termsConditionsModule)
                 modules(sdkModule)
                 modules(mainModule)
                 modules(checkAmlModule)

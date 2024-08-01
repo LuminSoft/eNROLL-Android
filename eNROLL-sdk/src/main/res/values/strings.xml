@@ -128,6 +128,7 @@
     <string name="intro5">Application password</string>
     <string name="intro7">You must select 3 security questions that you must answer.</string>
     <string name="intro8">Your Id will be verified by an anti-money laundering and anti-terrorism authority</string>
+    <string name="intro9">You must read the terms and conditions and approve it in order to complete the registration</string>
     <string name="start_request">Start Request</string>
 
     <string name="done">Done</string>
@@ -292,5 +293,8 @@
     <string name="errorEmptyAnswer">Please enter your answer</string>
     <string name="errorMaxLengthAnswer">Answer must not be more than 150 characters</string>
     <string name="successfulAuthentication">Account successfully authenticated</string>
+    <string name="readTermsAndConditions">Read Terms And Conditions</string>
+    <string name="acceptTermsAndConditions">Accept Terms And Conditions</string>
+    <string name="youMustApproveOurTermsToProceed">You must approve our terms and conditions in order to proceed</string>
 
 </resources>
