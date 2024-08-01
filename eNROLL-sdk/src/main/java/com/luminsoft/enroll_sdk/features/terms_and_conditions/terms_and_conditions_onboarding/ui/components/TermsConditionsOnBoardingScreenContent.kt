@@ -1,3 +1,9 @@
+package com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_onboarding.ui.components
+
+import AcceptTermsUseCase
+import GetTermsIdUseCase
+import GetTermsPdfFileByIdUseCase
+import TermsConditionsOnBoardingViewModel
 import android.app.Activity
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
@@ -9,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -83,7 +89,7 @@ fun TermsConditionsOnBoardingScreenContent(
 
 
 
-    BackGroundView(navController = navController, showAppBar = false) {
+    BackGroundView(navController = navController, showAppBar = true) {
         if (termsAccepted.value) {
 
             val isEmpty =
@@ -167,12 +173,13 @@ fun PdfViewerWidget(
 
 ) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
-
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ) {
         Column(
             modifier = Modifier
@@ -181,7 +188,7 @@ fun PdfViewerWidget(
         ) {
             Text(
                 text = stringResource(id = R.string.readTermsAndConditions),
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
@@ -193,7 +200,7 @@ fun PdfViewerWidget(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp)
+                    .height(screenHeight * 0.6f)
                     .border(BorderStroke(1.dp, primary))
                     .padding(8.dp)
             ) {
@@ -213,7 +220,7 @@ fun PdfViewerWidget(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -224,7 +231,7 @@ fun PdfViewerWidget(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 ButtonView(
-               onClick = { showConfirmationDialog = true  },
+                    onClick = { showConfirmationDialog = true },
                     title = stringResource(id = R.string.exit)
                 )
 
@@ -241,7 +248,12 @@ fun PdfViewerWidget(
                     showConfirmationDialog = false
 
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(EnrollFailedModel("Didn't accept our terms", Throwable()))
+                    EnrollSDK.enrollCallback?.error(
+                        EnrollFailedModel(
+                            "Didn't accept our terms",
+                            Throwable()
+                        )
+                    )
                 },
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedSecondButton = {
