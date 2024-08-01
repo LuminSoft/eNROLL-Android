@@ -71,7 +71,7 @@ sealed class OnBoardingPage(
     )
 
     data object TermsAndConditionsPage : OnBoardingPage(
-        image = R.drawable.step_01_national_id,
+        image = R.drawable.terms_conditions,
         stringValue = "TermsAndConditionsPage",
         text = R.string.intro9
     )
