@@ -1,3 +1,4 @@
+
 import androidx.lifecycle.ViewModel
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
@@ -43,6 +44,7 @@ class CheckAmlOnBoardingViewModel(
                 },
                 { s ->
                     s.let {
+                        loading.value = false
                         amlChecked.value = s.isWhiteListed!!
                     }
                 })
@@ -51,4 +53,5 @@ class CheckAmlOnBoardingViewModel(
     }
 
 }
+
 
