@@ -25,6 +25,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.main.main_presentation.common.ComposeLottieAnimation
+import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
@@ -37,7 +38,7 @@ fun SplashScreenUpdateContent(
 ) {
 //    val loading = viewModel.loading.collectAsState()
     val failure = viewModel.failure.collectAsState()
-//    val steps = viewModel.steps.collectAsState()
+    val steps = viewModel.steps.collectAsState()
 //    val context = LocalContext.current
     val activity = LocalContext.current as Activity
     viewModel.navController = navController
@@ -107,5 +108,7 @@ fun SplashScreenUpdateContent(
                 }
             }
         }
+    } else if (!steps.value.isNullOrEmpty()) {
+        navController.navigate(updateListScreenContent)
     }
 }

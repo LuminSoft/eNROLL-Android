@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models
 
 import checkIMEIAuthScreenContent
 import com.google.gson.annotations.SerializedName
+import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthPreScanScreenContent
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_navigation.checkExpiryDateAuthScreenContent
@@ -18,7 +19,7 @@ data class StepUpdateModel(
     @SerializedName("lastUpdatedDate") var lastUpdatedDate: String? = null
 
 ) {
-    fun parseEkycStepType(): EkycStepUpdateType {
+    fun parseUpdateStepType(): EkycStepUpdateType {
         return when (this.updateStepId) {
             1 -> EkycStepUpdateType.NationalID
             2 -> EkycStepUpdateType.Passport
@@ -73,6 +74,32 @@ enum class EkycStepUpdateType {
             Location -> 6
             SecurityQuestions -> 7
             Password -> 8
+        }
+    }
+
+    fun getStepNameIntSource(): Int {
+        return when (this) {
+            NationalID -> R.string.updateNationalId
+            Passport -> R.string.updatePassport
+            Phone -> R.string.updatePhoneNumber
+            Email -> R.string.updateMail
+            Device -> R.string.updateDevice
+            Location -> R.string.updateLocation
+            SecurityQuestions -> R.string.updateSecurityQuestion
+            Password -> R.string.updatePassword
+        }
+    }
+
+    fun getStepIconIntSource(): Int {
+        return when (this) {
+            NationalID -> R.drawable.update_id_card_icon
+            Passport -> R.drawable.update_passport
+            Phone -> R.drawable.update_mobile_icon
+            Email -> R.drawable.update_mail_icon
+            Device -> R.drawable.update_device_icon
+            Location -> R.drawable.update_address_icon
+            SecurityQuestions -> R.drawable.update_answer_icon
+            Password -> R.drawable.update_password_icon
         }
     }
 }

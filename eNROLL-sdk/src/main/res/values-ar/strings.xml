@@ -293,13 +293,18 @@
     <string name="errorEmptyAnswer">من فضلك أدخل الاجابه</string>
     <string name="errorMaxLengthAnswer">يجب ألا تزيد الاجابه عن 150 حرف</string>
     <string name="successfulAuthentication">تم التحقق الحساب بنجاح</string>
-
-
     <string name="readTermsAndConditions">اقرأ الشروط والأحكام</string>
     <string name="acceptTermsAndConditions">أوافق على الشروط و الأحكام</string>
     <string name="youMustApproveOurTermsToProceed">يجب عليك الموافقة على شروطنا وأحكامنا حتى تتمكن من المتابعة</string>
-
-
-
+    <string name="youCanSelectOneItem">يمكنك تحديد عنصر واحد</string>
+    <string name="updateNationalId">تحديث البطاقة</string>
+    <string name="updatePassport">تحديث جواز السفر</string>
+    <string name="updatePhoneNumber">تحديث رقم الهاتف</string>
+    <string name="updateMail">تحديث البريد الإلكتروني</string>
+    <string name="updateSecurityQuestion">تحديث سؤال الأمان</string>
+    <string name="updateLocation">تحديث الموقع</string>
+    <string name="updateDevice">تحديث الرقم التعريفي</string>
+    <string name="updatePassword">تحديث كلمة المرور</string>
+    <string name="cancelUpdate">إلغاء التعديل</string>
 
 </resources>

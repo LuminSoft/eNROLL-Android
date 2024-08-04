@@ -41,6 +41,7 @@ object eNROLL {
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
+//        EnrollSDK.updateSteps = arrayListOf("1", "2")
     }
 
     fun launch(

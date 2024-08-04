@@ -29,7 +29,8 @@ private val LightColorScheme = lightColorScheme(
     inverseOnSurface = defaultTextColor,
     onTertiary = unselectedDotColor,
     onSecondaryContainer = onSecondaryContainer,
-    onBackground = onBackground
+    onBackground = onBackground,
+    outline = textColor
 
 )
 private val DarkColorScheme = darkColorScheme(
@@ -46,7 +47,8 @@ private val DarkColorScheme = darkColorScheme(
     inverseOnSurface = defaultTextColor,
     onTertiary = unselectedDotColor,
     onSecondaryContainer = onSecondaryContainer,
-    onBackground = onBackground
+    onBackground = onBackground,
+    outline = textColor
 )
 
 @Composable
