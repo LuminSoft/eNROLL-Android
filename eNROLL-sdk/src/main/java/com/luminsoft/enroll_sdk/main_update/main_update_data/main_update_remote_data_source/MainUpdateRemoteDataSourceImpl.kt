@@ -22,6 +22,12 @@ class MainUpdateRemoteDataSourceImpl(
 
     }
 
+    override suspend fun updateStepsInitRequest(updateStepId: Int): BaseResponse<Any> {
+
+        return network.apiRequest { mainApi.updateStepsInitRequest(updateStepId) }
+
+    }
+
 }
 
 

@@ -9,6 +9,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_reposit
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.repository.MainUpdateRepository
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
+import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -20,6 +21,9 @@ val mainUpdateModule = module {
     }
     single {
         UpdateStepsConfigurationsUsecase(get())
+    }
+    single {
+        UpdateStepsInitRequestUsecase(get())
     }
 
     single<MainUpdateRemoteDataSource> {
@@ -37,7 +41,7 @@ val mainUpdateModule = module {
     }
     viewModel {
         UpdateViewModel(
-            get(), get(), context = androidApplication()
+            get(), get(),get(), context = androidApplication()
         )
     }
 

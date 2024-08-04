@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_repository
 
 import arrow.core.Either
+import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
@@ -31,6 +32,18 @@ class MainUpdateRepositoryImplementation(private val mainRemoteDataSource: MainU
             is BaseResponse.Success -> {
                 Either.Right(response.data as List<StepUpdateModel>)
 
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+        }
+    }
+
+    override suspend fun updateStepsInitRequest(updateStepId: Int): Either<SdkFailure, Null> {
+        return when (val response = mainRemoteDataSource.updateStepsInitRequest(updateStepId)) {
+            is BaseResponse.Success -> {
+                Either.Right(null)
             }
 
             is BaseResponse.Error -> {

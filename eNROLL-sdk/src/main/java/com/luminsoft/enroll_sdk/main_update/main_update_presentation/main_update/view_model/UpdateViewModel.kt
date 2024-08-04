@@ -6,6 +6,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
+import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -18,12 +19,15 @@ import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecaseParams
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdateStepConfigurationsUsecaseParams
+import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepIdParam
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
+import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
     private val updateStepConfigurationsUsecase: UpdateStepsConfigurationsUsecase,
+    private val updateStepIntRequestUseCase: UpdateStepsInitRequestUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -34,6 +38,7 @@ class UpdateViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var updateStepModel: MutableStateFlow<StepUpdateModel?> = MutableStateFlow(null)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -109,6 +114,33 @@ class UpdateViewModel(
                         })
 
                     }
+                })
+        }
+    }
+
+    fun updateStepsInitRequestCall(updateStep: StepUpdateModel) {
+        updateStepsInitRequest(updateStep)
+    }
+
+    private fun updateStepsInitRequest(updateStep: StepUpdateModel) {
+        loading.value = true
+        ui {
+            params.value = UpdateStepIdParam(
+                updateStepId = updateStep.updateStepId!!
+            )
+
+            val response: Either<SdkFailure, Null> =
+                updateStepIntRequestUseCase
+                    .call(params.value as UpdateStepIdParam)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    loading.value = false
+                    updateStepModel.value = updateStep
                 })
         }
     }

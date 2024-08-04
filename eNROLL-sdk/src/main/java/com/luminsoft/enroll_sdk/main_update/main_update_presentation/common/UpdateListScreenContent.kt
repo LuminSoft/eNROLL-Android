@@ -3,6 +3,7 @@ package com.luminsoft.enroll_sdk.main_update.main_update_presentation.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,10 +49,14 @@ fun UpdateListScreenContent(
 ) {
 
     val steps = updateViewModel.steps.collectAsState()
+    val updateStepModel = updateViewModel.updateStepModel.collectAsState()
     val context = LocalContext.current
     val activity = context.findActivity()
 
     BackGroundView(navController = navController, showAppBar = true) {
+        if (updateStepModel.value != null) {
+//TODO Navigate to update step screen
+        }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -80,7 +85,7 @@ fun UpdateListScreenContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(steps.value!!.size) { index ->
-                    UpdateStepItem(steps.value!![index])
+                    UpdateStepItem(steps.value!![index], updateViewModel)
                 }
             }
             ButtonView(
@@ -105,6 +110,7 @@ fun UpdateListScreenContent(
 @Composable
 private fun UpdateStepItem(
     step: StepUpdateModel,
+    updateViewModel: UpdateViewModel,
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
@@ -115,6 +121,9 @@ private fun UpdateStepItem(
         modifier = Modifier
             .padding(top = 5.dp)
             .padding(top = 0.dp)
+            .clickable {
+                updateViewModel.updateStepsInitRequestCall(step)
+            }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
