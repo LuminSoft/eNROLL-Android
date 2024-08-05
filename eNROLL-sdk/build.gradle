@@ -111,15 +111,16 @@ dependencies {
 
 }
 
+
 afterEvaluate {
     publishing {
         publications {
+            // Creates a Maven publication called "release".
             release(MavenPublication) {
                 from components.release
-
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '0.0.01'
+                version = '0.0.1'
             }
         }
     }
