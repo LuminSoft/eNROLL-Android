@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -290,30 +291,33 @@ private fun card(
             },
 
         ) {
-
         Column(
             modifier = Modifier
                 .fillMaxHeight(0.3f)
                 .fillMaxWidth(),
-
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
-            Image(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.45f),
-                painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
-                contentScale = ContentScale.Fit,
-                contentDescription = "Victor Ekyc Item"
-            )
+                    .fillMaxWidth(0.45f)
+                    .aspectRatio(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
+                    contentScale = ContentScale.Fit,
+                    contentDescription = "Victor Ekyc Item"
+                )
+            }
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalId else R.string.passport),
                 fontSize = 12.sp
             )
-
         }
+
     }
 }
 

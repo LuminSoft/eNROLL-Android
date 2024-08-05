@@ -43,6 +43,7 @@ class CheckAmlOnBoardingViewModel(
                 },
                 { s ->
                     s.let {
+                        loading.value = false
                         amlChecked.value = s.isWhiteListed!!
                     }
                 })
