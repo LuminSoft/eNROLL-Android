@@ -123,6 +123,8 @@
     <string name="intro5">إنشاء كلمة المرور الخاصة بالتطبيق</string>
     <string name="intro7">يجب إختيار 3 أسئلة أمان لإتمام عملية التسجيل بنجاح</string>
     <string name="intro8">سيتم التحقق من البطاقة من جهة مكافحة غسيل الأموال والإرهاب</string>
+    <string name="intro9">يجب عليك قراءة الشروط والأحكام والموافقة عليها حتى تتمكن من إكمال التسجيل</string>
+
     <string name="start_request">ابدا الفحص</string>
 
     <string name="done">تـم</string>
@@ -291,5 +293,13 @@
     <string name="errorEmptyAnswer">من فضلك أدخل الاجابه</string>
     <string name="errorMaxLengthAnswer">يجب ألا تزيد الاجابه عن 150 حرف</string>
     <string name="successfulAuthentication">تم التحقق الحساب بنجاح</string>
+
+
+    <string name="readTermsAndConditions">اقرأ الشروط والأحكام</string>
+    <string name="acceptTermsAndConditions">أوافق على الشروط و الأحكام</string>
+    <string name="youMustApproveOurTermsToProceed">يجب عليك الموافقة على شروطنا وأحكامنا حتى تتمكن من المتابعة</string>
+
+
+
 
 </resources>

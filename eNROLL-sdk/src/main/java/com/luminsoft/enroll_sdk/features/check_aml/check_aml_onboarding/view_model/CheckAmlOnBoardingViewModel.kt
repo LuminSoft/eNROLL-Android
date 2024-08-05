@@ -1,8 +1,9 @@
+
 import androidx.lifecycle.ViewModel
 import arrow.core.Either
-import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_data.check_aml_models.CheckAmlResponseModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
@@ -32,7 +33,7 @@ class CheckAmlOnBoardingViewModel(
         loading.value = true
         ui {
 
-            val response: Either<SdkFailure, Null> =
+            val response: Either<SdkFailure, CheckAmlResponseModel> =
                 checkAmlUseCase.call(null)
 
             response.fold(
@@ -43,7 +44,8 @@ class CheckAmlOnBoardingViewModel(
                 },
                 { s ->
                     s.let {
-                        amlChecked.value = true
+                        loading.value = false
+                        amlChecked.value = s.isWhiteListed!!
                     }
                 })
         }
@@ -51,4 +53,5 @@ class CheckAmlOnBoardingViewModel(
     }
 
 }
+
 

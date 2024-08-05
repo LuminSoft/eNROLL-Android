@@ -249,6 +249,10 @@ class MainActivity : ComponentActivity() {
 
                     }
 
+                    override fun getRequestId(requestId: String) {
+                        Log.d("requestId", requestId)
+                    }
+
                 },
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,

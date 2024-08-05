@@ -64,6 +64,7 @@ class TutorialViewModel(val steps: MutableStateFlow<List<StepModel>?>) : ViewMod
             EkycStepType.SecurityQuestions -> OnBoardingPage.SecurityQuestionsPage
             EkycStepType.SettingPassword -> OnBoardingPage.SettingPasswordPage
             EkycStepType.AmlCheck -> OnBoardingPage.CheckingAmlPage
+            EkycStepType.TermsConditions -> OnBoardingPage.TermsAndConditionsPage
             else -> {
                 OnBoardingPage.NationalIDOnlyPage
             }
