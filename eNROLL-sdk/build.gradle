@@ -1,7 +1,7 @@
-
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 android {
@@ -61,6 +61,7 @@ android {
 
 }
 
+
 dependencies {
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
@@ -103,23 +104,23 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.2.2"
     implementation 'androidx.navigation:navigation-runtime-ktx:2.7.2'
     implementation 'androidx.navigation:navigation-compose:2.7.2'
-//    implementation 'com.github.togisoft:jetpack_compose_country_code_picker:1.1.4'
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
 
     implementation("com.github.jump-sdk:jetpack_compose_country_code_picker_emoji:2.2.7")
 
+}
 
-//    implementation(project(":ekyc-android-sdk:libs:main"))
-//    implementation(project(":ekyc-android-sdk:libs:core"))
-//
-//    implementation(project(":ekyc-android-sdk:libs:ui-components"))
-//    implementation(project(":ekyc-android-sdk:libs:features:email"))
-//    implementation(project(":ekyc-android-sdk:libs:features:phone-numbers"))
-//    implementation(project(":ekyc-android-sdk:libs:features:face-capture"))
-//    implementation(project(":ekyc-android-sdk:libs:features:device-data"))
-//    implementation(project(":ekyc-android-sdk:libs:features:location"))
-//    implementation(project(":ekyc-android-sdk:libs:features:national-id-confirmation"))
-//    implementation(project(":ekyc-android-sdk:libs:features:security-questions"))
-//    implementation(project(":ekyc-android-sdk:libs:features:setting-password"))
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.luminsoft'
+                artifactId = 'eNROLL'
+                version = '0.0.01'
+            }
+        }
+    }
 }
