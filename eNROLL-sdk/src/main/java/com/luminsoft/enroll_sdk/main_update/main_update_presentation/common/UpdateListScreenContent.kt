@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.common
 
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -55,6 +56,7 @@ fun UpdateListScreenContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (updateStepModel.value != null) {
+            Log.d("updateStepModel", "updateStepModel")
 //TODO Navigate to update step screen
         }
         Column(

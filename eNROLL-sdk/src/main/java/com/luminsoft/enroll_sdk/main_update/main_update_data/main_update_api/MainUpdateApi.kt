@@ -17,6 +17,6 @@ interface MainUpdateApi {
     @GET("/api/v1/update/UpdateRequest/GetCurrentRequestSteps")
     suspend fun getUpdateStepsConfigurations(): Response<List<StepUpdateModel>>
 
-    @GET("/api/v1/update/UpdateRequest/Initialize/{updateStepId}")
+    @POST("/api/v1/update/UpdateRequest/Initialize/{updateStepId}")
     suspend fun updateStepsInitRequest(@Path("updateStepId") updateStepId: Int): Response<BasicResponseModel>
 }
