@@ -82,6 +82,16 @@ var isRememberMe = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
 
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+    }
+
+
+
+
+
     var text = mutableStateOf("")
     private var tenantIdText = mutableStateOf(TextFieldValue())
     private var tenantSecretText = mutableStateOf(TextFieldValue())

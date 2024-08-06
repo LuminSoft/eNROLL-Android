@@ -1,4 +1,6 @@
 
+
+
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -10,12 +12,14 @@ const val termsConditionsOnBoardingScreenContent = "termsConditionsOnBoardingScr
 
 fun NavGraphBuilder.termsConditionsRouter(
     navController: NavController,
-    onBoardingViewModel: OnBoardingViewModel
+    onBoardingViewModel: OnBoardingViewModel,
 
 ) {
     composable(route = termsConditionsOnBoardingScreenContent) {
+
         TermsConditionsOnBoardingScreenContent(
             navController = navController,
+
             onBoardingViewModel = onBoardingViewModel
 
         )

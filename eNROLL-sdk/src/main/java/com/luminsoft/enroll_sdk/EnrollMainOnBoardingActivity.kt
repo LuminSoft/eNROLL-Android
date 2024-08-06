@@ -1,3 +1,6 @@
+
+
+
 package com.luminsoft.enroll_sdk
 
 import android.os.Build
@@ -5,6 +8,9 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -59,6 +65,11 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
         RetroClient.setBaseUrl(EnrollSDK.getApisUrl())
     }
 
+    override fun onBackPressed() {
+
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
         setupServices()
@@ -72,6 +83,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
         }
 
         setContent {
+
             val onBoardingViewModel: OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
             val navController = rememberNavController()
 
