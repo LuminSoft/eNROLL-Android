@@ -23,8 +23,9 @@ object EnrollSDK {
 
     private fun getBaseUrl(): String {
         return when (environment) {
-            EnrollEnvironment.STAGING -> "http://197.44.231.206"
+//            EnrollEnvironment.STAGING -> "http://197.44.231.206"
 //            EnrollEnvironment.STAGING -> "http://197.168.1.39"
+            EnrollEnvironment.STAGING -> "https://enrollstg.nasps.org.eg:7400/OnBoarding"
             EnrollEnvironment.PRODUCTION -> "https://enroll.nasps.org.eg"
         }
     }
