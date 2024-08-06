@@ -12,6 +12,10 @@ class ElectronicSignatureRemoteDataSourceImpl(
     override suspend fun insertElectronicSignatureInfo(request: InsertSignatureInfoRequestModel): BaseResponse<Any> {
         return network.apiRequest { electronicSignatureApi.insertElectronicSignatureInfo(request) }
     }
+
+    override suspend fun hasNationalId(): BaseResponse<Any> {
+        return network.apiRequest { electronicSignatureApi.checkHasNationalId() }
+    }
 }
 
 

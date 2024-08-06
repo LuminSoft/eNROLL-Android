@@ -7,6 +7,9 @@ val electronicSignatureModule = module{
     single {
         InsertSignatureInfoUseCase(get())
     }
+    single {
+        CheckUserHasNationalIdUseCase(get())
+    }
     single<ElectronicSignatureRemoteDataSource> {
         ElectronicSignatureRemoteDataSourceImpl(get(),get())
     }

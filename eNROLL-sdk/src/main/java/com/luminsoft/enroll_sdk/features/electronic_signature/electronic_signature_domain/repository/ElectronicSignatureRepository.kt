@@ -6,4 +6,5 @@ import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signatu
 
 interface ElectronicSignatureRepository {
     suspend fun insertSignatureInfo(request: InsertSignatureInfoRequestModel): Either<SdkFailure, Null>
+    suspend fun hasNationalId(): Either<SdkFailure, Boolean>
 }

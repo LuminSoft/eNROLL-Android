@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Suppress("DEPRECATION")
 class ElectronicSignatureOnBoardingViewModel(
-    private val electronicSignatureUseCase: InsertSignatureInfoUseCase
+    private val electronicSignatureUseCase: InsertSignatureInfoUseCase,
+    private val checkUserHasNationalIdUseCase: CheckUserHasNationalIdUseCase,
 ) :
     ViewModel() {
 
@@ -22,7 +23,6 @@ class ElectronicSignatureOnBoardingViewModel(
 
 
 
-    // 3aiz ab2a a5aliha null
     var chosenStep: MutableStateFlow<ElectronicSignatureChooseStep?> =
         MutableStateFlow(ElectronicSignatureChooseStep.ApplyForSignature)
     var isStepSelected: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -54,7 +54,12 @@ class ElectronicSignatureOnBoardingViewModel(
 
     var failedStatus: MutableStateFlow<Int?> = MutableStateFlow(null)
 
+    var userHasNationalId: MutableStateFlow<Boolean?> = MutableStateFlow(false)
 
+
+    init {
+        checkUserHasNationalId()
+    }
 
 
 
@@ -101,6 +106,29 @@ private fun handleSuccess(status: Int) {
                 },
                 {
                     handleSuccess(status)
+                })
+        }
+    }
+
+
+
+     private fun checkUserHasNationalId() {
+        loading.value = true
+        ui {
+
+            val response: Either<SdkFailure, Boolean> = checkUserHasNationalIdUseCase.
+            call(null)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    println("testtt $it")
+                    userHasNationalId.value = it
+                    loading.value = false
+
                 })
         }
     }

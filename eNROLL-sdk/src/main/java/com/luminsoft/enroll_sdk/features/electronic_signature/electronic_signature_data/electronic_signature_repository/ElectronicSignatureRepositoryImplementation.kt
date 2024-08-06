@@ -21,6 +21,20 @@ class ElectronicSignatureRepositoryImplementation(private val electronicSignatur
 
         }
     }
+
+    override suspend fun hasNationalId(): Either<SdkFailure, Boolean> {
+        return when (val response = electronicSignatureRemoteDataSource.hasNationalId()) {
+            is BaseResponse.Success -> {
+                val userHasNationalId = response.data as Boolean
+                Either.Right(userHasNationalId)
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+
+        }
+    }
 }
 
 

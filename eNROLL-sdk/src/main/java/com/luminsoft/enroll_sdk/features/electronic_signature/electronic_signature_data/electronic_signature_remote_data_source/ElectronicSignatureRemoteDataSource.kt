@@ -4,5 +4,6 @@ import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signatu
 
 interface  ElectronicSignatureRemoteDataSource  {
     suspend fun insertElectronicSignatureInfo(request: InsertSignatureInfoRequestModel): BaseResponse<Any>
+    suspend fun hasNationalId(): BaseResponse<Any>
 
 }

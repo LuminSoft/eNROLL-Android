@@ -51,14 +51,16 @@ fun ApplyForElectronicSignatureScreenContent(
     val electronicSignatureUseCase =
         InsertSignatureInfoUseCase(koinInject())
 
+    val checkUserHasNationalIdUseCase =
+        CheckUserHasNationalIdUseCase(koinInject())
+
     val electronicSignatureOnBoardingViewModel =
         remember {
             ElectronicSignatureOnBoardingViewModel(
-                electronicSignatureUseCase = electronicSignatureUseCase
+                electronicSignatureUseCase = electronicSignatureUseCase,
+                checkUserHasNationalIdUseCase=checkUserHasNationalIdUseCase
             )
         }
-
-
     val context = LocalContext.current
     val activity = context.findActivity()
 
@@ -140,7 +142,7 @@ fun ApplyForElectronicSignatureScreenContent(
 //                            showDialog = false
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(1)) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value?.text!!,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value!!.text
                             )
@@ -170,11 +172,10 @@ fun ApplyForElectronicSignatureScreenContent(
             ) {
                 Spacer(modifier = Modifier.weight(0.5f))
 
-                if (!onBoardingViewModel.existingSteps.value!!.contains(1)) {
+                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==false) {
                     NationalIdTextField(electronicSignatureOnBoardingViewModel)
                     Spacer(modifier = Modifier.height(15.dp))
                 }
-
 
                 if (!onBoardingViewModel.existingSteps.value!!.contains(3)) {
                     PhoneNumberTextField(electronicSignatureOnBoardingViewModel)
@@ -195,7 +196,7 @@ fun ApplyForElectronicSignatureScreenContent(
                         var isValid = true
 
 
-                        if (!onBoardingViewModel.existingSteps.value!!.contains(1)) {
+                        if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==false) {
                             if (electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text?.length != 14) {
                                 electronicSignatureOnBoardingViewModel.nationalIdError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
@@ -226,7 +227,7 @@ fun ApplyForElectronicSignatureScreenContent(
 
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(1)) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value!!.text   ,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value!!.text
 

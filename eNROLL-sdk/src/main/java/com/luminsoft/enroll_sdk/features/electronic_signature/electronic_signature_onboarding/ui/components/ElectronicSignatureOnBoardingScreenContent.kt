@@ -63,10 +63,14 @@ fun ElectronicSignatureOnBoardingScreenContent(
     val electronicSignatureUseCase =
         InsertSignatureInfoUseCase(koinInject())
 
+    val checkUserHasNationalIdUseCase =
+        CheckUserHasNationalIdUseCase(koinInject())
+
     val electronicSignatureOnBoardingViewModel =
         remember {
             ElectronicSignatureOnBoardingViewModel(
-                electronicSignatureUseCase = electronicSignatureUseCase
+                electronicSignatureUseCase = electronicSignatureUseCase,
+                checkUserHasNationalIdUseCase=checkUserHasNationalIdUseCase
             )
         }
 
@@ -80,6 +84,7 @@ fun ElectronicSignatureOnBoardingScreenContent(
     val loading = electronicSignatureOnBoardingViewModel.loading.collectAsState()
     val failure = electronicSignatureOnBoardingViewModel.failure.collectAsState()
     val skipped = electronicSignatureOnBoardingViewModel.skippedSucceed.collectAsState()
+    val userHasNationalId = electronicSignatureOnBoardingViewModel.userHasNationalId.collectAsState()
     val haveSignature = electronicSignatureOnBoardingViewModel.haveSignatureSucceed.collectAsState()
     val applySignatureSucceed =
         electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
@@ -320,6 +325,7 @@ private fun ApplyForSignatureOrAlreadyHave(
             onClick = {
 
                 if (chosenStep.value == ElectronicSignatureChooseStep.AlreadyHaveSignature) {
+
                     signatureOnBoardingViewModel.insertSignatureInfo(
                         1,
                         onBoardingViewModel.userNationalId.value ?: "",
@@ -331,7 +337,7 @@ private fun ApplyForSignatureOrAlreadyHave(
 
                 else if (chosenStep.value == ElectronicSignatureChooseStep.ApplyForSignature) {
 
-                    if (onBoardingViewModel.existingSteps.value!!.contains(1) && onBoardingViewModel.existingSteps.value!!.contains(3) && onBoardingViewModel.existingSteps.value!!.contains(4)
+                    if (signatureOnBoardingViewModel.userHasNationalId.value == true && onBoardingViewModel.existingSteps.value!!.contains(3) && onBoardingViewModel.existingSteps.value!!.contains(4)
                     ) {
 
                         signatureOnBoardingViewModel.insertSignatureInfo(
