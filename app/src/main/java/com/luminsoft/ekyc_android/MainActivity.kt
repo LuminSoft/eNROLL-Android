@@ -54,6 +54,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
+import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import io.github.cdimascio.dotenv.dotenv
 
 
@@ -256,7 +257,16 @@ class MainActivity : ComponentActivity() {
                 },
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
-                skipTutorial = skipTutorial.value
+                skipTutorial = skipTutorial.value,
+                appColors =   AppColors(
+                    black = Color.Red,
+                    backGround = Color.Red,
+                    primary = Color.Red,
+                    secondary = Color.Red,
+                    successColor =Color.Red
+                )
+
+//                myPrimaryColor = Color.Red
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())

@@ -4,6 +4,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
+import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 
 
 object EnrollSDK {
@@ -18,6 +19,9 @@ object EnrollSDK {
     var environment = EnrollEnvironment.STAGING
     var localizationCode = LocalizationCode.EN
     var skipTutorial = false
+    var appColors = AppColors()
+//    var myPrimaryColor = Color(0xFF1D56B8)
+
     var enrollCallback: EnrollCallback? = null
     lateinit var enrollMode: EnrollMode
 
