@@ -46,6 +46,7 @@ fun CheckAmlOnBoardingScreenContent(
     val loading = checkAmlOnBoardingViewModel.loading.collectAsState()
     val failure = checkAmlOnBoardingViewModel.failure.collectAsState()
     val amlChecked = checkAmlOnBoardingViewModel.amlChecked.collectAsState()
+    val amlSucceeded = checkAmlOnBoardingViewModel.amlSucceeded.collectAsState()
 
 
     var showDialog by remember { mutableStateOf(false) }
@@ -55,10 +56,8 @@ fun CheckAmlOnBoardingScreenContent(
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
 
-
-
     LaunchedEffect(amlChecked.value) {
-        if (amlChecked.value) {
+        if (amlSucceeded.value!=null && amlSucceeded.value!!) {
             val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.AmlCheck.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.successfulRegistration)
@@ -76,6 +75,20 @@ fun CheckAmlOnBoardingScreenContent(
                 showDialog = true
             }
         }
+        else if(amlSucceeded.value!=null && !amlSucceeded.value!!) {
+            dialogMessage = context.getString(R.string.kindly_check_aml_to_clear_your_name)
+            dialogButtonText = context.getString(R.string.exit)
+            dialogStatus = BottomSheetStatus.ERROR
+            dialogOnPressButton = {
+                activity.finish()
+                EnrollSDK.enrollCallback?.error(EnrollFailedModel(R.string.kindly_check_aml_to_clear_your_name.
+                toString(),R.string.kindly_check_aml_to_clear_your_name ))
+
+            }
+            showDialog = true
+
+        }
+
     }
 
 

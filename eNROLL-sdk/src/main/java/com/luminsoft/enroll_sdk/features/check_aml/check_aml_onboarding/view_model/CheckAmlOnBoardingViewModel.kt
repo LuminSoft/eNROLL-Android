@@ -19,6 +19,7 @@ class CheckAmlOnBoardingViewModel(
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
 
     var amlChecked: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var amlSucceeded: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
     init {
         callCheckAml()
@@ -45,7 +46,8 @@ class CheckAmlOnBoardingViewModel(
                 { s ->
                     s.let {
                         loading.value = false
-                        amlChecked.value = s.isWhiteListed!!
+                        amlChecked.value = true
+                        amlSucceeded.value = s.isWhiteListed!!
                     }
                 })
         }
