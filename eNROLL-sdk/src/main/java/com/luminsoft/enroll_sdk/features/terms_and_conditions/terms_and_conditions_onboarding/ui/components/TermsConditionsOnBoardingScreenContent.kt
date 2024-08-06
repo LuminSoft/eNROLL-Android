@@ -6,7 +6,6 @@ import GetTermsPdfFileByIdUseCase
 import TermsConditionsOnBoardingViewModel
 import android.app.Activity
 import android.graphics.Bitmap
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -65,38 +64,6 @@ fun TermsConditionsOnBoardingScreenContent(
     navController: NavController,
 ) {
 
-//    val lifecycleOwner = LocalLifecycleOwner.current
-//
-//    DisposableEffect(lifecycleOwner) {
-//        val observer = LifecycleEventObserver { _, event ->
-//            if (event == Lifecycle.Event.ON_START)
-//            {
-//                println("back presed")
-//                onBackPressedDispatcher.onBackPressed()
-//            }
-//        }
-//        lifecycleOwner.lifecycle.addObserver(observer)
-//        onDispose {
-//            lifecycleOwner.lifecycle.removeObserver(observer)
-//        }
-//    }
-//
-
-//@Override
-//public void onBackPressed() {
-//    super.onBackPressed()
-//}
-
-/*    object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            println("back presed")
-        }
-    }
-
-    BackHandler(true) {
-        println("back presed")
-        Log.d("TAG", "OnBackPressed")
-    }*/
 
     val getTermsIdUseCase = GetTermsIdUseCase(koinInject())
     val getTermsPdfFileByIdUseCase = GetTermsPdfFileByIdUseCase(koinInject())

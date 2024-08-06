@@ -1,3 +1,6 @@
+
+
+
 package com.luminsoft.enroll_sdk
 
 import android.os.Build
@@ -7,7 +10,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
@@ -56,7 +58,6 @@ import termsConditionsRouter
 @Suppress("DEPRECATION")
 class EnrollMainOnBoardingActivity : ComponentActivity() {
     val onBoardingViewModel: OnBoardingViewModel by viewModel()
-    var enableBackPress by mutableStateOf(true)
 
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
@@ -65,12 +66,10 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-        if (enableBackPress) {
-            super.onBackPressed()
-        } else {
-            // Do nothing to disable the back button
-        }
+
     }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
         setupServices()
@@ -84,7 +83,6 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
         }
 
         setContent {
-            val enableBackPressState = remember { mutableStateOf(true) }
 
             val onBoardingViewModel: OnBoardingViewModel = koinViewModel<OnBoardingViewModel>()
             val navController = rememberNavController()
@@ -92,7 +90,6 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
 
             EKYCsDKTheme(dynamicColor = false) {
                 NavHost(
-
                     navController = navController,
                     startDestination = getStartingRoute()
                 ) {
