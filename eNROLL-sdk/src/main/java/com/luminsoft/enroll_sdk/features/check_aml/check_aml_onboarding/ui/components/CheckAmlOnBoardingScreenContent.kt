@@ -1,4 +1,6 @@
+package com.luminsoft.enroll_sdk.features.check_aml.check_aml_onboarding.ui.components
 
+import CheckAmlUseCase
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,6 +15,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_onboarding.view_model.CheckAmlOnBoardingViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -29,9 +32,8 @@ fun CheckAmlOnBoardingScreenContent(
     navController: NavController,
 ) {
 
-    val checkAmlUseCase=
+    val checkAmlUseCase =
         CheckAmlUseCase(koinInject())
-
 
 
     val checkAmlOnBoardingViewModel =
@@ -57,7 +59,7 @@ fun CheckAmlOnBoardingScreenContent(
 
 
     LaunchedEffect(amlChecked.value) {
-        if (amlSucceeded.value!=null && amlSucceeded.value!!) {
+        if (amlSucceeded.value != null && amlSucceeded.value!!) {
             val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.AmlCheck.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.successfulRegistration)
@@ -74,15 +76,18 @@ fun CheckAmlOnBoardingScreenContent(
                 }
                 showDialog = true
             }
-        }
-        else if(amlSucceeded.value!=null && !amlSucceeded.value!!) {
+        } else if (amlSucceeded.value != null && !amlSucceeded.value!!) {
             dialogMessage = context.getString(R.string.kindly_check_aml_to_clear_your_name)
             dialogButtonText = context.getString(R.string.exit)
             dialogStatus = BottomSheetStatus.ERROR
             dialogOnPressButton = {
                 activity.finish()
-                EnrollSDK.enrollCallback?.error(EnrollFailedModel(R.string.kindly_check_aml_to_clear_your_name.
-                toString(),R.string.kindly_check_aml_to_clear_your_name ))
+                EnrollSDK.enrollCallback?.error(
+                    EnrollFailedModel(
+                        R.string.kindly_check_aml_to_clear_your_name.toString(),
+                        R.string.kindly_check_aml_to_clear_your_name
+                    )
+                )
 
             }
             showDialog = true
