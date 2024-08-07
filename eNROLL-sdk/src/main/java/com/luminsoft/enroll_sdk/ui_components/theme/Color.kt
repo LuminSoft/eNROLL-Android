@@ -11,6 +11,7 @@ data class AppColors(
     val black : Color= Color(0xff333333),
     val backGround: Color = Color(0xFFFFFFFF),
     val primary : Color= Color(0xFF1D56B8),
+    val onPrimary : Color= Color(0xFFFFFFFF),
     val secondary : Color= Color(0xFF1C1526),
     val successColor: Color = Color(0xff61CC3D),
     val warningColor: Color = Color(0xFFF9D548),
@@ -18,10 +19,18 @@ data class AppColors(
     val textColor : Color= Color(0xff004194),
     val defaultColor: Color = Color(0xffF6F9FF),
     val defaultBorderColor : Color= Color(0xff0054BF),
+    val inverseSurface : Color= Color(0xff0054BF),
+    val onSurface : Color= Color(0xff333333),
+    val inversePrimary : Color=  Color(0xffF6F9FF),
     val defaultTextColor: Color = Color(0xff5791DB),
     val unselectedDotColor: Color = Color(0xffEBEBEB),
-    val onSecondaryContainer: Color = Color(0xffDFE5F2)
-,    val onBackground: Color = Color(0xffFCFDFF)
+    val onSecondaryContainer: Color = Color(0xffDFE5F2),
+  val onBackground: Color = Color(0xffFCFDFF),
+  val inverseOnSurface: Color = Color(0xff5791DB),
+  val onSecondary: Color = Color(0xff5791DB),
+  val onTertiary: Color =  Color(0xffEBEBEB),
+  val tertiary: Color =  Color(0xFF1D56B8),
+
 
 
 )

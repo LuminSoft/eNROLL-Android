@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -52,7 +54,6 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
-import com.luminsoft.enroll_sdk.ui_components.theme.primary
 import org.koin.compose.koinInject
 
 
@@ -201,7 +202,7 @@ fun PdfViewerWidget(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenHeight * 0.6f)
-                    .border(BorderStroke(1.dp, primary))
+                    .border(BorderStroke(1.dp, MaterialTheme.appColors.primary))
                     .padding(8.dp)
             ) {
                 LazyColumn(

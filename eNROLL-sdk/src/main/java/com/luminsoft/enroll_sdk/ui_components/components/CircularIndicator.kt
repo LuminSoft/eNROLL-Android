@@ -1,21 +1,27 @@
 package com.luminsoft.enroll_sdk.ui_components.components
 
 import androidx.annotation.IntRange
-import androidx.compose.animation.core.*
-import androidx.compose.runtime.State
 import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.InfiniteTransition
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.StartOffset
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.geometry.Offset
+import appColors
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -25,7 +31,7 @@ fun SpinKitLoadingIndicator(
     modifier: Modifier = Modifier,
     size: Dp = 40.dp,
     durationMillis: Int = 800,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = MaterialTheme.appColors.primary,
     circleSizeRatio: Float = 1.0f
 ) {
     val transition = rememberInfiniteTransition()

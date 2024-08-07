@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import coil.compose.AsyncImage
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -303,9 +304,9 @@ private fun MainContent(
                             )
                         },
                         title = stringResource(id = R.string.exit),
-                        textColor = MaterialTheme.colorScheme.primary,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        borderColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.onPrimary,
+                        borderColor = MaterialTheme.appColors.primary,
                     )
                 }
         }

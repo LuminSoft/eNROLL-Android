@@ -26,10 +26,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
-import com.luminsoft.enroll_sdk.ui_components.theme.errorColor
-import com.luminsoft.enroll_sdk.ui_components.theme.successColor
-import com.luminsoft.enroll_sdk.ui_components.theme.warningColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,13 +46,13 @@ fun DialogView(
         },
         modifier = Modifier
             .clip(shape = RoundedCornerShape(15.dp))
-            .background(color = MaterialTheme.colorScheme.onPrimary),
+            .background(color = MaterialTheme.appColors.onPrimary),
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.onPrimary)
+                .background(color = MaterialTheme.appColors.onPrimary)
                 .safeContentPadding()
         ) {
             Column(
@@ -87,7 +85,7 @@ fun DialogView(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = text,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.appColors.onSurface,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 10.dp)
@@ -108,6 +106,7 @@ fun DialogView(
                                 onPressedButton()
                             },
                             title = buttonText,
+                            textColor = MaterialTheme.appColors.white,
                             color = getColor(bottomSheetStatus = bottomSheetStatus)
                         )
                     }
@@ -124,7 +123,7 @@ fun DialogView(
                                     onPressedSecondButton()
                                 },
                                 title = secondButtonText,
-                                color = MaterialTheme.colorScheme.onPrimary,
+                                color = MaterialTheme.appColors.onPrimary,
                                 borderColor = getColor(bottomSheetStatus = bottomSheetStatus),
                                 textColor = getColor(bottomSheetStatus = bottomSheetStatus)
                             )
@@ -138,18 +137,19 @@ fun DialogView(
     }
 }
 
+@Composable
 fun getColor(bottomSheetStatus: BottomSheetStatus): Color {
     return when (bottomSheetStatus) {
         BottomSheetStatus.SUCCESS -> {
-            successColor
+            MaterialTheme.appColors.successColor
         }
 
         BottomSheetStatus.WARNING -> {
-            warningColor
+            MaterialTheme.appColors.warningColor
         }
 
         BottomSheetStatus.ERROR -> {
-            errorColor
+            MaterialTheme.appColors.errorColor
         }
     }
 }

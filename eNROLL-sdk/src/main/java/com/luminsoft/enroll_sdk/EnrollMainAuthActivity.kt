@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk
 
+import EKYCsDKTheme
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -17,10 +18,10 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
-import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_di.faceCaptureAuthModule
-import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_di.checkExpiryDateAuthModule
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_navigation.checkExpiryDateAuthRouter
+import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_di.faceCaptureAuthModule
+import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_di.locationAuthModule
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_navigation.locationAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_di.mailAuthModule
@@ -34,7 +35,6 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.mainAuthRouter
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -70,7 +70,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
             val authViewModel: AuthViewModel = koinViewModel<AuthViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(dynamicColor = false) {
+            EKYCsDKTheme(dynamicColor = false, appColors = EnrollSDK.appColors) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import appColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +48,7 @@ fun BottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.onPrimary).safeContentPadding()
+                .background(color = MaterialTheme.appColors.onPrimary).safeContentPadding()
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -60,7 +61,7 @@ fun BottomSheet(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = text,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.appColors.onSurface,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
@@ -86,7 +87,7 @@ fun BottomSheet(
                                 onPressedSecondButton()
                             },
                             title = secondButtonText,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = MaterialTheme.appColors.onPrimary,
                             borderColor = getColor(bottomSheetStatus = bottomSheetStatus),
                             textColor = getColor(bottomSheetStatus = bottomSheetStatus)
                         )

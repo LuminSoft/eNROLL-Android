@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
+import appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
@@ -180,7 +181,7 @@ class MainActivity : ComponentActivity() {
                         Text(text.value)
                     }
                     Column {
-                        val border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                        val border = BorderStroke(1.dp, MaterialTheme.appColors.primary)
                         val modifier = Modifier
                             .fillMaxWidth()
                             .height(45.dp)
@@ -196,13 +197,13 @@ class MainActivity : ComponentActivity() {
                             },
                             contentPadding = PaddingValues(0.dp),
                             shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.appColors.primary),
 
                             ) {
                             Text(
                                 text = "Launch eNROLL",
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onPrimary
+                                color = MaterialTheme.appColors.onPrimary
                             )
                         }
                         Spacer(modifier = Modifier.height(20.dp))
@@ -258,15 +259,8 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors =   AppColors(
-                    black = Color.Red,
-                    backGround = Color.Red,
-                    primary = Color.Red,
-                    secondary = Color.Red,
-                    successColor =Color.Red
-                )
+                appColors =   AppColors()
 
-//                myPrimaryColor = Color.Red
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())

@@ -20,7 +20,6 @@ object EnrollSDK {
     var localizationCode = LocalizationCode.EN
     var skipTutorial = false
     var appColors = AppColors()
-//    var myPrimaryColor = Color(0xFF1D56B8)
 
     var enrollCallback: EnrollCallback? = null
     lateinit var enrollMode: EnrollMode
