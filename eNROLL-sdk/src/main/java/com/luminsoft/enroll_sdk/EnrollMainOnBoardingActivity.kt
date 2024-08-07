@@ -42,7 +42,6 @@ import com.luminsoft.enroll_sdk.main.main_navigation.mainRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import electronicSignatureModule
 import electronicSignatureRouter
 import org.koin.android.ext.koin.androidContext
@@ -128,6 +127,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             }
         }
     }
+
 
     private fun getKoin(activity: ComponentActivity): Koin {
         return if (activity is KoinComponent) {

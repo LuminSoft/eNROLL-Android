@@ -292,7 +292,7 @@ private fun ApplyForSignatureOrAlreadyHave(
         Spacer(modifier = Modifier.height(10.dp))
 
         Divider(
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.appColors.onSecondary,
             thickness = 3.dp,
             modifier = Modifier.width(50.dp)
         )
@@ -375,9 +375,9 @@ private fun ApplyForSignatureOrAlreadyHave(
             },
             stringResource(id = R.string.skip),
             modifier = Modifier.padding(horizontal = 20.dp),
-            textColor = MaterialTheme.colorScheme.primary,
-            color = MaterialTheme.colorScheme.onPrimary,
-            borderColor = MaterialTheme.colorScheme.primary,
+            textColor = MaterialTheme.appColors.primary,
+            color = MaterialTheme.appColors.onPrimary,
+            borderColor = MaterialTheme.appColors.primary,
         )
 
 
@@ -402,7 +402,7 @@ private fun Card(
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (step == chosenStep.value!!) Color.White else MaterialTheme.colorScheme.onBackground
+            containerColor = if (step == chosenStep.value!!) Color.White else MaterialTheme.appColors.onBackground
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 5.dp
@@ -410,7 +410,7 @@ private fun Card(
         modifier = Modifier
             .border(
                 width = if (step != chosenStep.value!!) 1.dp else 0.dp,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.appColors.onSecondaryContainer,
                 shape = RoundedCornerShape(12.dp)
             )
             .alpha(alpha)
