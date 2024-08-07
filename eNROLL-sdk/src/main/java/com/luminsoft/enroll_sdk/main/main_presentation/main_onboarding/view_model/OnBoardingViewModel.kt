@@ -3,6 +3,8 @@ package com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_mod
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -42,6 +44,10 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var userPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
+    var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
+    val existingSteps: MutableState<List<Int>?> = mutableStateOf(null)
     var requestId: MutableStateFlow<String?> = MutableStateFlow(null)
     var requestCallBackSent: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -71,6 +77,11 @@ class OnBoardingViewModel(
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
+    }
+
+
+    private fun extractRegistrationStepIds(steps: List<StepModel>) {
+        existingSteps.value = steps.map { it.registrationStepId!! }
     }
 
     fun initRequest() {
@@ -146,6 +157,8 @@ class OnBoardingViewModel(
                         }, { list ->
                             steps.value = list
                             loading.value = false
+                            extractRegistrationStepIds(list)
+
                             if(EnrollSDK.skipTutorial){
                                 initRequest()
                             }else{

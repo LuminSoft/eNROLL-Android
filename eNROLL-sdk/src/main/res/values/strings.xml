@@ -129,6 +129,7 @@
     <string name="intro7">You must select 3 security questions that you must answer.</string>
     <string name="intro8">Your Id will be verified by an anti-money laundering and anti-terrorism authority</string>
     <string name="intro9">You must read the terms and conditions and approve it in order to complete the registration</string>
+    <string name="intro10">to sign documents electronically, please follow the instructions on the screen</string>
     <string name="start_request">Start Request</string>
 
     <string name="done">Done</string>
@@ -142,6 +143,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="type_your_email">Enter email</string>
+    <string name="type_your_national_id">Enter national id</string>
+    <string name="invalid_national_id">Invalid national ID. It must be 14 digits.</string>
     <string name="type_your_password">Enter password</string>
     <string name="type_your_confirm_password">Confirm password</string>
     <string name="type_your_phoneNumber">Enter your phone number</string>
@@ -296,5 +299,13 @@
     <string name="readTermsAndConditions">Read Terms And Conditions</string>
     <string name="acceptTermsAndConditions">Accept Terms And Conditions</string>
     <string name="youMustApproveOurTermsToProceed">You must approve our terms and conditions in order to proceed</string>
+    <string name="kindly_check_aml_to_clear_your_name">kindly check AML to clear your name</string>
+
+
+    <string name="eSignature">E-signature</string>
+    <string name="applyForSignature">Apply for signature</string>
+    <string name="haveSignature">I have a signature</string>
+
+
 
 </resources>

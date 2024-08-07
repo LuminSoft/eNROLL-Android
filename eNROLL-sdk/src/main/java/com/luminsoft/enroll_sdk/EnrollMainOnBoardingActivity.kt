@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import applyElectronicSignatureContent
 import checkAmlModule
 import checkAmlRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -38,6 +42,9 @@ import com.luminsoft.enroll_sdk.main.main_navigation.mainRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import electronicSignatureModule
+import electronicSignatureRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,6 +65,11 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
         ResourceProvider.instance.initializeWithApplicationContext(this)
         RetroClient.setBaseUrl(EnrollSDK.getApisUrl())
     }
+
+    override fun onBackPressed() {
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
@@ -108,6 +120,10 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                         navController = navController,
                         onBoardingViewModel = onBoardingViewModel
                     )
+                    electronicSignatureRouter(
+                        navController = navController,
+                        onBoardingViewModel = onBoardingViewModel
+                    )
                 }
             }
         }
@@ -131,6 +147,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                 modules(phoneNumbersModule)
                 modules(securityQuestionsModule)
                 modules(passwordModule)
+                modules(electronicSignatureModule)
             }.koin
         }
     }
