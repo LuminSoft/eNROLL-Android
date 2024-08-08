@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -362,9 +363,9 @@ private fun MainContent(
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
-                        textColor = MaterialTheme.colorScheme.primary,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        borderColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.onPrimary,
+                        borderColor = MaterialTheme.appColors.primary,
                         title = stringResource(id = R.string.reScan)
                     )
                     Spacer(modifier = Modifier.height(100.dp))

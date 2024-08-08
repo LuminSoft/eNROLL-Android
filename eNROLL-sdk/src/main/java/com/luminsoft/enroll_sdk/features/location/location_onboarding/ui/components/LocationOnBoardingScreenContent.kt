@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import appColors
 import coil.compose.rememberAsyncImagePainter
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -288,8 +289,8 @@ private fun PermissionDenied(
             },
             stringResource(id = R.string.settings),
             color = Color.White,
-            borderColor = MaterialTheme.colorScheme.primary,
-            textColor = MaterialTheme.colorScheme.primary
+            borderColor = MaterialTheme.appColors.primary,
+            textColor = MaterialTheme.appColors.primary
         )
 
         ButtonView(
@@ -359,7 +360,7 @@ private fun GotLocation(
         Spacer(modifier = Modifier.height(20.dp))
 
         Divider(
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.appColors.secondary,
             thickness = 0.8.dp,
             modifier = Modifier.fillMaxWidth(0.8f)
         )
@@ -374,7 +375,7 @@ private fun GotLocation(
                 Icons.Filled.LocationOn,
                 "menu",
                 Modifier.size(55.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.appColors.primary
             )
 
             Column {
