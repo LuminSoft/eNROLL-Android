@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -173,13 +174,13 @@ fun ValidateOtpMailsScreenContent(
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
                         fontSize = 8.sp,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.appColors.primary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         onBoardingViewModel.mailValue.value!!.text,
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSecondary
+                        color = MaterialTheme.appColors.onSecondary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Box {
@@ -187,7 +188,7 @@ fun ValidateOtpMailsScreenContent(
                             modifier = Modifier
                                 .matchParentSize()
                                 .background(
-                                    MaterialTheme.colorScheme.onSecondary,
+                                    MaterialTheme.appColors.onSecondary,
                                     shape = RoundedCornerShape(0.dp)
                                 ),
 
@@ -217,13 +218,13 @@ fun ValidateOtpMailsScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.appColors.primary,
                         fontSize = 10.sp
                     )
                     timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.appColors.primary,
                         fontSize = 10.sp
                     )
                 }
@@ -232,7 +233,7 @@ fun ValidateOtpMailsScreenContent(
                 if (onBoardingViewModel.isNotFirstMail.value && ticks == 0)
                     Text(
                         text = stringResource(id = R.string.resend),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.appColors.primary,
                         fontSize = 14.sp,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
@@ -265,9 +266,9 @@ fun ValidateOtpMailsScreenContent(
                             counter++
                         },
                         title = stringResource(id = R.string.resend),
-                        textColor = MaterialTheme.colorScheme.primary,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        borderColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.onPrimary,
+                        borderColor = MaterialTheme.appColors.primary,
                     ) else
                     ButtonView(
                         onClick = {
@@ -275,9 +276,9 @@ fun ValidateOtpMailsScreenContent(
                             navController.navigate(multipleMailsScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
-                        textColor = MaterialTheme.colorScheme.primary,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        borderColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.onPrimary,
+                        borderColor = MaterialTheme.appColors.primary,
                     )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -292,18 +293,18 @@ private fun timer(ticksF: Float, ticks: Int) {
         CircularProgressIndicator(
             progress = 1f,
             modifier = Modifier.size(30.dp),
-            color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f),
+            color = MaterialTheme.appColors.onSecondary.copy(alpha = 0.5f),
             strokeWidth = 3.dp
         )
         CircularProgressIndicator(
             progress = ticksF,
             modifier = Modifier.size(30.dp),
             strokeWidth = 3.dp,
-            color = MaterialTheme.colorScheme.onSecondary
+            color = MaterialTheme.appColors.onSecondary
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.appColors.onSecondary,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )

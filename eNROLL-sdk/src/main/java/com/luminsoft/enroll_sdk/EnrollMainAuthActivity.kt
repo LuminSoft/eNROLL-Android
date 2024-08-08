@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk
 
+import EKYCsDKTheme
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -34,7 +35,6 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.mainAuthRouter
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -73,7 +73,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
             val authViewModel: AuthViewModel = koinViewModel<AuthViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(dynamicColor = false) {
+            EKYCsDKTheme(dynamicColor = false, appColors = EnrollSDK.appColors) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()

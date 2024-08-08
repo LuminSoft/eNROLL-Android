@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -54,7 +55,6 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
-import com.luminsoft.enroll_sdk.ui_components.theme.primary
 import org.koin.compose.koinInject
 
 
@@ -63,7 +63,6 @@ fun TermsConditionsOnBoardingScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
     navController: NavController,
 ) {
-
 
     val getTermsIdUseCase = GetTermsIdUseCase(koinInject())
     val getTermsPdfFileByIdUseCase = GetTermsPdfFileByIdUseCase(koinInject())
@@ -193,7 +192,7 @@ fun PdfViewerWidget(
                 text = stringResource(id = R.string.readTermsAndConditions),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = primary,
+                color = MaterialTheme.appColors.primary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -201,7 +200,7 @@ fun PdfViewerWidget(
             )
 
             Divider(
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.appColors.primary,
                 thickness = 4.dp,
                 modifier = Modifier.width(50.dp).align(Alignment.CenterHorizontally)
             )
@@ -212,7 +211,7 @@ fun PdfViewerWidget(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenHeight * 0.6f)
-                    .border(BorderStroke(1.dp, primary))
+                    .border(BorderStroke(1.dp, MaterialTheme.appColors.primary))
                     .padding(8.dp)
             ) {
                 LazyColumn(
@@ -245,11 +244,10 @@ fun PdfViewerWidget(
                 ButtonView(
                     onClick = { showConfirmationDialog = true },
                     title = stringResource(id = R.string.exit),
-                    textColor = MaterialTheme.colorScheme.primary,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    borderColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.onPrimary,
+                    borderColor = MaterialTheme.appColors.primary,
                 )
-
 
             }
         }

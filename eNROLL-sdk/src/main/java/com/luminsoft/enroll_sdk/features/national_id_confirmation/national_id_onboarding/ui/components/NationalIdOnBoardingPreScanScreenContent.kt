@@ -45,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
@@ -228,7 +229,7 @@ private fun NationalIdOrPassport(
         Spacer(modifier = Modifier.height(10.dp))
 
         Divider(
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.appColors.onSecondary,
             thickness = 3.dp,
             modifier = Modifier.width(50.dp)
         )
@@ -274,7 +275,7 @@ private fun card(
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (step == chosenStep.value!!) Color.White else MaterialTheme.colorScheme.onBackground
+            containerColor = if (step == chosenStep.value!!) Color.White else MaterialTheme.appColors.onBackground
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 5.dp
@@ -282,7 +283,7 @@ private fun card(
         modifier = Modifier
             .border(
                 width = if (step != chosenStep.value!!) 1.dp else 0.dp,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.appColors.onSecondaryContainer,
                 shape = RoundedCornerShape(12.dp)
             )
             .alpha(alpha)
