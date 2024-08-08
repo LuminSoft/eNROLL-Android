@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
@@ -227,7 +229,7 @@ private fun NationalIdOrPassport(
         Spacer(modifier = Modifier.height(10.dp))
 
         Divider(
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.appColors.onSecondary,
             thickness = 3.dp,
             modifier = Modifier.width(50.dp)
         )
@@ -273,7 +275,7 @@ private fun card(
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (step == chosenStep.value!!) Color.White else MaterialTheme.colorScheme.onBackground
+            containerColor = if (step == chosenStep.value!!) Color.White else MaterialTheme.appColors.onBackground
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 5.dp
@@ -281,7 +283,7 @@ private fun card(
         modifier = Modifier
             .border(
                 width = if (step != chosenStep.value!!) 1.dp else 0.dp,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.appColors.onSecondaryContainer,
                 shape = RoundedCornerShape(12.dp)
             )
             .alpha(alpha)
@@ -290,30 +292,33 @@ private fun card(
             },
 
         ) {
-
         Column(
             modifier = Modifier
                 .fillMaxHeight(0.3f)
                 .fillMaxWidth(),
-
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
-            Image(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.45f),
-                painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
-                contentScale = ContentScale.Fit,
-                contentDescription = "Victor Ekyc Item"
-            )
+                    .fillMaxWidth(0.45f)
+                    .aspectRatio(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
+                    contentScale = ContentScale.Fit,
+                    contentDescription = "Victor Ekyc Item"
+                )
+            }
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalId else R.string.passport),
                 fontSize = 12.sp
             )
-
         }
+
     }
 }
 

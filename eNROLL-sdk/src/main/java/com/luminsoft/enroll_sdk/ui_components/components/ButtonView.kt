@@ -14,15 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import appColors
 
 @Composable
 fun ButtonView(
     onClick: () -> Unit,
     title: String,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = MaterialTheme.appColors.primary,
     borderColor: Color? = null,
     isEnabled: Boolean = true,
-    textColor: Color = MaterialTheme.colorScheme.onPrimary,
+    textColor: Color = MaterialTheme.appColors.white,
     width: Double? = null,
     height: Double = 45.0,
     modifier: Modifier = Modifier,

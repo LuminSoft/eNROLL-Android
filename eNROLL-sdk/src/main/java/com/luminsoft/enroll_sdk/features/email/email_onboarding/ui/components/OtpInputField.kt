@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import appColors
 import kotlinx.coroutines.launch
 
 
@@ -54,7 +55,7 @@ fun OtpInputField(
     otp: MutableState<String>, // The current OTP value.
     count: Int = 6, // Number of OTP boxes.
     otpTextType: KeyboardType = KeyboardType.Number,
-    textColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = MaterialTheme.appColors.primary,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -96,7 +97,7 @@ fun OtpInputField(
             OtpBox(
                 modifier = Modifier
                     .bottomStroke(
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.appColors.primary,
                         strokeWidth = 5.pxToDp()
                     ),
                 otpValue = otpFieldsValues[index].value,
@@ -187,7 +188,7 @@ private fun OtpBox(
     modifier: Modifier,
     otpValue: OtpField, // Current value of this OTP box.
     textType: KeyboardType = KeyboardType.Number,
-    textColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = MaterialTheme.appColors.primary,
     isLastItem: Boolean, // Whether this box is the last in the sequence.
     totalBoxCount: Int, // Total number of OTP boxes for layout calculations.
     onValueChange: (String) -> Unit, // Callback for when the value changes.
@@ -215,7 +216,7 @@ private fun OtpBox(
                     onValueChange(it.text)
                 }
             },
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            cursorBrush = SolidColor(MaterialTheme.appColors.primary),
             modifier = Modifier
                 .testTag("otpBox${otpValue.index}")
                 .focusRequester(focusRequest)

@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -287,7 +288,7 @@ private fun AnswerTextField(
         if (answerError.value != null)
             Text(
                 answerError.value!!,
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
     }
@@ -331,7 +332,7 @@ fun DropdownList(
                 Icon(
                     icon, "contentDescription",
                     Modifier.clickable { mExpanded = !mExpanded },
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.appColors.primary
                 )
             },
             leadingIcon = {
@@ -349,7 +350,7 @@ fun DropdownList(
         if (selectQuestionError.value)
             Text(
                 text = stringResource(id = R.string.required_question),
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
 
@@ -390,9 +391,9 @@ private fun textFieldColors() = TextFieldDefaults.colors(
     focusedTextColor = Color.Black,
     unfocusedTextColor = Color.Black,
     disabledTextColor = Color.Black,
-    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
-    disabledIndicatorColor = MaterialTheme.colorScheme.primary,
+    focusedIndicatorColor = MaterialTheme.appColors.primary,
+    unfocusedIndicatorColor = MaterialTheme.appColors.primary,
+    disabledIndicatorColor = MaterialTheme.appColors.primary,
 )
 
 @Composable
@@ -420,7 +421,7 @@ fun Step(
     isFirstItem: Boolean
 ) {
     val color =
-        if (isCompete || isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onTertiary
+        if (isCompete || isCurrent) MaterialTheme.appColors.primary else MaterialTheme.appColors.onTertiary
 
     Box(modifier = modifier) {
 

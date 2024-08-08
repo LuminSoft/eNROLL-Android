@@ -184,7 +184,7 @@ fun SecurityQuestionAuthScreenContent(
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Divider(
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.appColors.primary,
                             thickness = 1.2.dp,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -260,7 +260,7 @@ private fun AnswerTextField(
             println(" second answerError.value ${answerError.value}")
             Text(
                 answerError.value!!,
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
         }
@@ -277,9 +277,9 @@ private fun textFieldColors() = TextFieldDefaults.colors(
     focusedTextColor = Color.Black,
     unfocusedTextColor = Color.Black,
     disabledTextColor = Color.Black,
-    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
-    disabledIndicatorColor = MaterialTheme.colorScheme.primary,
+    focusedIndicatorColor = MaterialTheme.appColors.primary,
+    unfocusedIndicatorColor = MaterialTheme.appColors.primary,
+    disabledIndicatorColor = MaterialTheme.appColors.primary,
 )
 
 
