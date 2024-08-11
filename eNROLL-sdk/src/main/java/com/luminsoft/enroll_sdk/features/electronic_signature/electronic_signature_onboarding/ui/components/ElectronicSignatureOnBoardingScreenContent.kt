@@ -126,10 +126,9 @@ fun ElectronicSignatureOnBoardingScreenContent(
 
     LaunchedEffect(haveSignature.value) {
         if (haveSignature.value!!) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.successfulRegistration)
+                dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
@@ -151,7 +150,7 @@ fun ElectronicSignatureOnBoardingScreenContent(
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.successfulRegistration)
+                dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
