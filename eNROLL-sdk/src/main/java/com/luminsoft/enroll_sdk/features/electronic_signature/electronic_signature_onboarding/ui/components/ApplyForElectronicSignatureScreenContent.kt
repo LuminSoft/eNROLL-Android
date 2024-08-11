@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,7 +57,7 @@ fun ApplyForElectronicSignatureScreenContent(
         remember {
             ElectronicSignatureOnBoardingViewModel(
                 electronicSignatureUseCase = electronicSignatureUseCase,
-                checkUserHasNationalIdUseCase=checkUserHasNationalIdUseCase
+                checkUserHasNationalIdUseCase = checkUserHasNationalIdUseCase
             )
         }
     val context = LocalContext.current
@@ -67,7 +66,8 @@ fun ApplyForElectronicSignatureScreenContent(
 
     val loading = electronicSignatureOnBoardingViewModel.loading.collectAsState()
     val failure = electronicSignatureOnBoardingViewModel.failure.collectAsState()
-    val applySignatureSucceed = electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
+    val applySignatureSucceed =
+        electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
 
 
     var showDialog by remember { mutableStateOf(false) }
@@ -142,7 +142,7 @@ fun ApplyForElectronicSignatureScreenContent(
 //                            showDialog = false
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value?.text!!,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value!!.text
                             )
@@ -172,7 +172,7 @@ fun ApplyForElectronicSignatureScreenContent(
             ) {
                 Spacer(modifier = Modifier.weight(0.5f))
 
-                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==false) {
+                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == false) {
                     NationalIdTextField(electronicSignatureOnBoardingViewModel)
                     Spacer(modifier = Modifier.height(15.dp))
                 }
@@ -195,9 +195,8 @@ fun ApplyForElectronicSignatureScreenContent(
 
                         var isValid = true
 
-
-                        if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==false) {
-                            if (electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text?.length != 14) {
+                        if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == false) {
+                            if (electronicSignatureOnBoardingViewModel.nationalIdValue.value.text.length != 14) {
                                 electronicSignatureOnBoardingViewModel.nationalIdError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
                                 isValid = false
@@ -205,18 +204,21 @@ fun ApplyForElectronicSignatureScreenContent(
                         }
 
                         if (!onBoardingViewModel.existingSteps.value!!.contains(4)) {
+
                             emailFormatValidation(electronicSignatureOnBoardingViewModel)
-                            if (electronicSignatureOnBoardingViewModel.emailValue.value!!.text.isEmpty()) {
+                            if (electronicSignatureOnBoardingViewModel.emailValue.value.text.isEmpty()) {
                                 electronicSignatureOnBoardingViewModel.emailError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
                                 isValid = false
+                            } else if (!Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}").matches(electronicSignatureOnBoardingViewModel.emailValue.value.text)) {
+                                electronicSignatureOnBoardingViewModel.emailError.value =
+                                    ResourceProvider.instance.getStringResource(R.string.invalid_email)
+                                isValid = false
                             }
-
                         }
 
-
                         if (!onBoardingViewModel.existingSteps.value!!.contains(3)) {
-                            if (!Regex("^(\\+20|0)?1[0125][0-9]{8}\$").matches(electronicSignatureOnBoardingViewModel.phoneNumberValue.value!!.text)) {
+                            if (!Regex("^(\\+20|0)?1[0125][0-9]{8}\$").matches(electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text)) {
                                 electronicSignatureOnBoardingViewModel.phoneNumberError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
                                 isValid = false
@@ -227,9 +229,9 @@ fun ApplyForElectronicSignatureScreenContent(
 
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value!!.text   ,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value!!.text
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value.text
 
                             )
 
