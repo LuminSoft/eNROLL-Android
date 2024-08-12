@@ -81,7 +81,7 @@ fun ApplyForElectronicSignatureScreenContent(
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.successfulRegistration)
+                dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
@@ -142,9 +142,9 @@ fun ApplyForElectronicSignatureScreenContent(
 //                            showDialog = false
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value?.text!!,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value!!.text
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value.text
                             )
 
                         },
@@ -202,6 +202,9 @@ fun ApplyForElectronicSignatureScreenContent(
                                 isValid = false
                             }
                         }
+
+
+
 
                         if (!onBoardingViewModel.existingSteps.value!!.contains(4)) {
 
