@@ -249,7 +249,6 @@ fun ValidateOtpMailsScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
-                        onBoardingViewModel.userMail.value = onBoardingViewModel.mailValue.value?.text
                         onBoardingViewModel.mailValue.value = TextFieldValue()
                         mailsOnBoardingVM.callValidateOtp(otpValue.value)
                     },

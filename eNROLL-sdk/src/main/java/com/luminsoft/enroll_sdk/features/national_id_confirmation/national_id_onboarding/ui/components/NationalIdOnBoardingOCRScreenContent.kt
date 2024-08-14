@@ -240,7 +240,6 @@ private fun MainContent(
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
                 }
-            onBoardingViewModel.userNationalId.value = customerData.value?.idNumber
             setCustomerId(onBoardingViewModel, customerData)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

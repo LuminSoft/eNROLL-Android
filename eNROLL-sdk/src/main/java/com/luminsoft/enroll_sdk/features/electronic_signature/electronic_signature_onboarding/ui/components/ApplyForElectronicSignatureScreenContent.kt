@@ -60,6 +60,7 @@ fun ApplyForElectronicSignatureScreenContent(
                 checkUserHasNationalIdUseCase = checkUserHasNationalIdUseCase
             )
         }
+
     val context = LocalContext.current
     val activity = context.findActivity()
 
@@ -142,9 +143,9 @@ fun ApplyForElectronicSignatureScreenContent(
 //                            showDialog = false
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value.text
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) "" else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) "" else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) "" else electronicSignatureOnBoardingViewModel.emailValue.value.text
                             )
 
                         },
@@ -204,11 +205,10 @@ fun ApplyForElectronicSignatureScreenContent(
                         }
 
 
-
-
                         if (!onBoardingViewModel.existingSteps.value!!.contains(4)) {
 
                             emailFormatValidation(electronicSignatureOnBoardingViewModel)
+
                             if (electronicSignatureOnBoardingViewModel.emailValue.value.text.isEmpty()) {
                                 electronicSignatureOnBoardingViewModel.emailError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
@@ -229,19 +229,13 @@ fun ApplyForElectronicSignatureScreenContent(
                         }
 
                         if (isValid) {
-
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value.text
-
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) "" else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) "" else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) "" else electronicSignatureOnBoardingViewModel.emailValue.value.text
                             )
-
-
                         }
-
-
                     },
                     stringResource(id = R.string.confirmAndContinue),
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
@@ -368,7 +362,7 @@ fun EmailTextField(
 
     NormalTextField(
         label = ResourceProvider.instance.getStringResource(R.string.type_your_email),
-        value = mailValue.value!!,
+        value = mailValue.value,
         height = 60.0,
         icon = {
             Image(

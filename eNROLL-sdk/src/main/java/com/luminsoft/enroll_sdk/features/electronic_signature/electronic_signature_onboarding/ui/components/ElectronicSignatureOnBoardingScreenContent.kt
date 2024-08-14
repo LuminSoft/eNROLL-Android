@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -100,12 +101,33 @@ fun ElectronicSignatureOnBoardingScreenContent(
     var dialogButtonText by remember { mutableStateOf("") }
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
+    fun removeCurrentStep(id: Int): Boolean {
+        if (onBoardingViewModel.steps.value != null) {
+            val stepsSize = onBoardingViewModel.steps.value!!.size
+            onBoardingViewModel.steps.value = onBoardingViewModel.steps.value!!.toMutableList().apply {
+                removeIf { x -> x.registrationStepId == id }
+            }.toList()
+            val newStepsSize = onBoardingViewModel.steps.value!!.size
+            if (stepsSize != newStepsSize) {
+                return if (onBoardingViewModel.steps.value!!.isNotEmpty()) {
+                    false
+                } else
+                    true
+            }
+        }
+        return false
+    }
+     fun navigateToNextStep() {
+        onBoardingViewModel.mailValue.value = TextFieldValue()
+         onBoardingViewModel.currentPhoneNumber.value = null
+        navController!!.navigate(onBoardingViewModel.steps.value!!.first().stepNameNavigator())
+    }
 
 
     LaunchedEffect(skipped.value) {
         if (skipped.value!!) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+
+            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.successfulRegistration)
                 dialogButtonText = context.getString(R.string.continue_to_next)
@@ -121,12 +143,13 @@ fun ElectronicSignatureOnBoardingScreenContent(
                 }
                 showDialog = true
             }
+
         }
     }
 
     LaunchedEffect(haveSignature.value) {
         if (haveSignature.value!!) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+            val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
                 dialogButtonText = context.getString(R.string.continue_to_next)
@@ -142,6 +165,17 @@ fun ElectronicSignatureOnBoardingScreenContent(
                 }
                 showDialog = true
             }
+            else {
+                dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
+                dialogButtonText = context.getString(R.string.continue_to_next)
+                dialogStatus = BottomSheetStatus.WARNING
+                dialogOnPressButton = {
+                    navigateToNextStep()
+                }
+                showDialog = true
+            }
+
+
         }
     }
 
@@ -213,9 +247,9 @@ fun ElectronicSignatureOnBoardingScreenContent(
                                 1 -> {
                                     electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                         1,
-                                        onBoardingViewModel.userNationalId.value ?: "",
-                                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                                        onBoardingViewModel.userMail.value ?: ""
+                                         "",
+                                        "",
+                                         ""
 
                                         )
                                 }
@@ -223,9 +257,9 @@ fun ElectronicSignatureOnBoardingScreenContent(
                                 2 -> {
                                     electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                         2,
-                                        onBoardingViewModel.userNationalId.value ?: "",
-                                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                                        onBoardingViewModel.userMail.value ?: ""
+                                        "",
+                                         "",
+                                         ""
 
                                         )
                                 }
@@ -233,9 +267,9 @@ fun ElectronicSignatureOnBoardingScreenContent(
                                 3 -> {
                                     electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                         3,
-                                        onBoardingViewModel.userNationalId.value ?: "",
-                                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                                        onBoardingViewModel.userMail.value ?: ""
+                                         "",
+                                         "",
+                                         ""
                                     )
                                 }
 
@@ -327,9 +361,9 @@ private fun ApplyForSignatureOrAlreadyHave(
 
                     signatureOnBoardingViewModel.insertSignatureInfo(
                         1,
-                        onBoardingViewModel.userNationalId.value ?: "",
-                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                        onBoardingViewModel.userMail.value ?: "",
+                         "",
+                         "",
+                         "",
 
                         )
                 }
@@ -341,9 +375,9 @@ private fun ApplyForSignatureOrAlreadyHave(
 
                         signatureOnBoardingViewModel.insertSignatureInfo(
                             2,
-                            onBoardingViewModel.userNationalId.value!!,
-                            onBoardingViewModel.userPhoneNumber.value!!,
-                            onBoardingViewModel.userMail.value!!,
+                         "",
+                            "",
+                            "",
                             )
                     } else {
 
@@ -365,9 +399,9 @@ private fun ApplyForSignatureOrAlreadyHave(
 
                 signatureOnBoardingViewModel.insertSignatureInfo(
                     3,
-                    onBoardingViewModel.userNationalId.value ?: "",
-                    onBoardingViewModel.userPhoneNumber.value ?: "",
-                    onBoardingViewModel.userMail.value ?: "",
+                     "",
+                     "",
+                     "",
 
                     )
 

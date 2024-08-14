@@ -63,7 +63,6 @@ class ElectronicSignatureOnBoardingViewModel(
 
 
 
-
 private fun handleSuccess(status: Int) {
     loading.value = false
     when (status) {
@@ -125,7 +124,6 @@ private fun handleSuccess(status: Int) {
                     loading.value = false
                 },
                 {
-                    println("testtt $it")
                     userHasNationalId.value = it
                     loading.value = false
 

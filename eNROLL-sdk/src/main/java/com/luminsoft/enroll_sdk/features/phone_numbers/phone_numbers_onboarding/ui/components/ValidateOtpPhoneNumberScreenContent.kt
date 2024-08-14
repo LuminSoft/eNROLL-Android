@@ -249,7 +249,6 @@ fun ValidateOtpPhoneNumberScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
-                        onBoardingViewModel.userPhoneNumber.value = onBoardingViewModel.currentPhoneNumber.value
                         onBoardingViewModel.currentPhoneNumber.value = null
                         phoneNumbersOnBoardingVM.callValidateOtp(otpValue.value)
                     },
