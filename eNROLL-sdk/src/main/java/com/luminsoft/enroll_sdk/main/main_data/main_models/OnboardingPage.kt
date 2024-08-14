@@ -75,4 +75,10 @@ sealed class OnBoardingPage(
         stringValue = "TermsAndConditionsPage",
         text = R.string.intro9
     )
+
+    data object ElectronicSignaturePage : OnBoardingPage(
+        image = R.drawable.terms_conditions,
+        stringValue = "ElectronicSignaturePage",
+        text = R.string.intro10
+    )
 }

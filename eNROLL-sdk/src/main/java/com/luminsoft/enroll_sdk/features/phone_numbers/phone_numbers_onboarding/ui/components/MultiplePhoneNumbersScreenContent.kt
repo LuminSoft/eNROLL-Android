@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -184,9 +185,9 @@ fun MultiplePhoneNumbersScreenContent(
                         navController.navigate(phoneNumbersOnBoardingScreenContent)
                     },
                     title = stringResource(id = R.string.addPhoneNumber),
-                    textColor = MaterialTheme.colorScheme.primary,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    borderColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.onPrimary,
+                    borderColor = MaterialTheme.appColors.primary,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -214,9 +215,9 @@ private fun phoneItem(
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(
             1.dp,
-            if (model.isDefault!!) MaterialTheme.colorScheme.inverseSurface else Color.White
+            if (model.isDefault!!) MaterialTheme.appColors.inverseSurface else Color.White
         ),
-        backgroundColor = if (model.isDefault!!) MaterialTheme.colorScheme.inversePrimary else Color.White,
+        backgroundColor = if (model.isDefault!!) MaterialTheme.appColors.inversePrimary else Color.White,
         modifier = Modifier
             .padding(top = 5.dp)
             .padding(top = 0.dp)
@@ -239,7 +240,7 @@ private fun phoneItem(
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
                     text = model.phoneNumber!!,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.appColors.onSurface
                 )
             }
             if (model.isDefault!!)
@@ -264,14 +265,14 @@ private fun phoneItem(
                             modifier = Modifier
                                 .matchParentSize()
                                 .background(
-                                    MaterialTheme.colorScheme.inverseOnSurface,
+                                    MaterialTheme.appColors.inverseOnSurface,
                                     shape = RoundedCornerShape(15.dp)
                                 ),
 
                             )
                         Text(
                             text = stringResource(id = R.string.make_default),
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = MaterialTheme.appColors.onPrimary,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {

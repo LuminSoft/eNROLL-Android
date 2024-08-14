@@ -129,6 +129,7 @@
     <string name="intro7">You must select 3 security questions that you must answer.</string>
     <string name="intro8">Your Id will be verified by an anti-money laundering and anti-terrorism authority</string>
     <string name="intro9">You must read the terms and conditions and approve it in order to complete the registration</string>
+    <string name="intro10">to sign documents electronically, please follow the instructions on the screen</string>
     <string name="start_request">Start Request</string>
 
     <string name="done">Done</string>
@@ -142,6 +143,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="type_your_email">Enter email</string>
+    <string name="type_your_national_id">Enter national id</string>
+    <string name="invalid_national_id">Invalid national ID. It must be 14 digits.</string>
     <string name="type_your_password">Enter password</string>
     <string name="type_your_confirm_password">Confirm password</string>
     <string name="type_your_phoneNumber">Enter your phone number</string>
@@ -204,6 +207,8 @@
     <string name="someThingWentWrong">Something went wrong</string>
     <string name="re_createAccount">Recreate account</string>
     <string name="successfulRegistration">Account successfully created</string>
+    <string name="you_would_be_required_to_sign_documents_later_on">You would be required to sign documents later on</string>
+    <string name="we_will_contact_you_to_receive_the_physical_token">We will contact you to receive the physical token</string>
     <string name="noDocumentTypeBeforeSmileLiveness">No document data before SmileLiveness</string>
     <string name="nameEn">Name in English</string>
     <string name="nameAr">Name in Arabic</string>
@@ -296,6 +301,14 @@
     <string name="readTermsAndConditions">Read Terms And Conditions</string>
     <string name="acceptTermsAndConditions">Accept Terms And Conditions</string>
     <string name="youMustApproveOurTermsToProceed">You must approve our terms and conditions in order to proceed</string>
+    <string name="kindly_check_aml_to_clear_your_name">kindly check AML to clear your name</string>
+
+
+    <string name="eSignature">E-signature</string>
+    <string name="applyForSignature">Apply for signature</string>
+    <string name="haveSignature">I have a signature</string>
+
+
     <string name="youCanSelectOneItem">You can select one item</string>
     <string name="updateNationalId">Update National Id</string>
     <string name="updatePassport">Update Passport</string>

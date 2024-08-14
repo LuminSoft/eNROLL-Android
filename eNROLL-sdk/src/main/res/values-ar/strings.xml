@@ -124,6 +124,8 @@
     <string name="intro7">يجب إختيار 3 أسئلة أمان لإتمام عملية التسجيل بنجاح</string>
     <string name="intro8">سيتم التحقق من البطاقة من جهة مكافحة غسيل الأموال والإرهاب</string>
     <string name="intro9">يجب عليك قراءة الشروط والأحكام والموافقة عليها حتى تتمكن من إكمال التسجيل</string>
+    <string name="intro10">لتوقيع المستندات إلكترونيًا، يرجى اتباع التعليمات التي تظهر على الشاشة</string>
+
 
     <string name="start_request">ابدا الفحص</string>
 
@@ -138,6 +140,9 @@
     <string name="male">ذكر</string>
     <string name="female">أنثى</string>
     <string name="type_your_email">أدخل البريد الإلكتروني</string>
+    <string name="type_your_national_id">أدخل رقم البطاقة</string>
+    <string name="invalid_national_id">رقم البطاقة غير صالح. يجب أن يتكون من 14 رقمًا.</string>
+
     <string name="type_your_password">أدخل كلمة المرور</string>
     <string name="type_your_confirm_password">أدخل تأكيد كلمة المرور</string>
     <string name="type_your_phoneNumber">أدخل رقم المحمول</string>
@@ -201,6 +206,8 @@
     <string name="someThingWentWrong">حدث خطأ</string>
     <string name="re_createAccount">إعادة إنشاء الحساب</string>
     <string name="successfulRegistration">تم إنشاء الحساب بنجاح</string>
+    <string name="you_would_be_required_to_sign_documents_later_on">سوف يُطلب منك التوقيع على المستندات لاحقًا</string>
+    <string name="we_will_contact_you_to_receive_the_physical_token">سوف نتصل بك لإستلام التوقيع الإلكتروني</string>
     <string name="noDocumentTypeBeforeSmileLiveness">لا يوجد تأكيد بطاقة قبل مطابقة الصورة</string>
     <string name="nameEn">الإسم بالإنجليزية</string>
     <string name="nameAr">الإسم بالعربي</string>
@@ -296,6 +303,13 @@
     <string name="readTermsAndConditions">اقرأ الشروط والأحكام</string>
     <string name="acceptTermsAndConditions">أوافق على الشروط و الأحكام</string>
     <string name="youMustApproveOurTermsToProceed">يجب عليك الموافقة على شروطنا وأحكامنا حتى تتمكن من المتابعة</string>
+
+    <string name="kindly_check_aml_to_clear_your_name">يرجى التحقق من غسيل الأموال لمسح اسمك</string>
+
+    <string name="eSignature">التوقيع الالكتروني</string>
+    <string name="applyForSignature">طلب توقيع الكتروني</string>
+    <string name="haveSignature">لدي توقيع الكتروني</string>
+
     <string name="youCanSelectOneItem">يمكنك تحديد عنصر واحد</string>
     <string name="updateNationalId">تحديث البطاقة</string>
     <string name="updatePassport">تحديث جواز السفر</string>

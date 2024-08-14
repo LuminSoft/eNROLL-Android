@@ -1,4 +1,3 @@
-package com.luminsoft.enroll_sdk.ui_components.theme
 
 import android.app.Activity
 import android.os.Build
@@ -7,64 +6,74 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
+import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+import com.luminsoft.enroll_sdk.ui_components.theme.sdkTypography
+import com.luminsoft.enroll_sdk.ui_components.theme.sdkTypographyEn
 
 
-private val LightColorScheme = lightColorScheme(
-    primary = primary,
-    secondary = secondary,
-    tertiary = medium,
-    background = backGround,
-    onPrimary = white,
-    onSurface = black,
-    onSecondary = hintGrey,
-    error = errorColor,
-    inversePrimary = defaultColor,
-    inverseSurface = defaultBorderColor,
-    inverseOnSurface = defaultTextColor,
-    onTertiary = unselectedDotColor,
-    onSecondaryContainer = onSecondaryContainer,
-    onBackground = onBackground,
-    outline = textColor
+val LocalAppColors = staticCompositionLocalOf { AppColors() }
 
-)
-private val DarkColorScheme = darkColorScheme(
-    primary = primary,
-    secondary = secondary,
-    tertiary = medium,
-    background = backGround,
-    onPrimary = white,
-    onSurface = black,
-    onSecondary = hintGrey,
-    error = errorColor,
-    inversePrimary = defaultColor,
-    inverseSurface = defaultBorderColor,
-    inverseOnSurface = defaultTextColor,
-    onTertiary = unselectedDotColor,
-    onSecondaryContainer = onSecondaryContainer,
-    onBackground = onBackground,
-    outline = textColor
-)
+
 
 @Composable
 fun EKYCsDKTheme(
+    appColors: AppColors,
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     localizationCode: LocalizationCode = LocalizationCode.EN,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            LightColorScheme
-        }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+
+    val lightColorScheme = lightColorScheme(
+        primary = appColors.primary,
+        secondary = appColors.secondary,
+        tertiary = appColors.medium,
+        background = appColors.backGround,
+        onPrimary = appColors.white,
+        onSurface = appColors.black,
+        onSecondary = appColors.hintGrey,
+        error = appColors.errorColor,
+        inversePrimary = appColors.defaultColor,
+        inverseSurface = appColors.defaultBorderColor,
+        inverseOnSurface = appColors.backGround,
+        onTertiary = appColors.defaultTextColor,
+        onSecondaryContainer = appColors.onSecondaryContainer,
+        onBackground = appColors.onBackground
+    )
+
+    val darkColorScheme = darkColorScheme(
+        primary = appColors.primary,
+        secondary = appColors.secondary,
+        tertiary = appColors.medium,
+        background = appColors.backGround,
+        onPrimary = appColors.white,
+        onSurface = appColors.black,
+        onSecondary = appColors.hintGrey,
+        error = appColors.errorColor,
+        inversePrimary = appColors.defaultColor,
+        inverseSurface = appColors.defaultBorderColor,
+        inverseOnSurface = appColors.backGround,
+        onTertiary = appColors.defaultTextColor,
+        onSecondaryContainer = appColors.onSecondaryContainer,
+        onBackground = appColors.onBackground
+    )
+
+    val selectedColorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            lightColorScheme
+        }
+        darkTheme -> darkColorScheme
+        else -> lightColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -77,17 +86,17 @@ fun EKYCsDKTheme(
                 darkTheme
         }
     }
+    CompositionLocalProvider(LocalAppColors provides appColors) {
+        MaterialTheme(
+            colorScheme = selectedColorScheme,
+            typography = if (localizationCode == LocalizationCode.AR) sdkTypography else sdkTypographyEn,
+            content = content
+        )
+    }
 
-    if (localizationCode == LocalizationCode.AR) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = sdkTypography,
-            content = content
-        )
-    } else
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = sdkTypographyEn,
-            content = content
-        )
 }
+
+val MaterialTheme.appColors: AppColors
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalAppColors.current

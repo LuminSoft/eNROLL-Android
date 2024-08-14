@@ -11,6 +11,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import java.util.Locale
 
 object eNROLL {
@@ -26,6 +27,8 @@ object eNROLL {
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
+        appColors: AppColors
+//        myPrimaryColor: Color = Color(0xFF1D56B8)
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -42,6 +45,9 @@ object eNROLL {
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
 //        EnrollSDK.updateSteps = arrayListOf("1", "2")
+        EnrollSDK.appColors = appColors
+
+//        EnrollSDK.myPrimaryColor = myPrimaryColor
     }
 
     fun launch(

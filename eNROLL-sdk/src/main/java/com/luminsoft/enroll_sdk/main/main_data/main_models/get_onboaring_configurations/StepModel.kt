@@ -10,6 +10,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_na
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.setting_password.password_navigation.settingPasswordOnBoardingScreenContent
+import electronicSignatureContent
 import termsConditionsOnBoardingScreenContent
 
 
@@ -34,6 +35,7 @@ data class StepModel(
             8 -> EkycStepType.SettingPassword
             9 -> EkycStepType.AmlCheck
             10 -> EkycStepType.TermsConditions
+            12 -> EkycStepType.ElectronicSignature
             else -> {
                 EkycStepType.PersonalConfirmation
             }
@@ -52,6 +54,7 @@ data class StepModel(
             8 -> settingPasswordOnBoardingScreenContent
             9 -> checkAmlOnBoardingScreenContent
             10 -> termsConditionsOnBoardingScreenContent
+            12 -> electronicSignatureContent
             else -> {
                 nationalIdOnBoardingPreScanScreen
             }
@@ -70,8 +73,8 @@ enum class EkycStepType {
     SecurityQuestions,
     SettingPassword,
     AmlCheck,
-    TermsConditions
-    ;
+    TermsConditions,
+    ElectronicSignature;
 
     fun getStepId(): Int {
         return when (this) {
@@ -85,6 +88,7 @@ enum class EkycStepType {
             SettingPassword -> 8
             AmlCheck -> 9
             TermsConditions -> 10
+            ElectronicSignature -> 12
         }
     }
 }

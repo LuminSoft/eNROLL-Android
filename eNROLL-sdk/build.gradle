@@ -75,7 +75,7 @@ dependencies {
     implementation "com.innovatrics.dot:dot-face-passive-liveness:5.0.0"
     implementation "com.innovatrics.dot:dot-nfc:5.0.0"
     implementation "com.innovatrics.dot:dot-face-verification:5.0.0"
-    implementation 'com.gemalto.jp2:jp2-android:1.0.3'
+//    implementation 'com.gemalto.jp2:jp2-android:1.0.3'
 
     implementation 'androidx.activity:activity-ktx:1.8.2'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'

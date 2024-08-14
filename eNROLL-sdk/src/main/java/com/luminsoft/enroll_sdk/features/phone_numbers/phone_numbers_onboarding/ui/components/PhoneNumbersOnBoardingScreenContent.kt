@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -181,14 +182,14 @@ fun PhoneNumbersOnBoardingScreenContent(
                         initialCountryPhoneCode = onBoardingViewModel.currentPhoneNumberCode.value,
                         initialPhoneNumber = onBoardingViewModel.currentPhoneNumber.value,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            disabledBorderColor = MaterialTheme.colorScheme.primary,
-                            errorBorderColor = MaterialTheme.colorScheme.error,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                            errorLabelColor = MaterialTheme.colorScheme.error,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary,
-                            disabledLabelColor = MaterialTheme.colorScheme.primary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                            focusedBorderColor = MaterialTheme.appColors.primary,
+                            disabledBorderColor = MaterialTheme.appColors.primary,
+                            errorBorderColor = MaterialTheme.appColors.errorColor,
+                            unfocusedBorderColor = MaterialTheme.appColors.primary,
+                            errorLabelColor = MaterialTheme.appColors.errorColor,
+                            focusedLabelColor = MaterialTheme.appColors.primary,
+                            disabledLabelColor = MaterialTheme.appColors.primary,
+                            unfocusedLabelColor = MaterialTheme.appColors.primary,
                         ),
                         shape = RoundedCornerShape(8.dp),
                         onValueChange = { (code, phone), isValid ->
@@ -205,7 +206,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                             Text(
                                 ResourceProvider.instance.getStringResource(R.string.phoneNumber),
                                 fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.appColors.primary
                             )
                         },
                     )
@@ -216,7 +217,7 @@ fun PhoneNumbersOnBoardingScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.sendPhoneOtpContent),
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.appColors.primary,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
