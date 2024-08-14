@@ -318,6 +318,8 @@
     <string name="updateLocation">Update Location</string>
     <string name="updateDevice">Update Device</string>
     <string name="updatePassword">Update Password</string>
+    <string name="updateAml">Update Aml</string>
+    <string name="updateElectronicSignature">Update Electronic Signature</string>
     <string name="cancelUpdate">Cancel Update</string>
 
 </resources>

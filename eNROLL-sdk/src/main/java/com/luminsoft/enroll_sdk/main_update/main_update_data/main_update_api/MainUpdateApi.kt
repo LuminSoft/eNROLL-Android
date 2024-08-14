@@ -4,6 +4,7 @@ import com.luminsoft.enroll_sdk.features.location.location_data.location_models.
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
+import com.luminsoft.enroll_sdk.main_update.main_update_data.models.UpdateVerificationMethodResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,4 +20,8 @@ interface MainUpdateApi {
 
     @POST("/api/v1/update/UpdateRequest/Initialize/{updateStepId}")
     suspend fun updateStepsInitRequest(@Path("updateStepId") updateStepId: Int): Response<BasicResponseModel>
+
+    @GET("/api/v1/update/UpdateRequest/GetUpdateVerificationMethod")
+    suspend fun getUpdateVerificationMethod(): Response<UpdateVerificationMethodResponse>
+
 }

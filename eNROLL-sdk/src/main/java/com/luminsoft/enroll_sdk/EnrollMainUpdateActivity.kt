@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk
 
+import EKYCsDKTheme
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -20,7 +21,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRouter
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -54,7 +55,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
             val updateViewModel: UpdateViewModel = koinViewModel<UpdateViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(dynamicColor = false) {
+            EKYCsDKTheme(appColors = AppColors()) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()
