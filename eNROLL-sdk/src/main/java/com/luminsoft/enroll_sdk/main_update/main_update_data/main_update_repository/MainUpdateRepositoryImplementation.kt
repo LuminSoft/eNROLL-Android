@@ -8,6 +8,7 @@ import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_s
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_remote_data_source.MainUpdateRemoteDataSource
+import com.luminsoft.enroll_sdk.main_update.main_update_data.models.UpdateVerificationMethodResponse
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.repository.MainUpdateRepository
 
 class MainUpdateRepositoryImplementation(private val mainRemoteDataSource: MainUpdateRemoteDataSource) :
@@ -44,6 +45,20 @@ class MainUpdateRepositoryImplementation(private val mainRemoteDataSource: MainU
         return when (val response = mainRemoteDataSource.updateStepsInitRequest(updateStepId)) {
             is BaseResponse.Success -> {
                 Either.Right(null)
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+        }
+    }
+
+    override suspend fun getUpdateAuthenticationMethod(updateStepId: Int): Either<SdkFailure, UpdateVerificationMethodResponse> {
+
+        return when (val response = mainRemoteDataSource.getUpdateAuthenticationMethod(updateStepId)) {
+            is BaseResponse.Success -> {
+                Either.Right(response.data as UpdateVerificationMethodResponse)
+
             }
 
             is BaseResponse.Error -> {

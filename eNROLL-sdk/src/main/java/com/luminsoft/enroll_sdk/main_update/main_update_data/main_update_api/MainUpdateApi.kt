@@ -10,6 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MainUpdateApi {
     @POST("/api/v1/Auth/GenerateUpdateRequestSessionToken")
@@ -22,6 +23,6 @@ interface MainUpdateApi {
     suspend fun updateStepsInitRequest(@Path("updateStepId") updateStepId: Int): Response<BasicResponseModel>
 
     @GET("/api/v1/update/UpdateRequest/GetUpdateVerificationMethod")
-    suspend fun getUpdateVerificationMethod(): Response<UpdateVerificationMethodResponse>
+    suspend fun getUpdateAuthenticationMethod(@Query("updateStep") stepId: Int): Response<UpdateVerificationMethodResponse>
 
 }

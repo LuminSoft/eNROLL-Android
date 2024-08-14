@@ -16,8 +16,10 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
+import com.luminsoft.enroll_sdk.main_update.main_update_data.models.UpdateVerificationMethodResponse
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecaseParams
+import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdateAuthenticationMethodUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdateStepConfigurationsUsecaseParams
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepIdParam
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
@@ -28,6 +30,7 @@ class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
     private val updateStepConfigurationsUsecase: UpdateStepsConfigurationsUsecase,
     private val updateStepIntRequestUseCase: UpdateStepsInitRequestUsecase,
+    private val updateAuthenticationMethodUsecase: GetUpdateAuthenticationMethodUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -63,6 +66,8 @@ class UpdateViewModel(
     var isPassportAndMailFinal: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
+    var updateStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
+    var updateAuthenticationStep: MutableStateFlow<UpdateVerificationMethodResponse?> = MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -139,8 +144,31 @@ class UpdateViewModel(
                     loading.value = false
                 },
                 {
-                    loading.value = false
+//                    loading.value = false
                     updateStepModel.value = updateStep
+                    getUpdateAuthenticationStep(updateStep)
+
+                })
+        }
+    }
+
+    private fun getUpdateAuthenticationStep(updateStep: StepUpdateModel) {
+        loading.value = true
+        ui {
+
+            val response: Either<SdkFailure, UpdateVerificationMethodResponse> =
+                updateAuthenticationMethodUsecase.call(updateStep.updateStepId!!)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    loading.value = false
+                    updateAuthenticationStep.value = it
+                    updateStepModel.value?.updateAuthStepId = it.authStepId
+//                    navController!!.navigate(updateStepModel.value!!.stepAuthBeforeUpdateNameNavigator())
                 })
         }
     }

@@ -1,7 +1,6 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.common
 
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
@@ -40,7 +40,10 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_on
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
+import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
+import com.luminsoft.enroll_sdk.ui_components.components.DialogView
+import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 
 
 @Composable
@@ -49,61 +52,106 @@ fun UpdateListScreenContent(
     navController: NavController
 ) {
 
+
+
+    val context = LocalContext.current
     val steps = updateViewModel.steps.collectAsState()
     val updateStepModel = updateViewModel.updateStepModel.collectAsState()
-    val context = LocalContext.current
     val activity = context.findActivity()
+    val loading = updateViewModel.loading.collectAsState()
+    val failure = updateViewModel.failure.collectAsState()
+    val updateAuthenticationStep = updateViewModel.updateAuthenticationStep.collectAsState()
+
+
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (updateStepModel.value != null) {
-            Log.d("updateStepModel", "updateStepModel")
-//TODO Navigate to update step screen
-        }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-        ) {
-            Spacer(modifier = Modifier.height(50.dp))
+        if (loading.value) LoadingView()
+        else if (!failure.value?.message.isNullOrEmpty()) {
+            if (failure.value is AuthFailure) {
+                failure.value?.let {
+                    DialogView(
+                        bottomSheetStatus = BottomSheetStatus.ERROR,
+                        text = it.message,
+                        buttonText = stringResource(id = R.string.exit),
+                        onPressedButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
-            Image(
-                painterResource(R.drawable.update_icon),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxHeight(0.1f)
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(
-                text = stringResource(id = R.string.youCanSelectOneItem),
-                color = MaterialTheme.colorScheme.outline,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp
-            )
+                        },
+                    ) {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
-            Spacer(modifier = Modifier.height(20.dp))
-            LazyColumn(
-                modifier = Modifier.fillMaxHeight(0.77f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(steps.value!!.size) { index ->
-                    UpdateStepItem(steps.value!![index], updateViewModel)
+                    }
+                }
+            } else {
+                failure.value?.let {
+                    DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                        text = it.message,
+                        buttonText = stringResource(id = R.string.retry),
+                        onPressedButton = {
+                            //TODO: implement it later
+                        },
+                        secondButtonText = stringResource(id = R.string.exit),
+                        onPressedSecondButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+
+                        }) {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                    }
                 }
             }
-            ButtonView(
-                onClick = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            ResourceProvider.instance.getStringResource(
-                                R.string.cancelUpdate
-                            ), null
-                        )
-                    )
-                },
-                title = ResourceProvider.instance.getStringResource(R.string.cancel)
-            )
         }
+        else{
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
+            ) {
+                Spacer(modifier = Modifier.height(50.dp))
+
+                Image(
+                    painterResource(R.drawable.update_icon),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxHeight(0.1f)
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(
+                    text = stringResource(id = R.string.youCanSelectOneItem),
+                    color = MaterialTheme.colorScheme.outline,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+                LazyColumn(
+                    modifier = Modifier.fillMaxHeight(0.77f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(steps.value!!.size) { index ->
+                        UpdateStepItem(steps.value!![index], updateViewModel)
+                    }
+                }
+                ButtonView(
+                    onClick = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                ResourceProvider.instance.getStringResource(
+                                    R.string.cancelUpdate
+                                ), null
+                            )
+                        )
+                    },
+                    title = ResourceProvider.instance.getStringResource(R.string.cancel)
+                )
+            }
+        }
+
 
     }
 
