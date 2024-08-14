@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import checkDeviceIdAuthUpdateRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
@@ -22,6 +23,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRou
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+import deviceIdAuthUpdateModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -61,7 +63,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     startDestination = getStartingRoute()
                 ) {
                     mainUpdateRouter(navController = navController, updateViewModel)
-//                    passwordAuthRouter(navController = navController, updateViewModel)
+                    checkDeviceIdAuthUpdateRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -76,6 +78,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 androidContext(activity.applicationContext)
                 modules(sdkModule)
                 modules(mainUpdateModule)
+                modules(deviceIdAuthUpdateModule)
             }.koin
         }
     }

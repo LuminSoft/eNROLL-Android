@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations
 
+import checkDeviceIdAuthUpdateScreenContent
 import checkIMEIAuthScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.ekyc_android_sdk.R
@@ -59,7 +60,7 @@ data class StepUpdateModel(
             1 -> passwordAuthScreenContent
             2 -> mailAuthScreenContent
             3 -> securityQuestionAuthScreenContent
-            4 -> checkIMEIAuthScreenContent
+            4 -> checkDeviceIdAuthUpdateScreenContent    // updated
             5 -> phoneAuthScreenContent
             6 -> faceCaptureAuthPreScanScreenContent
             else -> {

@@ -7,12 +7,20 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import arrow.core.raise.Null
+import checkDeviceIdAuthUpdateScreenContent
+import checkIMEIAuthScreenContent
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
+import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_navigation.checkExpiryDateAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthPreScanScreenContent
+import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_navigation.locationAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_navigation.mailAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_navigation.phoneAuthScreenContent
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
@@ -25,6 +33,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateSt
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import kotlinx.coroutines.flow.MutableStateFlow
+import securityQuestionAuthScreenContent
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
@@ -166,12 +175,50 @@ class UpdateViewModel(
                 },
                 {
                     loading.value = false
+                    updateStepId.value = updateStep.updateStepId
                     updateAuthenticationStep.value = it
                     updateStepModel.value?.updateAuthStepId = it.authStepId
-//                    navController!!.navigate(updateStepModel.value!!.stepAuthBeforeUpdateNameNavigator())
+                    //TODO: here we will navigate to auth step
+                     // navigateToAuthStep(navController!!, it.authStepId!!)
                 })
         }
     }
+
+
+    private fun navigateToAuthStep(navController: NavController, stepId: Int) {
+        val route = when (stepId) {
+            1 -> checkDeviceIdAuthUpdateScreenContent
+            2 -> checkDeviceIdAuthUpdateScreenContent
+            3 -> checkDeviceIdAuthUpdateScreenContent
+            4 -> checkDeviceIdAuthUpdateScreenContent
+            5 -> checkDeviceIdAuthUpdateScreenContent
+            6 -> checkDeviceIdAuthUpdateScreenContent
+            else -> null
+        }
+        route?.let {
+            navController.navigate(it)
+        }
+    }
+
+
+    fun navigateToUpdateAfterAuthStep() {
+        val route = when (updateStepId.value) {
+            1 -> faceCaptureAuthPreScanScreenContent
+            2 -> mailAuthScreenContent
+            3 -> phoneAuthScreenContent
+            4 -> passwordAuthScreenContent
+            5 -> securityQuestionAuthScreenContent
+            6 -> checkExpiryDateAuthScreenContent
+            7 -> checkIMEIAuthScreenContent
+            8 -> locationAuthScreenContent
+            else -> null
+        }
+        route?.let {
+            navController?.navigate(it)
+        }
+    }
+
+
 
     fun removeCurrentStep(id: Int): Boolean {
         // Check if 'steps' is not null
@@ -202,12 +249,16 @@ class UpdateViewModel(
     }
 
     private fun navigateToNextStep() {
-        mailValue.value = TextFieldValue()
-        currentPhoneNumber.value = null
+        navController!!.navigate(steps.value!!.first().stepUpdateNameNavigator())
+    }
+
+
+    private fun navigateBackToUpdate() {
         navController!!.navigate(steps.value!!.first().stepUpdateNameNavigator())
     }
 
     fun navigateToTheSameStep() {
         navController!!.navigate(steps.value!!.first().stepUpdateNameNavigator())
     }
+
 }
