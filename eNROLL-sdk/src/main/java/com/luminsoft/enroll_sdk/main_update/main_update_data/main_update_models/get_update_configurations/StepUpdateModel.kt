@@ -12,6 +12,7 @@ import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_navigation.mai
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthScreenContent
 import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_navigation.phoneAuthScreenContent
 import securityQuestionAuthScreenContent
+import securityQuestionAuthUpdateScreenContent
 
 
 data class StepUpdateModel(
@@ -59,7 +60,7 @@ data class StepUpdateModel(
         return when (this.updateAuthStepId) {
             1 -> passwordAuthScreenContent
             2 -> mailAuthScreenContent
-            3 -> securityQuestionAuthScreenContent
+            3 -> securityQuestionAuthUpdateScreenContent  // updated
             4 -> checkDeviceIdAuthUpdateScreenContent    // updated
             5 -> phoneAuthScreenContent
             6 -> faceCaptureAuthPreScanScreenContent

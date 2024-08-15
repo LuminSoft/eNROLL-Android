@@ -32,6 +32,7 @@ fun DeviceIdAuthUpdateScreenContent(
             DeviceIdAuthUpdateViewModel( checkDeviceIdAuthUseCase= checkDeviceIdAuthUpdateUseCase, context = context)
         }
 
+    checkDeviceIdAuthUpdateViewModel.setStepUpdateId(updateViewModel.updateStepId.value!!)
 
     val activity = context.findActivity()
     val loading = checkDeviceIdAuthUpdateViewModel.loading.collectAsState()
@@ -42,9 +43,7 @@ fun DeviceIdAuthUpdateScreenContent(
     BackGroundView(navController = navController, showAppBar = false) {
 
         if (deviceIdChecked.value) {
-//            updateViewModel.navigateToUpdateAfterAuthStep()
-            //TODO: here we should navigate to update screen
-
+            updateViewModel.navigateToUpdateAfterAuthStep()
         } else if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {

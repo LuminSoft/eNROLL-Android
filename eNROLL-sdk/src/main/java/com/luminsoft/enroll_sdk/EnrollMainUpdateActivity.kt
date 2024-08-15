@@ -30,11 +30,16 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import securityQuestionAuthUpdateModule
+import securityQuestionAuthUpdateRouter
 
 
 @Suppress("DEPRECATION")
 class EnrollMainUpdateActivity : ComponentActivity() {
 
+    override fun onBackPressed() {
+
+    }
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
         ResourceProvider.instance.initializeWithApplicationContext(this)
@@ -64,6 +69,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 ) {
                     mainUpdateRouter(navController = navController, updateViewModel)
                     checkDeviceIdAuthUpdateRouter(navController = navController, updateViewModel)
+                    securityQuestionAuthUpdateRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -79,6 +85,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(sdkModule)
                 modules(mainUpdateModule)
                 modules(deviceIdAuthUpdateModule)
+                modules(securityQuestionAuthUpdateModule)
             }.koin
         }
     }
