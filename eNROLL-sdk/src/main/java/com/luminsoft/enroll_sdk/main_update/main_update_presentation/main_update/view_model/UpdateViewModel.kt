@@ -25,6 +25,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdat
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepIdParam
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
+import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
@@ -155,7 +156,7 @@ class UpdateViewModel(
     }
 
     private fun getUpdateAuthenticationStep(updateStep: StepUpdateModel) {
-        loading.value = true
+//        loading.value = true
         ui {
 
             val response: Either<SdkFailure, UpdateVerificationMethodResponse> =
@@ -167,7 +168,6 @@ class UpdateViewModel(
                     loading.value = false
                 },
                 {
-                    loading.value = false
                     updateStepId.value = updateStep.updateStepId
                     updateAuthenticationStep.value = it
                     updateStepModel.value?.updateAuthStepId = it.authStepId
@@ -179,21 +179,21 @@ class UpdateViewModel(
 
     private fun navigateToAuthStep(navController: NavController, stepId: Int) {
         val route = when (stepId) {
-            1 -> null
-            2 -> null
+            1 -> null   //TODO: password not in our scope
+            2 -> null   //TODO: email is blocked
             3 -> securityQuestionAuthUpdateScreenContent
             4 -> checkDeviceIdAuthUpdateScreenContent
-            5 -> null
-            6 -> null
-            else -> null
+            5 -> null   //TODO: phone is blocked
+            6 -> faceCaptureAuthUpdatePreScanScreenContent
+            else -> securityQuestionAuthUpdateScreenContent
         }
         route?.let {
             navController.navigate(it)
         }
     }
 
-
     fun navigateToUpdateAfterAuthStep() {
+        //TODO: will navigate to update modules
         val route = when (updateStepId.value) {
             1 -> testUpdateScreenContent
             2 -> testUpdateScreenContent

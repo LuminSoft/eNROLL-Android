@@ -24,6 +24,8 @@ import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenU
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import deviceIdAuthUpdateModule
+import faceCaptureAuthUpdateModule
+import faceCaptureAuthUpdateRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -70,6 +72,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     mainUpdateRouter(navController = navController, updateViewModel)
                     checkDeviceIdAuthUpdateRouter(navController = navController, updateViewModel)
                     securityQuestionAuthUpdateRouter(navController = navController, updateViewModel)
+                    faceCaptureAuthUpdateRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -86,6 +89,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(mainUpdateModule)
                 modules(deviceIdAuthUpdateModule)
                 modules(securityQuestionAuthUpdateModule)
+                modules(faceCaptureAuthUpdateModule)
             }.koin
         }
     }
