@@ -37,6 +37,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -57,6 +58,8 @@ fun UpdateListScreenContent(
     BackGroundView(navController = navController, showAppBar = true) {
         if (updateStepModel.value != null) {
             Log.d("updateStepModel", "updateStepModel")
+            navController.navigate(multipleMailsUpdateScreenContent)
+
 //TODO Navigate to update step screen
         }
         Column(
