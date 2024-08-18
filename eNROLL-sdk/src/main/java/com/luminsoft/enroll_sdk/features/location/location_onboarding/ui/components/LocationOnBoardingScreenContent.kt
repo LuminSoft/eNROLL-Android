@@ -17,6 +17,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,6 +53,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import appColors
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -337,30 +339,50 @@ private fun GotLocation(
             .padding(horizontal = 20.dp)
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.15f))
-        var apiKeyEmptyOrHasException by remember { mutableStateOf(googleApiKey.isEmpty()) }
-        if (apiKeyEmptyOrHasException.not()) {
-            val mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"
 
-            val painter = rememberAsyncImagePainter(
-                model = mapUrl,
-                onError = {
-                    apiKeyEmptyOrHasException = true
-                }
-            )
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier.size(400.dp, 200.dp)
-            )
-        }
-        if (apiKeyEmptyOrHasException) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f),
-                painter = painterResource(id = R.drawable.step_00_location),
-                contentScale = ContentScale.Fit,
-                contentDescription = "Victor Ekyc Item"
-            )
+        var apiKeyEmptyOrHasException by remember { mutableStateOf(googleApiKey.isEmpty()) }
+        var isLoading by remember { mutableStateOf(true) }
+        val imageHeight = 200.dp
+        val imageWidth = 400.dp
+        Box(
+            modifier = Modifier
+                .size(imageWidth, imageHeight),
+            contentAlignment = Alignment.Center
+        ) {
+            if (apiKeyEmptyOrHasException.not()) {
+                val mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"
+                val painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(mapUrl)
+                        .listener(onStart = {
+                            isLoading = true
+                        }, onSuccess = { _, _ ->
+                            isLoading = false
+                        }, onError = { _, _ ->
+                            isLoading = false
+                            apiKeyEmptyOrHasException = true
+                        })
+                        .build(),
+                    onError = {
+                        apiKeyEmptyOrHasException = true
+                    }
+                )
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    modifier = Modifier.size(400.dp, 200.dp)
+                )
+            }
+            if (apiKeyEmptyOrHasException) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f),
+                    painter = painterResource(id = R.drawable.step_00_location),
+                    contentScale = ContentScale.Fit,
+                    contentDescription = "Victor Ekyc Item"
+                )
+            }
+            if (isLoading) LoadingView()
         }
         Spacer(modifier = Modifier.fillMaxHeight(0.1f))
         androidx.compose.material3.Text(
