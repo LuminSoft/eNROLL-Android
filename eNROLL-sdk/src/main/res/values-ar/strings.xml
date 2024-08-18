@@ -206,6 +206,7 @@
     <string name="someThingWentWrong">حدث خطأ</string>
     <string name="re_createAccount">إعادة إنشاء الحساب</string>
     <string name="successfulRegistration">تم إنشاء الحساب بنجاح</string>
+    <string name="successfulUpdate">تم تحديث الحساب بنجاح</string>
     <string name="you_would_be_required_to_sign_documents_later_on">سوف يُطلب منك التوقيع على المستندات لاحقًا</string>
     <string name="we_will_contact_you_to_receive_the_physical_token">سوف نتصل بك لإستلام التوقيع الإلكتروني</string>
     <string name="noDocumentTypeBeforeSmileLiveness">لا يوجد تأكيد بطاقة قبل مطابقة الصورة</string>
