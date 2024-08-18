@@ -20,6 +20,7 @@ class AddMailUpdateViewModel(
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var mailSentSuccessfully: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var isClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var mailId: MutableStateFlow<Int?> = MutableStateFlow(null)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     private var params: MutableStateFlow<Any?> = MutableStateFlow(null)

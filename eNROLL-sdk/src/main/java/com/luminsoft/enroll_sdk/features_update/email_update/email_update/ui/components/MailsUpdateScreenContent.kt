@@ -1,3 +1,5 @@
+package com.luminsoft.enroll_sdk.features_update.email_update.email_update.ui.components
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,10 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -26,22 +26,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
-import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailInfoUseCase
-import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
-import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MultipleMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_navigation.validateOtpMailsScreenContent
-import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.MailsOnBoardingViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.DeleteMailUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.GetApplicantEmailsUseCase
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.MakeDefaultMailUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.MultipleMailsUpdateViewModel
-import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.AddMailUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -53,60 +48,52 @@ import org.koin.compose.koinInject
 
 
 @Composable
-fun MailsOnUpdateScreenContent(
+fun MailsUpdateScreenContent(
     updateViewModel: UpdateViewModel,
     navController: NavController,
 ) {
 
-    val multipleMailUseCase =
-        GetApplicantEmailsUseCase(koinInject())
+    val updateMailAddUseCase =
+        UpdateMailAddUseCase(koinInject())
 
-    val deleteMailUpdateUseCase =
-        DeleteMailUpdateUseCase(koinInject())
+    val sendOtpUpdateUseCase =
+        SendOtpUpdateUseCase(koinInject())
 
-    val makeDefaultMailUpdateUseCase =
-        MakeDefaultMailUpdateUseCase(koinInject())
-
-    val mailsOnBoardingViewModel =
+    val mailsUpdateViewModel =
         remember {
-            MultipleMailsUpdateViewModel(
-                multipleMailUseCase = multipleMailUseCase,
-                deleteMailUpdateUseCase = deleteMailUpdateUseCase,
-                makeDefaultMailUpdateUseCase = makeDefaultMailUpdateUseCase
+            AddMailUpdateViewModel(
+                updateMailAddUseCase = updateMailAddUseCase,
+                sendOtpUpdateUseCase = sendOtpUpdateUseCase
             )
         }
-    val mailsOnBoardingVM = remember { mailsOnBoardingViewModel }
+    val mailsUpdateVM = remember { mailsUpdateViewModel }
     val mailValue = updateViewModel.mailValue.collectAsState()
 
     val context = LocalContext.current
     val activity = context.findActivity()
-    val loading = mailsOnBoardingViewModel.loading.collectAsState()
-    val mailsApproved =
-        mailsOnBoardingViewModel.mailsApproved.collectAsState()
-    val failure = mailsOnBoardingViewModel.failure.collectAsState()
-
-//    var mail: String by rememberSaveable { mutableStateOf(TextFieldValue()) }
-//    var isMailValid: Boolean by rememberSaveable { mutableStateOf(false) }
-    var isClicked by mutableStateOf(false)
+    val loading = mailsUpdateViewModel.loading.collectAsState()
+    val mailSentSuccessfully =
+        mailsUpdateViewModel.mailSentSuccessfully.collectAsState()
+    val failure = mailsUpdateViewModel.failure.collectAsState()
+    val isClicked = mailsUpdateViewModel.isClicked.collectAsState()
 
     val userHasModifiedText = remember { mutableStateOf(false) }
 
-
     BackGroundView(navController = navController, showAppBar = true) {
-        if (isClicked) {
+        if (isClicked.value) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.WARNING,
                 text = stringResource(id = R.string.emailOtpContentConfirmationMessage) + mailValue.value?.text,
                 buttonText = stringResource(id = R.string.continue_to_next),
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedButton = {
-                    mailsOnBoardingViewModel.loading.value = true
+                    mailsUpdateViewModel.loading.value = true
 //                    updateViewModel.currentMail.value = mailValue.value.text
-                    isClicked = false
-                    mailsOnBoardingVM.callMailInfo(mailValue.value!!.text)
+                    mailsUpdateViewModel.isClicked.value = false
+                    mailsUpdateVM.addMailCallApi(mailValue.value!!.text)
                 },
                 onPressedSecondButton = {
-                    isClicked = false
+                    mailsUpdateViewModel.isClicked.value = false
                 }
             )
         }
@@ -139,7 +126,7 @@ fun MailsOnUpdateScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.cancel),
                         onPressedButton = {
-                            mailsOnBoardingViewModel.failure.value = null
+                            mailsUpdateViewModel.failure.value = null
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -190,7 +177,9 @@ fun MailsOnUpdateScreenContent(
                         imeAction = ImeAction.Done,
                         keyboardType = KeyboardType.Email
                     ),
-                    error = englishNameValidation(updateViewModel),
+                    error = englishNameValidation(
+                        updateViewModel
+                    ),
                 )
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
@@ -205,8 +194,11 @@ fun MailsOnUpdateScreenContent(
 
                 ButtonView(
                     onClick = {
-                        if (englishNameValidation(updateViewModel) == null)
-                            isClicked = true
+                        if (englishNameValidation(
+                                updateViewModel
+                            ) == null
+                        )
+                            mailsUpdateViewModel.isClicked.value = true
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -217,7 +209,7 @@ fun MailsOnUpdateScreenContent(
 
 }
 
-private fun englishNameValidation(updateViewModel: OnBoardingViewModel) = when {
+private fun englishNameValidation(updateViewModel: UpdateViewModel) = when {
 
     updateViewModel.mailValue.value!!.text.isEmpty() -> {
         ResourceProvider.instance.getStringResource(R.string.required_email)

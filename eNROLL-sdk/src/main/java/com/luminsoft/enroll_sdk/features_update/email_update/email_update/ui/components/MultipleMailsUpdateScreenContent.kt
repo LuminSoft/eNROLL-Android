@@ -40,9 +40,11 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
-import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendVerifyEmailOtpUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.DeleteMailUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.GetApplicantEmailsUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.MakeDefaultMailUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.mailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.MultipleMailsUpdateViewModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -61,22 +63,22 @@ fun MultipleMailsUpdateScreenContent(
 ) {
 
     val multipleMailUseCase =
-        SendVerifyEmailOtpUseCase(koinInject())
+        GetApplicantEmailsUseCase(koinInject())
 
-    /*    val approveMailsUseCase =
-            ApproveMailsUseCase(koinInject())
+    val deleteMailUpdateUseCase =
+        DeleteMailUpdateUseCase(koinInject())
 
-        val makeDefaultMailUseCase =
-            MakeDefaultMailUseCase(koinInject())*/
+    val makeDefaultMailUpdateUseCase =
+        MakeDefaultMailUpdateUseCase(koinInject())
 
     val multipleMailsViewModel =
         remember {
             MultipleMailsUpdateViewModel(
                 multipleMailUseCase = multipleMailUseCase,
-                stepId = updateViewModel.updateStepModel.value?.updateStepId!!
+                deleteMailUpdateUseCase = deleteMailUpdateUseCase,
+                makeDefaultMailUpdateUseCase = makeDefaultMailUpdateUseCase
             )
         }
-    val multipleMailsVM = remember { multipleMailsViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -172,7 +174,7 @@ fun MultipleMailsUpdateScreenContent(
 
                 LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
                     items(verifiedMails.value!!.size) { index ->
-                        MailItem(verifiedMails.value!![index], multipleMailsVM)
+                        MailItem(verifiedMails.value!![index])
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
@@ -181,7 +183,7 @@ fun MultipleMailsUpdateScreenContent(
                     onClick = {
                         updateViewModel.isNotFirstMail.value = true
                         updateViewModel.mailValue.value = TextFieldValue()
-                        navController.navigate(mailsOnBoardingScreenContent)
+                        navController.navigate(mailsUpdateScreenContent)
                     },
                     title = stringResource(id = R.string.addMail),
                     textColor = MaterialTheme.appColors.primary,
@@ -200,6 +202,9 @@ fun MultipleMailsUpdateScreenContent(
                 Spacer(modifier = Modifier.height(20.dp))
 
             }
+        } else {
+            navController.navigate(mailsUpdateScreenContent)
+
         }
     }
 
@@ -207,8 +212,7 @@ fun MultipleMailsUpdateScreenContent(
 
 @Composable
 private fun MailItem(
-    model: GetVerifiedMailsResponseModel,
-    multipleMailsVM: MultipleMailsUpdateViewModel
+    model: GetVerifiedMailsResponseModel
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),

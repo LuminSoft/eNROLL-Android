@@ -1,4 +1,4 @@
-package com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components
+package com.luminsoft.enroll_sdk.features_update.email_update.email_update.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +22,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,11 +50,12 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ValidateOtpMailUseCase
-import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_navigation.multipleMailsScreenContent
+import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.ValidateOtpMailsViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.mailsUpdateScreenContent
+import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
@@ -64,8 +67,8 @@ import kotlin.time.Duration.Companion.seconds
 
 
 @Composable
-fun ValidateOtpMailsScreenContent(
-    onBoardingViewModel: OnBoardingViewModel,
+fun ValidateOtpMailsUpdateScreenContent(
+    updateViewModel: UpdateViewModel,
     navController: NavController,
 ) {
 
@@ -81,7 +84,7 @@ fun ValidateOtpMailsScreenContent(
                 mailSendOtpUseCase = mailSendOtpUseCase
             )
         }
-    val mailsOnBoardingVM = remember { validateOtpMailsViewModel }
+    val mailsUpdateVM = remember { validateOtpMailsViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -90,13 +93,15 @@ fun ValidateOtpMailsScreenContent(
         validateOtpMailsViewModel.otpApproved.collectAsState()
     val failure = validateOtpMailsViewModel.failure.collectAsState()
     val wrongOtpTimes = validateOtpMailsViewModel.wrongOtpTimes.collectAsState()
+    val mailValue = updateViewModel.mailValue.collectAsState()
+    val isNotFirstMail = updateViewModel.isNotFirstMail.collectAsState()
 
     val otpValue = remember { mutableStateOf("") }
 
-    var counter by remember { mutableStateOf(0) }
+    var counter by remember { mutableIntStateOf(0) }
 
-    var ticks by remember { mutableStateOf(60) }
-    var ticksF by remember { mutableStateOf(1.0f) }
+    var ticks by remember { mutableIntStateOf(60) }
+    var ticksF by remember { mutableFloatStateOf(1.0f) }
     LaunchedEffect(counter) {
         while (ticks > 0) {
             delay(1.seconds)
@@ -178,7 +183,7 @@ fun ValidateOtpMailsScreenContent(
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
-                        onBoardingViewModel.mailValue.value!!.text,
+                        mailValue.value!!.text,
                         fontSize = 10.sp,
                         color = MaterialTheme.appColors.onSecondary
                     )
@@ -200,7 +205,7 @@ fun ValidateOtpMailsScreenContent(
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
-                                    navController.navigate(mailsOnBoardingScreenContent)
+                                    navController.navigate(mailsUpdateScreenContent)
                                 }
                         )
                     }
@@ -221,7 +226,7 @@ fun ValidateOtpMailsScreenContent(
                         color = MaterialTheme.appColors.primary,
                         fontSize = 10.sp
                     )
-                    timer(ticksF, ticks)
+                    Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
                         color = MaterialTheme.appColors.primary,
@@ -230,7 +235,7 @@ fun ValidateOtpMailsScreenContent(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                if (onBoardingViewModel.isNotFirstMail.value && ticks == 0)
+                if (isNotFirstMail.value && ticks == 0)
                     Text(
                         text = stringResource(id = R.string.resend),
                         color = MaterialTheme.appColors.primary,
@@ -238,7 +243,7 @@ fun ValidateOtpMailsScreenContent(
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
-                                mailsOnBoardingVM.callSendOtp()
+                                mailsUpdateVM.callSendOtp()
                                 ticks = 60
                                 ticksF = 1.0f
                                 counter++
@@ -249,18 +254,18 @@ fun ValidateOtpMailsScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
-                        onBoardingViewModel.userMail.value = onBoardingViewModel.mailValue.value?.text
-                        onBoardingViewModel.mailValue.value = TextFieldValue()
-                        mailsOnBoardingVM.callValidateOtp(otpValue.value)
+                        updateViewModel.userMail.value = updateViewModel.mailValue.value?.text
+                        updateViewModel.mailValue.value = TextFieldValue()
+                        mailsUpdateVM.callValidateOtp(otpValue.value)
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                if (!onBoardingViewModel.isNotFirstMail.value)
+                if (!isNotFirstMail.value)
                     ButtonView(
                         isEnabled = ticks == 0,
                         onClick = {
-                            mailsOnBoardingVM.callSendOtp()
+                            mailsUpdateVM.callSendOtp()
                             ticks = 60
                             ticksF = 1.0f
                             counter++
@@ -272,7 +277,7 @@ fun ValidateOtpMailsScreenContent(
                     ) else
                     ButtonView(
                         onClick = {
-                            onBoardingViewModel.mailValue.value = TextFieldValue()
+                            updateViewModel.mailValue.value = TextFieldValue()
                             navController.navigate(multipleMailsScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
@@ -288,7 +293,7 @@ fun ValidateOtpMailsScreenContent(
 }
 
 @Composable
-private fun timer(ticksF: Float, ticks: Int) {
+private fun Timer(ticksF: Float, ticks: Int) {
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
             progress = 1f,

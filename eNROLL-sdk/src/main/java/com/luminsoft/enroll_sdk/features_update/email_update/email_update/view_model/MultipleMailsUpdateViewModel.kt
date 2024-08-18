@@ -22,6 +22,7 @@ class MultipleMailsUpdateViewModel(
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var mailsApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var isClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
         MutableStateFlow(null)

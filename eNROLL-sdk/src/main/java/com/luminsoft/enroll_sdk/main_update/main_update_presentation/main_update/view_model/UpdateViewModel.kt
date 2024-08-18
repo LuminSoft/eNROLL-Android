@@ -63,6 +63,7 @@ class UpdateViewModel(
     var isPassportAndMailFinal: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
+    var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")

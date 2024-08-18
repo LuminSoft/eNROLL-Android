@@ -15,6 +15,7 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
+import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.emailUpdateRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
@@ -77,6 +78,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 androidContext(activity.applicationContext)
                 modules(sdkModule)
                 modules(mainUpdateModule)
+                modules(emailUpdateModule)
             }.koin
         }
     }
