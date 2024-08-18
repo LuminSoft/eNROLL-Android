@@ -8,13 +8,26 @@ pipelines:
           - gradle
           - android-sdk
         script:
-          - apt-get update && apt-get install -y wget
-          - wget "https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip" -O cmdline-tools.zip
-          - unzip cmdline-tools.zip -d $ANDROID_HOME/
-          - yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --licenses
-          - $ANDROID_HOME/cmdline-tools/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+          # Set the Android SDK path
+          - export ANDROID_HOME=/Users/luminsoft/Library/Android/sdk
+          - mkdir -p $ANDROID_HOME/cmdline-tools/latest
+
+          # Download and extract the Command-Line Tools
+          - wget "https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip" -O commandlinetools.zip
+          - unzip commandlinetools.zip -d $ANDROID_HOME/cmdline-tools/latest
+
+          # Accept licenses
+          - yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
+          # Install necessary SDK components
+          - $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+
+          # Build the project
           - ./gradlew assembleRelease
+
+          # Deploy to Firebase
           - ./gradlew appDistributionUploadRelease
+
         artifacts:
           - app/build/outputs/**
 
