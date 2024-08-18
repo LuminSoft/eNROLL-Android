@@ -1,4 +1,3 @@
-package com.luminsoft.enroll_sdk.features.location.location_onboarding.ui.components
 
 import android.Manifest
 import android.app.Activity
@@ -51,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import appColors
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.android.gms.common.api.ResolvableApiException
@@ -66,12 +64,9 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
-import com.luminsoft.enroll_sdk.features.location.location_domain.usecases.PostLocationUseCase
-import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationDetails
-import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
-import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
+import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
@@ -82,31 +77,31 @@ import org.koin.compose.koinInject
 
 
 @Composable
-fun LocationOnBoardingScreenContent(
-    onBoardingViewModel: OnBoardingViewModel,
+fun UpdateLocationScreenContent(
+    updateViewModel: UpdateViewModel,
     navController: NavController,
 ) {
 
-    val postLocationUseCase =
-        PostLocationUseCase(koinInject())
+    val updateLocationUseCase =
+        UpdateLocationUseCase(koinInject())
 
-    val locationOnBoardingViewModel =
+    val updateLocationViewModel =
         remember {
-            LocationOnBoardingViewModel(
-                postLocationUseCase = postLocationUseCase
+            UpdateLocationViewModel(
+                updateLocationUseCase = updateLocationUseCase
             )
         }
-    val locationOnBoardingVM = remember { locationOnBoardingViewModel }
+    val updateLocationVM = remember { updateLocationViewModel }
 
 
     val context = LocalContext.current
     val activity = context.findActivity()
-    val gotLocation = locationOnBoardingViewModel.gotLocation.collectAsState()
-    val loading = locationOnBoardingViewModel.loading.collectAsState()
-    val failure = locationOnBoardingViewModel.failure.collectAsState()
-    val currentLocation = locationOnBoardingViewModel.currentLocation.collectAsState()
-    val locationSent = locationOnBoardingVM.locationSent.collectAsState()
-    val permissionDenied = locationOnBoardingVM.permissionDenied.collectAsState()
+    val gotLocation = updateLocationViewModel.gotLocation.collectAsState()
+    val loading = updateLocationViewModel.loading.collectAsState()
+    val failure = updateLocationViewModel.failure.collectAsState()
+    val currentLocation = updateLocationViewModel.currentLocation.collectAsState()
+    val locationSent = updateLocationVM.locationSent.collectAsState()
+    val permissionDenied = updateLocationVM.permissionDenied.collectAsState()
 
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
@@ -120,19 +115,16 @@ fun LocationOnBoardingScreenContent(
 
     BackGroundView(navController = navController, showAppBar = false) {
         if (locationSent.value) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.DeviceLocation.getStepId())
-            if (isEmpty)
-                DialogView(
+                      DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
+                    text = stringResource(id = R.string.successfulUpdate),
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(
                             EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                                activity.getString(R.string.successfulUpdate),
+                                activity.getString(R.string.successfulUpdate)
                             )
                         )
                     },
@@ -143,10 +135,10 @@ fun LocationOnBoardingScreenContent(
         ) { permissionsMap ->
             val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
             if (areGranted) {
-                locationOnBoardingVM.permissionDenied.value = false
-                locationOnBoardingViewModel.startLocationUpdates()
+                updateLocationVM.permissionDenied.value = false
+                updateLocationViewModel.startLocationUpdates()
             } else {
-                locationOnBoardingVM.permissionDenied.value = true
+                updateLocationVM.permissionDenied.value = true
                 Log.d("permissionsMap", "denied")
             }
         }
@@ -179,7 +171,7 @@ fun LocationOnBoardingScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
-                            locationOnBoardingViewModel.callPostLocation()
+                            updateLocationViewModel.callPostLocation()
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -196,7 +188,7 @@ fun LocationOnBoardingScreenContent(
             PermissionDenied(
                 permissions,
                 context,
-                locationOnBoardingViewModel,
+                updateLocationViewModel,
                 launcherMultiplePermissions,
                 activity,
             )
@@ -204,13 +196,14 @@ fun LocationOnBoardingScreenContent(
             RequestLocation(
                 permissions,
                 context,
-                locationOnBoardingViewModel,
+                updateLocationViewModel,
                 launcherMultiplePermissions,
                 activity,
+                navController = navController,
                 settingResultRequest
             )
         else
-            GotLocation(currentLocation.value!!, locationOnBoardingViewModel)
+            GotLocation(currentLocation.value!!, updateLocationViewModel,navController = navController)
     }
 
 }
@@ -219,9 +212,10 @@ fun LocationOnBoardingScreenContent(
 private fun RequestLocation(
     permissions: Array<String>,
     context: Context,
-    locationOnBoardingViewModel: LocationOnBoardingViewModel,
+    updateLocationViewModel: UpdateLocationViewModel,
     launcherMultiplePermissions: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
     activity: Activity,
+    navController: NavController,
     settingResultRequest: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>
 ) {
 
@@ -233,36 +227,51 @@ private fun RequestLocation(
             .padding(horizontal = 20.dp)
     ) {
         EnrollItemView(R.drawable.step_00_location, R.string.getLocationText)
-        ButtonView(
-            onClick = {
-                if (permissions.all {
-                        ContextCompat.checkSelfPermission(
-                            context,
-                            it
-                        ) == PackageManager.PERMISSION_GRANTED
-                    }) {
-                    checkLocationSetting(
-                        context = context,
-                        onDisabled = { intentSenderRequest ->
-                            settingResultRequest.launch(intentSenderRequest)
-                        },
-                        onEnabled = {
-                            locationOnBoardingViewModel.requestLocation(activity = activity)
-                        }
-                    )
-                } else {
-                    launcherMultiplePermissions.launch(permissions)
-                }
-            },
-            stringResource(id = R.string.start),
-            modifier = Modifier.padding(horizontal = 20.dp),
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ButtonView(
+                onClick = {
+                    if (permissions.all {
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                it
+                            ) == PackageManager.PERMISSION_GRANTED
+                        }) {
+                        checkLocationSetting(
+                            context = context,
+                            onDisabled = { intentSenderRequest ->
+                                settingResultRequest.launch(intentSenderRequest)
+                            },
+                            onEnabled = {
+                                updateLocationViewModel.requestLocation(activity = activity)
+                            }
+                        )
+                    } else {
+                        launcherMultiplePermissions.launch(permissions)
+                    }
+                },
+                stringResource(id = R.string.start),
+                modifier = Modifier.padding(horizontal = 20.dp),
+            )
+            ButtonView(
+                onClick = {
+                    navController.navigate(updateListScreenContent)
+                },
+                stringResource(id = R.string.skip),
+                modifier = Modifier.padding(horizontal = 20.dp),
+                textColor = MaterialTheme.appColors.primary,
+                color = MaterialTheme.appColors.onPrimary,
+                borderColor = MaterialTheme.appColors.primary,
+            )
+        }
         Spacer(
             modifier = Modifier
                 .safeContentPadding()
                 .height(10.dp)
         )
-
 
     }
 }
@@ -271,7 +280,7 @@ private fun RequestLocation(
 private fun PermissionDenied(
     permissions: Array<String>,
     context: Context,
-    locationOnBoardingViewModel: LocationOnBoardingViewModel,
+    updateLocationViewModel: UpdateLocationViewModel,
     launcherMultiplePermissions: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
     activity: Activity
 ) {
@@ -306,8 +315,8 @@ private fun PermissionDenied(
                             it
                         ) == PackageManager.PERMISSION_GRANTED
                     }) {
-                    locationOnBoardingViewModel.permissionDenied.value = false
-                    locationOnBoardingViewModel.requestLocation(activity = activity)
+                    updateLocationViewModel.permissionDenied.value = false
+                    updateLocationViewModel.requestLocation(activity = activity)
                 } else {
                     launcherMultiplePermissions.launch(permissions)
                 }
@@ -329,8 +338,10 @@ private fun PermissionDenied(
 @Composable
 private fun GotLocation(
     currentLocation: LocationDetails,
-    locationOnBoardingViewModel: LocationOnBoardingViewModel
+    updateLocationViewModel: UpdateLocationViewModel,
+    navController: NavController
 ) {
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -351,6 +362,7 @@ private fun GotLocation(
         ) {
             if (apiKeyEmptyOrHasException.not()) {
                 val mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"
+
                 val painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(mapUrl)
@@ -384,6 +396,8 @@ private fun GotLocation(
             }
             if (isLoading) LoadingView()
         }
+
+
         Spacer(modifier = Modifier.fillMaxHeight(0.1f))
         androidx.compose.material3.Text(
             modifier = Modifier
@@ -429,14 +443,30 @@ private fun GotLocation(
         }
 
         Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ButtonView(
+                onClick = {
+                    updateLocationViewModel.callPostLocation()
+                },
+                stringResource(id = R.string.continue_to_next),
+                modifier = Modifier.padding(horizontal = 20.dp),
+            )
+            ButtonView(
+                onClick = {
+                    navController.navigate(updateListScreenContent)
+                },
+                stringResource(id = R.string.skip),
+                modifier = Modifier.padding(horizontal = 20.dp),
+                textColor = MaterialTheme.appColors.primary,
+                color = MaterialTheme.appColors.onPrimary,
+                borderColor = MaterialTheme.appColors.primary,
+            )
+        }
 
-        ButtonView(
-            onClick = {
-                locationOnBoardingViewModel.callPostLocation()
-            },
-            stringResource(id = R.string.continue_to_next),
-            modifier = Modifier.padding(horizontal = 20.dp),
-        )
         Spacer(
             modifier = Modifier
                 .safeContentPadding()

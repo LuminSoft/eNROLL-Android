@@ -29,6 +29,7 @@ import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
+import updateLocationScreenContent
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
@@ -200,7 +201,7 @@ class UpdateViewModel(
             3 -> testUpdateScreenContent
             4 -> testUpdateScreenContent
             5 -> testUpdateScreenContent
-            6 -> testUpdateScreenContent
+            6 -> updateLocationScreenContent
             7 -> testUpdateScreenContent
             8 -> testUpdateScreenContent
             else -> null
