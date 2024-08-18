@@ -125,7 +125,6 @@ private fun handleSuccess(status: Int) {
                     loading.value = false
                 },
                 {
-                    println("testtt $it")
                     userHasNationalId.value = it
                     loading.value = false
 
