@@ -50,7 +50,6 @@ fun UpdateListScreenContent(
 ) {
 
 
-
     val context = LocalContext.current
     val steps = updateViewModel.steps.collectAsState()
     val activity = context.findActivity()
@@ -59,8 +58,9 @@ fun UpdateListScreenContent(
 
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (loading.value) LoadingView()
-        else{
+
+
+        if (steps.value!=null) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -107,8 +107,8 @@ fun UpdateListScreenContent(
                 )
             }
         }
-
-
+        else
+            if (loading.value) LoadingView()
     }
 
 }

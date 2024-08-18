@@ -1,4 +1,6 @@
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -189,7 +191,19 @@ fun SecurityQuestionAuthUpdateScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+
+                ButtonView(
+                    onClick = {
+                        navController.popBackStack()
+                              },
+                    stringResource(id = R.string.skip),
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    textColor = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.onPrimary,
+                    borderColor = MaterialTheme.appColors.primary,
+                )
+
 
             }
         }
