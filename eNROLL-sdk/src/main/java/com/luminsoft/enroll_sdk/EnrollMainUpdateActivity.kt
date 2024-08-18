@@ -34,6 +34,8 @@ import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
+import updateLocationModule
+import updateLocationRouter
 
 
 @Suppress("DEPRECATION")
@@ -73,6 +75,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     checkDeviceIdAuthUpdateRouter(navController = navController, updateViewModel)
                     securityQuestionAuthUpdateRouter(navController = navController, updateViewModel)
                     faceCaptureAuthUpdateRouter(navController = navController, updateViewModel)
+                    updateLocationRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -90,6 +93,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(deviceIdAuthUpdateModule)
                 modules(securityQuestionAuthUpdateModule)
                 modules(faceCaptureAuthUpdateModule)
+                modules(updateLocationModule)
             }.koin
         }
     }
