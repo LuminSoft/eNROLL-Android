@@ -36,6 +36,8 @@ import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
 import updateLocationModule
 import updateLocationRouter
+import updateNationalIdConfirmationModule
+import updateNationalIdRouter
 
 
 @Suppress("DEPRECATION")
@@ -76,6 +78,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     securityQuestionAuthUpdateRouter(navController = navController, updateViewModel)
                     faceCaptureAuthUpdateRouter(navController = navController, updateViewModel)
                     updateLocationRouter(navController = navController, updateViewModel)
+                    updateNationalIdRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -94,6 +97,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(securityQuestionAuthUpdateModule)
                 modules(faceCaptureAuthUpdateModule)
                 modules(updateLocationModule)
+                modules(updateNationalIdConfirmationModule)
             }.koin
         }
     }

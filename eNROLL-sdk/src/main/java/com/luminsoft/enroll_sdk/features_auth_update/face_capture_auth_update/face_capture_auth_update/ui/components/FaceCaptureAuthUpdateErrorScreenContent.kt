@@ -28,7 +28,6 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPostScanScreenContent
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthErrorScreen
 import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
@@ -60,7 +59,7 @@ fun FaceCaptureAuthUpdateErrorScreen(
                 } catch (e: Exception) {
                     updateViewModel.disableLoading()
                     updateViewModel.errorMessage.value = e.message
-                    updateViewModel.scanType.value = ScanType.FRONT
+                    updateViewModel.scanType.value = UpdateScanType.FRONT
                     navController.navigate(faceCaptureAuthErrorScreen)
                     println(e.message)
                 }
