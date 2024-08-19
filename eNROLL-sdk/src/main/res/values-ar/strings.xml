@@ -206,6 +206,7 @@
     <string name="someThingWentWrong">حدث خطأ</string>
     <string name="re_createAccount">إعادة إنشاء الحساب</string>
     <string name="successfulRegistration">تم إنشاء الحساب بنجاح</string>
+    <string name="successfulUpdate">تم تحديث الحساب بنجاح</string>
     <string name="you_would_be_required_to_sign_documents_later_on">سوف يُطلب منك التوقيع على المستندات لاحقًا</string>
     <string name="we_will_contact_you_to_receive_the_physical_token">سوف نتصل بك لإستلام التوقيع الإلكتروني</string>
     <string name="noDocumentTypeBeforeSmileLiveness">لا يوجد تأكيد بطاقة قبل مطابقة الصورة</string>
@@ -300,8 +301,6 @@
     <string name="errorEmptyAnswer">من فضلك أدخل الاجابه</string>
     <string name="errorMaxLengthAnswer">يجب ألا تزيد الاجابه عن 150 حرف</string>
     <string name="successfulAuthentication">تم التحقق الحساب بنجاح</string>
-
-
     <string name="readTermsAndConditions">اقرأ الشروط والأحكام</string>
     <string name="acceptTermsAndConditions">أوافق على الشروط و الأحكام</string>
     <string name="youMustApproveOurTermsToProceed">يجب عليك الموافقة على شروطنا وأحكامنا حتى تتمكن من المتابعة</string>
@@ -312,5 +311,17 @@
     <string name="applyForSignature">طلب توقيع الكتروني</string>
     <string name="haveSignature">لدي توقيع الكتروني</string>
 
+    <string name="youCanSelectOneItem">يمكنك تحديد عنصر واحد</string>
+    <string name="updateNationalId">تحديث البطاقة</string>
+    <string name="updatePassport">تحديث جواز السفر</string>
+    <string name="updatePhoneNumber">تحديث رقم الهاتف</string>
+    <string name="updateMail">تحديث البريد الإلكتروني</string>
+    <string name="updateSecurityQuestion">تحديث سؤال الأمان</string>
+    <string name="updateLocation">تحديث الموقع</string>
+    <string name="updateDevice">تحديث الرقم التعريفي</string>
+    <string name="updatePassword">تحديث كلمة المرور</string>
+    <string name="updateAml">تحديث غسيل الاموال</string>
+    <string name="updateElectronicSignature">تحديث التوقيع الإلكتروني</string>
+    <string name="cancelUpdate">إلغاء التعديل</string>
 
 </resources>

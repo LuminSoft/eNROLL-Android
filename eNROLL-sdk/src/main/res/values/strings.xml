@@ -207,6 +207,7 @@
     <string name="someThingWentWrong">Something went wrong</string>
     <string name="re_createAccount">Recreate account</string>
     <string name="successfulRegistration">Account successfully created</string>
+    <string name="successfulUpdate">Account successfully updated</string>
     <string name="you_would_be_required_to_sign_documents_later_on">You would be required to sign documents later on</string>
     <string name="we_will_contact_you_to_receive_the_physical_token">We will contact you to receive the physical token</string>
     <string name="noDocumentTypeBeforeSmileLiveness">No document data before SmileLiveness</string>
@@ -309,5 +310,17 @@
     <string name="haveSignature">I have a signature</string>
 
 
+    <string name="youCanSelectOneItem">You can select one item</string>
+    <string name="updateNationalId">Update National Id</string>
+    <string name="updatePassport">Update Passport</string>
+    <string name="updatePhoneNumber">Update Phone Number</string>
+    <string name="updateMail">Update E-Mail</string>
+    <string name="updateSecurityQuestion">Update Security Question</string>
+    <string name="updateLocation">Update Location</string>
+    <string name="updateDevice">Update Device</string>
+    <string name="updatePassword">Update Password</string>
+    <string name="updateAml">Update Aml</string>
+    <string name="updateElectronicSignature">Update Electronic Signature</string>
+    <string name="cancelUpdate">Cancel Update</string>
 
 </resources>

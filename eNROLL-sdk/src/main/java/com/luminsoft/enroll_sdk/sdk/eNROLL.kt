@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
+import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -18,32 +19,35 @@ object eNROLL {
     fun init(
         tenantId: String,
         tenantSecret: String,
-        applicantId: String,
-        levelOfTrustToken: String,
         enrollMode: EnrollMode,
         environment: EnrollEnvironment = EnrollEnvironment.STAGING,
         localizationCode: LocalizationCode = LocalizationCode.EN,
+        applicantId: String? = "",
+        levelOfTrustToken: String? = "",
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
-        skipTutorial: Boolean = false,
-        appColors: AppColors
-//        myPrimaryColor: Color = Color(0xFF1D56B8)
+        skipTutorial: Boolean? = false,
+        appColors: AppColors? = AppColors()
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
         if (tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
+        if (enrollMode == EnrollMode.AUTH) {
+            if (applicantId.isNullOrEmpty() || levelOfTrustToken.isNullOrEmpty())
+                throw Exception("Invalid Applicant Id or Level Of Trust Token")
+        }
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
         EnrollSDK.tenantId = tenantId
-        EnrollSDK.applicantId = applicantId
-        EnrollSDK.levelOfTrustToken = levelOfTrustToken
+        EnrollSDK.applicantId = applicantId!!
+        EnrollSDK.levelOfTrustToken = levelOfTrustToken!!
         EnrollSDK.googleApiKey = googleApiKey!!
         EnrollSDK.localizationCode = localizationCode
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
-        EnrollSDK.skipTutorial = skipTutorial
-        EnrollSDK.appColors = appColors
+        EnrollSDK.skipTutorial = skipTutorial!!
+        EnrollSDK.appColors = appColors!!
 
 //        EnrollSDK.myPrimaryColor = myPrimaryColor
     }
@@ -56,15 +60,27 @@ object eNROLL {
         if (EnrollSDK.tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
         setLocale(EnrollSDK.localizationCode, activity)
-        if (EnrollSDK.enrollMode == EnrollMode.ONBOARDING)
-            activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
-        else if (EnrollSDK.enrollMode == EnrollMode.AUTH) {
-            if (EnrollSDK.applicantId.isEmpty())
-                throw Exception("Invalid application id")
-            else if (EnrollSDK.levelOfTrustToken.isEmpty())
-                throw Exception("Invalid level of trust token")
+        when (EnrollSDK.enrollMode) {
+            EnrollMode.ONBOARDING -> {
+                activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
+            }
 
-            activity.startActivity(Intent(activity, EnrollMainAuthActivity::class.java))
+            EnrollMode.AUTH -> {
+                if (EnrollSDK.applicantId.isEmpty())
+                    throw Exception("Invalid application id")
+                else if (EnrollSDK.levelOfTrustToken.isEmpty())
+                    throw Exception("Invalid level of trust token")
+
+                activity.startActivity(Intent(activity, EnrollMainAuthActivity::class.java))
+            }
+
+            EnrollMode.UPDATE -> {
+                if (EnrollSDK.applicantId.isEmpty())
+                    throw Exception("Invalid application id")
+                activity.startActivity(Intent(activity, EnrollMainUpdateActivity::class.java))
+            }
+
+            EnrollMode.CANT_LOGIN -> TODO()
         }
     }
 
