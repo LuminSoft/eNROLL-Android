@@ -1,6 +1,13 @@
 workflows:
   android:
     name: Android Workflow
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: release/staging
+          include: true
+          source: true
     scripts:
       - ./gradlew clean assembleRelease
       - name: Deploy to Firebase App Distribution
