@@ -65,7 +65,8 @@ fun UpdateListScreenContent(
             navController.navigate(multipleMailsUpdateScreenContent)
 
 //TODO Navigate to update step screen
-        }
+        } else
+            if (loading.value) LoadingView()
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -74,48 +75,44 @@ fun UpdateListScreenContent(
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
-                Image(
-                    painterResource(R.drawable.update_icon),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight(0.1f)
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(
-                    text = stringResource(id = R.string.youCanSelectOneItem),
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp
-                )
+            Image(
+                painterResource(R.drawable.update_icon),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxHeight(0.1f)
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                text = stringResource(id = R.string.youCanSelectOneItem),
+                color = MaterialTheme.colorScheme.outline,
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp
+            )
 
-                Spacer(modifier = Modifier.height(20.dp))
-                LazyColumn(
-                    modifier = Modifier.fillMaxHeight(0.77f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(steps.value!!.size) { index ->
-                        UpdateStepItem(steps.value!![index], updateViewModel)
-                    }
+            Spacer(modifier = Modifier.height(20.dp))
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(0.77f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(steps.value!!.size) { index ->
+                    UpdateStepItem(steps.value!![index], updateViewModel)
                 }
-                ButtonView(
-                    onClick = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                ResourceProvider.instance.getStringResource(
-                                    R.string.cancelUpdate
-                                ), null
-                            )
-                        )
-                    },
-                    title = ResourceProvider.instance.getStringResource(R.string.cancel)
-                )
             }
+            ButtonView(
+                onClick = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.error(
+                        EnrollFailedModel(
+                            ResourceProvider.instance.getStringResource(
+                                R.string.cancelUpdate
+                            ), null
+                        )
+                    )
+                },
+                title = ResourceProvider.instance.getStringResource(R.string.cancel)
+            )
         }
-        else
-            if (loading.value) LoadingView()
     }
-
 }
 
 @Composable
