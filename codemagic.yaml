@@ -1,7 +1,6 @@
 workflows:
   android:
     name: Android Workflow
-    environment:
     scripts:
       - ./gradlew clean assembleRelease
       - name: Deploy to Firebase App Distribution
