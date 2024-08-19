@@ -8,16 +8,9 @@ pipelines:
           - gradle
           - android-sdk
         script:
-          # Set the Android SDK path
-          - export ANDROID_HOME=/Users/luminsoft/Library/Android/sdk
-          - mkdir -p $ANDROID_HOME/cmdline-tools/latest
-
-          # Download and extract the Command-Line Tools
-          - wget "https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip" -O commandlinetools.zip
-          - unzip commandlinetools.zip -d $ANDROID_HOME/cmdline-tools/latest
-
-          # Accept licenses
-          - yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          - export ANDROID_HOME=$HOME/Library/Android/sdk
+          - export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+          - yes | sdkmanager --licenses
 
           # Install necessary SDK components
           - $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
