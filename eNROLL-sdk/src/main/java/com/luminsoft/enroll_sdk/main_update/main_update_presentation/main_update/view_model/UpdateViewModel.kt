@@ -14,6 +14,7 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
@@ -72,7 +73,8 @@ class UpdateViewModel(
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
     var updateStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
-    var updateAuthenticationStep: MutableStateFlow<UpdateVerificationMethodResponse?> = MutableStateFlow(null)
+    var updateAuthenticationStep: MutableStateFlow<UpdateVerificationMethodResponse?> =
+        MutableStateFlow(null)
     var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
@@ -173,7 +175,7 @@ class UpdateViewModel(
                     updateStepId.value = updateStep.updateStepId
                     updateAuthenticationStep.value = it
                     updateStepModel.value?.updateAuthStepId = it.authStepId
-                      navigateToAuthStep(navController!!, it.authStepId!!)
+                    navigateToAuthStep(navController!!, it.authStepId!!)
                 })
         }
     }
@@ -200,7 +202,7 @@ class UpdateViewModel(
             1 -> testUpdateScreenContent
             2 -> testUpdateScreenContent
             3 -> testUpdateScreenContent
-            4 -> testUpdateScreenContent
+            4 -> multipleMailsUpdateScreenContent
             5 -> testUpdateScreenContent
             6 -> updateLocationScreenContent
             7 -> testUpdateScreenContent
@@ -213,7 +215,7 @@ class UpdateViewModel(
     }
 
 
-    fun convertStepUpdateIdToTitle() :String{
+    fun convertStepUpdateIdToTitle(): String {
         val title = when (updateStepId.value) {
             1 -> "Update NationalID"
             2 -> "Update Passport"
@@ -228,7 +230,6 @@ class UpdateViewModel(
         return title;
 
     }
-
 
 
     fun removeCurrentStep(id: Int): Boolean {
