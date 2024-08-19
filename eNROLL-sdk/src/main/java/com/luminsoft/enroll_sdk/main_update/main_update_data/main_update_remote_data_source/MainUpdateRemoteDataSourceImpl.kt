@@ -28,6 +28,11 @@ class MainUpdateRemoteDataSourceImpl(
 
     }
 
+    override suspend fun getUpdateAuthenticationMethod(updateStepId: Int): BaseResponse<Any> {
+        return network.apiRequest { mainApi.getUpdateAuthenticationMethod(updateStepId) }
+
+    }
+
 }
 
 

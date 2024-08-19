@@ -1,0 +1,30 @@
+image: openjdk:8
+
+pipelines:
+  default:
+    - step:
+        name: Build and Deploy to Firebase
+        caches:
+          - gradle
+          - android-sdk
+        script:
+          - export ANDROID_HOME=$HOME/Library/Android/sdk
+          - export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+          - yes | sdkmanager --licenses
+
+          # Install necessary SDK components
+          - $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+
+          # Build the project
+          - ./gradlew assembleRelease
+
+          # Deploy to Firebase
+          - ./gradlew appDistributionUploadRelease
+
+        artifacts:
+          - app/build/outputs/**
+
+definitions:
+  caches:
+    gradle: ~/.gradle
+    android-sdk: $ANDROID_HOME

@@ -42,6 +42,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
+import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 
 
 @Composable
@@ -50,10 +51,13 @@ fun UpdateListScreenContent(
     navController: NavController
 ) {
 
-    val steps = updateViewModel.steps.collectAsState()
     val updateStepModel = updateViewModel.updateStepModel.collectAsState()
     val context = LocalContext.current
+    val steps = updateViewModel.steps.collectAsState()
     val activity = context.findActivity()
+    val loading = updateViewModel.loading.collectAsState()
+    val failure = updateViewModel.failure.collectAsState()
+
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (updateStepModel.value != null) {
@@ -70,44 +74,46 @@ fun UpdateListScreenContent(
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
-            Image(
-                painterResource(R.drawable.update_icon),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxHeight(0.1f)
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(
-                text = stringResource(id = R.string.youCanSelectOneItem),
-                color = MaterialTheme.colorScheme.outline,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp
-            )
+                Image(
+                    painterResource(R.drawable.update_icon),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxHeight(0.1f)
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(
+                    text = stringResource(id = R.string.youCanSelectOneItem),
+                    color = MaterialTheme.colorScheme.outline,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp
+                )
 
-            Spacer(modifier = Modifier.height(20.dp))
-            LazyColumn(
-                modifier = Modifier.fillMaxHeight(0.77f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(steps.value!!.size) { index ->
-                    UpdateStepItem(steps.value!![index], updateViewModel)
+                Spacer(modifier = Modifier.height(20.dp))
+                LazyColumn(
+                    modifier = Modifier.fillMaxHeight(0.77f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(steps.value!!.size) { index ->
+                        UpdateStepItem(steps.value!![index], updateViewModel)
+                    }
                 }
-            }
-            ButtonView(
-                onClick = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            ResourceProvider.instance.getStringResource(
-                                R.string.cancelUpdate
-                            ), null
+                ButtonView(
+                    onClick = {
+                        activity.finish()
+                        EnrollSDK.enrollCallback?.error(
+                            EnrollFailedModel(
+                                ResourceProvider.instance.getStringResource(
+                                    R.string.cancelUpdate
+                                ), null
+                            )
                         )
-                    )
-                },
-                title = ResourceProvider.instance.getStringResource(R.string.cancel)
-            )
+                    },
+                    title = ResourceProvider.instance.getStringResource(R.string.cancel)
+                )
+            }
         }
-
+        else
+            if (loading.value) LoadingView()
     }
 
 }

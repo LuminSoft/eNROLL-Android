@@ -1,23 +1,25 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations
 
+import checkDeviceIdAuthUpdateScreenContent
 import checkIMEIAuthScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen
-import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthPreScanScreenContent
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_navigation.checkExpiryDateAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthPreScanScreenContent
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_navigation.locationAuthScreenContent
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_navigation.mailAuthScreenContent
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthScreenContent
 import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_navigation.phoneAuthScreenContent
 import securityQuestionAuthScreenContent
+import securityQuestionAuthUpdateScreenContent
 
 
 data class StepUpdateModel(
 
     @SerializedName("updateStepId") var updateStepId: Int? = null,
-    @SerializedName("lastUpdatedDate") var lastUpdatedDate: String? = null
-
+    @SerializedName("lastUpdatedDate") var lastUpdatedDate: String? = null,
+    var updateAuthStepId: Int? = null,
 ) {
     fun parseUpdateStepType(): EkycStepUpdateType {
         return when (this.updateStepId) {
@@ -48,6 +50,22 @@ data class StepUpdateModel(
 
             else -> {
                 nationalIdOnBoardingPreScanScreen
+            }
+        }
+    }
+
+
+
+    fun stepAuthBeforeUpdateNameNavigator(): String {
+        return when (this.updateAuthStepId) {
+            1 -> passwordAuthScreenContent
+            2 -> mailAuthScreenContent
+            3 -> securityQuestionAuthUpdateScreenContent  // updated
+            4 -> checkDeviceIdAuthUpdateScreenContent    // updated
+            5 -> phoneAuthScreenContent
+            6 -> faceCaptureAuthPreScanScreenContent
+            else -> {
+                passwordAuthScreenContent
             }
         }
     }

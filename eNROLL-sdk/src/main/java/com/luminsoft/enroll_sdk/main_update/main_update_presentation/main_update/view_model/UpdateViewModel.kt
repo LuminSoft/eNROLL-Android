@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import arrow.core.raise.Null
+import checkDeviceIdAuthUpdateScreenContent
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -16,18 +17,25 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
+import com.luminsoft.enroll_sdk.main_update.main_update_data.models.UpdateVerificationMethodResponse
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecaseParams
+import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdateAuthenticationMethodUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdateStepConfigurationsUsecaseParams
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepIdParam
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
+import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
+import securityQuestionAuthUpdateScreenContent
+import testUpdateScreenContent
+import updateLocationScreenContent
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
     private val updateStepConfigurationsUsecase: UpdateStepsConfigurationsUsecase,
     private val updateStepIntRequestUseCase: UpdateStepsInitRequestUsecase,
+    private val updateAuthenticationMethodUsecase: GetUpdateAuthenticationMethodUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -63,6 +71,8 @@ class UpdateViewModel(
     var isPassportAndMailFinal: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
+    var updateStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
+    var updateAuthenticationStep: MutableStateFlow<UpdateVerificationMethodResponse?> = MutableStateFlow(null)
     var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
@@ -140,11 +150,86 @@ class UpdateViewModel(
                     loading.value = false
                 },
                 {
-                    loading.value = false
                     updateStepModel.value = updateStep
+                    getUpdateAuthenticationStep(updateStep)
+
                 })
         }
     }
+
+    private fun getUpdateAuthenticationStep(updateStep: StepUpdateModel) {
+//        loading.value = true
+        ui {
+
+            val response: Either<SdkFailure, UpdateVerificationMethodResponse> =
+                updateAuthenticationMethodUsecase.call(updateStep.updateStepId!!)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    updateStepId.value = updateStep.updateStepId
+                    updateAuthenticationStep.value = it
+                    updateStepModel.value?.updateAuthStepId = it.authStepId
+                      navigateToAuthStep(navController!!, it.authStepId!!)
+                })
+        }
+    }
+
+
+    private fun navigateToAuthStep(navController: NavController, stepId: Int) {
+        val route = when (stepId) {
+            1 -> null   //TODO: password not in our scope
+            2 -> null   //TODO: email is blocked
+            3 -> securityQuestionAuthUpdateScreenContent
+            4 -> checkDeviceIdAuthUpdateScreenContent
+            5 -> null   //TODO: phone is blocked
+            6 -> faceCaptureAuthUpdatePreScanScreenContent
+            else -> securityQuestionAuthUpdateScreenContent
+        }
+        route?.let {
+            navController.navigate(it)
+        }
+    }
+
+    fun navigateToUpdateAfterAuthStep() {
+        //TODO: will navigate to update modules
+        val route = when (updateStepId.value) {
+            1 -> testUpdateScreenContent
+            2 -> testUpdateScreenContent
+            3 -> testUpdateScreenContent
+            4 -> testUpdateScreenContent
+            5 -> testUpdateScreenContent
+            6 -> updateLocationScreenContent
+            7 -> testUpdateScreenContent
+            8 -> testUpdateScreenContent
+            else -> null
+        }
+        route?.let {
+            navController?.navigate(it)
+        }
+    }
+
+
+    fun convertStepUpdateIdToTitle() :String{
+        val title = when (updateStepId.value) {
+            1 -> "Update NationalID"
+            2 -> "Update Passport"
+            3 -> "Update Phone"
+            4 -> "Update Email"
+            5 -> "Update Device"
+            6 -> "Update Location"
+            7 -> "Update Security Questions"
+            8 -> "Update Password"
+            else -> "Update"
+        }
+        return title;
+
+    }
+
+
 
     fun removeCurrentStep(id: Int): Boolean {
         // Check if 'steps' is not null
@@ -175,8 +260,10 @@ class UpdateViewModel(
     }
 
     private fun navigateToNextStep() {
-        mailValue.value = TextFieldValue()
-        currentPhoneNumber.value = null
+        navController!!.navigate(steps.value!!.first().stepUpdateNameNavigator())
+    }
+
+    private fun navigateBackToUpdate() {
         navController!!.navigate(steps.value!!.first().stepUpdateNameNavigator())
     }
 

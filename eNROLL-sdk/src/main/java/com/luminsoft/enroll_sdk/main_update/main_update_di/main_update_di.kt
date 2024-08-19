@@ -8,6 +8,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_remote_
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_repository.MainUpdateRepositoryImplementation
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.repository.MainUpdateRepository
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GenerateUpdateSessionTokenUsecase
+import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdateAuthenticationMethodUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -26,6 +27,10 @@ val mainUpdateModule = module {
         UpdateStepsInitRequestUsecase(get())
     }
 
+    single {
+        GetUpdateAuthenticationMethodUsecase(get())
+    }
+
     single<MainUpdateRemoteDataSource> {
         MainUpdateRemoteDataSourceImpl(get(), get())
     }
@@ -41,7 +46,7 @@ val mainUpdateModule = module {
     }
     viewModel {
         UpdateViewModel(
-            get(), get(),get(), context = androidApplication()
+            get(), get(),get(),get(), context = androidApplication()
         )
     }
 
