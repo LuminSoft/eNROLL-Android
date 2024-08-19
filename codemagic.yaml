@@ -1,0 +1,16 @@
+workflows:
+  android:
+    name: Android Workflow
+    environment:
+      vars:
+        FIREBASE_TOKEN: Encrypted(...)
+    scripts:
+      - ./gradlew clean assembleRelease
+      - name: Deploy to Firebase App Distribution
+        script: |
+          firebase appdistribution:distribute ./app/build/outputs/apk/release/app-release.apk \
+          --app 1:477819023880:android:de1c11868522e567f257bd \
+          --token $FIREBASE_TOKEN \
+          --groups lumin
+    artifacts:
+      - app/build/outputs/apk/release/*.apk
