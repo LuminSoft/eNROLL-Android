@@ -18,32 +18,35 @@ object eNROLL {
     fun init(
         tenantId: String,
         tenantSecret: String,
-        applicantId: String,
-        levelOfTrustToken: String,
         enrollMode: EnrollMode,
         environment: EnrollEnvironment = EnrollEnvironment.STAGING,
         localizationCode: LocalizationCode = LocalizationCode.EN,
+        applicantId: String? = "",
+        levelOfTrustToken: String? = "",
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
-        skipTutorial: Boolean = false,
-        appColors: AppColors
-//        myPrimaryColor: Color = Color(0xFF1D56B8)
+        skipTutorial: Boolean? = false,
+        appColors: AppColors? = AppColors()
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
         if (tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
+        if (enrollMode == EnrollMode.AUTH) {
+            if (applicantId.isNullOrEmpty() || levelOfTrustToken.isNullOrEmpty())
+                throw Exception("Invalid Applicant Id or Level Of Trust Token")
+        }
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
         EnrollSDK.tenantId = tenantId
-        EnrollSDK.applicantId = applicantId
-        EnrollSDK.levelOfTrustToken = levelOfTrustToken
+        EnrollSDK.applicantId = applicantId!!
+        EnrollSDK.levelOfTrustToken = levelOfTrustToken!!
         EnrollSDK.googleApiKey = googleApiKey!!
         EnrollSDK.localizationCode = localizationCode
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
-        EnrollSDK.skipTutorial = skipTutorial
-        EnrollSDK.appColors = appColors
+        EnrollSDK.skipTutorial = skipTutorial!!
+        EnrollSDK.appColors = appColors!!
 
 //        EnrollSDK.myPrimaryColor = myPrimaryColor
     }
