@@ -34,22 +34,21 @@ object eNROLL {
         if (tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
         if (enrollMode == EnrollMode.AUTH) {
-            if (applicantId.isNullOrEmpty() || levelOfTrustToken.isNullOrEmpty())
+            if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
                 throw Exception("Invalid Applicant Id or Level Of Trust Token")
         }
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
         EnrollSDK.tenantId = tenantId
-        EnrollSDK.applicantId = applicantId!!
-        EnrollSDK.levelOfTrustToken = levelOfTrustToken!!
+        EnrollSDK.applicantId = applicantId
+        EnrollSDK.levelOfTrustToken = levelOfTrustToken
         EnrollSDK.googleApiKey = googleApiKey!!
         EnrollSDK.localizationCode = localizationCode
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
-        EnrollSDK.skipTutorial = skipTutorial!!
-        EnrollSDK.appColors = appColors!!
+        EnrollSDK.skipTutorial = skipTutorial
+        EnrollSDK.appColors = appColors
 
-//        EnrollSDK.myPrimaryColor = myPrimaryColor
     }
 
     fun launch(
