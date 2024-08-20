@@ -62,8 +62,8 @@ import io.github.cdimascio.dotenv.dotenv
 var dotenv = dotenv {
     directory = "/assets"
 //   filename = "env_andrew"
-    filename = "env_radwan"
-//    filename = "env_org_1"
+//    filename = "env_radwan"
+    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
@@ -89,9 +89,6 @@ class MainActivity : ComponentActivity() {
         super.onBackPressed()
 
     }
-
-
-
 
 
     var text = mutableStateOf("")
@@ -134,7 +131,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activity = LocalContext.current as Activity
 
-            val itemList = listOf("Onboarding", "Auth")
+            val itemList = listOf("Onboarding", "Auth", "Update")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
 
@@ -213,12 +210,10 @@ class MainActivity : ComponentActivity() {
                             Text(
                                 text = "Launch eNROLL",
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.appColors.onPrimary
+                                color = MaterialTheme.appColors.backGround
                             )
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
                 }
 
@@ -243,12 +238,10 @@ class MainActivity : ComponentActivity() {
         }
         try {
             eNROLL.init(
-                tenantIdText.value.text,
-                tenantSecretText.value.text,
-                applicationIdText.value.text,
-                levelOfTrustTokenText.value.text,
-                if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
-                if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
+                tenantId = tenantIdText.value.text,
+                tenantSecret = tenantSecretText.value.text,
+                enrollMode =  if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
+                environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
@@ -269,7 +262,9 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors =   AppColors()
+                appColors = AppColors(),
+                applicantId = applicationIdText.value.text,
+                levelOfTrustToken = levelOfTrustTokenText.value.text,
 
             )
         } catch (e: Exception) {

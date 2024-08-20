@@ -48,7 +48,7 @@ fun BottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.appColors.onPrimary).safeContentPadding()
+                .background(color = MaterialTheme.appColors.backGround).safeContentPadding()
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -61,7 +61,7 @@ fun BottomSheet(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = text,
-                    color = MaterialTheme.appColors.onSurface,
+                    color = MaterialTheme.appColors.appBlack,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
@@ -87,7 +87,7 @@ fun BottomSheet(
                                 onPressedSecondButton()
                             },
                             title = secondButtonText,
-                            color = MaterialTheme.appColors.onPrimary,
+                            color = MaterialTheme.appColors.backGround,
                             borderColor = getColor(bottomSheetStatus = bottomSheetStatus),
                             textColor = getColor(bottomSheetStatus = bottomSheetStatus)
                         )

@@ -14,6 +14,7 @@ object EnrollSDK {
     var tenantSecret = ""
     var applicantId = ""
     var levelOfTrustToken = ""
+    var updateSteps = arrayListOf<String>()
 
     // this info related to sdk initiation
     var environment = EnrollEnvironment.STAGING
@@ -26,8 +27,6 @@ object EnrollSDK {
 
     private fun getBaseUrl(): String {
         return when (environment) {
-//            EnrollEnvironment.STAGING -> "http://197.44.231.206"
-//            EnrollEnvironment.STAGING -> "http://197.168.1.39"
             EnrollEnvironment.STAGING -> "https://enrollstg.nasps.org.eg"
             EnrollEnvironment.PRODUCTION -> "https://enroll.nasps.org.eg"
         }

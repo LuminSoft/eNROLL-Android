@@ -19,4 +19,7 @@ open class GenerateOnboardingSessionTokenRequest {
     @SerializedName("levelOfTrutToken")
     internal var levelOfTrustToken: String? = null
 
+    @SerializedName("updateSteps")
+    internal var updateSteps: ArrayList<String>? = null
+
 }

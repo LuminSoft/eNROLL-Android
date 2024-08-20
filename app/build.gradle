@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.firebase.appdistribution'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -11,8 +13,8 @@ android {
         applicationId "com.luminsoft.EnrollTestingApp"
         minSdk 24
         targetSdk 34
-        versionCode 42
-        versionName "1.0.42"
+        versionCode 47
+        versionName "1.0.47"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,10 +25,18 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            firebaseAppDistribution {
+                releaseNotesFile = file("appdistribution/releasenotes.txt").toString()
+                testersFile = file("appdistribution/testers.txt").toString()
+            }
         }
         debug {
             debuggable true
             minifyEnabled false
+            firebaseAppDistribution {
+                releaseNotesFile = file("appdistribution/releasenotes.txt").toString()
+                testersFile = file("appdistribution/testers.txt").toString()
+            }
         }
     }
     compileOptions {

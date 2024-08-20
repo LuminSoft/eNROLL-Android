@@ -421,7 +421,7 @@ fun Step(
     isFirstItem: Boolean
 ) {
     val color =
-        if (isCompete || isCurrent) MaterialTheme.appColors.primary else MaterialTheme.appColors.onTertiary
+        if (isCompete || isCurrent) MaterialTheme.appColors.primary else Color(0xffEBEBEB)
 
     Box(modifier = modifier) {
 
