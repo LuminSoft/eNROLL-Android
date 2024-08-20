@@ -11,6 +11,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface EmailApiUpdate {
 
@@ -24,7 +25,7 @@ interface EmailApiUpdate {
     suspend fun updateOldMail(@Body request: MailUpdateOldMailRequestModel): Response<MailUpdateAddNewResponseModel>
 
     @POST("api/v1/update/UpdateEmailInfo/SendOTP")
-    suspend fun sendOTPUpdate(): Response<BasicResponseModel>
+    suspend fun sendOTPUpdate(@Query("id") id: Int): Response<BasicResponseModel>
 
     @POST("api/v1/update/UpdateEmailInfo/ValidateOTP")
     suspend fun validateOTPUpdate(@Body request: MailUpdateValidateMailRequestModel): Response<BasicResponseModel>

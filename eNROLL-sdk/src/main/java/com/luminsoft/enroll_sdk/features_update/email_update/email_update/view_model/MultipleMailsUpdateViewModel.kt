@@ -21,8 +21,9 @@ class MultipleMailsUpdateViewModel(
 
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isButtonLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var mailsApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var isClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var mailsUpdated: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var isDeleteMailClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var mailToDelete: MutableStateFlow<String?> = MutableStateFlow(null)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
         MutableStateFlow(null)
@@ -57,6 +58,10 @@ class MultipleMailsUpdateViewModel(
     }
 
 
+    fun callMakeDefaultMail(mail: String) {
+        makeDefaultMail(mail)
+    }
+
     private fun makeDefaultMail(mail: String) {
         loading.value = true
         ui {
@@ -73,9 +78,14 @@ class MultipleMailsUpdateViewModel(
                     loading.value = false
                 },
                 {
-                    getVerifiedMails()
+                    mailsUpdated.value = true
+//                    getVerifiedMails()
                 })
         }
+    }
+
+    fun callDeleteMail(mail: String) {
+        deleteMail(mail)
     }
 
     private fun deleteMail(mail: String) {
@@ -94,7 +104,8 @@ class MultipleMailsUpdateViewModel(
                     loading.value = false
                 },
                 {
-                    getVerifiedMails()
+                    mailsUpdated.value = true
+//                    getVerifiedMails()
                 })
         }
     }

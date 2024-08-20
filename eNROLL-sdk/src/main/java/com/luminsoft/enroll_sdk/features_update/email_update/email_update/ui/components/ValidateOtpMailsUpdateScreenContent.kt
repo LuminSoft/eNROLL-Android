@@ -48,13 +48,14 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
-import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
-import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ValidateOtpMailUseCase
-import com.luminsoft.enroll_sdk.features.email.email_navigation.multipleMailsScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
-import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.ValidateOtpMailsViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.ValidateOtpMailUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.mailsUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.ValidateOtpMailsUpdateViewModel
+import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -73,13 +74,13 @@ fun ValidateOtpMailsUpdateScreenContent(
 ) {
 
     val validateOtpMailUseCase =
-        ValidateOtpMailUseCase(koinInject())
+        ValidateOtpMailUpdateUseCase(koinInject())
     val mailSendOtpUseCase =
-        MailSendOtpUseCase(koinInject())
+        UpdateMailAddUpdateUseCase(koinInject())
 
     val validateOtpMailsViewModel =
         remember {
-            ValidateOtpMailsViewModel(
+            ValidateOtpMailsUpdateViewModel(
                 validateOtpMailUseCase = validateOtpMailUseCase,
                 mailSendOtpUseCase = mailSendOtpUseCase
             )
@@ -111,7 +112,14 @@ fun ValidateOtpMailsUpdateScreenContent(
     }
     BackGroundView(navController = navController, showAppBar = true) {
         if (otpApproved.value) {
-            navController.navigate(multipleMailsScreenContent)
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulUpdate),
+                buttonText = stringResource(id = R.string.exit),
+                onPressedButton = {
+                    navController.navigate(updateListScreenContent)
+                },
+            )
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -139,9 +147,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                         text = stringResource(id = R.string.wrongOtpFiveTimes),
                         buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
+                            navController.navigate(updateListScreenContent)
                         },
                     )
                 }
@@ -243,7 +249,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
-                                mailsUpdateVM.callSendOtp()
+                                mailsUpdateVM.callSendOtp(updateViewModel.mailValue.value!!.text)
                                 ticks = 60
                                 ticksF = 1.0f
                                 counter++
@@ -255,8 +261,13 @@ fun ValidateOtpMailsUpdateScreenContent(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
                         updateViewModel.userMail.value = updateViewModel.mailValue.value?.text
-                        updateViewModel.mailValue.value = TextFieldValue()
-                        mailsUpdateVM.callValidateOtp(otpValue.value)
+//                        updateViewModel.mailValue.value = TextFieldValue()
+                        updateViewModel.mailId.value?.let {
+                            mailsUpdateVM.callValidateOtp(
+                                otpValue.value,
+                                it
+                            )
+                        }
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
@@ -265,7 +276,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                     ButtonView(
                         isEnabled = ticks == 0,
                         onClick = {
-                            mailsUpdateVM.callSendOtp()
+                            mailsUpdateVM.callSendOtp(updateViewModel.mailValue.value!!.text)
                             ticks = 60
                             ticksF = 1.0f
                             counter++
@@ -278,7 +289,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                     ButtonView(
                         onClick = {
                             updateViewModel.mailValue.value = TextFieldValue()
-                            navController.navigate(multipleMailsScreenContent)
+                            navController.navigate(multipleMailsUpdateScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
                         textColor = MaterialTheme.appColors.primary,

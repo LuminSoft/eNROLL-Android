@@ -53,8 +53,8 @@ class EmailRepositoryUpdateImplementation(private val emailRemoteDataSource: Ema
         }
     }
 
-    override suspend fun sendOTPUpdate(): Either<SdkFailure, Null> {
-        return when (val response = emailRemoteDataSource.sendOTPUpdate()) {
+    override suspend fun sendOTPUpdate(id: Int): Either<SdkFailure, Null> {
+        return when (val response = emailRemoteDataSource.sendOTPUpdate(id)) {
             is BaseResponse.Success -> {
                 Either.Right(null)
             }

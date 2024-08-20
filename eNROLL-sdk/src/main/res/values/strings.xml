@@ -156,8 +156,8 @@
     <string name="confirm">Confirm</string>
     <string name="sendEmailOtp">Verify mail</string>
     <string name="sendPhoneOtp">Verify mobile number</string>
-    <string name="emailOtpContentConfirmationMessage">Are you sure you want to send the OTP to this email? </string>
-    <string name="phoneOtpContentConfirmationMessage">Are you sure you want to send the OTP to this number? </string>
+    <string name="emailOtpContentConfirmationMessage">Are you sure you want to send the OTP to this email? \n</string>
+    <string name="phoneOtpContentConfirmationMessage">Are you sure you want to send the OTP to this number? \n</string>
     <string name="invalid_phone_number">Invalid mobile number</string>
     <string name="invalid_english_name">Invalid english name</string>
     <string name="invalid_english_name_min">English name must be more than 2 characters</string>
@@ -322,5 +322,8 @@
     <string name="updateAml">Update Aml</string>
     <string name="updateElectronicSignature">Update Electronic Signature</string>
     <string name="cancelUpdate">Cancel Update</string>
+    <string name="deleteConfirmationMessage">Are you sure you want to delete this mail? \n </string>
+    <string name="delete">Delete</string>
+
 
 </resources>

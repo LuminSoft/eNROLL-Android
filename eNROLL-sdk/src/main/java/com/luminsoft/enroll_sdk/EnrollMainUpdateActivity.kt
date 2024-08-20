@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk
 
 import EKYCsDKTheme
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -43,9 +44,11 @@ import updateLocationRouter
 @Suppress("DEPRECATION")
 class EnrollMainUpdateActivity : ComponentActivity() {
 
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-
     }
+
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
         ResourceProvider.instance.initializeWithApplicationContext(this)

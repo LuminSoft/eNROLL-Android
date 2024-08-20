@@ -14,7 +14,7 @@ interface EmailRepositoryUpdate {
     suspend fun updateMailAdd(request: MailUpdateRequestModel): Either<SdkFailure, MailUpdateAddNewResponseModel>
     suspend fun sendVerifyEmailOtp(request: MailUpdateRequestModel): Either<SdkFailure, Null>
     suspend fun updateOldMail(request: MailUpdateOldMailRequestModel): Either<SdkFailure, MailUpdateAddNewResponseModel>
-    suspend fun sendOTPUpdate(): Either<SdkFailure, Null>
+    suspend fun sendOTPUpdate(id: Int): Either<SdkFailure, Null>
     suspend fun validateOTPUpdate(request: MailUpdateValidateMailRequestModel): Either<SdkFailure, Null>
     suspend fun getApplicantEmails(): Either<SdkFailure, List<GetVerifiedMailsResponseModel>>
     suspend fun deleteMail(request: MakeDefaultRequestModel): Either<SdkFailure, Null>

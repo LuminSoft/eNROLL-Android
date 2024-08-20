@@ -32,11 +32,12 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
-import com.luminsoft.enroll_sdk.features.email.email_navigation.validateOtpMailsScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.validateOtpMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.AddMailUpdateViewModel
+import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -54,7 +55,7 @@ fun MailsUpdateScreenContent(
 ) {
 
     val updateMailAddUseCase =
-        UpdateMailAddUseCase(koinInject())
+        UpdateMailAddUpdateUseCase(koinInject())
 
     val sendOtpUpdateUseCase =
         SendOtpUpdateUseCase(koinInject())
@@ -76,6 +77,7 @@ fun MailsUpdateScreenContent(
         mailsUpdateViewModel.mailSentSuccessfully.collectAsState()
     val failure = mailsUpdateViewModel.failure.collectAsState()
     val isClicked = mailsUpdateViewModel.isClicked.collectAsState()
+    val mailId = mailsUpdateViewModel.mailId.collectAsState()
 
     val userHasModifiedText = remember { mutableStateOf(false) }
 
@@ -99,7 +101,8 @@ fun MailsUpdateScreenContent(
         }
 
         if (mailSentSuccessfully.value) {
-            navController.navigate(validateOtpMailsScreenContent)
+            mailId.value?.let { updateViewModel.updateMailId(it) }
+            navController.navigate(validateOtpMailsUpdateScreenContent)
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -202,6 +205,15 @@ fun MailsUpdateScreenContent(
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
+                ButtonView(
+                    onClick = {
+                        navController.navigate(updateListScreenContent)
+                    },
+                    title = stringResource(id = R.string.exit),
+                    textColor = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.onPrimary,
+                    borderColor = MaterialTheme.appColors.primary,
+                )
 
             }
         }

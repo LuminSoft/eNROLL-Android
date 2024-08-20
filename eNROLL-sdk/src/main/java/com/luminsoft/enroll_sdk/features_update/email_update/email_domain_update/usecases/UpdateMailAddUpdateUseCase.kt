@@ -7,7 +7,7 @@ import com.luminsoft.enroll_sdk.features_update.email_update.email_data_update.e
 import com.luminsoft.enroll_sdk.features_update.email_update.email_data_update.email_models_update.mail_info_update.MailUpdateRequestModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.repository.EmailRepositoryUpdate
 
-class UpdateMailAddUseCase(private val mailsRepository: EmailRepositoryUpdate) :
+class UpdateMailAddUpdateUseCase(private val mailsRepository: EmailRepositoryUpdate) :
     UseCase<Either<SdkFailure, MailUpdateAddNewResponseModel>, UpdateMailAddUseCaseParams> {
 
     override suspend fun call(params: UpdateMailAddUseCaseParams): Either<SdkFailure, MailUpdateAddNewResponseModel> {

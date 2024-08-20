@@ -76,6 +76,7 @@ class UpdateViewModel(
     var updateAuthenticationStep: MutableStateFlow<UpdateVerificationMethodResponse?> =
         MutableStateFlow(null)
     var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
+    var mailId: MutableStateFlow<Int?> = MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -270,5 +271,9 @@ class UpdateViewModel(
 
     fun navigateToTheSameStep() {
         navController!!.navigate(steps.value!!.first().stepUpdateNameNavigator())
+    }
+
+    fun updateMailId(id: Int) {
+        mailId.value = id
     }
 }
