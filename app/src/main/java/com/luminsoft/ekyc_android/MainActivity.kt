@@ -212,12 +212,10 @@ class MainActivity : ComponentActivity() {
                             Text(
                                 text = "Launch eNROLL",
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.appColors.onPrimary
+                                color = MaterialTheme.appColors.backGround
                             )
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
                 }
 

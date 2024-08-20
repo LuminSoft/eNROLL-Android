@@ -73,6 +73,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 import org.koin.compose.koinInject
 
 
@@ -360,7 +361,7 @@ private fun GotLocation(
         Spacer(modifier = Modifier.height(20.dp))
 
         Divider(
-            color = MaterialTheme.appColors.secondary,
+            color = ConstantColors.darkPurple,
             thickness = 0.8.dp,
             modifier = Modifier.fillMaxWidth(0.8f)
         )

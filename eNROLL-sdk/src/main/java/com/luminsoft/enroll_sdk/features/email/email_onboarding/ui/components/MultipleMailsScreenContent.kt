@@ -53,6 +53,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 import org.koin.compose.koinInject
 
 
@@ -189,7 +190,7 @@ fun MultipleMailsScreenContent(
                     },
                     title = stringResource(id = R.string.addMail),
                     textColor = MaterialTheme.appColors.primary,
-                    color = MaterialTheme.appColors.onPrimary,
+                    color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -218,9 +219,9 @@ private fun mailItem(
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(
             1.dp,
-            if (model.isDefault!!) MaterialTheme.appColors.inverseSurface else Color.White
+            if (model.isDefault!!) MaterialTheme.appColors.textColor else Color.White
         ),
-        backgroundColor = if (model.isDefault!!) MaterialTheme.appColors.inversePrimary else Color.White,
+        backgroundColor = if (model.isDefault!!) ConstantColors.inversePrimary else Color.White,
         modifier = Modifier
             .padding(top = 5.dp)
             .padding(top = 0.dp)
@@ -243,7 +244,7 @@ private fun mailItem(
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
                     text = model.email!!,
-                    color = MaterialTheme.appColors.onSurface,
+                    color = MaterialTheme.appColors.appBlack,
                     fontSize = 12.sp
                 )
             }
@@ -269,14 +270,14 @@ private fun mailItem(
                             modifier = Modifier
                                 .matchParentSize()
                                 .background(
-                                    MaterialTheme.appColors.inverseOnSurface,
+                                    MaterialTheme.appColors.secondary,
                                     shape = RoundedCornerShape(15.dp)
                                 ),
 
                             )
                         Text(
                             text = stringResource(id = R.string.make_default),
-                            color = MaterialTheme.appColors.onPrimary,
+                            color = MaterialTheme.appColors.backGround,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
