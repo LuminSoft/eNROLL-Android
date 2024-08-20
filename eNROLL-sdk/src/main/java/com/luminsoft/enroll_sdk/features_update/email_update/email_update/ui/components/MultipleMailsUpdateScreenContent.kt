@@ -46,7 +46,7 @@ import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.MakeDefaultMailUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.mailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.MultipleMailsUpdateViewModel
-import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
+import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -83,31 +83,40 @@ fun MultipleMailsUpdateScreenContent(
     val context = LocalContext.current
     val activity = context.findActivity()
     val loading = multipleMailsViewModel.loading.collectAsState()
-    val mailsApproved =
-        multipleMailsViewModel.mailsApproved.collectAsState()
+    val mailsUpdated =
+        multipleMailsViewModel.mailsUpdated.collectAsState()
     val failure = multipleMailsViewModel.failure.collectAsState()
     val verifiedMails = multipleMailsViewModel.verifiedMails.collectAsState()
-
-
+    val isDeleteMailClicked = multipleMailsViewModel.isDeleteMailClicked.collectAsState()
+    val mailToDelete = multipleMailsViewModel.mailToDelete.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (mailsApproved.value) {
-            val isEmpty = updateViewModel.removeCurrentStep(EkycStepType.EmailOtp.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
-                        )
-                    },
-                )
+        if (isDeleteMailClicked.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.WARNING,
+                text = stringResource(id = R.string.deleteConfirmationMessage) + mailToDelete.value,
+                buttonText = stringResource(id = R.string.delete),
+                secondButtonText = stringResource(id = R.string.cancel),
+                onPressedButton = {
+                    multipleMailsViewModel.isDeleteMailClicked.value = false
+                    multipleMailsViewModel.callDeleteMail(mailToDelete.value!!)
+                    multipleMailsViewModel.mailToDelete.value = null
+                },
+                onPressedSecondButton = {
+                    multipleMailsViewModel.isDeleteMailClicked.value = false
+                    multipleMailsViewModel.mailToDelete.value = null
+                }
+            )
+        }
+        if (mailsUpdated.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulUpdate),
+                buttonText = stringResource(id = R.string.exit),
+                onPressedButton = {
+                    navController.navigate(updateListScreenContent)
+                },
+            )
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -172,9 +181,12 @@ fun MultipleMailsUpdateScreenContent(
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
-                LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxHeight(0.6f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
                     items(verifiedMails.value!!.size) { index ->
-                        MailItem(verifiedMails.value!![index])
+                        MailItem(verifiedMails.value!![index], multipleMailsViewModel)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
@@ -194,9 +206,9 @@ fun MultipleMailsUpdateScreenContent(
 
                 ButtonView(
                     onClick = {
-//                        multipleMailsVM.callApproveMails()
+                        navController.navigate(updateListScreenContent)
                     },
-                    title = stringResource(id = R.string.confirmAndContinue)
+                    title = stringResource(id = R.string.exit)
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -212,7 +224,8 @@ fun MultipleMailsUpdateScreenContent(
 
 @Composable
 private fun MailItem(
-    model: GetVerifiedMailsResponseModel
+    model: GetVerifiedMailsResponseModel,
+    multipleMailsViewModel: MultipleMailsUpdateViewModel
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
@@ -280,10 +293,9 @@ private fun MailItem(
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
-//                                    multipleMailsVM.callMakeDefaultMail(model.email!!)
+                                    multipleMailsViewModel.callMakeDefaultMail(model.email!!)
                                 },
                             fontSize = 8.sp
-
                         )
                     }
 
@@ -293,6 +305,10 @@ private fun MailItem(
                         contentDescription = "",
                         modifier = Modifier
                             .height(50.dp)
+                            .clickable {
+                                multipleMailsViewModel.mailToDelete.value = model.email
+                                multipleMailsViewModel.isDeleteMailClicked.value = true
+                            }
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                 }

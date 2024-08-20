@@ -22,8 +22,8 @@ class EmailRemoteDataSourceUpdateImpl(
         return network.apiRequest { emailApi.sendVerifyEmailOtp(request) }
     }
 
-    override suspend fun sendOTPUpdate(): BaseResponse<Any> {
-        return network.apiRequest { emailApi.sendOTPUpdate() }
+    override suspend fun sendOTPUpdate(id: Int): BaseResponse<Any> {
+        return network.apiRequest { emailApi.sendOTPUpdate(id) }
     }
 
     override suspend fun updateOldMail(request: MailUpdateOldMailRequestModel): BaseResponse<Any> {

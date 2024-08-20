@@ -7,12 +7,12 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features_update.email_update.email_data_update.email_models_update.mail_add_new_update.MailUpdateAddNewResponseModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class AddMailUpdateViewModel(
-    private val updateMailAddUseCase: UpdateMailAddUseCase,
+    private val updateMailAddUseCase: UpdateMailAddUpdateUseCase,
     private val sendOtpUpdateUseCase: SendOtpUpdateUseCase
 ) :
     ViewModel() {
@@ -47,17 +47,17 @@ class AddMailUpdateViewModel(
                 },
                 {
                     mailId.value = it.id
-                    sendOtpCall()
+                    sendOtpCall(it.id!!)
 
                 })
         }
     }
 
-    private fun sendOtpCall() {
+    private fun sendOtpCall(id: Int) {
         loading.value = true
         ui {
             val response: Either<SdkFailure, Null> =
-                sendOtpUpdateUseCase.call(null)
+                sendOtpUpdateUseCase.call(id)
 
             response.fold(
                 {

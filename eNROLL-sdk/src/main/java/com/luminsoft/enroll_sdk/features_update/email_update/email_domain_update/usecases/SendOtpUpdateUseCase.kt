@@ -7,10 +7,10 @@ import com.luminsoft.enroll_sdk.core.utils.UseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.repository.EmailRepositoryUpdate
 
 class SendOtpUpdateUseCase(private val mailsRepository: EmailRepositoryUpdate) :
-    UseCase<Either<SdkFailure, Null>, Null> {
+    UseCase<Either<SdkFailure, Null>, Int> {
 
-    override suspend fun call(params: Null): Either<SdkFailure, Null> {
-        return mailsRepository.sendOTPUpdate()
+    override suspend fun call(params: Int): Either<SdkFailure, Null> {
+        return mailsRepository.sendOTPUpdate(params)
     }
 }
 

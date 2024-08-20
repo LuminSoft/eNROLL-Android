@@ -10,7 +10,7 @@ interface EmailRemoteDataSourceUpdate {
     suspend fun updateMailAdd(request: MailUpdateRequestModel): BaseResponse<Any>
     suspend fun sendVerifyEmailOtp(request: MailUpdateRequestModel): BaseResponse<Any>
     suspend fun updateOldMail(request: MailUpdateOldMailRequestModel): BaseResponse<Any>
-    suspend fun sendOTPUpdate(): BaseResponse<Any>
+    suspend fun sendOTPUpdate(id: Int): BaseResponse<Any>
     suspend fun validateOTPUpdate(request: MailUpdateValidateMailRequestModel): BaseResponse<Any>
     suspend fun getApplicantEmails(): BaseResponse<Any>
     suspend fun deleteMail(request: MakeDefaultRequestModel): BaseResponse<Any>
