@@ -55,15 +55,14 @@ import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import io.github.cdimascio.dotenv.dotenv
 
 
 var dotenv = dotenv {
     directory = "/assets"
 //   filename = "env_andrew"
-//    filename = "env_radwan"
-    filename = "env_org_1"
+    filename = "env_radwan"
+//    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
@@ -243,12 +242,12 @@ class MainActivity : ComponentActivity() {
         }
         try {
             eNROLL.init(
-                tenantIdText.value.text,
-                tenantSecretText.value.text,
-                applicationIdText.value.text,
-                levelOfTrustTokenText.value.text,
-                if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
-                if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
+                tenantId =  tenantIdText.value.text,
+                tenantSecret = tenantSecretText.value.text,
+                applicantId= applicationIdText.value.text,
+                levelOfTrustToken= levelOfTrustTokenText.value.text,
+                enrollMode =   if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
+                environment =  if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
@@ -269,8 +268,6 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors =   AppColors()
-
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())

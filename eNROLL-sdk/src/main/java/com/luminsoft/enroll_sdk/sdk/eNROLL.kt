@@ -18,16 +18,15 @@ object eNROLL {
     fun init(
         tenantId: String,
         tenantSecret: String,
-        applicantId: String,
-        levelOfTrustToken: String,
+        applicantId:String = "",
+        levelOfTrustToken: String = "",
         enrollMode: EnrollMode,
         environment: EnrollEnvironment = EnrollEnvironment.STAGING,
         localizationCode: LocalizationCode = LocalizationCode.EN,
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
-        appColors: AppColors
-//        myPrimaryColor: Color = Color(0xFF1D56B8)
+        appColors: AppColors = AppColors()
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -44,8 +43,6 @@ object eNROLL {
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
-
-//        EnrollSDK.myPrimaryColor = myPrimaryColor
     }
 
     fun launch(
