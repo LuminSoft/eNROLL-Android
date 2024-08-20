@@ -191,7 +191,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                     Text(
                         mailValue.value!!.text,
                         fontSize = 10.sp,
-                        color = MaterialTheme.appColors.onSecondary
+                        color = MaterialTheme.appColors.secondary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Box {
@@ -199,7 +199,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                             modifier = Modifier
                                 .matchParentSize()
                                 .background(
-                                    MaterialTheme.appColors.onSecondary,
+                                    MaterialTheme.appColors.secondary,
                                     shape = RoundedCornerShape(0.dp)
                                 ),
 
@@ -283,7 +283,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                         },
                         title = stringResource(id = R.string.resend),
                         textColor = MaterialTheme.appColors.primary,
-                        color = MaterialTheme.appColors.onPrimary,
+                        color = MaterialTheme.appColors.backGround,
                         borderColor = MaterialTheme.appColors.primary,
                     ) else
                     ButtonView(
@@ -293,7 +293,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                         },
                         title = stringResource(id = R.string.skip),
                         textColor = MaterialTheme.appColors.primary,
-                        color = MaterialTheme.appColors.onPrimary,
+                        color = MaterialTheme.appColors.backGround,
                         borderColor = MaterialTheme.appColors.primary,
                     )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -309,18 +309,18 @@ private fun Timer(ticksF: Float, ticks: Int) {
         CircularProgressIndicator(
             progress = 1f,
             modifier = Modifier.size(30.dp),
-            color = MaterialTheme.appColors.onSecondary.copy(alpha = 0.5f),
+            color = MaterialTheme.appColors.secondary.copy(alpha = 0.5f),
             strokeWidth = 3.dp
         )
         CircularProgressIndicator(
             progress = ticksF,
             modifier = Modifier.size(30.dp),
             strokeWidth = 3.dp,
-            color = MaterialTheme.appColors.onSecondary
+            color = MaterialTheme.appColors.secondary
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.appColors.onSecondary,
+            color = MaterialTheme.appColors.secondary,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )
