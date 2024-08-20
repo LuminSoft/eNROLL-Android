@@ -51,7 +51,7 @@ fun NormalTextField(
         unfocusedContainerColor = Color.Transparent,
         errorContainerColor = Color.Transparent,
         focusedIndicatorColor = MaterialTheme.appColors.primary,
-        unfocusedIndicatorColor = MaterialTheme.appColors.tertiary,
+        unfocusedIndicatorColor = MaterialTheme.appColors.primary,
         errorIndicatorColor = MaterialTheme.appColors.errorColor,
         focusedTextColor = MaterialTheme.appColors.primary,
         cursorColor = MaterialTheme.appColors.primary,

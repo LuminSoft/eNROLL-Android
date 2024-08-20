@@ -37,35 +37,17 @@ fun EKYCsDKTheme(
     val lightColorScheme = lightColorScheme(
         primary = appColors.primary,
         secondary = appColors.secondary,
-        tertiary = appColors.medium,
         background = appColors.backGround,
-        onPrimary = appColors.white,
-        onSurface = appColors.black,
-        onSecondary = appColors.hintGrey,
         error = appColors.errorColor,
-        inversePrimary = appColors.defaultColor,
-        inverseSurface = appColors.defaultBorderColor,
         inverseOnSurface = appColors.backGround,
-        onTertiary = appColors.defaultTextColor,
-        onSecondaryContainer = appColors.onSecondaryContainer,
-        onBackground = appColors.onBackground
     )
 
     val darkColorScheme = darkColorScheme(
         primary = appColors.primary,
         secondary = appColors.secondary,
-        tertiary = appColors.medium,
         background = appColors.backGround,
-        onPrimary = appColors.white,
-        onSurface = appColors.black,
-        onSecondary = appColors.hintGrey,
         error = appColors.errorColor,
-        inversePrimary = appColors.defaultColor,
-        inverseSurface = appColors.defaultBorderColor,
         inverseOnSurface = appColors.backGround,
-        onTertiary = appColors.defaultTextColor,
-        onSecondaryContainer = appColors.onSecondaryContainer,
-        onBackground = appColors.onBackground
     )
 
     val selectedColorScheme = when {
