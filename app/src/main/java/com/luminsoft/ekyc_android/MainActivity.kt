@@ -61,9 +61,9 @@ import io.github.cdimascio.dotenv.dotenv
 
 var dotenv = dotenv {
     directory = "/assets"
-//   filename = "env_andrew"
+   filename = "env_andrew"
 //    filename = "env_radwan"
-    filename = "env_org_1"
+//    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
@@ -131,7 +131,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activity = LocalContext.current as Activity
 
-            val itemList = listOf("Onboarding", "Auth")
+            val itemList = listOf("Onboarding", "Auth", "Update")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
 
@@ -242,7 +242,7 @@ class MainActivity : ComponentActivity() {
             eNROLL.init(
                 tenantId = tenantIdText.value.text,
                 tenantSecret = tenantSecretText.value.text,
-                enrollMode = if (selectedIndex == 0) EnrollMode.ONBOARDING else EnrollMode.AUTH,
+                enrollMode =  if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
                 environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
@@ -268,7 +268,7 @@ class MainActivity : ComponentActivity() {
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
 
-                )
+            )
         } catch (e: Exception) {
             Log.e("error", e.toString())
         }
