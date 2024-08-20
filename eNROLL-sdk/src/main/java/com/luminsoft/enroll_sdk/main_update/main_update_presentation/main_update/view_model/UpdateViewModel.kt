@@ -61,6 +61,7 @@ class UpdateViewModel(
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var scanType: MutableStateFlow<UpdateScanType?> = MutableStateFlow(null)
     var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var preScanLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isNotFirstMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var securityQuestions: MutableStateFlow<List<GetSecurityQuestionsResponseModel>?> =
         MutableStateFlow(null)
@@ -79,6 +80,8 @@ class UpdateViewModel(
         TODO("Not yet implemented")
     }
 
+
+
     fun enableLoading() {
         loading.value = true
     }
@@ -87,9 +90,19 @@ class UpdateViewModel(
         loading.value = false
     }
 
+
+    fun enablePreScanLoading() {
+        preScanLoading.value = true
+    }
+
+    fun disablePreScanLoading() {
+        preScanLoading.value = false
+    }
+
     init {
         generateToken()
     }
+
 
     private fun generateToken() {
         loading.value = true

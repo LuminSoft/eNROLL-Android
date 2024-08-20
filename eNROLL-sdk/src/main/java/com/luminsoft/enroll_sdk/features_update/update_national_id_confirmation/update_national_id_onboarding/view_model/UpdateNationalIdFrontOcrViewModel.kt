@@ -16,6 +16,7 @@ class UpdateNationalIdFrontOcrViewModel(
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    var reScanLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isTranslationStepEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var frontNIApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
@@ -85,6 +86,13 @@ class UpdateNationalIdFrontOcrViewModel(
         }
 
 
+    }
+    fun enableReScanLoading() {
+        reScanLoading.value = true
+    }
+
+    fun disableReScanLoading() {
+        reScanLoading.value = false
     }
 
     private fun approveFront(englishName: String) {

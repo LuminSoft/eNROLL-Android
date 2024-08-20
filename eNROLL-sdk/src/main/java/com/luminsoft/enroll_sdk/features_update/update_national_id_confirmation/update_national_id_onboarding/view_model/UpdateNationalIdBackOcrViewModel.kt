@@ -25,6 +25,7 @@ class UpdateNationalIdBackOcrViewModel(
     var customerData: MutableStateFlow<UpdateCustomerData?> = MutableStateFlow(null)
     var navController: NavController? = null
     var backNIApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var reScanLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
 
     fun callApproveBack() {
@@ -38,7 +39,13 @@ class UpdateNationalIdBackOcrViewModel(
     init {
         sendBackImage()
     }
+    fun enableReScanLoading() {
+        reScanLoading.value = true
+    }
 
+    fun disableReScanLoading() {
+        reScanLoading.value = false
+    }
     private fun sendBackImage() {
         Log.e("sendBackImage", nationalIdBackImage.toString())
 

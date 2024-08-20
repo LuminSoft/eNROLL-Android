@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
-
+import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 
 @Composable
 fun UpdateNationalIdPreScanScreen(
@@ -41,9 +42,11 @@ fun UpdateNationalIdPreScanScreen(
     val rememberedViewModel = remember { updateViewModel }
     val context = LocalContext.current
     val activity = context.findActivity()
+    val isLoading by rememberedViewModel.preScanLoading.collectAsState()
 
     val startForResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            rememberedViewModel.enableLoading()
             val documentFrontUri = it.data?.data
             if (documentFrontUri != null) {
                 try {
@@ -52,15 +55,17 @@ fun UpdateNationalIdPreScanScreen(
                     rememberedViewModel.nationalIdFrontImage.value =
                         facialDocumentModel.documentImageBase64
                     navController.navigate(updateNationalIdFrontConfirmationScreen)
+
                 } catch (e: Exception) {
                     updateViewModel.disableLoading()
+                    rememberedViewModel.disablePreScanLoading()
                     updateViewModel.errorMessage.value = e.message
                     updateViewModel.scanType.value = UpdateScanType.FRONT
                     navController.navigate(updateNationalIdErrorScreen)
-                    println(e.message)
                 }
             } else if (it.resultCode == 19 || it.resultCode == 8) {
                 updateViewModel.disableLoading()
+                rememberedViewModel.disablePreScanLoading()
                 updateViewModel.errorMessage.value =
                     context.getString(R.string.timeoutException)
                 updateViewModel.scanType.value = UpdateScanType.FRONT
@@ -68,12 +73,15 @@ fun UpdateNationalIdPreScanScreen(
             }
         }
 
-    BackGroundView(navController = navController, showAppBar = false) {
-            NationalIdOnly(activity, startForResult, rememberedViewModel)
+if (isLoading){
+    BackGroundView(navController = navController, showAppBar = true) {
+        LoadingView()
     }
-
 }
-
+    else{
+    NationalIdOnly(activity, startForResult, rememberedViewModel)
+}
+}
 
 @Composable
 private fun NationalIdOnly(
@@ -81,31 +89,33 @@ private fun NationalIdOnly(
     startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     rememberedViewModel: UpdateViewModel
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp)
-    ) {
-        EnrollItemView(R.drawable.step_01_national_id, R.string.documentPreScanContent)
-        ButtonView(
-            onClick = {
-                rememberedViewModel.enableLoading()
-                val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
-                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
-                intent.putExtra("localCode", EnrollSDK.localizationCode.name)
-                startForResult.launch(intent)
-            },
-            stringResource(id = R.string.start),
-            modifier = Modifier.padding(horizontal = 20.dp),
-        )
-        Spacer(
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .safeContentPadding()
-                .height(10.dp)
-        )
-    }
+                .fillMaxSize()
+                .padding(horizontal = 20.dp)
+        ) {
+            EnrollItemView(R.drawable.step_01_national_id, R.string.documentPreScanContent)
+            ButtonView(
+                onClick = {
+                    rememberedViewModel.enableLoading()
+                    rememberedViewModel.enablePreScanLoading()
+                    val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
+                    intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                    intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+                    startForResult.launch(intent)
+                },
+                stringResource(id = R.string.start),
+                modifier = Modifier.padding(horizontal = 20.dp),
+            )
+            Spacer(
+                modifier = Modifier
+                    .safeContentPadding()
+                    .height(10.dp)
+            )
+        }
 }
 
 internal fun Context.findActivity(): Activity {
@@ -116,3 +126,4 @@ internal fun Context.findActivity(): Activity {
     }
     throw IllegalStateException("Permissions should be called in the context of an Activity")
 }
+

@@ -109,10 +109,18 @@ fun UpdateNationalIdBackConfirmationScreen(
                 navController.navigate(updateNationalIdErrorScreen)
             }
         }
-
-
-    BackGroundView(navController = navController, showAppBar = true) {
-        if (backNIApproved.value) {
+    if(nationalIdBackOcrViewModel.reScanLoading.value){
+        BackGroundView(navController = navController, showAppBar = true) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) { SpinKitLoadingIndicator() }
+        }
+    }
+    else{
+        BackGroundView(navController = navController, showAppBar = true) {
+            if (backNIApproved.value) {
 
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -128,163 +136,168 @@ fun UpdateNationalIdBackConfirmationScreen(
                         )
                     },
                 )
-        }
-
-        if (loading.value) Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) { SpinKitLoadingIndicator() }
-        else if (customerData.value != null) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp)
-            ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                if (customerData.value!!.profession != null) TextItem(
-                    R.string.profession,
-                    customerData.value!!.profession!!,
-                    R.drawable.profession_icon
-                )
-                if (customerData.value!!.gender != null) Spacer(modifier = Modifier.height(10.dp))
-                if (customerData.value!!.gender != null) TextItem(
-                    R.string.gender, customerData.value!!.gender!!, R.drawable.gender_icon
-                )
-                if (customerData.value!!.religion != null) Spacer(modifier = Modifier.height(10.dp))
-                if (customerData.value!!.religion != null) TextItem(
-                    R.string.religion, customerData.value!!.religion!!, R.drawable.religion_icon
-                )
-                if (customerData.value!!.expirationDate != null) Spacer(
-                    modifier = Modifier.height(
-                        10.dp
-                    )
-                )
-                if (customerData.value!!.expirationDate != null) TextItem(
-                    R.string.dateOfExpiry,
-                    customerData.value!!.expirationDate!!.split("T")[0],
-                    R.drawable.calendar_icon
-                )
-                if (customerData.value!!.maritalStatus != null) Spacer(
-                    modifier = Modifier.height(
-                        10.dp
-                    )
-                )
-                if (customerData.value!!.maritalStatus != null) TextItem(
-                    R.string.maritalStatus,
-                    customerData.value!!.maritalStatus!!,
-                    R.drawable.marital_status_icon
-                )
-                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
-
-                ButtonView(
-                    onClick = {
-                         updateViewModel.enableLoading()
-                        nationalIdBackOcrViewModel.callApproveBack()
-                    }, title = stringResource(id = R.string.confirmAndContinue)
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-
-                ButtonView(
-                    onClick = {
-                         updateViewModel.enableLoading()
-                        val intent =
-                            Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-                        intent.putExtra("localCode", EnrollSDK.localizationCode.name)
-
-                        startForBackResult.launch(intent)
-                    },
-                    textColor = MaterialTheme.appColors.primary,
-                    color = MaterialTheme.appColors.onPrimary,
-                    borderColor = MaterialTheme.appColors.primary,
-                    title = stringResource(id = R.string.reScan)
-                )
             }
-        } else if (!failure.value?.message.isNullOrEmpty()) {
-            when (failure.value) {
-                is AuthFailure -> {
-                    failure.value?.let {
-                        DialogView(
-                            bottomSheetStatus = BottomSheetStatus.ERROR,
-                            text = it.message,
-                            buttonText = stringResource(id = R.string.exit),
-                            onPressedButton = {
+
+            if (loading.value) Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) { SpinKitLoadingIndicator() }
+            else if (customerData.value != null) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    if (customerData.value!!.profession != null) TextItem(
+                        R.string.profession,
+                        customerData.value!!.profession!!,
+                        R.drawable.profession_icon
+                    )
+                    if (customerData.value!!.gender != null) Spacer(modifier = Modifier.height(10.dp))
+                    if (customerData.value!!.gender != null) TextItem(
+                        R.string.gender, customerData.value!!.gender!!, R.drawable.gender_icon
+                    )
+                    if (customerData.value!!.religion != null) Spacer(modifier = Modifier.height(10.dp))
+                    if (customerData.value!!.religion != null) TextItem(
+                        R.string.religion, customerData.value!!.religion!!, R.drawable.religion_icon
+                    )
+                    if (customerData.value!!.expirationDate != null) Spacer(
+                        modifier = Modifier.height(
+                            10.dp
+                        )
+                    )
+                    if (customerData.value!!.expirationDate != null) TextItem(
+                        R.string.dateOfExpiry,
+                        customerData.value!!.expirationDate!!.split("T")[0],
+                        R.drawable.calendar_icon
+                    )
+                    if (customerData.value!!.maritalStatus != null) Spacer(
+                        modifier = Modifier.height(
+                            10.dp
+                        )
+                    )
+                    if (customerData.value!!.maritalStatus != null) TextItem(
+                        R.string.maritalStatus,
+                        customerData.value!!.maritalStatus!!,
+                        R.drawable.marital_status_icon
+                    )
+                    Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+
+                    ButtonView(
+                        onClick = {
+                            updateViewModel.enableLoading()
+                            nationalIdBackOcrViewModel.callApproveBack()
+                        }, title = stringResource(id = R.string.confirmAndContinue)
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+
+                    ButtonView(
+                        onClick = {
+                            updateViewModel.enableLoading()
+                            nationalIdBackOcrViewModel.enableReScanLoading()
+
+                            val intent =
+                                Intent(activity.applicationContext, DocumentActivity::class.java)
+                            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                            intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+
+                            startForBackResult.launch(intent)
+                        },
+                        textColor = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.onPrimary,
+                        borderColor = MaterialTheme.appColors.primary,
+                        title = stringResource(id = R.string.reScan)
+                    )
+                }
+            } else if (!failure.value?.message.isNullOrEmpty()) {
+                when (failure.value) {
+                    is AuthFailure -> {
+                        failure.value?.let {
+                            DialogView(
+                                bottomSheetStatus = BottomSheetStatus.ERROR,
+                                text = it.message,
+                                buttonText = stringResource(id = R.string.exit),
+                                onPressedButton = {
+                                    activity.finish()
+                                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+
+                                },
+                            ) {
                                 activity.finish()
                                 EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
-                            },
-                        ) {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
+                            }
                         }
                     }
-                }
 
-                is NIFailure -> {
-                    failure.value?.let {
-                        DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
-                            text = context.getString(it.strInt),
-                            buttonText = stringResource(id = R.string.retry),
-                            onPressedButton = {
-                                nationalIdBackOcrViewModel.resetFailure()
-                                 updateViewModel.enableLoading()
-                                val intent =
-                                    Intent(
-                                        activity.applicationContext,
-                                        DocumentActivity::class.java
-                                    )
-                                intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-                                intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+                    is NIFailure -> {
+                        failure.value?.let {
+                            DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                                text = context.getString(it.strInt),
+                                buttonText = stringResource(id = R.string.retry),
+                                onPressedButton = {
+                                    nationalIdBackOcrViewModel.resetFailure()
+                                    updateViewModel.enableLoading()
+                                    val intent =
+                                        Intent(
+                                            activity.applicationContext,
+                                            DocumentActivity::class.java
+                                        )
+                                    intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                    intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
-                                startForBackResult.launch(intent)
-                            },
-                            secondButtonText = stringResource(id = R.string.exit),
-                            onPressedSecondButton = {
+                                    startForBackResult.launch(intent)
+                                },
+                                secondButtonText = stringResource(id = R.string.cancel),
+                                onPressedSecondButton = {
+                                    activity.finish()
+                                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+
+                                }) {
                                 activity.finish()
                                 EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
-                            }) {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                            }
                         }
                     }
-                }
 
-                else -> {
-                    failure.value?.let {
-                        DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
-                            text = it.message,
-                            buttonText = stringResource(id = R.string.retry),
-                            onPressedButton = {
-                                nationalIdBackOcrViewModel.resetFailure()
-                                 updateViewModel.enableLoading()
-                                val intent =
-                                    Intent(
-                                        activity.applicationContext,
-                                        DocumentActivity::class.java
-                                    )
-                                intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
-                                intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+                    else -> {
+                        failure.value?.let {
+                            DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
+                                text = it.message,
+                                buttonText = stringResource(id = R.string.retry),
+                                onPressedButton = {
+                                    nationalIdBackOcrViewModel.resetFailure()
+                                    updateViewModel.enableLoading()
+                                    val intent =
+                                        Intent(
+                                            activity.applicationContext,
+                                            DocumentActivity::class.java
+                                        )
+                                    intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                    intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
-                                startForBackResult.launch(intent)
-                            },
-                            secondButtonText = stringResource(id = R.string.exit),
-                            onPressedSecondButton = {
+                                    startForBackResult.launch(intent)
+                                },
+                                secondButtonText = stringResource(id = R.string.cancel),
+                                onPressedSecondButton = {
+                                    activity.finish()
+                                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+
+                                }) {
                                 activity.finish()
                                 EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
-                            }) {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                            }
                         }
                     }
                 }
             }
         }
     }
+
+
 }
 
 @Composable

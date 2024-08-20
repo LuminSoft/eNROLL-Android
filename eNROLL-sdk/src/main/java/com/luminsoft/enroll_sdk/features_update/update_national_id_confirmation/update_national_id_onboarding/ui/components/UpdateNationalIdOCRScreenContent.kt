@@ -133,16 +133,25 @@ fun UpdateNationalIdFrontConfirmationScreen(
             }
         }
 
-
-
+if(updateNationalIdFrontOcrVM!!.reScanLoading.value){
+    BackGroundView(navController = navController, showAppBar = true) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) { SpinKitLoadingIndicator() }
+    }
+}
+    else{
     MainContent(
         navController,
-        updateNationalIdFrontOcrVM!!,
+        updateNationalIdFrontOcrVM,
         activity,
         startForBackResult,
         startForResult,
         updateViewModel
     )
+    }
 }
 
 @Composable
@@ -331,6 +340,7 @@ private fun MainContent(
                 ButtonView(
                     onClick = {
                         updateViewModel.enableLoading()
+                        updateNationalIdFrontOcrVM.enableReScanLoading()
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
                         intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
