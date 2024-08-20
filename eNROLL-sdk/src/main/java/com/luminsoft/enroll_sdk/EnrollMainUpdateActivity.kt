@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk
 
 import EKYCsDKTheme
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -16,6 +17,8 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
+import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.emailUpdateRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
@@ -43,9 +46,11 @@ import updateNationalIdRouter
 @Suppress("DEPRECATION")
 class EnrollMainUpdateActivity : ComponentActivity() {
 
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-
     }
+
     private fun setupServices() {
         WifiService.instance.initializeWithApplicationContext(this)
         ResourceProvider.instance.initializeWithApplicationContext(this)
@@ -78,6 +83,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     securityQuestionAuthUpdateRouter(navController = navController, updateViewModel)
                     faceCaptureAuthUpdateRouter(navController = navController, updateViewModel)
                     updateLocationRouter(navController = navController, updateViewModel)
+                    emailUpdateRouter(navController = navController, updateViewModel)
                     updateNationalIdRouter(navController = navController, updateViewModel)
 
                 }
@@ -97,6 +103,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(securityQuestionAuthUpdateModule)
                 modules(faceCaptureAuthUpdateModule)
                 modules(updateLocationModule)
+                modules(emailUpdateModule)
                 modules(updateNationalIdConfirmationModule)
             }.koin
         }

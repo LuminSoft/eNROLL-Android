@@ -91,9 +91,6 @@ class MainActivity : ComponentActivity() {
     }
 
 
-
-
-
     var text = mutableStateOf("")
     private var tenantIdText = mutableStateOf(TextFieldValue())
     private var tenantSecretText = mutableStateOf(TextFieldValue())
@@ -243,12 +240,10 @@ class MainActivity : ComponentActivity() {
         }
         try {
             eNROLL.init(
-                tenantIdText.value.text,
-                tenantSecretText.value.text,
-                applicationIdText.value.text,
-                levelOfTrustTokenText.value.text,
-                if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
-                if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
+                tenantId = tenantIdText.value.text,
+                tenantSecret = tenantSecretText.value.text,
+                enrollMode =  if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
+                environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
@@ -269,7 +264,9 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors =   AppColors()
+                appColors = AppColors(),
+                applicantId = applicationIdText.value.text,
+                levelOfTrustToken = levelOfTrustTokenText.value.text,
 
             )
         } catch (e: Exception) {

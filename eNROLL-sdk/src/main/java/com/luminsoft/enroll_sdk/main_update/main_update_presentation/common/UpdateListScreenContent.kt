@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.common
 
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -49,7 +51,7 @@ fun UpdateListScreenContent(
     navController: NavController
 ) {
 
-
+    val updateStepModel = updateViewModel.updateStepModel.collectAsState()
     val context = LocalContext.current
     val steps = updateViewModel.steps.collectAsState()
     val activity = context.findActivity()
@@ -58,59 +60,59 @@ fun UpdateListScreenContent(
 
 
     BackGroundView(navController = navController, showAppBar = true) {
+        if (updateStepModel.value != null) {
+            Log.d("updateStepModel", "updateStepModel")
+//            navController.navigate(multipleMailsUpdateScreenContent)
 
-
-        if (steps.value!=null) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp)
-            ) {
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Image(
-                    painterResource(R.drawable.update_icon),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight(0.1f)
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(
-                    text = stringResource(id = R.string.youCanSelectOneItem),
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-                LazyColumn(
-                    modifier = Modifier.fillMaxHeight(0.77f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(steps.value!!.size) { index ->
-                        UpdateStepItem(steps.value!![index], updateViewModel)
-                    }
-                }
-                ButtonView(
-                    onClick = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                ResourceProvider.instance.getStringResource(
-                                    R.string.cancelUpdate
-                                ), null
-                            )
-                        )
-                    },
-                    title = ResourceProvider.instance.getStringResource(R.string.cancel)
-                )
-            }
-        }
-        else
+//TODO Navigate to update step screen
+        } else
             if (loading.value) LoadingView()
-    }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp)
+        ) {
+            Spacer(modifier = Modifier.height(50.dp))
 
+            Image(
+                painterResource(R.drawable.update_icon),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxHeight(0.1f)
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                text = stringResource(id = R.string.youCanSelectOneItem),
+                color = MaterialTheme.colorScheme.outline,
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(0.77f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(steps.value!!.size) { index ->
+                    UpdateStepItem(steps.value!![index], updateViewModel)
+                }
+            }
+            ButtonView(
+                onClick = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.error(
+                        EnrollFailedModel(
+                            ResourceProvider.instance.getStringResource(
+                                R.string.cancelUpdate
+                            ), null
+                        )
+                    )
+                },
+                title = ResourceProvider.instance.getStringResource(R.string.cancel)
+            )
+        }
+    }
 }
 
 @Composable
