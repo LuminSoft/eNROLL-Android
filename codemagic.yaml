@@ -1,0 +1,26 @@
+workflows:
+  android:
+    name: Android Workflow
+    triggering:
+      events:
+        - push
+      branch_patterns:
+      - pattern: '*'
+        include: true
+        source: true
+      - pattern: excluded-target
+        include: false
+        source: false
+      - pattern: included-source
+        include: true
+        source: true
+    scripts:
+      - ./gradlew clean assembleRelease
+      - name: Deploy to Firebase App Distribution
+        script: |
+          firebase appdistribution:distribute ./app/build/outputs/apk/release/app-release.apk \
+          --app 1:477819023880:android:de1c11868522e567f257bd \
+          --token 1//033uBB1nH5jz-CgYIARAAGAMSNwF-L9IrTwRSlXSdW6nri7XT7hFLn5eB_4RAWXe4LP05VYyj-BGPsjx_HxKDEGMEoH0zDesKMCw \
+          --groups lumin
+    artifacts:
+      - app/build/outputs/apk/release/*.apk

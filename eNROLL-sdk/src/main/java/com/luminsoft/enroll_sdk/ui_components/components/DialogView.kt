@@ -46,13 +46,13 @@ fun DialogView(
         },
         modifier = Modifier
             .clip(shape = RoundedCornerShape(15.dp))
-            .background(color = MaterialTheme.appColors.onPrimary),
+            .background(color = MaterialTheme.appColors.backGround),
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.appColors.onPrimary)
+                .background(color = MaterialTheme.appColors.backGround)
                 .safeContentPadding()
         ) {
             Column(
@@ -85,7 +85,7 @@ fun DialogView(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = text,
-                    color = MaterialTheme.appColors.onSurface,
+                    color = MaterialTheme.appColors.appBlack,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 10.dp)
@@ -123,7 +123,7 @@ fun DialogView(
                                     onPressedSecondButton()
                                 },
                                 title = secondButtonText,
-                                color = MaterialTheme.appColors.onPrimary,
+                                color = MaterialTheme.appColors.backGround,
                                 borderColor = getColor(bottomSheetStatus = bottomSheetStatus),
                                 textColor = getColor(bottomSheetStatus = bottomSheetStatus)
                             )

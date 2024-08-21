@@ -14,6 +14,7 @@ object EnrollSDK {
     var tenantSecret = ""
     var applicantId = ""
     var levelOfTrustToken = ""
+    var updateSteps = arrayListOf<String>()
 
     // this info related to sdk initiation
     var environment = EnrollEnvironment.STAGING

@@ -209,7 +209,7 @@ fun NationalIdOnBoardingErrorScreen(
                         }
                     },
                     textColor = MaterialTheme.appColors.primary,
-                    color = MaterialTheme.appColors.onPrimary,
+                    color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                     title = stringResource(id = R.string.reScan)
                 )

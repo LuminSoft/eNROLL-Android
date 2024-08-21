@@ -61,6 +61,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 
 
 @Composable
@@ -229,7 +230,7 @@ private fun NationalIdOrPassport(
         Spacer(modifier = Modifier.height(10.dp))
 
         Divider(
-            color = MaterialTheme.appColors.onSecondary,
+            color = MaterialTheme.appColors.secondary,
             thickness = 3.dp,
             modifier = Modifier.width(50.dp)
         )
@@ -275,7 +276,7 @@ private fun card(
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (step == chosenStep.value!!) Color.White else MaterialTheme.appColors.onBackground
+            containerColor = if (step == chosenStep.value!!) Color.White else ConstantColors.onBackground
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 5.dp
@@ -283,7 +284,7 @@ private fun card(
         modifier = Modifier
             .border(
                 width = if (step != chosenStep.value!!) 1.dp else 0.dp,
-                color = MaterialTheme.appColors.onSecondaryContainer,
+                color = ConstantColors.onSecondaryContainer,
                 shape = RoundedCornerShape(12.dp)
             )
             .alpha(alpha)
