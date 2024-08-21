@@ -249,13 +249,12 @@ fun ValidateOtpPhoneNumberScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
-                        onBoardingViewModel.userPhoneNumber.value = onBoardingViewModel.currentPhoneNumber.value
                         onBoardingViewModel.currentPhoneNumber.value = null
                         phoneNumbersOnBoardingVM.callValidateOtp(otpValue.value)
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 if (!onBoardingViewModel.isNotFirstPhone.value)
                     ButtonView(
                         isEnabled = ticks == 0,

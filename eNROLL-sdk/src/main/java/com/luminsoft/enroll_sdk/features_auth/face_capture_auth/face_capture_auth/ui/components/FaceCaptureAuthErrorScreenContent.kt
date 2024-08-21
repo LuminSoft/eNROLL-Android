@@ -108,7 +108,7 @@ fun FaceCaptureAuthErrorScreen(
                     )
                 }, title = stringResource(id = R.string.exit)
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             ButtonView(
                 onClick = {

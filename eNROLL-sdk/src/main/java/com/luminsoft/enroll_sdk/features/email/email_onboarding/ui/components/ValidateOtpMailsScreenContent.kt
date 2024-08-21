@@ -249,13 +249,12 @@ fun ValidateOtpMailsScreenContent(
                 ButtonView(
                     isEnabled = otpValue.value.length == 6,
                     onClick = {
-                        onBoardingViewModel.userMail.value = onBoardingViewModel.mailValue.value?.text
                         onBoardingViewModel.mailValue.value = TextFieldValue()
                         mailsOnBoardingVM.callValidateOtp(otpValue.value)
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 if (!onBoardingViewModel.isNotFirstMail.value)
                     ButtonView(
                         isEnabled = ticks == 0,
