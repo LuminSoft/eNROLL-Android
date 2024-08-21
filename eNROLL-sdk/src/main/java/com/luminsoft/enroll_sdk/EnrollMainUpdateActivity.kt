@@ -40,7 +40,7 @@ import securityQuestionAuthUpdateRouter
 import updateLocationModule
 import updateLocationRouter
 import updateNationalIdConfirmationModule
-import updateNationalIdRouter
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
 
 
 @Suppress("DEPRECATION")

@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdErrorScreen
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdFrontConfirmationScreen
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel

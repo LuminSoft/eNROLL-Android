@@ -1,5 +1,6 @@
+package com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_onboarding.ui.components
 
-
+import UpdateScanType
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -32,6 +34,10 @@ import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import findActivity
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdBackConfirmationScreen
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdErrorScreen
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdFrontConfirmationScreen
 
 
 @Composable
@@ -169,14 +175,12 @@ fun UpdateNationalIdErrorScreen(
                         }
                     },
                     textColor = MaterialTheme.appColors.primary,
-                    color = MaterialTheme.appColors.onPrimary,
+                    color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                     title = stringResource(id = R.string.reScan)
                 )
             }
-
     }
-
 }
 
 

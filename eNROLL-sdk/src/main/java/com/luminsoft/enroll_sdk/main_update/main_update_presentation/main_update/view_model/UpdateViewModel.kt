@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
 import updateLocationScreenContent
-import updateNationalIdPreScanScreen
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
