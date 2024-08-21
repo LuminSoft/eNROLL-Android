@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
@@ -63,12 +64,9 @@ fun ApplyForElectronicSignatureScreenContent(
 
     val context = LocalContext.current
     val activity = context.findActivity()
-
-
     val loading = electronicSignatureOnBoardingViewModel.loading.collectAsState()
     val failure = electronicSignatureOnBoardingViewModel.failure.collectAsState()
-    val applySignatureSucceed =
-        electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
+    val applySignatureSucceed = electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
 
 
     var showDialog by remember { mutableStateOf(false) }
@@ -77,24 +75,52 @@ fun ApplyForElectronicSignatureScreenContent(
     var dialogButtonText by remember { mutableStateOf("") }
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
-    LaunchedEffect(applySignatureSucceed.value) {
-        if (applySignatureSucceed.value!!) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+    fun navigateToNextStep() {
+        onBoardingViewModel.mailValue.value = TextFieldValue()
+        onBoardingViewModel.currentPhoneNumber.value = null
+        navController.navigate(onBoardingViewModel.steps.value!!.first().stepNameNavigator())
+    }
+
+    fun removeCurrentStep(id: Int): Boolean {
+        if (onBoardingViewModel.steps.value != null) {
+            val stepsSize = onBoardingViewModel.steps.value!!.size
+            onBoardingViewModel.steps.value = onBoardingViewModel.steps.value!!.toMutableList().apply {
+                removeIf { x -> x.registrationStepId == id }
+            }.toList()
+            val newStepsSize = onBoardingViewModel.steps.value!!.size
+            if (stepsSize != newStepsSize) {
+                return onBoardingViewModel.steps.value!!.isEmpty()
+            }
+        }
+        return false
+    }
+
+    fun showSuccessDialog(isEmpty: Boolean) {
+        dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+        dialogButtonText = context.getString(R.string.continue_to_next)
+        dialogStatus = BottomSheetStatus.SUCCESS
+        dialogOnPressButton = {
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            context.getString(R.string.successfulRegistration),
-                            context.getString(R.string.successfulRegistration)
-                        )
+                activity.finish()
+                EnrollSDK.enrollCallback?.error(
+                    EnrollFailedModel(
+                        context.getString(R.string.successfulRegistration),
+                        context.getString(R.string.successfulRegistration)
                     )
-                }
-                showDialog = true
+                )
+            } else {
+                navigateToNextStep()
+                showDialog = false
+            }
+        }
+        showDialog = true
+    }
+
+    LaunchedEffect(applySignatureSucceed.value) {
+        applySignatureSucceed.value?.let { succeed ->
+            if (succeed) {
+                val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+                showSuccessDialog(isEmpty)
             }
         }
     }
@@ -140,14 +166,13 @@ fun ApplyForElectronicSignatureScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
-//                            showDialog = false
-                            electronicSignatureOnBoardingViewModel.insertSignatureInfo(
+                            showDialog = false
+     /*                       electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
                                 if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) "" else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(3)) "" else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
                                 if (onBoardingViewModel.existingSteps.value!!.contains(4)) "" else electronicSignatureOnBoardingViewModel.emailValue.value.text
-                            )
-
+                            )*/
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -242,15 +267,9 @@ fun ApplyForElectronicSignatureScreenContent(
                 )
                 Spacer(modifier = Modifier.weight(1f))
 
-
             }
-
-
         }
-
     }
-
-
 }
 
 

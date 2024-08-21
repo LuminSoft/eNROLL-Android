@@ -324,7 +324,7 @@ private fun MainContent(
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 ButtonView(
                     onClick = {
