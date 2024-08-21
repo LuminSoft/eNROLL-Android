@@ -211,7 +211,7 @@ fun MailsUpdateScreenContent(
                     },
                     title = stringResource(id = R.string.exit),
                     textColor = MaterialTheme.appColors.primary,
-                    color = MaterialTheme.appColors.onPrimary,
+                    color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                 )
 

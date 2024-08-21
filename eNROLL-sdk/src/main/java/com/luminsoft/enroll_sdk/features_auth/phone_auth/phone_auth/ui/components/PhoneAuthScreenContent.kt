@@ -210,7 +210,7 @@ fun PhoneAuthScreenContent(
                     },
                     title = stringResource(id = R.string.resend),
                     textColor = MaterialTheme.appColors.primary,
-                    color = MaterialTheme.appColors.onPrimary,
+                    color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                 )
 
@@ -227,18 +227,18 @@ private fun Timer(ticksF: Float, ticks: Int) {
         CircularProgressIndicator(
             progress = 1f,
             modifier = Modifier.size(30.dp),
-            color = MaterialTheme.appColors.onSecondary.copy(alpha = 0.5f),
+            color = MaterialTheme.appColors.secondary.copy(alpha = 0.5f),
             strokeWidth = 3.dp
         )
         CircularProgressIndicator(
             progress = ticksF,
             modifier = Modifier.size(30.dp),
             strokeWidth = 3.dp,
-            color = MaterialTheme.appColors.onSecondary
+            color = MaterialTheme.appColors.secondary
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.appColors.onSecondary,
+            color = MaterialTheme.appColors.secondary,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )

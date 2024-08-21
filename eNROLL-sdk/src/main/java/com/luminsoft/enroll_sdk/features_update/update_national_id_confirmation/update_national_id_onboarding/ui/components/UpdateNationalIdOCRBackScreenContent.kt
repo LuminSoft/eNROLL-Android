@@ -1,5 +1,9 @@
+package com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_onboarding.ui.components
 
-
+import UpdateNationalIdBackOcrViewModel
+import UpdatePersonalConfirmationApproveUseCase
+import UpdatePersonalConfirmationUploadImageUseCase
+import UpdateScanType
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -24,12 +28,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.NIFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdBackConfirmationScreen
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdErrorScreen
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -39,6 +46,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import findActivity
 import org.koin.compose.koinInject
 
 
@@ -49,17 +57,18 @@ fun UpdateNationalIdBackConfirmationScreen(
 ) {
     val context = LocalContext.current
     val activity = context.findActivity()
-    val document =  updateViewModel.nationalIdBackImage.collectAsState()
+    val document = updateViewModel.nationalIdBackImage.collectAsState()
 
 
     val updatePersonalConfirmationUploadImageUseCase =
         UpdatePersonalConfirmationUploadImageUseCase(koinInject())
 
-    val updatePersonalConfirmationApproveUseCase = UpdatePersonalConfirmationApproveUseCase(koinInject())
+    val updatePersonalConfirmationApproveUseCase =
+        UpdatePersonalConfirmationApproveUseCase(koinInject())
 
     val nationalIdBackOcrVM = document.value?.let {
         remember {
-             updateViewModel.customerId.value?.let { it1 ->
+            updateViewModel.customerId.value?.let { it1 ->
                 UpdateNationalIdBackOcrViewModel(
                     updatePersonalConfirmationUploadImageUseCase,
                     updatePersonalConfirmationApproveUseCase,
@@ -83,7 +92,7 @@ fun UpdateNationalIdBackConfirmationScreen(
             val documentBackUri = it.data?.data
             if (documentBackUri != null) {
                 try {
-                     updateViewModel.disableLoading()
+                    updateViewModel.disableLoading()
                     val nonFacialDocumentModel =
                         DotHelper.documentNonFacial(documentBackUri, activity)
 
@@ -94,22 +103,21 @@ fun UpdateNationalIdBackConfirmationScreen(
 
                 } catch (e: Exception) {
 
-                     updateViewModel.disableLoading()
-                     updateViewModel.errorMessage.value = e.message
-                     updateViewModel.scanType.value = UpdateScanType.Back
+                    updateViewModel.disableLoading()
+                    updateViewModel.errorMessage.value = e.message
+                    updateViewModel.scanType.value = UpdateScanType.Back
                     navController.navigate(updateNationalIdErrorScreen)
                     println("Exception ${e.message}")
                 }
-            }
-            else if (it.resultCode == 19 || it.resultCode == 8) {
-                 updateViewModel.disableLoading()
-                 updateViewModel.errorMessage.value =
+            } else if (it.resultCode == 19 || it.resultCode == 8) {
+                updateViewModel.disableLoading()
+                updateViewModel.errorMessage.value =
                     context.getString(R.string.timeoutException)
-                 updateViewModel.scanType.value = UpdateScanType.Back
+                updateViewModel.scanType.value = UpdateScanType.Back
                 navController.navigate(updateNationalIdErrorScreen)
             }
         }
-    if(nationalIdBackOcrViewModel.reScanLoading.value){
+    if (nationalIdBackOcrViewModel.reScanLoading.value) {
         BackGroundView(navController = navController, showAppBar = true) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -117,8 +125,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
         }
-    }
-    else{
+    } else {
         BackGroundView(navController = navController, showAppBar = true) {
             if (backNIApproved.value) {
 
@@ -207,7 +214,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                             startForBackResult.launch(intent)
                         },
                         textColor = MaterialTheme.appColors.primary,
-                        color = MaterialTheme.appColors.onPrimary,
+                        color = MaterialTheme.appColors.backGround,
                         borderColor = MaterialTheme.appColors.primary,
                         title = stringResource(id = R.string.reScan)
                     )
@@ -222,7 +229,12 @@ fun UpdateNationalIdBackConfirmationScreen(
                                 buttonText = stringResource(id = R.string.exit),
                                 onPressedButton = {
                                     activity.finish()
-                                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                                    EnrollSDK.enrollCallback?.error(
+                                        EnrollFailedModel(
+                                            it.message,
+                                            it
+                                        )
+                                    )
 
                                 },
                             ) {
@@ -254,7 +266,12 @@ fun UpdateNationalIdBackConfirmationScreen(
                                 secondButtonText = stringResource(id = R.string.cancel),
                                 onPressedSecondButton = {
                                     activity.finish()
-                                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                                    EnrollSDK.enrollCallback?.error(
+                                        EnrollFailedModel(
+                                            it.message,
+                                            it
+                                        )
+                                    )
 
                                 }) {
                                 activity.finish()
@@ -284,7 +301,12 @@ fun UpdateNationalIdBackConfirmationScreen(
                                 secondButtonText = stringResource(id = R.string.cancel),
                                 onPressedSecondButton = {
                                     activity.finish()
-                                    EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                                    EnrollSDK.enrollCallback?.error(
+                                        EnrollFailedModel(
+                                            it.message,
+                                            it
+                                        )
+                                    )
 
                                 }) {
                                 activity.finish()
