@@ -20,6 +20,8 @@ class DocumentActivity : AppCompatActivity() {
     val BACK_SCAN =11
     val PASSPORT_SCAN =2
 
+    override fun onBackPressed() {}
+
     fun setLocale(lang: String?) {
         val locale = lang?.let { Locale(it) }
         if (locale != null) {
