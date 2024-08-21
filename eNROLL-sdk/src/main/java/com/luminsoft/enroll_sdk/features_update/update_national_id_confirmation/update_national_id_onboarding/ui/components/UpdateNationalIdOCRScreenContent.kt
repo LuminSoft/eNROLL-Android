@@ -187,7 +187,7 @@ private fun MainContent(
         if (frontNIApproved.value) {
             val intent =
                 Intent(activity.applicationContext, DocumentActivity::class.java)
-            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+            intent.putExtra("scanType", DocumentActivity().backScan)
             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
             startForBackResult.launch(intent)
             updateNationalIdFrontOcrViewModel.scanBack()
@@ -233,7 +233,7 @@ private fun MainContent(
                             updateViewModel.enableLoading()
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                            intent.putExtra("scanType", DocumentActivity().frontScan)
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
@@ -354,14 +354,14 @@ private fun MainContent(
                         updateNationalIdFrontOcrVM.enableReScanLoading()
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                        intent.putExtra("scanType", DocumentActivity().frontScan)
                         intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                         startForResult.launch(intent)
                     },
-                    textColor = MaterialTheme.appColors.primary,
+                    title = stringResource(id = R.string.reScan),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
-                    title = stringResource(id = R.string.reScan)
+                    textColor = MaterialTheme.appColors.primary
                 )
             }
         }

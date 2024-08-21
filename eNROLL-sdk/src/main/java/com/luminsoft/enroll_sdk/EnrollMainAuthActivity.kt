@@ -9,8 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import checkIMEIAuthModule
-import checkIMEIAuthRouter
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_di.checkIMEIAuthModule
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_navigation.checkIMEIAuthRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient

@@ -1,3 +1,4 @@
+package com.luminsoft.enroll_sdk.features_auth_update.device_id_auth_update.device_id_auth_update.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,14 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -24,7 +24,6 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_on
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
-import org.koin.compose.koinInject
 
 @Composable
 fun TestUpdateScreenContent(
@@ -33,18 +32,8 @@ fun TestUpdateScreenContent(
 ) {
     val context = LocalContext.current
 
-    val checkDeviceIdAuthUpdateUseCase =
-        CheckDeviceIdAuthUpdateUseCase(koinInject())
-
-    val checkDeviceIdAuthUpdateViewModel =
-        remember {
-            DeviceIdAuthUpdateViewModel( checkDeviceIdAuthUseCase= checkDeviceIdAuthUpdateUseCase, context = context)
-        }
-
 
     val activity = context.findActivity()
-    val loading = checkDeviceIdAuthUpdateViewModel.loading.collectAsState()
-    val failure = checkDeviceIdAuthUpdateViewModel.failure.collectAsState()
 
 
     BackGroundView(navController = navController, showAppBar = true) {
@@ -65,7 +54,6 @@ fun TestUpdateScreenContent(
 
                 Spacer(modifier = Modifier.height(48.dp))
                 ButtonView(
-                    color = MaterialTheme.appColors.errorColor,
                     onClick = {
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(
@@ -73,7 +61,9 @@ fun TestUpdateScreenContent(
                                 "Update Failed", "Update Failed"
                             )
                         )
-                    }, title = stringResource(id = R.string.exit)
+                    },
+                    title = stringResource(id = R.string.exit),
+                    color = MaterialTheme.appColors.errorColor
                 )
 
             }

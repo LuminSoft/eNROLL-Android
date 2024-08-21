@@ -1,9 +1,6 @@
-package com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token
-
+package com.luminsoft.enroll_sdk.core.network//
 import com.google.gson.annotations.SerializedName
 
 data class BasicResponseModel(
-
     @SerializedName("status") var status: Int? = null
-
 )

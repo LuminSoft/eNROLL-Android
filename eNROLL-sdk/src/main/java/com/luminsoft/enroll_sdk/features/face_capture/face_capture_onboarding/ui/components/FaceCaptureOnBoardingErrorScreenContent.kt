@@ -117,10 +117,10 @@ fun FaceCaptureOnBoardingErrorScreen(
                         Intent(activity.applicationContext, SmileLivenessActivity::class.java)
                     startForResult.launch(intent)
                 },
-                textColor = MaterialTheme.appColors.primary,
+                title = stringResource(id = R.string.reScan),
                 color = MaterialTheme.appColors.backGround,
                 borderColor = MaterialTheme.appColors.primary,
-                title = stringResource(id = R.string.reScan)
+                textColor = MaterialTheme.appColors.primary
             )
         }
 

@@ -15,4 +15,4 @@ class UpdateStepsConfigurationsUsecase(private val mainRepository: MainUpdateRep
     }
 }
 
-class GetUpdateStepConfigurationsUsecaseParams {}
+class GetUpdateStepConfigurationsUsecaseParams

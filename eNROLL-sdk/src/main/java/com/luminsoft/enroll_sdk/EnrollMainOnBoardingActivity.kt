@@ -1,20 +1,17 @@
 package com.luminsoft.enroll_sdk
 
 import EKYCsDKTheme
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import applyElectronicSignatureContent
-import checkAmlModule
-import checkAmlRouter
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
@@ -65,8 +62,9 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
         RetroClient.setBaseUrl(EnrollSDK.getApisUrl())
     }
 
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-
     }
 
 

@@ -1,4 +1,5 @@
-
+package com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases
+import TermsConditionsRepository
 import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure

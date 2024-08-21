@@ -15,4 +15,4 @@ class GetAuthStepConfigurationsUsecase(private val mainRepository: MainAuthRepos
     }
 }
 
-class GetAuthStepConfigurationsUsecaseParams {}
+class GetAuthStepConfigurationsUsecaseParams

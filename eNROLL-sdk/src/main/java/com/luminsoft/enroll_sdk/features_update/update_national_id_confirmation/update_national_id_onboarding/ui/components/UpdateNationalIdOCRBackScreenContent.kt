@@ -208,15 +208,15 @@ fun UpdateNationalIdBackConfirmationScreen(
 
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                            intent.putExtra("scanType", DocumentActivity().backScan)
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                             startForBackResult.launch(intent)
                         },
-                        textColor = MaterialTheme.appColors.primary,
+                        title = stringResource(id = R.string.reScan),
                         color = MaterialTheme.appColors.backGround,
                         borderColor = MaterialTheme.appColors.primary,
-                        title = stringResource(id = R.string.reScan)
+                        textColor = MaterialTheme.appColors.primary
                     )
                 }
             } else if (!failure.value?.message.isNullOrEmpty()) {
@@ -258,7 +258,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                                             activity.applicationContext,
                                             DocumentActivity::class.java
                                         )
-                                    intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                    intent.putExtra("scanType", DocumentActivity().backScan)
                                     intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                     startForBackResult.launch(intent)
@@ -293,7 +293,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                                             activity.applicationContext,
                                             DocumentActivity::class.java
                                         )
-                                    intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                    intent.putExtra("scanType", DocumentActivity().backScan)
                                     intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                     startForBackResult.launch(intent)

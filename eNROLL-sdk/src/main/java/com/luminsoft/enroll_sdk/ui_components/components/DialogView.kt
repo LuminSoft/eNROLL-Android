@@ -106,8 +106,8 @@ fun DialogView(
                                 onPressedButton()
                             },
                             title = buttonText,
-                            textColor = MaterialTheme.appColors.white,
-                            color = getColor(bottomSheetStatus = bottomSheetStatus)
+                            color = getColor(bottomSheetStatus = bottomSheetStatus),
+                            textColor = MaterialTheme.appColors.white
                         )
                     }
                     if (secondButtonText != null && onPressedSecondButton != null) {

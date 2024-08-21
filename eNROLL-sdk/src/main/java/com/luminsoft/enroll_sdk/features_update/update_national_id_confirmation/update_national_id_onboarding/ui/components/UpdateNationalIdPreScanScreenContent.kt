@@ -105,12 +105,11 @@ private fun NationalIdOnly(
                     rememberedViewModel.enableLoading()
                     rememberedViewModel.enablePreScanLoading()
                     val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
-                    intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                    intent.putExtra("scanType", DocumentActivity().frontScan)
                     intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                     startForResult.launch(intent)
                 },
                 stringResource(id = R.string.start),
-                modifier = Modifier.padding(horizontal = 20.dp),
             )
             Spacer(
                 modifier = Modifier
