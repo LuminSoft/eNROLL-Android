@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model
 
+import UpdateScanType
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.ui.text.input.TextFieldValue
@@ -12,7 +13,6 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
 import updateLocationScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
@@ -59,8 +60,9 @@ class UpdateViewModel(
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var passportImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
+    var scanType: MutableStateFlow<UpdateScanType?> = MutableStateFlow(null)
     var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var preScanLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isNotFirstMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var securityQuestions: MutableStateFlow<List<GetSecurityQuestionsResponseModel>?> =
         MutableStateFlow(null)
@@ -82,6 +84,8 @@ class UpdateViewModel(
         TODO("Not yet implemented")
     }
 
+
+
     fun enableLoading() {
         loading.value = true
     }
@@ -90,9 +94,19 @@ class UpdateViewModel(
         loading.value = false
     }
 
+
+    fun enablePreScanLoading() {
+        preScanLoading.value = true
+    }
+
+    fun disablePreScanLoading() {
+        preScanLoading.value = false
+    }
+
     init {
         generateToken()
     }
+
 
     private fun generateToken() {
         loading.value = true
@@ -200,7 +214,7 @@ class UpdateViewModel(
     fun navigateToUpdateAfterAuthStep() {
         //TODO: will navigate to update modules
         val route = when (updateStepId.value) {
-            1 -> testUpdateScreenContent
+            1 -> updateNationalIdPreScanScreen
             2 -> testUpdateScreenContent
             3 -> testUpdateScreenContent
             4 -> multipleMailsUpdateScreenContent
