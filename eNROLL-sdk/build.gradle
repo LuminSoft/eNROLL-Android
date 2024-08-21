@@ -108,6 +108,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:1.2.0")
 
     implementation("com.github.jump-sdk:jetpack_compose_country_code_picker_emoji:2.2.7")
+    implementation project(':app')
 
 
 //    implementation(project(":ekyc-android-sdk:libs:main"))
