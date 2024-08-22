@@ -32,6 +32,7 @@ import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
@@ -53,6 +54,7 @@ class UpdateViewModel(
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
+    var phoneValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
     var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
     var steps: MutableStateFlow<List<StepUpdateModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
@@ -78,12 +80,13 @@ class UpdateViewModel(
     var updateAuthenticationStep: MutableStateFlow<UpdateVerificationMethodResponse?> =
         MutableStateFlow(null)
     var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
+    var userPhone: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailId: MutableStateFlow<Int?> = MutableStateFlow(null)
+    var phoneId: MutableStateFlow<Int?> = MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
-
 
 
     fun enableLoading() {
@@ -216,7 +219,7 @@ class UpdateViewModel(
         val route = when (updateStepId.value) {
             1 -> updateNationalIdPreScanScreen
             2 -> testUpdateScreenContent
-            3 -> testUpdateScreenContent
+            3 -> multiplePhonesUpdateScreenContent
             4 -> multipleMailsUpdateScreenContent
             5 -> testUpdateScreenContent
             6 -> updateLocationScreenContent
@@ -289,5 +292,9 @@ class UpdateViewModel(
 
     fun updateMailId(id: Int) {
         mailId.value = id
+    }
+
+    fun updatePhoneId(id: Int) {
+        phoneId.value = id
     }
 }
