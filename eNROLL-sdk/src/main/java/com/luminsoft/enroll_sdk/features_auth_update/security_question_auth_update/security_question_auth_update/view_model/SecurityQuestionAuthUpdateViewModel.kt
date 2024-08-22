@@ -8,6 +8,8 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.GetSecurityQuestionAuthUpdateUseCase
+import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.ValidateSecurityQuestionAuthUpdateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -15,7 +17,8 @@ import kotlinx.coroutines.launch
 
 class SecurityQuestionAuthUpdateViewModel(
     private val getSecurityQuestionAuthUseCase: GetSecurityQuestionAuthUpdateUseCase,
-    private val validateSecurityQuestionUseCase: ValidateSecurityQuestionAuthUpdateUseCase) :
+    private val validateSecurityQuestionUseCase: ValidateSecurityQuestionAuthUpdateUseCase
+) :
     ViewModel() {
 
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)

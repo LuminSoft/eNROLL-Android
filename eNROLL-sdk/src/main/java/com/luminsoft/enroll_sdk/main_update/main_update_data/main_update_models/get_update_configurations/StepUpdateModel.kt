@@ -1,7 +1,7 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations
 
 import checkDeviceIdAuthUpdateScreenContent
-import checkIMEIAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_navigation.checkIMEIAuthScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingPreScanScreen

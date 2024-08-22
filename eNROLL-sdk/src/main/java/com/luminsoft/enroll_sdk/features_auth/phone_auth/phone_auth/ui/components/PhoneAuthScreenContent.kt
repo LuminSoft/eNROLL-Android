@@ -193,15 +193,14 @@ fun PhoneAuthScreenContent(
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
                 ButtonView(
-                    isEnabled = otpValue.value.length == 6,
                     onClick = {
                         phoneViewModel.callValidateOtp(otpValue.value)
                     },
-                    title = stringResource(id = R.string.confirmAndContinue)
+                    title = stringResource(id = R.string.confirmAndContinue),
+                    isEnabled = otpValue.value.length == 6
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 ButtonView(
-                    isEnabled = ticks == 0,
                     onClick = {
                         phoneViewModel.callSendOtp()
                         ticks = 60
@@ -209,9 +208,10 @@ fun PhoneAuthScreenContent(
                         counter++
                     },
                     title = stringResource(id = R.string.resend),
-                    textColor = MaterialTheme.appColors.primary,
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
+                    isEnabled = ticks == 0,
+                    textColor = MaterialTheme.appColors.primary,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

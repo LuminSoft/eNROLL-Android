@@ -30,7 +30,7 @@ import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
-import updateLocationScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 
 class UpdateViewModel(
@@ -242,7 +242,7 @@ class UpdateViewModel(
             8 -> "Update Password"
             else -> "Update"
         }
-        return title;
+        return title
 
     }
 

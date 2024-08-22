@@ -1,8 +1,8 @@
 package com.luminsoft.enroll_sdk.features.location.location_data.location_api
 
 
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.PostLocationRequestModel
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
 import retrofit2.Response
 
 import retrofit2.http.*

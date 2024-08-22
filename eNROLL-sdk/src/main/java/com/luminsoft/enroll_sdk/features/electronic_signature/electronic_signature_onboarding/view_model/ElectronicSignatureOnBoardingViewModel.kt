@@ -63,9 +63,8 @@ class ElectronicSignatureOnBoardingViewModel(
 
 
 
-
 private fun handleSuccess(status: Int) {
-    loading.value = false
+
     when (status) {
         1 -> {
             haveSignatureSucceed.value = true
@@ -81,36 +80,34 @@ private fun handleSuccess(status: Int) {
         }
     }
 }
-
-     fun insertSignatureInfo(status: Int,nationalId: String,phoneNumber: String ,email: String ) {
+    fun insertSignatureInfo(
+        status: Int,
+        nationalId: String? = null,
+        phoneNumber: String? = null,
+        email: String? = null
+    ) {
         loading.value = true
         ui {
-
             params.value = ApplySignatureUseCaseParams(
-                status,
-                nationalId,
-                phoneNumber,
-                email,
-
+                status = status ,
+                nationalId = nationalId ?: "",
+                phoneNumber = phoneNumber ?: "",
+                email = email ?: ""
             )
-
-            val response: Either<SdkFailure, Null> = electronicSignatureUseCase.
-            call(params.value as ApplySignatureUseCaseParams)
+            val response: Either<SdkFailure, Null> = electronicSignatureUseCase.call(params.value as ApplySignatureUseCaseParams)
 
             response.fold(
                 {
                     failedStatus.value = status
                     failure.value = it
                     loading.value = false
-
                 },
                 {
                     handleSuccess(status)
-                })
+                }
+            )
         }
     }
-
-
 
      private fun checkUserHasNationalId() {
         loading.value = true
@@ -131,11 +128,5 @@ private fun handleSuccess(status: Int) {
                 })
         }
     }
-
-
-
-
-
-
 }
 

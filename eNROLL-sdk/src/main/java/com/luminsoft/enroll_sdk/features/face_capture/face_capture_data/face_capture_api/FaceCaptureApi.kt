@@ -1,10 +1,10 @@
 package com.luminsoft.enroll_sdk.features.face_capture.face_capture_data.face_capture_api
 
 
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_data.face_capture_models.SelfieImageApproveRequestModel
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_data.face_capture_models.UploadSelfieRequestModel
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_data.face_capture_models.UploadSelfieResponseModel
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
 
 import retrofit2.Response
 import retrofit2.http.*

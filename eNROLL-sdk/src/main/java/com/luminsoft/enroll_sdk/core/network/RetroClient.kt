@@ -59,7 +59,7 @@ object RetroClient {
     }
 }
 
-class AuthInterceptor() : Interceptor {
+class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var req = chain.request()
 

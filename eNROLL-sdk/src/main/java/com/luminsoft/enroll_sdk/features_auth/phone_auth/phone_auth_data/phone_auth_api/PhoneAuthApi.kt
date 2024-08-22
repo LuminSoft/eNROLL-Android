@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_data.phone_auth_api
 
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.validate_otp.ValidateOTPRequestModel
 import retrofit2.Response
 import retrofit2.http.Body

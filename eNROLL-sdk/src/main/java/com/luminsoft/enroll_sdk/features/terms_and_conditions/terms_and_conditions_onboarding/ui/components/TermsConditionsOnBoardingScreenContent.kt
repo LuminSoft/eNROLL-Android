@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_onboarding.ui.components
 
-import AcceptTermsUseCase
+import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases.AcceptTermsUseCase
 import GetTermsIdUseCase
 import GetTermsPdfFileByIdUseCase
 import TermsConditionsOnBoardingViewModel
@@ -244,9 +244,9 @@ fun PdfViewerWidget(
                 ButtonView(
                     onClick = { showConfirmationDialog = true },
                     title = stringResource(id = R.string.exit),
-                    textColor = MaterialTheme.appColors.primary,
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
                 )
 
             }

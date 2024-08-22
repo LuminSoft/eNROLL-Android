@@ -172,7 +172,7 @@ private fun MainContent(
         if (frontNIApproved.value) {
             val intent =
                 Intent(activity.applicationContext, DocumentActivity::class.java)
-            intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+            intent.putExtra("scanType", DocumentActivity().backScan)
             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
             startForBackResult.launch(intent)
             nationalIdFrontOcrViewModel.scanBack()
@@ -218,7 +218,7 @@ private fun MainContent(
                             onBoardingViewModel.enableLoading()
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                            intent.putExtra("scanType", DocumentActivity().frontScan)
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
@@ -240,7 +240,6 @@ private fun MainContent(
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
                 }
-            onBoardingViewModel.userNationalId.value = customerData.value?.idNumber
             setCustomerId(onBoardingViewModel, customerData)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -325,21 +324,21 @@ private fun MainContent(
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 ButtonView(
                     onClick = {
                         onBoardingViewModel.enableLoading()
                         val intent =
                             Intent(activity.applicationContext, DocumentActivity::class.java)
-                        intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                        intent.putExtra("scanType", DocumentActivity().frontScan)
                         intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                         startForResult.launch(intent)
                     },
-                    textColor = MaterialTheme.appColors.primary,
+                    title = stringResource(id = R.string.reScan),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
-                    title = stringResource(id = R.string.reScan)
+                    textColor = MaterialTheme.appColors.primary
                 )
             }
         }

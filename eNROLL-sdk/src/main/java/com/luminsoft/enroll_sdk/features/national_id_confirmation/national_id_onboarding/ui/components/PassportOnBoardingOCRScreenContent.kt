@@ -204,7 +204,7 @@ private fun MainContent(
                             onBoardingViewModel.enableLoading()
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                            intent.putExtra("scanType", DocumentActivity().passportScan)
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
@@ -352,21 +352,21 @@ private fun MainContent(
                         },
                         title = stringResource(id = R.string.confirmAndContinue)
                     )
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     ButtonView(
                         onClick = {
                             onBoardingViewModel.enableLoading()
                             val intent =
                                 Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                            intent.putExtra("scanType", DocumentActivity().passportScan)
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
-                        textColor = MaterialTheme.appColors.primary,
+                        title = stringResource(id = R.string.reScan),
                         color = MaterialTheme.appColors.backGround,
                         borderColor = MaterialTheme.appColors.primary,
-                        title = stringResource(id = R.string.reScan)
+                        textColor = MaterialTheme.appColors.primary
                     )
                     Spacer(modifier = Modifier.height(100.dp))
                 }

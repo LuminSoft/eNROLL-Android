@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations
 
-import checkAmlOnBoardingScreenContent
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlOnBoardingScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent

@@ -1,6 +1,13 @@
+package com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_di
 
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_data.check_imei_auth_api.CheckIMEIAuthApi
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_data.check_imei_auth_remote_data_source.CheckIMEIAuthRemoteDataSource
+import CheckIMEIAuthRemoteDataSourceImpl
+import CheckIMEIAuthRepository
+import CheckIMEIAuthRepositoryImplementation
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor
 import com.luminsoft.enroll_sdk.core.network.RetroClient
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_domain.usecases.AuthCheckIMEIUseCase
 import org.koin.dsl.module
 
 val checkIMEIAuthModule = module {

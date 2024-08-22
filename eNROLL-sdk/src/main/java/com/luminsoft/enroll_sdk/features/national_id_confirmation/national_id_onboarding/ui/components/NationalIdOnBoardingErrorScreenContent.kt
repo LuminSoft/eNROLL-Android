@@ -171,7 +171,7 @@ fun NationalIdOnBoardingErrorScreen(
                         )
                     }, title = stringResource(id = R.string.exit)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 ButtonView(
                     onClick = {
@@ -180,38 +180,38 @@ fun NationalIdOnBoardingErrorScreen(
                             Intent(activity.applicationContext, DocumentActivity::class.java)
                         when (scanType.value) {
                             FRONT -> {
-                                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                                intent.putExtra("scanType", DocumentActivity().frontScan)
                                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                 startForResult.launch(intent)
                             }
 
                             Back -> {
-                                intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                intent.putExtra("scanType", DocumentActivity().backScan)
                                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                 startForBackResult.launch(intent)
                             }
 
                             PASSPORT -> {
-                                intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                                intent.putExtra("scanType", DocumentActivity().passportScan)
                                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                 startPassportForResult.launch(intent)
                             }
 
                             null -> {
-                                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                                intent.putExtra("scanType", DocumentActivity().frontScan)
                                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                 startForResult.launch(intent)
                             }
                         }
                     },
-                    textColor = MaterialTheme.appColors.primary,
+                    title = stringResource(id = R.string.reScan),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
-                    title = stringResource(id = R.string.reScan)
+                    textColor = MaterialTheme.appColors.primary
                 )
             }
 

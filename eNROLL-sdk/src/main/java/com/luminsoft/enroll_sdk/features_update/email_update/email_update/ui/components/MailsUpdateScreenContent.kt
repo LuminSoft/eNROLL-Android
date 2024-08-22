@@ -210,9 +210,9 @@ fun MailsUpdateScreenContent(
                         navController.navigate(updateListScreenContent)
                     },
                     title = stringResource(id = R.string.exit),
-                    textColor = MaterialTheme.appColors.primary,
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
                 )
 
             }

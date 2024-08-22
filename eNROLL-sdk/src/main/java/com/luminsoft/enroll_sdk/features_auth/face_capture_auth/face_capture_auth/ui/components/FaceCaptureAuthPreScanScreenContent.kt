@@ -82,7 +82,6 @@ fun FaceCaptureAuthPreScanScreenContent(
                     startForResult.launch(intent)
                 },
                 stringResource(id = R.string.start),
-                modifier = Modifier.padding(horizontal = 20.dp),
             )
             Spacer(
                 modifier = Modifier

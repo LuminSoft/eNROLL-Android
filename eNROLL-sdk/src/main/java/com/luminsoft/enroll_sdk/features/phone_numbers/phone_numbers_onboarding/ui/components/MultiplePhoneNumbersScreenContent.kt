@@ -174,21 +174,21 @@ fun MultiplePhoneNumbersScreenContent(
 
                 LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
                     items(verifiedPhones.value!!.size) { index ->
-                        phoneItem(verifiedPhones.value!![index], multiplePhoneNumbersVM)
+                        PhoneItem(verifiedPhones.value!![index], multiplePhoneNumbersVM)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 ButtonView(
-                    isEnabled = verifiedPhones.value!!.size < 5,
                     onClick = {
                         onBoardingViewModel.currentPhoneNumber.value = null
                         onBoardingViewModel.isNotFirstPhone.value = true
                         navController.navigate(phoneNumbersOnBoardingScreenContent)
                     },
                     title = stringResource(id = R.string.addPhoneNumber),
-                    textColor = MaterialTheme.appColors.primary,
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
+                    isEnabled = verifiedPhones.value!!.size < 5,
+                    textColor = MaterialTheme.appColors.primary,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -208,7 +208,7 @@ fun MultiplePhoneNumbersScreenContent(
 }
 
 @Composable
-private fun phoneItem(
+private fun PhoneItem(
     model: GetVerifiedPhonesResponseModel,
     multiplePhoneNumbersVM: MultiplePhoneNumbersViewModel
 ) {

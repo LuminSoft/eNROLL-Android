@@ -8,5 +8,4 @@ data class TokenizedCardData(
     @SerializedName("cardExpMonth") var cardExpMonth: String? = null,
     @SerializedName("cardExpYear") var cardExpYear: String? = null,
     @SerializedName("tokenId") var tokenId: String? = null,
-    ) {
-}
+    )

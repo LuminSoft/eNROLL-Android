@@ -205,6 +205,7 @@ private fun permissionDenied(context: Context, activity: Activity) {
     activity.startActivity(intent)
 }
 
+@Suppress("DEPRECATION")
 private fun checkLocationSetting(
     context: Context,
     onDisabled: (IntentSenderRequest) -> Unit,

@@ -19,7 +19,7 @@ object eNROLL {
     fun init(
         tenantId: String,
         tenantSecret: String,
-        applicantId:String = "",
+        applicantId: String = "",
         levelOfTrustToken: String = "",
         enrollMode: EnrollMode,
         environment: EnrollEnvironment = EnrollEnvironment.STAGING,
@@ -83,6 +83,7 @@ object eNROLL {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun setLocale(lang: LocalizationCode, activity: Activity) {
         val locale = if (lang != LocalizationCode.AR) {
             Locale("en")

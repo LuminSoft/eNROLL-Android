@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_api
 
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.countries_code.GetCountriesResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.make_default.MakeDefaultRequestModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.phone_info.PhoneInfoRequestModel

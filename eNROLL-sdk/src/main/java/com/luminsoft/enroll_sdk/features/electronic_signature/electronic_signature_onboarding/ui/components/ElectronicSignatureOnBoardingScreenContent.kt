@@ -1,3 +1,4 @@
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -77,22 +79,15 @@ fun ElectronicSignatureOnBoardingScreenContent(
 
 
     val context = LocalContext.current
-
-
     val activity = context.findActivity()
-
-
     val loading = electronicSignatureOnBoardingViewModel.loading.collectAsState()
     val failure = electronicSignatureOnBoardingViewModel.failure.collectAsState()
     val skipped = electronicSignatureOnBoardingViewModel.skippedSucceed.collectAsState()
-    val userHasNationalId = electronicSignatureOnBoardingViewModel.userHasNationalId.collectAsState()
     val haveSignature = electronicSignatureOnBoardingViewModel.haveSignatureSucceed.collectAsState()
-    val applySignatureSucceed =
-        electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
+    val applySignatureSucceed = electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
     val isStepSelected = electronicSignatureOnBoardingViewModel.isStepSelected.collectAsState()
     val chosenStep = electronicSignatureOnBoardingViewModel.chosenStep.collectAsState()
     val failedStatus = electronicSignatureOnBoardingViewModel.failedStatus.collectAsState()
-    val selectedStep = onBoardingViewModel.selectedStep.collectAsState()
 
 
     var showDialog by remember { mutableStateOf(false) }
@@ -101,12 +96,30 @@ fun ElectronicSignatureOnBoardingScreenContent(
     var dialogButtonText by remember { mutableStateOf("") }
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
+    fun navigateToNextStep() {
+        onBoardingViewModel.mailValue.value = TextFieldValue()
+        onBoardingViewModel.currentPhoneNumber.value = null
+        navController.navigate(onBoardingViewModel.steps.value!!.first().stepNameNavigator())
+    }
 
+    fun removeCurrentStep(id: Int): Boolean {
+        if (onBoardingViewModel.steps.value != null) {
+            val stepsSize = onBoardingViewModel.steps.value!!.size
+            onBoardingViewModel.steps.value = onBoardingViewModel.steps.value!!.toMutableList().apply {
+                removeIf { x -> x.registrationStepId == id }
+            }.toList()
+            val newStepsSize = onBoardingViewModel.steps.value!!.size
+            if (stepsSize != newStepsSize) {
+                return onBoardingViewModel.steps.value!!.isEmpty()
+            }
+        }
+        return false
+    }
 
     LaunchedEffect(skipped.value) {
+
         if (skipped.value!!) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.successfulRegistration)
                 dialogButtonText = context.getString(R.string.continue_to_next)
@@ -122,12 +135,13 @@ fun ElectronicSignatureOnBoardingScreenContent(
                 }
                 showDialog = true
             }
+
         }
     }
 
     LaunchedEffect(haveSignature.value) {
         if (haveSignature.value!!) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+            val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
                 dialogButtonText = context.getString(R.string.continue_to_next)
@@ -143,13 +157,22 @@ fun ElectronicSignatureOnBoardingScreenContent(
                 }
                 showDialog = true
             }
+            else {
+                dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
+                dialogButtonText = context.getString(R.string.continue_to_next)
+                dialogStatus = BottomSheetStatus.SUCCESS
+                dialogOnPressButton = {
+                    navigateToNextStep()
+                    showDialog = false
+                }
+                showDialog = true
+            }
         }
     }
 
     LaunchedEffect(applySignatureSucceed.value) {
         if (applySignatureSucceed.value!!) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+            val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
                 dialogButtonText = context.getString(R.string.continue_to_next)
@@ -162,6 +185,16 @@ fun ElectronicSignatureOnBoardingScreenContent(
                             context.getString(R.string.successfulRegistration)
                         )
                     )
+                }
+                showDialog = true
+            }
+            else {
+                dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+                dialogButtonText = context.getString(R.string.continue_to_next)
+                dialogStatus = BottomSheetStatus.SUCCESS
+                dialogOnPressButton = {
+                    navigateToNextStep()
+                    showDialog = false
                 }
                 showDialog = true
             }
@@ -186,7 +219,8 @@ fun ElectronicSignatureOnBoardingScreenContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
-        } else if (!failure.value?.message.isNullOrEmpty()) {
+        }
+        else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(
@@ -204,7 +238,8 @@ fun ElectronicSignatureOnBoardingScreenContent(
 
                     }
                 }
-            } else {
+            }
+            else {
                 failure.value?.let {
                     DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = it.message,
@@ -212,36 +247,15 @@ fun ElectronicSignatureOnBoardingScreenContent(
                         onPressedButton = {
                             when (failedStatus.value) {
                                 1 -> {
-                                    electronicSignatureOnBoardingViewModel.insertSignatureInfo(
-                                        1,
-                                        onBoardingViewModel.userNationalId.value ?: "",
-                                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                                        onBoardingViewModel.userMail.value ?: ""
-
-                                        )
+                                    electronicSignatureOnBoardingViewModel.insertSignatureInfo(1)
                                 }
-
                                 2 -> {
-                                    electronicSignatureOnBoardingViewModel.insertSignatureInfo(
-                                        2,
-                                        onBoardingViewModel.userNationalId.value ?: "",
-                                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                                        onBoardingViewModel.userMail.value ?: ""
-
-                                        )
+                                    electronicSignatureOnBoardingViewModel.insertSignatureInfo(2)
                                 }
-
                                 3 -> {
-                                    electronicSignatureOnBoardingViewModel.insertSignatureInfo(
-                                        3,
-                                        onBoardingViewModel.userNationalId.value ?: "",
-                                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                                        onBoardingViewModel.userMail.value ?: ""
-                                    )
+                                    electronicSignatureOnBoardingViewModel.insertSignatureInfo(3)
                                 }
-
                             }
-
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -254,7 +268,8 @@ fun ElectronicSignatureOnBoardingScreenContent(
                     }
                 }
             }
-        } else {
+        }
+        else {
 
             if (!isStepSelected.value) {
                 ApplyForSignatureOrAlreadyHave(
@@ -264,10 +279,7 @@ fun ElectronicSignatureOnBoardingScreenContent(
                     navController
                 )
             }
-
         }
-
-
     }
 
 }
@@ -325,59 +337,32 @@ private fun ApplyForSignatureOrAlreadyHave(
             onClick = {
 
                 if (chosenStep.value == ElectronicSignatureChooseStep.AlreadyHaveSignature) {
-
-                    signatureOnBoardingViewModel.insertSignatureInfo(
-                        1,
-                        onBoardingViewModel.userNationalId.value ?: "",
-                        onBoardingViewModel.userPhoneNumber.value ?: "",
-                        onBoardingViewModel.userMail.value ?: "",
-
-                        )
+                    signatureOnBoardingViewModel.insertSignatureInfo(1)
                 }
 
                 else if (chosenStep.value == ElectronicSignatureChooseStep.ApplyForSignature) {
 
-                    if (signatureOnBoardingViewModel.userHasNationalId.value == true && onBoardingViewModel.existingSteps.value!!.contains(3) && onBoardingViewModel.existingSteps.value!!.contains(4)
+                    if (signatureOnBoardingViewModel.userHasNationalId.value == true &&
+                        onBoardingViewModel.existingSteps.value!!.contains(3) && onBoardingViewModel.existingSteps.value!!.contains(4)
                     ) {
-
-                        signatureOnBoardingViewModel.insertSignatureInfo(
-                            2,
-                            onBoardingViewModel.userNationalId.value!!,
-                            onBoardingViewModel.userPhoneNumber.value!!,
-                            onBoardingViewModel.userMail.value!!,
-                            )
+                        signatureOnBoardingViewModel.insertSignatureInfo(2)
                     } else {
-
                         navController.navigate(applyElectronicSignatureContent)
                     }
-
-
                 }
-
             },
             stringResource(id = R.string.continue_to_next),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ButtonView(
             onClick = {
-
-
-                signatureOnBoardingViewModel.insertSignatureInfo(
-                    3,
-                    onBoardingViewModel.userNationalId.value ?: "",
-                    onBoardingViewModel.userPhoneNumber.value ?: "",
-                    onBoardingViewModel.userMail.value ?: "",
-
-                    )
-
+                signatureOnBoardingViewModel.insertSignatureInfo(3)
             },
             stringResource(id = R.string.skip),
-            modifier = Modifier.padding(horizontal = 20.dp),
-            textColor = MaterialTheme.appColors.primary,
             color = MaterialTheme.appColors.backGround,
             borderColor = MaterialTheme.appColors.primary,
+            textColor = MaterialTheme.appColors.primary,
         )
 
 
@@ -415,7 +400,6 @@ private fun Card(
             )
             .alpha(alpha)
             .clickable(step != chosenStep.value!!) {
-
                 rememberedViewModel.chosenStep.value = step
             },
 
@@ -448,33 +432,6 @@ private fun Card(
                 fontSize = 12.sp
             )
         }
-
-        /*        Column(
-                    modifier = Modifier
-                        .fillMaxHeight(0.3f)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.45f)
-                            .aspectRatio(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
-                            contentScale = ContentScale.Fit,
-                            contentDescription = "Victor Ekyc Item"
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalId else R.string.passport),
-                        fontSize = 12.sp
-                    )
-                }*/
 
     }
 }
