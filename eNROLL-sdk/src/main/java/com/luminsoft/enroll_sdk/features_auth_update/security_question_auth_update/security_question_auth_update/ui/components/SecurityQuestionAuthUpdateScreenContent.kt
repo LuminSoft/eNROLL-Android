@@ -1,6 +1,5 @@
 
-import android.util.Log
-import androidx.activity.compose.BackHandler
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +39,8 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.GetSecurityQuestionAuthUpdateUseCase
+import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.ValidateSecurityQuestionAuthUpdateUseCase
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -51,6 +52,7 @@ import org.koin.compose.koinInject
 
 var isAnswerValidate = mutableStateOf(false)
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SecurityQuestionAuthUpdateScreenContent(
     navController: NavController,
@@ -198,10 +200,9 @@ fun SecurityQuestionAuthUpdateScreenContent(
                         navController.popBackStack()
                               },
                     stringResource(id = R.string.skip),
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    textColor = MaterialTheme.appColors.primary,
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
                 )
 
 

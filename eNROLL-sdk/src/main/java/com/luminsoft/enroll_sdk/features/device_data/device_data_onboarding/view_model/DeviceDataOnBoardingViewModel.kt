@@ -3,7 +3,7 @@ package com.luminsoft.enroll_sdk.features.device_data.device_data_onboarding.vie
 import androidx.lifecycle.ViewModel
 
 
-class DeviceDataOnBoardingViewModel(/*private val payUseCase: PayUseCase, private val getFees: GetFeesUseCase*/) :
+class DeviceDataOnBoardingViewModel :
     ViewModel() {
 
 //    var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)

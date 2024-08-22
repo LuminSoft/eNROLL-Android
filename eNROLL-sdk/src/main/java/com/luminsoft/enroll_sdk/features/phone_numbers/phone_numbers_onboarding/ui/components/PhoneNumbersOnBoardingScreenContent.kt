@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,7 @@ import com.togitech.ccp.component.TogiCountryCodePicker
 import org.koin.compose.koinInject
 
 
+@SuppressLint("UnrememberedMutableState", "StateFlowValueCalledInComposition")
 @Composable
 fun PhoneNumbersOnBoardingScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
@@ -87,8 +89,6 @@ fun PhoneNumbersOnBoardingScreenContent(
     var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
     var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
     var isClicked by mutableStateOf(false)
-
-
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (isClicked) {
@@ -223,10 +223,10 @@ fun PhoneNumbersOnBoardingScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
                 ButtonView(
-                    isEnabled = onBoardingViewModel.currentPhoneNumber.value != null || isNumberValid,
                     onClick = {
                         isClicked = true
-                    }, title = stringResource(id = R.string.confirmAndContinue)
+                    },
+                    title = stringResource(id = R.string.confirmAndContinue), isEnabled = onBoardingViewModel.currentPhoneNumber.value != null || isNumberValid
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 

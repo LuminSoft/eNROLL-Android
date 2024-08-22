@@ -153,31 +153,31 @@ fun UpdateNationalIdErrorScreen(
                             Intent(activity.applicationContext, DocumentActivity::class.java)
                         when (scanType.value) {
                             UpdateScanType.FRONT -> {
-                                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                                intent.putExtra("scanType", DocumentActivity().frontScan)
                                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                 startForResult.launch(intent)
                             }
 
                             UpdateScanType.Back -> {
-                                intent.putExtra("scanType", DocumentActivity().BACK_SCAN)
+                                intent.putExtra("scanType", DocumentActivity().backScan)
                                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                 startForBackResult.launch(intent)
                             }
 
                             null -> {
-                                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                                intent.putExtra("scanType", DocumentActivity().frontScan)
                                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                                 startForResult.launch(intent)
                             }
                         }
                     },
-                    textColor = MaterialTheme.appColors.primary,
+                    title = stringResource(id = R.string.reScan),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
-                    title = stringResource(id = R.string.reScan)
+                    textColor = MaterialTheme.appColors.primary
                 )
             }
     }

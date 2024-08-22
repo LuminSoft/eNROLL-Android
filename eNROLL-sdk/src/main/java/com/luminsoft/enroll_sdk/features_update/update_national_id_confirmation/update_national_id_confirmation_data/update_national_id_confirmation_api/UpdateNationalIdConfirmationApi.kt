@@ -1,5 +1,10 @@
+package com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_confirmation_data.update_national_id_confirmation_api
 
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
+import IsTranslationEnabledResponse
+import UpdateNationalIDConfirmationResponse
+import UpdatePersonalConfirmationApproveRequest
+import UpdatePersonalConfirmationUploadImageRequest
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

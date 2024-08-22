@@ -177,21 +177,21 @@ fun MultipleMailsScreenContent(
 
                 LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
                     items(verifiedMails.value!!.size) { index ->
-                        mailItem(verifiedMails.value!![index], multipleMailsVM)
+                        MailItem(verifiedMails.value!![index], multipleMailsVM)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 ButtonView(
-                    isEnabled = verifiedMails.value!!.size < 5,
                     onClick = {
                         onBoardingViewModel.isNotFirstMail.value = true
                         onBoardingViewModel.mailValue.value = TextFieldValue()
                         navController.navigate(mailsOnBoardingScreenContent)
                     },
                     title = stringResource(id = R.string.addMail),
-                    textColor = MaterialTheme.appColors.primary,
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
+                    isEnabled = verifiedMails.value!!.size < 5,
+                    textColor = MaterialTheme.appColors.primary,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -211,7 +211,7 @@ fun MultipleMailsScreenContent(
 }
 
 @Composable
-private fun mailItem(
+private fun MailItem(
     model: GetVerifiedMailsResponseModel,
     multipleMailsVM: MultipleMailsViewModel
 ) {

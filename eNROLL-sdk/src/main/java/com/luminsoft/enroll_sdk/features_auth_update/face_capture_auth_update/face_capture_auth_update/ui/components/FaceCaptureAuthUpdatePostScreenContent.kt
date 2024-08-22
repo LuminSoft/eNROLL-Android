@@ -1,4 +1,7 @@
-
+package com.luminsoft.enroll_sdk.features_auth_update.face_capture_auth_update.face_capture_auth_update.ui.components
+import FaceCaptureAuthUpdateUseCase
+import FaceCaptureAuthUpdateViewModel
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,6 +22,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import org.koin.compose.koinInject
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FaceCaptureAuthUpdatePostScanScreenContent(
     navController: NavController,

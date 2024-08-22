@@ -15,4 +15,4 @@ class GetOnboardingStepConfigurationsUsecase  (private  val mainRepository: Main
     }
 }
 
- class GetOnboardingStepConfigurationsUsecaseParams{}
+ class GetOnboardingStepConfigurationsUsecaseParams

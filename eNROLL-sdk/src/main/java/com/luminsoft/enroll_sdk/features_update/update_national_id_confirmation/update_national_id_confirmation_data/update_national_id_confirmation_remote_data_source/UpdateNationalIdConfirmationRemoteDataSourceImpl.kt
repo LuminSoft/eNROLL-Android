@@ -1,6 +1,7 @@
 
 import com.luminsoft.enroll_sdk.core.network.BaseRemoteDataSource
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_confirmation_data.update_national_id_confirmation_api.UpdateNationalIdConfirmationApi
 
 
 class UpdateNationalIdConfirmationRemoteDataSourceImpl(

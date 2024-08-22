@@ -1,4 +1,2 @@
 
-open class SelfieImageAuthUpdateApproveRequestModel {
-
-}
+open class SelfieImageAuthUpdateApproveRequestModel

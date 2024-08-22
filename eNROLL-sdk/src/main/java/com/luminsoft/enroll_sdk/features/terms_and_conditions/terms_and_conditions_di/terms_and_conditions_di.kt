@@ -1,6 +1,7 @@
 
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor
 import com.luminsoft.enroll_sdk.core.network.RetroClient
+import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases.AcceptTermsUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

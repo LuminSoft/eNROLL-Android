@@ -37,6 +37,8 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth_domain.usecases.GetSecurityQuestionAuthUseCase
+import com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth_domain.usecases.ValidateSecurityQuestionUseCase
 import com.luminsoft.enroll_sdk.main_auth.main_auth_data.main_auth_models.get_auth_configurations.EkycStepAuthType
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView

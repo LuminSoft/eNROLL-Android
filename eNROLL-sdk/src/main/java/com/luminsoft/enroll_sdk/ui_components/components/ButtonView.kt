@@ -1,3 +1,5 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.luminsoft.enroll_sdk.ui_components.components
 
 import androidx.compose.foundation.BorderStroke
@@ -26,13 +28,11 @@ fun ButtonView(
     textColor: Color = MaterialTheme.appColors.white,
     width: Double? = null,
     height: Double = 45.0,
-    modifier: Modifier = Modifier,
 ) {
     var buttonColor = color
     var textColorF = textColor
     var borderColorF = borderColor
     var border: BorderStroke? = null
-    var modifier = modifier
 
     if (!isEnabled) {
         buttonColor = color.copy(alpha = 0.5f)
@@ -50,7 +50,7 @@ fun ButtonView(
 
     }
 
-    modifier = Modifier
+    val modifier: Modifier = Modifier
         .fillMaxWidth()
         .height(height.dp)
 

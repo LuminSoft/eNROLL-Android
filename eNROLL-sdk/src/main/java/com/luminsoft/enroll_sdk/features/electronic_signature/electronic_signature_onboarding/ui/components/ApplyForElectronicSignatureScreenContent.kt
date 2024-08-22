@@ -1,3 +1,9 @@
+package com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_onboarding.ui.components
+
+import CheckUserHasNationalIdUseCase
+import ElectronicSignatureOnBoardingViewModel
+import InsertSignatureInfoUseCase
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,6 +48,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import org.koin.compose.koinInject
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun ApplyForElectronicSignatureScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
@@ -263,7 +270,6 @@ fun ApplyForElectronicSignatureScreenContent(
                         }
                     },
                     stringResource(id = R.string.confirmAndContinue),
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
                 )
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -276,12 +282,12 @@ fun ApplyForElectronicSignatureScreenContent(
 private fun emailFormatValidation(electronicSignatureOnBoardingViewModel: ElectronicSignatureOnBoardingViewModel) {
     when {
 
-        electronicSignatureOnBoardingViewModel.emailValue.value!!.text.isEmpty() -> {
+        electronicSignatureOnBoardingViewModel.emailValue.value.text.isEmpty() -> {
             electronicSignatureOnBoardingViewModel.emailError.value = null
         }
 
         !Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}").matches(
-            electronicSignatureOnBoardingViewModel.emailValue.value!!.text
+            electronicSignatureOnBoardingViewModel.emailValue.value.text
         ) -> {
             electronicSignatureOnBoardingViewModel.emailError.value =
                 ResourceProvider.instance.getStringResource(R.string.invalid_email)

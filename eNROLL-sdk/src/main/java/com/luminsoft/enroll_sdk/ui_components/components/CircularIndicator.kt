@@ -34,7 +34,7 @@ fun SpinKitLoadingIndicator(
     color: Color = MaterialTheme.appColors.primary,
     circleSizeRatio: Float = 1.0f
 ) {
-    val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition(label = "")
 
     val durationPerFraction = durationMillis / 2
 
@@ -195,33 +195,33 @@ internal fun InfiniteTransition.fractionTransition(
             animation = keyframes {
                 this.durationMillis = durationMillis
                 this.delayMillis = delayMillis
-                initialValue at 0 with easing
+                initialValue at 0 using easing
                 when (fraction) {
                     1 -> {
-                        targetValue at durationMillis with easing
+                        targetValue at durationMillis using easing
                     }
 
                     2 -> {
-                        targetValue / fraction at durationMillis / fraction with easing
-                        targetValue at durationMillis with easing
+                        targetValue / fraction at durationMillis / fraction using easing
+                        targetValue at durationMillis using easing
                     }
 
                     3 -> {
-                        targetValue / fraction at durationMillis / fraction with easing
-                        targetValue / fraction * 2 at durationMillis / fraction * 2 with easing
-                        targetValue at durationMillis with easing
+                        targetValue / fraction at durationMillis / fraction using easing
+                        targetValue / fraction * 2 at durationMillis / fraction * 2 using easing
+                        targetValue at durationMillis using easing
                     }
 
                     4 -> {
-                        targetValue / fraction at durationMillis / fraction with easing
-                        targetValue / fraction * 2 at durationMillis / fraction * 2 with easing
-                        targetValue / fraction * 3 at durationMillis / fraction * 3 with easing
-                        targetValue at durationMillis with easing
+                        targetValue / fraction at durationMillis / fraction using easing
+                        targetValue / fraction * 2 at durationMillis / fraction * 2 using easing
+                        targetValue / fraction * 3 at durationMillis / fraction * 3 using easing
+                        targetValue at durationMillis using easing
                     }
                 }
             },
             repeatMode,
             StartOffset(offsetMillis)
-        )
+        ), label = ""
     )
 }

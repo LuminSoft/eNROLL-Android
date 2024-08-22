@@ -32,7 +32,7 @@ class NIFailure(strIntInput: Int) :
 
 }
 
-class NoConnectionFailure() : ConnectionFailure {
+class NoConnectionFailure : ConnectionFailure {
     override val message: String =
         ResourceProvider.instance.getStringResource(R.string.noConnection)
     override val strInt: Int = 0

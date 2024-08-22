@@ -352,7 +352,6 @@ private fun ApplyForSignatureOrAlreadyHave(
                 }
             },
             stringResource(id = R.string.continue_to_next),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -361,10 +360,9 @@ private fun ApplyForSignatureOrAlreadyHave(
                 signatureOnBoardingViewModel.insertSignatureInfo(3)
             },
             stringResource(id = R.string.skip),
-            modifier = Modifier.padding(horizontal = 20.dp),
-            textColor = MaterialTheme.appColors.primary,
             color = MaterialTheme.appColors.backGround,
             borderColor = MaterialTheme.appColors.primary,
+            textColor = MaterialTheme.appColors.primary,
         )
 
 

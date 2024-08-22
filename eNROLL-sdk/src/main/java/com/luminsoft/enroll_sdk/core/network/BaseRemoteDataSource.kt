@@ -9,7 +9,6 @@ import retrofit2.Response
 import java.net.ConnectException
 import java.net.UnknownHostException
 
-@Suppress("UNCHECKED_CAST")
 class BaseRemoteDataSource {
 
     private val gson = Gson()
@@ -21,15 +20,17 @@ class BaseRemoteDataSource {
             val response = call.invoke()
             if (response.isSuccessful) {
                 val body = response.body() ?: {}
-                if ((response.code() == 200 || response.code() == 201|| response.code() == 204))
+                if ((response.code() == 200 || response.code() == 201 || response.code() == 204))
                     return BaseResponse.Success(body)
             } else {
                 return if (response.code() == 401) {
-                   BaseResponse.Error(
-                        AuthFailure(response.errorBody().let {gson.fromJson(
-                            response.errorBody()?.string(),
-                            ApiErrorResponse::class.java
-                        )})
+                    BaseResponse.Error(
+                        AuthFailure(response.errorBody().let {
+                            gson.fromJson(
+                                response.errorBody()?.string(),
+                                ApiErrorResponse::class.java
+                            )
+                        })
                     )
 
                 } else {
@@ -37,7 +38,7 @@ class BaseRemoteDataSource {
                         ServerFailure(
                             gson.fromJson(
                                 response.errorBody()?.string() ?: "Some Thing went wrong",
-                               ApiErrorResponse::class.java
+                                ApiErrorResponse::class.java
                             )
                         )
                     )
@@ -54,19 +55,19 @@ class BaseRemoteDataSource {
 
                 is UnknownHostException -> {
                     BaseResponse.Error(
-                       NetworkFailure()
+                        NetworkFailure()
                     )
                 }
 
                 is ConnectException -> {
-                   BaseResponse.Error(
-                       NetworkFailure()
+                    BaseResponse.Error(
+                        NetworkFailure()
                     )
                 }
 
                 else -> {
-                   BaseResponse.Error(
-                        NetworkFailure(e.localizedMessage)
+                    BaseResponse.Error(
+                        NetworkFailure(e.localizedMessage!!)
                     )
                 }
             }

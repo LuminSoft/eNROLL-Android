@@ -192,16 +192,16 @@ fun MultipleMailsUpdateScreenContent(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 ButtonView(
-                    isEnabled = verifiedMails.value!!.size < 5,
                     onClick = {
                         updateViewModel.isNotFirstMail.value = true
                         updateViewModel.mailValue.value = TextFieldValue()
                         navController.navigate(mailsUpdateScreenContent)
                     },
                     title = stringResource(id = R.string.addMail),
-                    textColor = MaterialTheme.appColors.primary,
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
+                    isEnabled = verifiedMails.value!!.size < 5,
+                    textColor = MaterialTheme.appColors.primary,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 

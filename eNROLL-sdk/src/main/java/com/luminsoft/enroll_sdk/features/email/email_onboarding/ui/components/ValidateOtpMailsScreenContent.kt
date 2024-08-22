@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +23,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,6 +66,7 @@ import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.seconds
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun ValidateOtpMailsScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
@@ -93,10 +97,10 @@ fun ValidateOtpMailsScreenContent(
 
     val otpValue = remember { mutableStateOf("") }
 
-    var counter by remember { mutableStateOf(0) }
+    var counter by remember { mutableIntStateOf(0) }
 
-    var ticks by remember { mutableStateOf(60) }
-    var ticksF by remember { mutableStateOf(1.0f) }
+    var ticks by remember { mutableIntStateOf(60) }
+    var ticksF by remember { mutableFloatStateOf(1.0f) }
     LaunchedEffect(counter) {
         while (ticks > 0) {
             delay(1.seconds)
@@ -221,7 +225,7 @@ fun ValidateOtpMailsScreenContent(
                         color = MaterialTheme.appColors.primary,
                         fontSize = 10.sp
                     )
-                    timer(ticksF, ticks)
+                    Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
                         color = MaterialTheme.appColors.primary,
@@ -247,17 +251,16 @@ fun ValidateOtpMailsScreenContent(
                     )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
                 ButtonView(
-                    isEnabled = otpValue.value.length == 6,
                     onClick = {
                         onBoardingViewModel.mailValue.value = TextFieldValue()
                         mailsOnBoardingVM.callValidateOtp(otpValue.value)
                     },
-                    title = stringResource(id = R.string.confirmAndContinue)
+                    title = stringResource(id = R.string.confirmAndContinue),
+                    isEnabled = otpValue.value.length == 6
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 if (!onBoardingViewModel.isNotFirstMail.value)
                     ButtonView(
-                        isEnabled = ticks == 0,
                         onClick = {
                             mailsOnBoardingVM.callSendOtp()
                             ticks = 60
@@ -265,9 +268,10 @@ fun ValidateOtpMailsScreenContent(
                             counter++
                         },
                         title = stringResource(id = R.string.resend),
-                        textColor = MaterialTheme.appColors.primary,
                         color = MaterialTheme.appColors.backGround,
                         borderColor = MaterialTheme.appColors.primary,
+                        isEnabled = ticks == 0,
+                        textColor = MaterialTheme.appColors.primary,
                     ) else
                     ButtonView(
                         onClick = {
@@ -275,9 +279,9 @@ fun ValidateOtpMailsScreenContent(
                             navController.navigate(multipleMailsScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
-                        textColor = MaterialTheme.appColors.primary,
                         color = MaterialTheme.appColors.backGround,
                         borderColor = MaterialTheme.appColors.primary,
+                        textColor = MaterialTheme.appColors.primary,
                     )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -287,7 +291,7 @@ fun ValidateOtpMailsScreenContent(
 }
 
 @Composable
-private fun timer(ticksF: Float, ticks: Int) {
+private fun Timer(ticksF: Float, ticks: Int) {
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
             progress = 1f,

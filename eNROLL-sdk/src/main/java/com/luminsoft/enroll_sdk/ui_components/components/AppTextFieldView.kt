@@ -59,20 +59,20 @@ fun NormalTextField(
         errorTextColor = MaterialTheme.appColors.primary,
     ),
 ) {
-    var focusedBorderThickness = 1.2.dp
-    var unfocusedBorderThickness = 1.2.dp
-    if (error != null) {
-        focusedBorderThickness = 1.8.dp
-        unfocusedBorderThickness = 1.8.dp
-    }
+//    var focusedBorderThickness = 1.2.dp
+//    var unfocusedBorderThickness = 1.2.dp
+//    if (error != null) {
+//        focusedBorderThickness = 1.8.dp
+//        unfocusedBorderThickness = 1.8.dp
+//    }
     Column(
         modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 5.dp)
+            .fillMaxWidth()
+            .padding(vertical = 5.dp)
     ) {
         BasicTextField(
             value = value,
-            onValueChange =onValueChange,
+            onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth(width)
                 .height(height.dp),
@@ -80,12 +80,12 @@ fun NormalTextField(
                 color = MaterialTheme.appColors.primary,
                 fontSize = 14.sp,
 
-            ),
+                ),
             cursorBrush = SolidColor(error?.let { MaterialTheme.appColors.errorColor }
                 ?: MaterialTheme.appColors.primary),
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
-            keyboardActions =keyboardActions,
+            keyboardActions = keyboardActions,
             interactionSource = interactionSource,
             singleLine = singleLine,
             enabled = enabled,
@@ -105,8 +105,7 @@ fun NormalTextField(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    leadingIcon = icon?:
-                    painter?.let {
+                    leadingIcon = icon ?: painter?.let {
                         {
                             Image(
                                 painter = it,

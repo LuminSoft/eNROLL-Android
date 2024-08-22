@@ -18,11 +18,11 @@ class FaceCaptureRepositoryImplementation(private val faceCaptureRemoteDataSourc
     override suspend fun faceCaptureUploadSelfie(request: UploadSelfieRequestModel): Either<SdkFailure, UploadSelfieData> {
         return when (val response = faceCaptureRemoteDataSource.uploadSelfie(request)) {
             is BaseResponse.Success -> {
-                val response = response.data as UploadSelfieResponseModel
-                if (response.isSuccess!!) {
-                    Either.Right(response.uploadSelfieData!!)
+                val res = response.data as UploadSelfieResponseModel
+                if (res.isSuccess!!) {
+                    Either.Right(res.uploadSelfieData!!)
                 } else {
-                    Either.Left(NetworkFailure(mes = response.message!!))
+                    Either.Left(NetworkFailure(mes = res.message!!))
                 }
             }
 
