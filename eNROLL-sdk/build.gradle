@@ -53,8 +53,8 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.10.0'
-    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.android.gms:play-services-maps:19.0.0'
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
     implementation "com.google.accompanist:accompanist-pager:0.24.2-alpha"
@@ -68,12 +68,12 @@ dependencies {
     implementation "com.innovatrics.dot:dot-face-verification:5.0.0"
 //    implementation 'com.gemalto.jp2:jp2-android:1.0.3'
 
-    implementation 'androidx.activity:activity-ktx:1.8.2'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
-    implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "androidx.compose.material:material-icons-core:1.5.4"
+    implementation 'androidx.activity:activity-ktx:1.9.1'
+    implementation 'androidx.fragment:fragment-ktx:1.8.2'
+    implementation "androidx.appcompat:appcompat:1.7.0"
+    implementation "androidx.compose.material:material-icons-core:1.6.8"
 
-    implementation "com.google.android.gms:play-services-location:21.2.0"
+    implementation "com.google.android.gms:play-services-location:21.3.0"
 
     //region retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -86,14 +86,14 @@ dependencies {
     implementation "io.insert-koin:koin-test:3.4.3"
     implementation "io.insert-koin:koin-androidx-compose:3.4.3"
 
-    implementation 'androidx.compose.ui:ui:1.5.0'
+    implementation 'androidx.compose.ui:ui:1.6.8'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling'
     implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3:1.1.1'
+    implementation 'androidx.compose.material3:material3:1.2.1'
     implementation "io.coil-kt:coil-compose:2.2.2"
-    implementation 'androidx.navigation:navigation-runtime-ktx:2.7.2'
-    implementation 'androidx.navigation:navigation-compose:2.7.2'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
 
