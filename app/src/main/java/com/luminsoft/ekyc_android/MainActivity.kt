@@ -47,21 +47,15 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
 import appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
-import com.luminsoft.enroll_sdk.core.models.EnrollCallback
-import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
-import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
-import com.luminsoft.enroll_sdk.core.models.EnrollMode
-import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
-import com.luminsoft.enroll_sdk.core.models.LocalizationCode
-import com.luminsoft.enroll_sdk.sdk.eNROLL
+import com.luminsoft.enroll_sdk.*
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+
 import io.github.cdimascio.dotenv.dotenv
 
 
 var dotenv = dotenv {
     directory = "/assets"
-//   filename = "env_andrew"
+//    filename = "env_andrew"
 //    filename = "env_radwan"
     filename = "env_org_1"
 //    filename = "env_support_team"
@@ -69,7 +63,7 @@ var dotenv = dotenv {
 //    filename = "env_azimut_production"
 //    filename = "env_lumin_production"
 //    filename = "env_naspas_production"
-
+//    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -83,12 +77,6 @@ var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
-
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-
-    }
 
 
     var text = mutableStateOf("")
@@ -240,7 +228,7 @@ class MainActivity : ComponentActivity() {
             eNROLL.init(
                 tenantId = tenantIdText.value.text,
                 tenantSecret = tenantSecretText.value.text,
-                enrollMode =  if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
+                enrollMode = if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
                 environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
@@ -266,7 +254,7 @@ class MainActivity : ComponentActivity() {
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
 
-            )
+                )
         } catch (e: Exception) {
             Log.e("error", e.toString())
         }

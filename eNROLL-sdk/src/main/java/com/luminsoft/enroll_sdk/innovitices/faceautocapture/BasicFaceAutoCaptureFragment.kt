@@ -40,8 +40,8 @@ class BasicFaceAutoCaptureFragment : FaceAutoCaptureFragment() {
         }
 
         override fun onFinish() {
-            getActivity()?.setResult(RESULT_TIME_OUT);
-            getActivity()?.finish()
+            activity?.setResult(RESULT_TIME_OUT)
+            activity?.finish()
         }
     }
 
@@ -116,8 +116,8 @@ class BasicFaceAutoCaptureFragment : FaceAutoCaptureFragment() {
     }
 
     override fun onNoCameraPermission() {
-        getActivity()?.setResult(RESULT_NO_CAMERA_PERMISSION);
-        getActivity()?.finish();
+        activity?.setResult(RESULT_NO_CAMERA_PERMISSION)
+        activity?.finish()
     }
 
     override fun onStepChanged(captureStepId: CaptureStepId, detectedFace: DetectedFace) {

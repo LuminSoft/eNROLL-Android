@@ -256,7 +256,6 @@ private fun RequestLocation(
                 }
             },
             stringResource(id = R.string.start),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(
             modifier = Modifier
@@ -314,7 +313,6 @@ private fun PermissionDenied(
                 }
             },
             stringResource(id = R.string.getLocationButtonText),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(
             modifier = Modifier
@@ -351,7 +349,8 @@ private fun GotLocation(
             contentAlignment = Alignment.Center
         ) {
             if (apiKeyEmptyOrHasException.not()) {
-                val mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"
+                val mapUrl =
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"
                 val painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(mapUrl)
@@ -436,7 +435,6 @@ private fun GotLocation(
                 locationOnBoardingViewModel.callPostLocation()
             },
             stringResource(id = R.string.continue_to_next),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(
             modifier = Modifier
@@ -449,6 +447,7 @@ private fun GotLocation(
 }
 
 
+@Suppress("DEPRECATION")
 private fun checkLocationSetting(
     context: Context,
     onDisabled: (IntentSenderRequest) -> Unit,

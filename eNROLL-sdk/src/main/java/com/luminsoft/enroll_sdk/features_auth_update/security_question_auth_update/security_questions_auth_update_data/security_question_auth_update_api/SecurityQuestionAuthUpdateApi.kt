@@ -1,6 +1,8 @@
+package com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_questions_auth_update_data.security_question_auth_update_api
 
-
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
+import GetSecurityQuestionAuthUpdateResponseModel
+import SecurityQuestionAuthUpdateRequestModel
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,5 +14,5 @@ interface SecurityQuestionAuthUpdateApi {
     suspend fun getSecurityQuestion(@Query("updateStep") stepId: Int): Response<GetSecurityQuestionAuthUpdateResponseModel>
 
     @POST("api/v1/update/UpdateRequest/Validate")
-    suspend fun validateSecurityQuestion(@Body request:  SecurityQuestionAuthUpdateRequestModel): Response<BasicResponseModel>
+    suspend fun validateSecurityQuestion(@Body request: SecurityQuestionAuthUpdateRequestModel): Response<BasicResponseModel>
 }

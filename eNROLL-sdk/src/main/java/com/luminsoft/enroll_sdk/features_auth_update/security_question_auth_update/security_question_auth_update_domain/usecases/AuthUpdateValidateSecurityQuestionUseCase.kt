@@ -1,4 +1,7 @@
+package com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases
 
+import SecurityQuestionAuthUpdateRepository
+import SecurityQuestionAuthUpdateRequestModel
 import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure

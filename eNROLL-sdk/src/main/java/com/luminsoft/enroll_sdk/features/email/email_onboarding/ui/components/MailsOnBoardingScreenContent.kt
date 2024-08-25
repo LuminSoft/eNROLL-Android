@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +51,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import org.koin.compose.koinInject
 
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun MailsOnBoardingScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
@@ -79,8 +81,6 @@ fun MailsOnBoardingScreenContent(
         mailsOnBoardingViewModel.mailSentSuccessfully.collectAsState()
     val failure = mailsOnBoardingViewModel.failure.collectAsState()
 
-//    var mail: String by rememberSaveable { mutableStateOf(TextFieldValue()) }
-//    var isMailValid: Boolean by rememberSaveable { mutableStateOf(false) }
     var isClicked by mutableStateOf(false)
 
     val userHasModifiedText = remember { mutableStateOf(false) }

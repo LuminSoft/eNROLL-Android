@@ -1,4 +1,8 @@
+package com.luminsoft.enroll_sdk.features_update.update_location.update_location_presentation.ui.components
 
+import LocationDetails
+import UpdateLocationUseCase
+import UpdateLocationViewModel
 import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -50,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import appColors
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.android.gms.common.api.ResolvableApiException
@@ -66,7 +71,6 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
-import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
@@ -78,7 +82,6 @@ import org.koin.compose.koinInject
 
 @Composable
 fun UpdateLocationScreenContent(
-    updateViewModel: UpdateViewModel,
     navController: NavController,
 ) {
 
@@ -115,20 +118,20 @@ fun UpdateLocationScreenContent(
 
     BackGroundView(navController = navController, showAppBar = false) {
         if (locationSent.value) {
-                      DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulUpdate),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulUpdate),
-                                activity.getString(R.string.successfulUpdate)
-                            )
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulUpdate),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.error(
+                        EnrollFailedModel(
+                            activity.getString(R.string.successfulUpdate),
+                            activity.getString(R.string.successfulUpdate)
                         )
-                    },
-                )
+                    )
+                },
+            )
         }
         val launcherMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -203,7 +206,11 @@ fun UpdateLocationScreenContent(
                 settingResultRequest
             )
         else
-            GotLocation(currentLocation.value!!, updateLocationViewModel,navController = navController)
+            GotLocation(
+                currentLocation.value!!,
+                updateLocationViewModel,
+                navController = navController
+            )
     }
 
 }
@@ -254,17 +261,15 @@ private fun RequestLocation(
                     }
                 },
                 stringResource(id = R.string.start),
-                modifier = Modifier.padding(horizontal = 20.dp),
             )
             ButtonView(
                 onClick = {
                     navController.navigate(updateListScreenContent)
                 },
                 stringResource(id = R.string.skip),
-                modifier = Modifier.padding(horizontal = 20.dp),
-                textColor = MaterialTheme.appColors.primary,
                 color = MaterialTheme.appColors.backGround,
                 borderColor = MaterialTheme.appColors.primary,
+                textColor = MaterialTheme.appColors.primary,
             )
         }
         Spacer(
@@ -322,7 +327,6 @@ private fun PermissionDenied(
                 }
             },
             stringResource(id = R.string.getLocationButtonText),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(
             modifier = Modifier
@@ -361,7 +365,8 @@ private fun GotLocation(
             contentAlignment = Alignment.Center
         ) {
             if (apiKeyEmptyOrHasException.not()) {
-                val mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"
+                val mapUrl =
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.latitude},${currentLocation.longitude}&zoom=18&size=400x200&maptype=roadmap&markers=color:red%7C${currentLocation.latitude},${currentLocation.longitude}&key=$googleApiKey"
 
                 val painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -453,17 +458,15 @@ private fun GotLocation(
                     updateLocationViewModel.callPostLocation()
                 },
                 stringResource(id = R.string.continue_to_next),
-                modifier = Modifier.padding(horizontal = 20.dp),
             )
             ButtonView(
                 onClick = {
                     navController.navigate(updateListScreenContent)
                 },
                 stringResource(id = R.string.skip),
-                modifier = Modifier.padding(horizontal = 20.dp),
-                textColor = MaterialTheme.appColors.primary,
                 color = MaterialTheme.appColors.backGround,
                 borderColor = MaterialTheme.appColors.primary,
+                textColor = MaterialTheme.appColors.primary,
             )
         }
 
@@ -478,6 +481,7 @@ private fun GotLocation(
 }
 
 
+@Suppress("DEPRECATION")
 private fun checkLocationSetting(
     context: Context,
     onDisabled: (IntentSenderRequest) -> Unit,

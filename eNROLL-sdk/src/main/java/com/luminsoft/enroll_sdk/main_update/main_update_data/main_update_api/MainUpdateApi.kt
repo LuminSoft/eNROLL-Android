@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_api
 
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel

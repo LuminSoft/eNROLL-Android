@@ -27,6 +27,7 @@ object DotHelper {
         }
     }
 
+    @Suppress("DEPRECATION")
     fun getThumbnail(uri: Uri?, activity: Activity): Bitmap {
         val thumbnailSize = 150.0
         var input: InputStream? = activity.contentResolver.openInputStream(uri!!)

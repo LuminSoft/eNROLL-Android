@@ -7,15 +7,13 @@ plugins {
 
 android {
     namespace 'com.luminsoft.ekyc_android'
-    compileSdk 34
-
+    compileSdk 35
     defaultConfig {
         applicationId "com.luminsoft.EnrollTestingApp"
         minSdk 24
-        targetSdk 34
-        versionCode 48
-        versionName "1.0.48"
-
+        targetSdk 35
+        versionCode 53
+        versionName "1.0.53"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

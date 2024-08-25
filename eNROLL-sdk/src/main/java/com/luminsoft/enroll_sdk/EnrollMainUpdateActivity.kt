@@ -38,7 +38,9 @@ import org.koin.core.context.startKoin
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
 import updateLocationModule
-import updateLocationRouter
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationRouter
+import updateNationalIdConfirmationModule
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
 
 
 @Suppress("DEPRECATION")
@@ -80,8 +82,9 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     checkDeviceIdAuthUpdateRouter(navController = navController, updateViewModel)
                     securityQuestionAuthUpdateRouter(navController = navController, updateViewModel)
                     faceCaptureAuthUpdateRouter(navController = navController, updateViewModel)
-                    updateLocationRouter(navController = navController, updateViewModel)
+                    updateLocationRouter(navController = navController)
                     emailUpdateRouter(navController = navController, updateViewModel)
+                    updateNationalIdRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -101,6 +104,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(faceCaptureAuthUpdateModule)
                 modules(updateLocationModule)
                 modules(emailUpdateModule)
+                modules(updateNationalIdConfirmationModule)
             }.koin
         }
     }

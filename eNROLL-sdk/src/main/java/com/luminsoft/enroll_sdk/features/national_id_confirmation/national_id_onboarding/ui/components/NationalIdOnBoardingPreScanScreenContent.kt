@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -64,6 +65,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun NationalIdOnBoardingPreScanScreen(
     navController: NavController,
@@ -197,13 +199,12 @@ private fun NationalIdOnly(
             onClick = {
                 rememberedViewModel.enableLoading()
                 val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
-                intent.putExtra("scanType", DocumentActivity().FRONT_SCAN)
+                intent.putExtra("scanType", DocumentActivity().frontScan)
                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                 startForResult.launch(intent)
             },
             stringResource(id = R.string.start),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(
             modifier = Modifier
@@ -242,11 +243,11 @@ private fun NationalIdOrPassport(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                card(ChooseStep.NationalId, chosenStep, rememberedViewModel)
+                Card(ChooseStep.NationalId, chosenStep, rememberedViewModel)
             }
 
             Box(modifier = Modifier.weight(1f)) {
-                card(ChooseStep.Passport, chosenStep, rememberedViewModel)
+                Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
             }
         }
         Spacer(modifier = Modifier.fillMaxHeight(0.4f))
@@ -256,7 +257,6 @@ private fun NationalIdOrPassport(
                 rememberedViewModel.selectedStep.value = chosenStep.value
             },
             stringResource(id = R.string.continue_to_next),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(
             modifier = Modifier
@@ -267,7 +267,7 @@ private fun NationalIdOrPassport(
 }
 
 @Composable
-private fun card(
+private fun Card(
     step: ChooseStep,
     chosenStep: State<ChooseStep?>,
     rememberedViewModel: OnBoardingViewModel
@@ -342,13 +342,12 @@ private fun PassportOnly(
                 rememberedViewModel.enableLoading()
 
                 val intent = Intent(activity.applicationContext, DocumentActivity::class.java)
-                intent.putExtra("scanType", DocumentActivity().PASSPORT_SCAN)
+                intent.putExtra("scanType", DocumentActivity().passportScan)
                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                 startForResult.launch(intent)
             },
             stringResource(id = R.string.start),
-            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(
             modifier = Modifier

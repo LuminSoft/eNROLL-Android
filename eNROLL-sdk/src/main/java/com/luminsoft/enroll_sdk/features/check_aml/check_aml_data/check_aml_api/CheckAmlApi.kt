@@ -1,4 +1,4 @@
-
+package com.luminsoft.enroll_sdk.features.check_aml.check_aml_data.check_aml_api
 
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_data.check_aml_models.CheckAmlResponseModel
 import retrofit2.Response

@@ -1,4 +1,9 @@
+package com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_onboarding.ui.components
 
+import CheckUserHasNationalIdUseCase
+import ElectronicSignatureOnBoardingViewModel
+import InsertSignatureInfoUseCase
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
@@ -42,6 +48,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import org.koin.compose.koinInject
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun ApplyForElectronicSignatureScreenContent(
     onBoardingViewModel: OnBoardingViewModel,
@@ -58,13 +65,12 @@ fun ApplyForElectronicSignatureScreenContent(
         remember {
             ElectronicSignatureOnBoardingViewModel(
                 electronicSignatureUseCase = electronicSignatureUseCase,
-                checkUserHasNationalIdUseCase=checkUserHasNationalIdUseCase
+                checkUserHasNationalIdUseCase = checkUserHasNationalIdUseCase
             )
         }
+
     val context = LocalContext.current
     val activity = context.findActivity()
-
-
     val loading = electronicSignatureOnBoardingViewModel.loading.collectAsState()
     val failure = electronicSignatureOnBoardingViewModel.failure.collectAsState()
     val applySignatureSucceed = electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
@@ -76,24 +82,52 @@ fun ApplyForElectronicSignatureScreenContent(
     var dialogButtonText by remember { mutableStateOf("") }
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
-    LaunchedEffect(applySignatureSucceed.value) {
-        if (applySignatureSucceed.value!!) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+    fun navigateToNextStep() {
+        onBoardingViewModel.mailValue.value = TextFieldValue()
+        onBoardingViewModel.currentPhoneNumber.value = null
+        navController.navigate(onBoardingViewModel.steps.value!!.first().stepNameNavigator())
+    }
+
+    fun removeCurrentStep(id: Int): Boolean {
+        if (onBoardingViewModel.steps.value != null) {
+            val stepsSize = onBoardingViewModel.steps.value!!.size
+            onBoardingViewModel.steps.value = onBoardingViewModel.steps.value!!.toMutableList().apply {
+                removeIf { x -> x.registrationStepId == id }
+            }.toList()
+            val newStepsSize = onBoardingViewModel.steps.value!!.size
+            if (stepsSize != newStepsSize) {
+                return onBoardingViewModel.steps.value!!.isEmpty()
+            }
+        }
+        return false
+    }
+
+    fun showSuccessDialog(isEmpty: Boolean) {
+        dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+        dialogButtonText = context.getString(R.string.continue_to_next)
+        dialogStatus = BottomSheetStatus.SUCCESS
+        dialogOnPressButton = {
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.successfulRegistration)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            context.getString(R.string.successfulRegistration),
-                            context.getString(R.string.successfulRegistration)
-                        )
+                activity.finish()
+                EnrollSDK.enrollCallback?.error(
+                    EnrollFailedModel(
+                        context.getString(R.string.successfulRegistration),
+                        context.getString(R.string.successfulRegistration)
                     )
-                }
-                showDialog = true
+                )
+            } else {
+                navigateToNextStep()
+                showDialog = false
+            }
+        }
+        showDialog = true
+    }
+
+    LaunchedEffect(applySignatureSucceed.value) {
+        applySignatureSucceed.value?.let { succeed ->
+            if (succeed) {
+                val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+                showSuccessDialog(isEmpty)
             }
         }
     }
@@ -139,14 +173,13 @@ fun ApplyForElectronicSignatureScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
-//                            showDialog = false
-                            electronicSignatureOnBoardingViewModel.insertSignatureInfo(
+                            showDialog = false
+     /*                       electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value?.text!!,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value!!.text
-                            )
-
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) "" else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) "" else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) "" else electronicSignatureOnBoardingViewModel.emailValue.value.text
+                            )*/
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -172,7 +205,7 @@ fun ApplyForElectronicSignatureScreenContent(
             ) {
                 Spacer(modifier = Modifier.weight(0.5f))
 
-                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==false) {
+                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == false) {
                     NationalIdTextField(electronicSignatureOnBoardingViewModel)
                     Spacer(modifier = Modifier.height(15.dp))
                 }
@@ -195,28 +228,32 @@ fun ApplyForElectronicSignatureScreenContent(
 
                         var isValid = true
 
-
-                        if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==false) {
-                            if (electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text?.length != 14) {
+                        if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == false) {
+                            if (electronicSignatureOnBoardingViewModel.nationalIdValue.value.text.length != 14) {
                                 electronicSignatureOnBoardingViewModel.nationalIdError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
                                 isValid = false
                             }
                         }
 
+
                         if (!onBoardingViewModel.existingSteps.value!!.contains(4)) {
+
                             emailFormatValidation(electronicSignatureOnBoardingViewModel)
-                            if (electronicSignatureOnBoardingViewModel.emailValue.value!!.text.isEmpty()) {
+
+                            if (electronicSignatureOnBoardingViewModel.emailValue.value.text.isEmpty()) {
                                 electronicSignatureOnBoardingViewModel.emailError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
                                 isValid = false
+                            } else if (!Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}").matches(electronicSignatureOnBoardingViewModel.emailValue.value.text)) {
+                                electronicSignatureOnBoardingViewModel.emailError.value =
+                                    ResourceProvider.instance.getStringResource(R.string.invalid_email)
+                                isValid = false
                             }
-
                         }
 
-
                         if (!onBoardingViewModel.existingSteps.value!!.contains(3)) {
-                            if (!Regex("^(\\+20|0)?1[0125][0-9]{8}\$").matches(electronicSignatureOnBoardingViewModel.phoneNumberValue.value!!.text)) {
+                            if (!Regex("^(\\+20|0)?1[0125][0-9]{8}\$").matches(electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text)) {
                                 electronicSignatureOnBoardingViewModel.phoneNumberError.value =
                                     ResourceProvider.instance.getStringResource(R.string.emptyError)
                                 isValid = false
@@ -224,46 +261,33 @@ fun ApplyForElectronicSignatureScreenContent(
                         }
 
                         if (isValid) {
-
                             electronicSignatureOnBoardingViewModel.insertSignatureInfo(
                                 2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value==true) onBoardingViewModel.userNationalId.value!! else electronicSignatureOnBoardingViewModel.nationalIdValue.value?.text!!,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) onBoardingViewModel.userPhoneNumber.value!! else electronicSignatureOnBoardingViewModel.phoneNumberValue.value!!.text   ,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) onBoardingViewModel.userMail.value!! else electronicSignatureOnBoardingViewModel.emailValue.value!!.text
-
+                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) "" else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) "" else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
+                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) "" else electronicSignatureOnBoardingViewModel.emailValue.value.text
                             )
-
-
                         }
-
-
                     },
                     stringResource(id = R.string.confirmAndContinue),
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
                 )
                 Spacer(modifier = Modifier.weight(1f))
 
-
             }
-
-
         }
-
     }
-
-
 }
 
 
 private fun emailFormatValidation(electronicSignatureOnBoardingViewModel: ElectronicSignatureOnBoardingViewModel) {
     when {
 
-        electronicSignatureOnBoardingViewModel.emailValue.value!!.text.isEmpty() -> {
+        electronicSignatureOnBoardingViewModel.emailValue.value.text.isEmpty() -> {
             electronicSignatureOnBoardingViewModel.emailError.value = null
         }
 
         !Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}").matches(
-            electronicSignatureOnBoardingViewModel.emailValue.value!!.text
+            electronicSignatureOnBoardingViewModel.emailValue.value.text
         ) -> {
             electronicSignatureOnBoardingViewModel.emailError.value =
                 ResourceProvider.instance.getStringResource(R.string.invalid_email)
@@ -363,7 +387,7 @@ fun EmailTextField(
 
     NormalTextField(
         label = ResourceProvider.instance.getStringResource(R.string.type_your_email),
-        value = mailValue.value!!,
+        value = mailValue.value,
         height = 60.0,
         icon = {
             Image(

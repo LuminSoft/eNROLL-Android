@@ -1,4 +1,7 @@
-import com.luminsoft.enroll_sdk.features.location.location_data.location_models.get_token.BasicResponseModel
+package com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_data.check_imei_auth_api
+
+import CheckIMEIRequestModel
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

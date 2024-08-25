@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
-import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
@@ -50,7 +49,7 @@ fun FaceCaptureAuthUpdatePreScanScreenContent(
                 } catch (e: Exception) {
                     updateViewModel.disableLoading()
                     updateViewModel.errorMessage.value = e.message
-                    updateViewModel.scanType.value = ScanType.FRONT
+                    updateViewModel.scanType.value = UpdateScanType.FRONT
                     navController.navigate(faceCaptureAuthUpdateErrorScreen)
                     println(e.message)
                 }
@@ -78,7 +77,6 @@ fun FaceCaptureAuthUpdatePreScanScreenContent(
                     startForResult.launch(intent)
                 },
                 stringResource(id = R.string.start),
-                modifier = Modifier.padding(horizontal = 20.dp),
             )
             Spacer(
                 modifier = Modifier

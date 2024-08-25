@@ -19,6 +19,6 @@ class ResourceProvider {
     }
     fun getDeviceData():String{
 
-        return Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID)
+        return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     }
 }
