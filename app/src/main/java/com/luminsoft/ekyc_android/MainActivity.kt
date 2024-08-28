@@ -28,6 +28,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,9 +56,9 @@ import io.github.cdimascio.dotenv.dotenv
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename = "env_andrew"
+    filename = "env_andrew"
 //    filename = "env_radwan"
-    filename = "env_org_1"
+//    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
@@ -318,7 +319,7 @@ class MainActivity : ComponentActivity() {
 
                             itemList.onEachIndexed { index, item ->
                                 if (index != 0) {
-                                    Divider(thickness = 1.dp, color = Color.LightGray)
+                                    HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
                                 }
                                 Box(
                                     modifier = Modifier
