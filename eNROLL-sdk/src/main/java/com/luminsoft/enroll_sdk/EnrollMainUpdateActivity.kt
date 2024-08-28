@@ -19,6 +19,8 @@ import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.emailUpdateRouter
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_di_update.phoneUpdateModule
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phoneUpdateRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
@@ -84,6 +86,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     faceCaptureAuthUpdateRouter(navController = navController, updateViewModel)
                     updateLocationRouter(navController = navController)
                     emailUpdateRouter(navController = navController, updateViewModel)
+                    phoneUpdateRouter(navController = navController, updateViewModel)
                     updateNationalIdRouter(navController = navController, updateViewModel)
 
                 }
@@ -104,6 +107,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(faceCaptureAuthUpdateModule)
                 modules(updateLocationModule)
                 modules(emailUpdateModule)
+                modules(phoneUpdateModule)
                 modules(updateNationalIdConfirmationModule)
             }.koin
         }
