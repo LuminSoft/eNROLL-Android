@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.ui.components
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -55,6 +57,7 @@ import com.togitech.ccp.component.TogiCountryCodePicker
 import org.koin.compose.koinInject
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PhonesUpdateScreenContent(
     updateViewModel: UpdateViewModel,
@@ -84,21 +87,25 @@ fun PhonesUpdateScreenContent(
     val failure = phonesUpdateViewModel.failure.collectAsState()
     val isClicked = phonesUpdateViewModel.isClicked.collectAsState()
     val phoneId = phonesUpdateViewModel.phoneId.collectAsState()
+    val fullPhoneNumber = updateViewModel.fullPhoneNumber.collectAsState()
+    val currentPhoneNumber = updateViewModel.currentPhoneNumber.collectAsState()
+    val currentPhoneNumberCode = updateViewModel.currentPhoneNumberCode.collectAsState()
+
+
     var phoneNumber: String by rememberSaveable { mutableStateOf("") }
     var phoneCode: String by rememberSaveable { mutableStateOf("") }
-    var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
+//    var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
     var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (isClicked.value) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.WARNING,
-                text = stringResource(id = R.string.phoneOtpContentConfirmationMessage) + fullPhoneNumber,
+                text = stringResource(id = R.string.phoneOtpContentConfirmationMessage) + fullPhoneNumber.value,
                 buttonText = stringResource(id = R.string.continue_to_next),
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedButton = {
                     phonesUpdateViewModel.loading.value = true
-//                    phonesUpdateViewModel.currentPhoneNumber.value = phoneNumber
                     phonesUpdateViewModel.isClicked.value = false
                     phonesUpdateVM.addPhoneCallApi(phoneCode.replace("+", ""), phoneNumber)
                 },
@@ -169,17 +176,17 @@ fun PhonesUpdateScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    if (updateViewModel.currentPhoneNumber.value != null) {
-                        phoneCode = updateViewModel.currentPhoneNumberCode.value!!
-                        phoneNumber = updateViewModel.currentPhoneNumber.value!!
-                        fullPhoneNumber = phoneCode + phoneNumber
+                    if (currentPhoneNumber.value != null) {
+                        phoneCode = currentPhoneNumberCode.value!!
+                        phoneNumber = currentPhoneNumber.value!!
+                        updateViewModel.fullPhoneNumber.value = phoneCode + phoneNumber
                     }
                     TogiCountryCodePicker(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp),
-                        initialCountryPhoneCode = updateViewModel.currentPhoneNumberCode.value,
-                        initialPhoneNumber = updateViewModel.currentPhoneNumber.value,
+                        initialCountryPhoneCode = currentPhoneNumberCode.value,
+                        initialPhoneNumber = currentPhoneNumber.value,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = MaterialTheme.appColors.primary,
                             disabledBorderColor = MaterialTheme.appColors.primary,
@@ -196,7 +203,8 @@ fun PhonesUpdateScreenContent(
                             phoneNumber = phone
                             phoneCode = code
                             updateViewModel.currentPhoneNumberCode.value = code
-                            fullPhoneNumber = code + phone
+                            updateViewModel.currentPhoneNumber.value = phone
+                            updateViewModel.fullPhoneNumber.value = code + phone
                             isNumberValid = isValid
                             if (!isValid)
                                 updateViewModel.currentPhoneNumber.value = null
@@ -237,17 +245,7 @@ fun PhonesUpdateScreenContent(
                     borderColor = MaterialTheme.appColors.primary,
                     textColor = MaterialTheme.appColors.primary,
                 )
-
             }
         }
     }
-}
-
-private fun phoneNumberValidation(updateViewModel: UpdateViewModel) = when {
-
-    updateViewModel.phoneValue.value!!.text.isEmpty() -> {
-        ResourceProvider.instance.getStringResource(R.string.required_phone_number)
-    }
-
-    else -> null
 }

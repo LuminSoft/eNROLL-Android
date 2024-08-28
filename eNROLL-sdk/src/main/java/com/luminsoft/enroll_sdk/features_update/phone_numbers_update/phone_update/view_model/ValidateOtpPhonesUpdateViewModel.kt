@@ -30,10 +30,9 @@ class ValidateOtpPhonesUpdateViewModel(
         validateOtp(otp, id)
     }
 
-    fun callSendOtp(phone: String) {
-        sendOtpCall(phone)
+    fun callSendOtp(phone: String, code: String) {
+        sendOtpCall(phone, code)
     }
-
 
     private fun validateOtp(otp: String, id: Int) {
         loading.value = true
@@ -62,12 +61,13 @@ class ValidateOtpPhonesUpdateViewModel(
     }
 
 
-    private fun sendOtpCall(phone: String) {
+    private fun sendOtpCall(phone: String, code: String) {
         loading.value = true
         ui {
             params.value =
                 UpdatePhoneAddUseCaseParams(
-                    phone = phone
+                    phone = phone,
+                    code = code
                 )
             val response: Either<SdkFailure, PhoneUpdateAddNewResponseModel> =
                 phoneSendOtpUseCase.call(params.value as UpdatePhoneAddUseCaseParams)

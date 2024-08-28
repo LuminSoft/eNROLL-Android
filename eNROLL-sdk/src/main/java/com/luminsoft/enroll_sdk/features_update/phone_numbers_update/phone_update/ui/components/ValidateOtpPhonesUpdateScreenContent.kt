@@ -94,7 +94,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
         validateOtpPhonesViewModel.otpApproved.collectAsState()
     val failure = validateOtpPhonesViewModel.failure.collectAsState()
     val wrongOtpTimes = validateOtpPhonesViewModel.wrongOtpTimes.collectAsState()
-    val phoneValue = updateViewModel.phoneValue.collectAsState()
+    val phoneValue = updateViewModel.fullPhoneNumber.collectAsState()
     val isNotFirstPhone = updateViewModel.isNotFirstPhone.collectAsState()
 
     val otpValue = remember { mutableStateOf("") }
@@ -137,7 +137,6 @@ fun ValidateOtpPhonesUpdateScreenContent(
                     ) {
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
                     }
                 }
             } else if (wrongOtpTimes.value == 5) {
@@ -189,7 +188,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
-                        phoneValue.value!!.text,
+                        phoneValue.value!!,
                         fontSize = 10.sp,
                         color = MaterialTheme.appColors.secondary
                     )
@@ -249,7 +248,10 @@ fun ValidateOtpPhonesUpdateScreenContent(
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
-                                phonesUpdateVM.callSendOtp(updateViewModel.phoneValue.value!!.text)
+                                phonesUpdateVM.callSendOtp(
+                                    phone = updateViewModel.currentPhoneNumber.value!!,
+                                    code = updateViewModel.currentPhoneNumberCode.value!!
+                                )
                                 ticks = 60
                                 ticksF = 1.0f
                                 counter++
@@ -275,7 +277,10 @@ fun ValidateOtpPhonesUpdateScreenContent(
                 if (!isNotFirstPhone.value)
                     ButtonView(
                         onClick = {
-                            phonesUpdateVM.callSendOtp(updateViewModel.phoneValue.value!!.text)
+                            phonesUpdateVM.callSendOtp(
+                                phone = updateViewModel.currentPhoneNumber.value!!,
+                                code = updateViewModel.currentPhoneNumberCode.value!!
+                            )
                             ticks = 60
                             ticksF = 1.0f
                             counter++
@@ -289,6 +294,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                     ButtonView(
                         onClick = {
                             updateViewModel.phoneValue.value = TextFieldValue()
+                            updateViewModel.currentPhoneNumber.value = null
                             navController.navigate(multiplePhonesUpdateScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
@@ -307,16 +313,16 @@ fun ValidateOtpPhonesUpdateScreenContent(
 private fun Timer(ticksF: Float, ticks: Int) {
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            progress = 1f,
+            progress = { 1f },
             modifier = Modifier.size(30.dp),
             color = MaterialTheme.appColors.secondary.copy(alpha = 0.5f),
-            strokeWidth = 3.dp
+            strokeWidth = 3.dp,
         )
         CircularProgressIndicator(
-            progress = ticksF,
+            progress = { ticksF },
             modifier = Modifier.size(30.dp),
+            color = MaterialTheme.appColors.secondary,
             strokeWidth = 3.dp,
-            color = MaterialTheme.appColors.secondary
         )
         Text(
             text = ticks.toString(),

@@ -36,7 +36,7 @@ interface PhoneApiUpdate {
     @POST("api/v1/update/UpdatePhoneInfo/Archieve")
     suspend fun deletePhone(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
-    @POST("api/v1/update/UpdateEmailInfo/MakeDefault")
+    @POST("api/v1/update/UpdatePhoneInfo/MakeDefault")
     suspend fun makeDefault(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
 }

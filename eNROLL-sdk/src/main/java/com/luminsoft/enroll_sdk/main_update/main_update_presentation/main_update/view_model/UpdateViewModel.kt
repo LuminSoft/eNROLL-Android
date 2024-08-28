@@ -1,7 +1,6 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model
 
 import UpdateScanType
-import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -38,8 +37,7 @@ class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
     private val updateStepConfigurationsUsecase: UpdateStepsConfigurationsUsecase,
     private val updateStepIntRequestUseCase: UpdateStepsInitRequestUsecase,
-    private val updateAuthenticationMethodUsecase: GetUpdateAuthenticationMethodUsecase,
-    private val context: Context
+    private val updateAuthenticationMethodUsecase: GetUpdateAuthenticationMethodUsecase
 
 ) : ViewModel(),
     MainViewModel {
@@ -53,6 +51,7 @@ class UpdateViewModel(
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
+    var fullPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
     var phoneValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
     var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
