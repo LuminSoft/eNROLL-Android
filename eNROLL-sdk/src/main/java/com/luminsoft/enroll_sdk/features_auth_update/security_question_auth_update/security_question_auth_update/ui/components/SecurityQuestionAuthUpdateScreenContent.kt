@@ -193,13 +193,13 @@ fun SecurityQuestionAuthUpdateScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 ButtonView(
                     onClick = {
                         navController.popBackStack()
                               },
-                    stringResource(id = R.string.skip),
+                    stringResource(id = R.string.cancel),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                     textColor = MaterialTheme.appColors.primary,
