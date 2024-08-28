@@ -23,10 +23,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.luminsoft.EnrollTestingApp" />
+                  <option name="mobileSdkAppId" value="1:477819023880:android:de1c11868522e567f257bd" />
+                  <option name="projectId" value="excel-hr-app" />
+                  <option name="projectNumber" value="477819023880" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
