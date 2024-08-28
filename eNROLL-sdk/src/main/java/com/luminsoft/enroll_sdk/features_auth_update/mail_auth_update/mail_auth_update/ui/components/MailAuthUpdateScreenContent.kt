@@ -85,6 +85,7 @@ fun MailAuthUpdateScreenContent(
     val otpApproved =
         mailViewModel.otpApproved.collectAsState()
     val failure = mailViewModel.failure.collectAsState()
+    val mailSent = mailViewModel.mailSent.collectAsState()
 
     val otpValue = remember { mutableStateOf("") }
 
@@ -150,8 +151,13 @@ fun MailAuthUpdateScreenContent(
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
-                    text = stringResource(id = R.string.emailOtpGuide),
+                    text = stringResource(id = R.string.emailOtpGuideWithMailVariable),
                     color = MaterialTheme.appColors.primary,
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = mailSent.value ?: "",
+                    color = MaterialTheme.appColors.secondary,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.height(30.dp))

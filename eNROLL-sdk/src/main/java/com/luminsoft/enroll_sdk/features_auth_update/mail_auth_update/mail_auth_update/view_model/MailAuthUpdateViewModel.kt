@@ -22,6 +22,7 @@ class MailAuthUpdateViewModel(
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var navController: NavController? = null
     var otpApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var mailSent: MutableStateFlow<String?> = MutableStateFlow(null)
 
 
     private val _stepUpdateId = MutableStateFlow<Int?>(null)
@@ -55,7 +56,7 @@ class MailAuthUpdateViewModel(
     private fun sendOtpCall(updateStepId: Int) {
         loading.value = true
         ui {
-            val response: Either<SdkFailure, Null> =
+            val response: Either<SdkFailure, SendOTPAuthUpdateResponseModel> =
                 mailAuthSendOTPUseCase.call(updateStepId)
 
             response.fold(
@@ -64,6 +65,7 @@ class MailAuthUpdateViewModel(
                     loading.value = false
                 },
                 {
+                    mailSent.value = it.email
                     loading.value = false
                 })
         }

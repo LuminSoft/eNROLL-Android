@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface MailAuthUpdateApi {
     @POST("api/v1/update/EmailUpdateAuthentication/SendVerifyEmailOtp")
-    suspend fun sendMailAuthUpdateOtp(@Query("updateStep") stepId: Int): Response<BasicResponseModel>
+    suspend fun sendMailAuthUpdateOtp(@Query("updateStep") stepId: Int): Response<SendOTPAuthUpdateResponseModel>
 
     @POST("api/v1/update/EmailUpdateAuthentication/VerifyEmailOtp")
     suspend fun validateOTPMailAuthUpdate(@Body request: ValidateOTPAuthUpdateRequestModel): Response<BasicResponseModel>

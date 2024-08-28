@@ -7,10 +7,11 @@ import com.luminsoft.enroll_sdk.core.network.BaseResponse
 
 class MailAuthUpdateRepositoryImplementation(private val mailRemoteDataSource: MailAuthUpdateRemoteDataSource) :
     MailAuthUpdateRepository {
-    override suspend fun sendMailAuthUpdateOtp(updateStepId:Int): Either<SdkFailure, Null> {
+    override suspend fun sendMailAuthUpdateOtp(updateStepId:Int): Either<SdkFailure, SendOTPAuthUpdateResponseModel> {
         return when (val response = mailRemoteDataSource.sendMailAuthUpdateOtp(updateStepId)) {
             is BaseResponse.Success -> {
-                Either.Right(null)
+                val data = response.data as SendOTPAuthUpdateResponseModel
+                Either.Right(data)
             }
 
             is BaseResponse.Error -> {
