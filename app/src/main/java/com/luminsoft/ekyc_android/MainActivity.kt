@@ -49,15 +49,14 @@ import appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.*
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-
 import io.github.cdimascio.dotenv.dotenv
 
 
 var dotenv = dotenv {
     directory = "/assets"
 //    filename = "env_andrew"
-//    filename = "env_radwan"
-    filename = "env_org_1"
+    filename = "env_radwan"
+//    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"

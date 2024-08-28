@@ -19,6 +19,8 @@ import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.emailUpdateRouter
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationRouter
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
@@ -29,6 +31,8 @@ import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import deviceIdAuthUpdateModule
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
+import mailAuthUpdateModule
+import mailAuthUpdateRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -38,9 +42,7 @@ import org.koin.core.context.startKoin
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
 import updateLocationModule
-import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationRouter
 import updateNationalIdConfirmationModule
-import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
 
 
 @Suppress("DEPRECATION")
@@ -85,6 +87,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     updateLocationRouter(navController = navController)
                     emailUpdateRouter(navController = navController, updateViewModel)
                     updateNationalIdRouter(navController = navController, updateViewModel)
+                    mailAuthUpdateRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -105,6 +108,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(updateLocationModule)
                 modules(emailUpdateModule)
                 modules(updateNationalIdConfirmationModule)
+                modules(mailAuthUpdateModule)
             }.koin
         }
     }
