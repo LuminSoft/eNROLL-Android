@@ -184,7 +184,7 @@ fun MailAuthUpdateScreenContent(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Spacer(modifier = Modifier.fillMaxHeight(0.35f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.29f))
                 ButtonView(
                     onClick = {
                         mailViewModel.callValidateOtp(otpValue.value)
@@ -204,6 +204,16 @@ fun MailAuthUpdateScreenContent(
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                     isEnabled = ticks == 0,
+                    textColor = MaterialTheme.appColors.primary,
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                ButtonView(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    stringResource(id = R.string.cancel),
+                    color = MaterialTheme.appColors.backGround,
+                    borderColor = MaterialTheme.appColors.primary,
                     textColor = MaterialTheme.appColors.primary,
                 )
 

@@ -199,7 +199,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
                     onClick = {
                         navController.popBackStack()
                               },
-                    stringResource(id = R.string.skip),
+                    stringResource(id = R.string.cancel),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                     textColor = MaterialTheme.appColors.primary,
