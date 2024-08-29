@@ -17,6 +17,9 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
@@ -30,12 +33,10 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateSt
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
+import passwordAuthUpdateScreenContent
 import mailAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
@@ -204,7 +205,7 @@ class UpdateViewModel(
 
     private fun navigateToAuthStep(navController: NavController, stepId: Int) {
         val route = when (stepId) {
-            1 -> null   //TODO: password not in our scope
+            1 -> passwordAuthUpdateScreenContent
             2 -> mailAuthUpdateScreenContent
             3 -> securityQuestionAuthUpdateScreenContent
             4 -> checkDeviceIdAuthUpdateScreenContent
