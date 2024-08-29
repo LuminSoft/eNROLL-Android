@@ -27,7 +27,8 @@ object eNROLL {
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
-        appColors: AppColors = AppColors()
+        appColors: AppColors = AppColors(),
+        correlationId: String = ""
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -48,7 +49,7 @@ object eNROLL {
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
-
+        EnrollSDK.correlationId = correlationId
     }
 
     fun launch(

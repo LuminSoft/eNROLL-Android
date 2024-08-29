@@ -44,7 +44,8 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
-//    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
+
+    //    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
 //    var userPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
 //    var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
     val existingSteps: MutableState<List<Int>?> = mutableStateOf(null)
@@ -133,7 +134,8 @@ class OnBoardingViewModel(
             params.value = GenerateOnboardingSessionTokenUsecaseParams(
                 EnrollSDK.tenantId,
                 EnrollSDK.tenantSecret,
-                uuid
+                uuid,
+                EnrollSDK.correlationId
             )
 
             val response: Either<SdkFailure, String> =
@@ -159,9 +161,9 @@ class OnBoardingViewModel(
                             loading.value = false
                             extractRegistrationStepIds(list)
 
-                            if(EnrollSDK.skipTutorial){
+                            if (EnrollSDK.skipTutorial) {
                                 initRequest()
-                            }else{
+                            } else {
                                 navController!!.navigate(onBoardingScreenContent)
                             }
 
