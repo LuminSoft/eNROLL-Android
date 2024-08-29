@@ -1,8 +1,8 @@
 package com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_data.mail_auth_remote_data_source
 
+import ValidateOTPRequestModel
 import com.luminsoft.enroll_sdk.core.network.BaseRemoteDataSource
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
-import com.luminsoft.enroll_sdk.features.email.email_data.email_models.validate_otp.ValidateOTPRequestModel
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_data.mail_auth_api.MailAuthApi
 
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -143,20 +144,12 @@ fun MultiplePhonesUpdateScreenContent(
                 failure.value?.let {
                     DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = it.message,
-                        buttonText = stringResource(id = R.string.retry),
+                        buttonText = stringResource(id = R.string.exit),
                         onPressedButton = {
-                            //TODO
-                        },
-                        secondButtonText = stringResource(id = R.string.exit),
-                        onPressedSecondButton = {
                             updateViewModel.currentPhoneNumber.value = null
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
-                        }) {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-                    }
+                        })
                 }
             }
         } else if (!verifiedPhones.value.isNullOrEmpty()) {

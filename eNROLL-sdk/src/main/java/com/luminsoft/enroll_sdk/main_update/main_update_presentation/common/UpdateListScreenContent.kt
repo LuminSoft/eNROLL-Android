@@ -61,9 +61,7 @@ fun UpdateListScreenContent(
     BackGroundView(navController = navController, showAppBar = true) {
         if (updateStepModel.value != null) {
             Log.d("updateStepModel", "updateStepModel")
-//            navController.navigate(multipleMailsUpdateScreenContent)
 
-//TODO Navigate to update step screen
         } else
             if (loading.value) LoadingView()
         Column(
