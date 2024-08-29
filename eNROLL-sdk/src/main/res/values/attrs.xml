@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="pathColor1" format="color" />
+    <attr name="pathColor2" format="color" />
+    <attr name="pathColor3" format="color" />
+</resources>
