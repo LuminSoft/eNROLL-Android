@@ -56,7 +56,7 @@ import io.github.cdimascio.dotenv.dotenv
 
 var dotenv = dotenv {
     directory = "/assets"
-    filename = "env_andrew"
+//    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
@@ -64,7 +64,7 @@ var dotenv = dotenv {
 //    filename = "env_azimut_production"
 //    filename = "env_lumin_production"
 //    filename = "env_naspas_production"
-//    filename = "env_test_2"
+    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
