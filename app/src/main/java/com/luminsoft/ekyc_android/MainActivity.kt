@@ -27,7 +27,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -48,9 +47,15 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
 import appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
-import com.luminsoft.enroll_sdk.*
+import com.luminsoft.enroll_sdk.AppColors
+import com.luminsoft.enroll_sdk.EnrollCallback
+import com.luminsoft.enroll_sdk.EnrollEnvironment
+import com.luminsoft.enroll_sdk.EnrollFailedModel
+import com.luminsoft.enroll_sdk.EnrollMode
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
+import com.luminsoft.enroll_sdk.LocalizationCode
+import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-
 import io.github.cdimascio.dotenv.dotenv
 
 

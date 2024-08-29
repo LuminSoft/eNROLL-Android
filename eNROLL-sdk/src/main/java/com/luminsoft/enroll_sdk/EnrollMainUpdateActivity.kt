@@ -33,6 +33,8 @@ import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import deviceIdAuthUpdateModule
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
+import mailAuthUpdateModule
+import mailAuthUpdateRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -90,6 +92,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     emailUpdateRouter(navController = navController, updateViewModel)
                     phoneUpdateRouter(navController = navController, updateViewModel)
                     updateNationalIdRouter(navController = navController, updateViewModel)
+                    mailAuthUpdateRouter(navController = navController, updateViewModel)
                     passwordAuthUpdateRouter(navController = navController, updateViewModel)
 
                 }
@@ -113,6 +116,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(phoneUpdateModule)
                 modules(updateNationalIdConfirmationModule)
                 modules(passwordAuthUpdateModule)
+                modules(mailAuthUpdateModule)
             }.koin
         }
     }
