@@ -21,6 +21,8 @@ import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.ema
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.emailUpdateRouter
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_di_update.phoneUpdateModule
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phoneUpdateRouter
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationRouter
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
@@ -31,6 +33,8 @@ import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import deviceIdAuthUpdateModule
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
+import mailAuthUpdateModule
+import mailAuthUpdateRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -40,9 +44,7 @@ import org.koin.core.context.startKoin
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
 import updateLocationModule
-import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationRouter
 import updateNationalIdConfirmationModule
-import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
 
 
 @Suppress("DEPRECATION")
@@ -88,6 +90,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     emailUpdateRouter(navController = navController, updateViewModel)
                     phoneUpdateRouter(navController = navController, updateViewModel)
                     updateNationalIdRouter(navController = navController, updateViewModel)
+                    mailAuthUpdateRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -109,6 +112,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(emailUpdateModule)
                 modules(phoneUpdateModule)
                 modules(updateNationalIdConfirmationModule)
+                modules(mailAuthUpdateModule)
             }.koin
         }
     }
