@@ -13,6 +13,7 @@ object EnrollSDK {
     var googleApiKey = ""
     var tenantSecret = ""
     var applicantId = ""
+    var correlationId = ""
     var levelOfTrustToken = ""
     var updateSteps = arrayListOf<String>()
 

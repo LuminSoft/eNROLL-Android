@@ -170,6 +170,7 @@
     <string name="required_email">Mail is required</string>
     <string name="timerOtpMessage">Didn\'t receive the OTP? It will be sent again</string>
     <string name="emailOtpGuide">Please enter the verification code sent to your email</string>
+    <string name="emailOtpGuideWithMailVariable">Please enter the verification code sent to </string>
     <string name="smsOtpGuide">Please enter the verification code sent to your phone number</string>
     <string name="smsOtpGuideWithDynamicVariable">Please enter the verification code sent to </string>
     <string name="emailOtpMessage">Didn\'t receive the OTP? It will be sent in</string>

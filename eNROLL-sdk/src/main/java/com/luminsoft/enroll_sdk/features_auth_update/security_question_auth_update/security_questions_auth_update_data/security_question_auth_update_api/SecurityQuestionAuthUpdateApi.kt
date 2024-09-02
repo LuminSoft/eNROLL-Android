@@ -10,7 +10,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface SecurityQuestionAuthUpdateApi {
-    @GET("api/v1/update/SecurityQuestionsUpdateAuthentication/GetSecurityQuestion?")
+    @GET("api/v1/update/SecurityQuestionsUpdateAuthentication/GetSecurityQuestion")
     suspend fun getSecurityQuestion(@Query("updateStep") stepId: Int): Response<GetSecurityQuestionAuthUpdateResponseModel>
 
     @POST("api/v1/update/SecurityQuestionsUpdateAuthentication/VerifySecurityQuestion")
