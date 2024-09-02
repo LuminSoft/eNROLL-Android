@@ -281,7 +281,6 @@ private fun AnswerTextField(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
                     colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     contentDescription = "",
                 )
             },
@@ -343,6 +342,7 @@ fun DropdownList(
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.info_icon),
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )

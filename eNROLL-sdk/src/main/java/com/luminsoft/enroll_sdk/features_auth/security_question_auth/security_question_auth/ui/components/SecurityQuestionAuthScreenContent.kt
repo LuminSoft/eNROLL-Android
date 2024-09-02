@@ -178,7 +178,6 @@ fun SecurityQuestionAuthScreenContent(
                                 painter = painterResource(R.drawable.info_icon),
                                 contentDescription = "",
                                 colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                                 contentScale = ContentScale.FillBounds,
                                 modifier = Modifier.size(18.dp)
                             )

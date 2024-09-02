@@ -92,7 +92,6 @@ fun FaceCaptureAuthUpdateErrorScreen(
                 contentDescription = "",
                 contentScale = ContentScale.FillHeight,
                 colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                 modifier = Modifier.fillMaxHeight(0.35f)
             )
             Spacer(modifier = Modifier.height(30.dp))

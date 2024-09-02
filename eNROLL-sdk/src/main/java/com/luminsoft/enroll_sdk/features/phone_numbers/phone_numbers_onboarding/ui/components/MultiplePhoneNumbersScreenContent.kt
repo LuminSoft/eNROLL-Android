@@ -238,7 +238,6 @@ private fun PhoneItem(
                     painterResource(R.drawable.mobile_icon),
                     contentDescription = "",
                     colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     modifier = Modifier
                         .height(50.dp)
                 )

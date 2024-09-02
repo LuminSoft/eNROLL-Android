@@ -66,7 +66,6 @@ fun BackGroundView(
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds,
                         colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                         modifier = Modifier
                             .fillMaxSize()
                             .fillMaxWidth(),

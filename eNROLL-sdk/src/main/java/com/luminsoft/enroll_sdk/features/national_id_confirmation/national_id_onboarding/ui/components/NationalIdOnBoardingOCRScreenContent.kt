@@ -262,7 +262,6 @@ private fun MainContent(
                                 painterResource(R.drawable.user_icon),
                                 contentDescription = "",
                                 colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                                 modifier = Modifier
                                     .height(50.dp)
                             )

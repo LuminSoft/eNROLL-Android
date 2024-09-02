@@ -166,7 +166,6 @@ fun MultiplePhonesUpdateScreenContent(
                     painterResource(R.drawable.step_03_phone),
                     contentDescription = "",
                     colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
@@ -248,7 +247,6 @@ private fun PhoneItem(
                     painterResource(R.drawable.mobile_icon),
                     contentDescription = "",
                     colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     modifier = Modifier
                         .height(50.dp)
                 )

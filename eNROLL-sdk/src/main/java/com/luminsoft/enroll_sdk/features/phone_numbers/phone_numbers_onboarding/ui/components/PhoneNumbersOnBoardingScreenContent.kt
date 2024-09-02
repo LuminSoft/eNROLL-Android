@@ -165,7 +165,6 @@ fun PhoneNumbersOnBoardingScreenContent(
                     painterResource(R.drawable.step_03_phone),
                     contentDescription = "",
                     colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.3f)
                 )

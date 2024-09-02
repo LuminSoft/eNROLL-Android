@@ -359,7 +359,6 @@ fun PhoneNumberTextField(
                 painter = painterResource(R.drawable.factory_num_icon),
                 contentDescription = "",
                 colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                 modifier = Modifier.height(50.dp)
             )
         },
@@ -401,7 +400,6 @@ fun EmailTextField(
                 painterResource(R.drawable.mail_icon),
                 contentDescription = "",
                 colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                 modifier = Modifier
                     .height(50.dp)
             )

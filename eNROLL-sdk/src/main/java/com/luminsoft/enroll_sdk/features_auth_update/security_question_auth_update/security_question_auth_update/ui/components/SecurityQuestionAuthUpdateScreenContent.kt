@@ -163,7 +163,6 @@ fun SecurityQuestionAuthUpdateScreenContent(
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds,
                                 colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
@@ -247,7 +246,6 @@ private fun AnswerTextFieldWidget(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
                     colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     contentDescription = "",
                 )
             },
