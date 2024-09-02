@@ -20,6 +20,9 @@ import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
@@ -33,6 +36,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateSt
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
+import phoneAuthUpdateScreenContent
 import passwordAuthUpdateScreenContent
 import mailAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
@@ -209,7 +213,7 @@ class UpdateViewModel(
             2 -> mailAuthUpdateScreenContent
             3 -> securityQuestionAuthUpdateScreenContent
             4 -> checkDeviceIdAuthUpdateScreenContent
-            5 -> null   //TODO: phone is blocked
+            5 -> phoneAuthUpdateScreenContent
             6 -> faceCaptureAuthUpdatePreScanScreenContent
             else -> securityQuestionAuthUpdateScreenContent
         }
