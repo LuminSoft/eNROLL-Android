@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -180,6 +181,8 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
@@ -277,6 +280,8 @@ private fun AnswerTextField(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     contentDescription = "",
                 )
             },

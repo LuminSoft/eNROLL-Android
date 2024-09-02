@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -260,6 +261,8 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.user_icon),
                                     contentDescription = "",
+                                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                                     modifier = Modifier
                                         .height(50.dp)
                                 )
@@ -268,6 +271,8 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.edit_icon),
                                     contentDescription = "",
+                                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                                     modifier = Modifier
                                         .height(50.dp)
                                 )

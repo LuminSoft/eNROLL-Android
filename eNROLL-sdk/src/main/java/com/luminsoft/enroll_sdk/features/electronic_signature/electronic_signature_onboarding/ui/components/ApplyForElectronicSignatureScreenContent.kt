@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -312,6 +315,8 @@ fun NationalIdTextField(
             Image(
                 painter = painterResource(R.drawable.id_card_icon),
                 contentDescription = "",
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                 modifier = Modifier.height(50.dp)
             )
         },
@@ -353,6 +358,8 @@ fun PhoneNumberTextField(
             Image(
                 painter = painterResource(R.drawable.factory_num_icon),
                 contentDescription = "",
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                 modifier = Modifier.height(50.dp)
             )
         },
@@ -393,6 +400,8 @@ fun EmailTextField(
             Image(
                 painterResource(R.drawable.mail_icon),
                 contentDescription = "",
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                 modifier = Modifier
                     .height(50.dp)
             )

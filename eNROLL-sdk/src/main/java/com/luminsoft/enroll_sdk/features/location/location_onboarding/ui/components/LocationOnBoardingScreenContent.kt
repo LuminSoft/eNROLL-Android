@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -379,6 +380,8 @@ private fun GotLocation(
                         .fillMaxWidth(0.8f),
                     painter = painterResource(id = R.drawable.step_00_location),
                     contentScale = ContentScale.Fit,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     contentDescription = "Victor Ekyc Item"
                 )
             }
