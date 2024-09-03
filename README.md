@@ -122,7 +122,7 @@ try {
 | Keys.     | Values                                                                                                                                                             |
 | :-------- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `tenantId` | **Required**. Write your organization tenant id                                                                                                                    |
-| `tenantSecret` | **Required**. Write your organization tenant sercet.                                                                                                               |
+| `tenantSecret` | **Required**. Write your organization tenant secret.                                                                                                               |
 | `enrollMode`       | **Required**. Mode of the SDK.                                                                                                                                     |
 | `environment`      | **Required**. Select the EnrollEnvironment: EnrollEnvironment.STAGING  for staging and EnrollEnvironment.PRODUCTION for production.                                |
 | `enrollCallback`   | **Required**. Callback function to receive success and error response.                                                                                             |
