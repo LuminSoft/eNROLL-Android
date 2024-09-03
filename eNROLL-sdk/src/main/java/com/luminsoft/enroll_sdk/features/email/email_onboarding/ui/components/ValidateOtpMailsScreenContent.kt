@@ -172,7 +172,6 @@ fun ValidateOtpMailsScreenContent(
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
                     colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     modifier = Modifier.fillMaxHeight(0.25f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))

@@ -24,7 +24,7 @@ import appColors
 
 
 @Composable
-fun EnrollItemView(victorResourceId:Int, textResourceId:Int) {
+fun EnrollItemView(victorResourceId: Int, textResourceId: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,6 +33,36 @@ fun EnrollItemView(victorResourceId:Int, textResourceId:Int) {
         verticalArrangement = Arrangement.Top
     ) {
         Spacer(modifier = Modifier.height(80.dp))
+        //TODO: we will use this commented code when the new ui is done
+/*        Box {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .fillMaxHeight(0.5f),
+                painter = painterResource(id = R.drawable.location_icon),
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(color = MaterialTheme.appColors.errorColor),
+                contentDescription = "Victor Ekyc Item"
+            )
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .fillMaxHeight(0.5f),
+                painter = painterResource(id = R.drawable.location_icon_1),
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(color = MaterialTheme.appColors.secondary),
+                contentDescription = "Victor Ekyc Item"
+            )
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .fillMaxHeight(0.5f),
+                painter = painterResource(id = R.drawable.location_icon_2),
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(color = MaterialTheme.appColors.primary),
+                contentDescription = "Victor Ekyc Item"
+            )
+        }*/
         Image(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
