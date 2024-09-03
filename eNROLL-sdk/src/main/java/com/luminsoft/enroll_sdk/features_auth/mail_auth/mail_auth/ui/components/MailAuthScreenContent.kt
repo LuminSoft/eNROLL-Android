@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -156,6 +157,8 @@ fun MailAuthScreenContent(
                 Image(
                     painterResource(R.drawable.validate_mail_otp),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.25f)
                 )

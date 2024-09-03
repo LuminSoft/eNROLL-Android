@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -75,6 +77,8 @@ fun UpdateListScreenContent(
             Image(
                 painterResource(R.drawable.update_icon),
                 contentDescription = "",
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxHeight(0.1f)
             )
@@ -142,6 +146,8 @@ private fun UpdateStepItem(
                 Image(
                     painterResource(step.parseUpdateStepType().getStepIconIntSource()),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     modifier = Modifier
                         .height(50.dp),
 

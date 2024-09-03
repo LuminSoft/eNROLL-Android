@@ -46,7 +46,7 @@ sealed class OnBoardingPage(
     )
 
     data object DeviceLocationPage : OnBoardingPage(
-        image = R.drawable.step_00_location,
+        image = R.drawable.location_icon,
         stringValue = "DeviceLocationPage",
         text = R.string.device_location
     )

@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -131,6 +132,8 @@ fun SecurityQuestionAuthUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
@@ -159,6 +162,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
                                 painter = painterResource(R.drawable.info_icon),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds,
+                                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
@@ -241,6 +245,7 @@ private fun AnswerTextFieldWidget(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },

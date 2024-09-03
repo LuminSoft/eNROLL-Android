@@ -141,6 +141,7 @@ fun PasswordAuthScreenContent(
                 Image(
                     painterResource(R.drawable.step_07_password),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxHeight(0.3f)
                 )
