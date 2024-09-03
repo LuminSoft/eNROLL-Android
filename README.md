@@ -123,6 +123,7 @@ try {
 ## 5. VALUES DESCRIPTION
 
 
+.
 | Keys.     | Values                                                                                                                                                             |
 | :-------- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `tenantId` | **Required**. Write your organization tenant id                                                                                                                    |
@@ -139,34 +140,6 @@ try {
 | `correlationId` | **Optional**. Correlation ID to connect your User ID with our Request ID                                                                                           |
 
 
-
-
-
-
-
-
-
-
-## 5. VALUES DESCRIPTION
-
-
-
-
-| Keys.     |  Values                |
-| :-------- | :------------------------- |
-| `tenantId` | **Required**. Write your organization tenant id|
-| `tenantSecret` | **Required**. Write your organization tenant sercet. |
-| `enrollMode`       | **Required**. Mode of the SDK. |
-| `environment`      | **Required**. Select the EnrollEnvironment: EnrollEnvironment.STAGING  for staging and EnrollEnvironment.PRODUCTION for production.|
-| `enrollCallback`   | **Required**. Callback function to receive success and error response. |
-| `localizationCode` | **Required**. Select your language code LocalizationCode.EN for English, and LocalizationCode.AR for Arabic. The default value is English. |
-| `googleApiKey` | **Optional**. Google Api Key to view the user current location on the map. |
-| `applicantId` | **Optional**. Write your Application id. |
-| `levelOfTrustToken` | **Optional**. Write your Organization level of trust. |
-| `skipTutorial` | **Optional**. Choose to ignore the tutorial or not.|
-| `appColors` | **Optional**. Collection of the app colors that you could override like (primary - secondary - backGround - successColor - warningColor - errorColor - textColor). |
-
->>>>>>> upstream/master
 
 
 
