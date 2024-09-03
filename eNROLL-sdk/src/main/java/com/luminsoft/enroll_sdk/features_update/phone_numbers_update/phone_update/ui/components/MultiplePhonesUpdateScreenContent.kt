@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -58,6 +59,7 @@ import org.koin.compose.koinInject
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phonesUpdateScreenContent
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MultiplePhonesUpdateScreenContent(
     updateViewModel: UpdateViewModel,
@@ -96,7 +98,7 @@ fun MultiplePhonesUpdateScreenContent(
         if (isDeletePhoneClicked.value) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.WARNING,
-                text = stringResource(id = R.string.deleteConfirmationMessage) + phoneToDelete.value,
+                text = stringResource(id = R.string.phoneDeleteConfirmationMessage) + phoneToDelete.value,
                 buttonText = stringResource(id = R.string.delete),
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedButton = {
@@ -152,7 +154,9 @@ fun MultiplePhonesUpdateScreenContent(
                         })
                 }
             }
-        } else if (!verifiedPhones.value.isNullOrEmpty()) {
+        }
+        else if (!verifiedPhones.value.isNullOrEmpty()) {
+            updateViewModel.verifiedPhones.value = verifiedPhones.value
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier

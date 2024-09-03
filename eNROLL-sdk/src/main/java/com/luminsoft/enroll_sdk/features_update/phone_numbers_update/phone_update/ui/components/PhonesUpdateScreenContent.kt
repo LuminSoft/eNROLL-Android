@@ -44,6 +44,7 @@ import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.UpdatePhoneAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.validateOtpPhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.view_model.AddPhoneUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
@@ -90,6 +91,7 @@ fun PhonesUpdateScreenContent(
     val fullPhoneNumber = updateViewModel.fullPhoneNumber.collectAsState()
     val currentPhoneNumber = updateViewModel.currentPhoneNumber.collectAsState()
     val currentPhoneNumberCode = updateViewModel.currentPhoneNumberCode.collectAsState()
+    val verifiedPhones = updateViewModel.verifiedPhones.collectAsState()
 
 
     var phoneNumber: String by rememberSaveable { mutableStateOf("") }
@@ -236,7 +238,16 @@ fun PhonesUpdateScreenContent(
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                ButtonView(
+                if (!verifiedPhones.value.isNullOrEmpty()) ButtonView(
+                    onClick = {
+                        navController.navigate(multiplePhonesUpdateScreenContent)
+                    },
+                    title = stringResource(id = R.string.skip),
+                    color = MaterialTheme.appColors.backGround,
+                    borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
+                )
+                else ButtonView(
                     onClick = {
                         navController.navigate(updateListScreenContent)
                     },

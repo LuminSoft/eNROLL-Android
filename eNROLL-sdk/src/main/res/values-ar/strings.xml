@@ -326,6 +326,7 @@
     <string name="updateElectronicSignature">تحديث التوقيع الإلكتروني</string>
     <string name="cancelUpdate">إلغاء التعديل</string>
     <string name="deleteConfirmationMessage">هل أنت متأكد من حذف هذا البريد الإلكتروني ؟ \n </string>
+    <string name="phoneDeleteConfirmationMessage">هل أنت متأكد من حذف هذا الهاتف ؟ \n </string>
     <string name="delete">حذف</string>
 
 </resources>
