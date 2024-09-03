@@ -373,7 +373,8 @@ private fun TextItem(label: Int, value: String, icon: Int) {
                 painterResource(icon),
                 contentDescription = "",
                 modifier = Modifier
-                    .height(50.dp)
+                    .height(50.dp),
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         }
     )

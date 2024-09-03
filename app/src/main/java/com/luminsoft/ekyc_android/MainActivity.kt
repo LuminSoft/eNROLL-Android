@@ -259,7 +259,8 @@ class MainActivity : ComponentActivity() {
                 appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
-                correlationId = "123456"
+                correlationId = "123456",
+
 
             )
         } catch (e: Exception) {

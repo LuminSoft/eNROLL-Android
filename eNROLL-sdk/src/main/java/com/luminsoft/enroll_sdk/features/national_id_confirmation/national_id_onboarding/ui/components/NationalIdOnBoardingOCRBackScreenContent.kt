@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -313,7 +314,8 @@ private fun TextItem(label: Int, value: String, icon: Int) {
         enabled = false,
         icon = {
             Image(
-                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp)
+                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp),
+                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         })
 }
