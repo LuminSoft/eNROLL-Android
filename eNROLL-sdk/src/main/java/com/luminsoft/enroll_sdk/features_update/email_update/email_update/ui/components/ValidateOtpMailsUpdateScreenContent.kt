@@ -50,10 +50,9 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.ValidateOtpMailUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.mailsUpdateScreenContent
-import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.ValidateOtpMailsUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -76,7 +75,7 @@ fun ValidateOtpMailsUpdateScreenContent(
     val validateOtpMailUseCase =
         ValidateOtpMailUpdateUseCase(koinInject())
     val mailSendOtpUseCase =
-        UpdateMailAddUpdateUseCase(koinInject())
+        SendOtpUpdateUseCase(koinInject())
 
     val validateOtpMailsViewModel =
         remember {
@@ -249,7 +248,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
-                                mailsUpdateVM.callSendOtp(updateViewModel.mailValue.value!!.text)
+                                updateViewModel.mailId.value?.let { mailsUpdateVM.callSendOtp(it) }
                                 ticks = 60
                                 ticksF = 1.0f
                                 counter++
@@ -275,7 +274,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                 if (!isNotFirstMail.value)
                     ButtonView(
                         onClick = {
-                            mailsUpdateVM.callSendOtp(updateViewModel.mailValue.value!!.text)
+                            updateViewModel.mailId.value?.let { mailsUpdateVM.callSendOtp(it) }
                             ticks = 60
                             ticksF = 1.0f
                             counter++
@@ -289,7 +288,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                     ButtonView(
                         onClick = {
                             updateViewModel.mailValue.value = TextFieldValue()
-                            navController.navigate(multipleMailsUpdateScreenContent)
+                            navController.navigate(updateListScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
                         color = MaterialTheme.appColors.backGround,
@@ -307,16 +306,16 @@ fun ValidateOtpMailsUpdateScreenContent(
 private fun Timer(ticksF: Float, ticks: Int) {
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            progress = 1f,
+            progress = { 1f },
             modifier = Modifier.size(30.dp),
             color = MaterialTheme.appColors.secondary.copy(alpha = 0.5f),
-            strokeWidth = 3.dp
+            strokeWidth = 3.dp,
         )
         CircularProgressIndicator(
-            progress = ticksF,
+            progress = { ticksF },
             modifier = Modifier.size(30.dp),
+            color = MaterialTheme.appColors.secondary,
             strokeWidth = 3.dp,
-            color = MaterialTheme.appColors.secondary
         )
         Text(
             text = ticks.toString(),

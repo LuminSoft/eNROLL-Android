@@ -13,6 +13,7 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
@@ -94,6 +95,9 @@ class UpdateViewModel(
     var phoneId: MutableStateFlow<Int?> = MutableStateFlow(null)
     var verifiedPhones: MutableStateFlow<List<GetVerifiedPhonesResponseModel>?> =
         MutableStateFlow(null)
+    var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
+        MutableStateFlow(null)
+
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }

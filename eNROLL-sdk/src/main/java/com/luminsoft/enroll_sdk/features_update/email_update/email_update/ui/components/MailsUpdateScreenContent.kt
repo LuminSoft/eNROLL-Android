@@ -35,6 +35,7 @@ import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.validateOtpMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.AddMailUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
@@ -78,6 +79,7 @@ fun MailsUpdateScreenContent(
     val failure = mailsUpdateViewModel.failure.collectAsState()
     val isClicked = mailsUpdateViewModel.isClicked.collectAsState()
     val mailId = mailsUpdateViewModel.mailId.collectAsState()
+    val verifiedMails = updateViewModel.verifiedMails.collectAsState()
 
     val userHasModifiedText = remember { mutableStateOf(false) }
 
@@ -205,7 +207,17 @@ fun MailsUpdateScreenContent(
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                ButtonView(
+                if (!verifiedMails.value.isNullOrEmpty())
+                    ButtonView(
+                        onClick = {
+                            navController.navigate(multipleMailsUpdateScreenContent)
+                        },
+                        title = stringResource(id = R.string.skip),
+                        color = MaterialTheme.appColors.backGround,
+                        borderColor = MaterialTheme.appColors.primary,
+                        textColor = MaterialTheme.appColors.primary,
+                    )
+                else ButtonView(
                     onClick = {
                         navController.navigate(updateListScreenContent)
                     },

@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.email_update.email_update.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -57,6 +59,7 @@ import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 import org.koin.compose.koinInject
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MultipleMailsUpdateScreenContent(
     updateViewModel: UpdateViewModel,
@@ -160,6 +163,8 @@ fun MultipleMailsUpdateScreenContent(
                 }
             }
         } else if (!verifiedMails.value.isNullOrEmpty()) {
+            updateViewModel.verifiedMails.value = verifiedMails.value
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier

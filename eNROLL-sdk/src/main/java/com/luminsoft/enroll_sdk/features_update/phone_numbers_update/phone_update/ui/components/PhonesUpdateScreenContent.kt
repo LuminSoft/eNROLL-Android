@@ -238,15 +238,16 @@ fun PhonesUpdateScreenContent(
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                if (!verifiedPhones.value.isNullOrEmpty()) ButtonView(
-                    onClick = {
-                        navController.navigate(multiplePhonesUpdateScreenContent)
-                    },
-                    title = stringResource(id = R.string.skip),
-                    color = MaterialTheme.appColors.backGround,
-                    borderColor = MaterialTheme.appColors.primary,
-                    textColor = MaterialTheme.appColors.primary,
-                )
+                if (!verifiedPhones.value.isNullOrEmpty())
+                    ButtonView(
+                        onClick = {
+                            navController.navigate(multiplePhonesUpdateScreenContent)
+                        },
+                        title = stringResource(id = R.string.skip),
+                        color = MaterialTheme.appColors.backGround,
+                        borderColor = MaterialTheme.appColors.primary,
+                        textColor = MaterialTheme.appColors.primary,
+                    )
                 else ButtonView(
                     onClick = {
                         navController.navigate(updateListScreenContent)
