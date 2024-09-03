@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_onboarding.ui.components
 
-import CheckUserHasNationalIdUseCase
+import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_domain.usecases.CheckUserHasNationalIdUseCase
 import ElectronicSignatureOnBoardingViewModel
 import InsertSignatureInfoUseCase
 import android.annotation.SuppressLint

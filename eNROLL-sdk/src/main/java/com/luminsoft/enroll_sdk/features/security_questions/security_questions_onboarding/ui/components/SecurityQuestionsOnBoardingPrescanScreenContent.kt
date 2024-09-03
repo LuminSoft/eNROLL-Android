@@ -20,9 +20,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -432,10 +432,10 @@ fun Step(
 
         //Line
         if (!isFirstItem)
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.align(Alignment.CenterStart),
-                color = color,
-                thickness = 2.dp
+                thickness = 2.dp,
+                color = color
             )
 
         //Circle

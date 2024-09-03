@@ -223,7 +223,7 @@ class UpdateViewModel(
             6 -> faceCaptureAuthUpdatePreScanScreenContent
             else -> securityQuestionAuthUpdateScreenContent
         }
-        route?.let {
+        route.let {
             navController.navigate(it)
         }
     }

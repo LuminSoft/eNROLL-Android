@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -199,10 +199,10 @@ fun PdfViewerWidget(
                     .padding(bottom = 10.dp)
             )
 
-            Divider(
-                color = MaterialTheme.appColors.primary,
+            HorizontalDivider(
+                modifier = Modifier.width(50.dp).align(Alignment.CenterHorizontally),
                 thickness = 4.dp,
-                modifier = Modifier.width(50.dp).align(Alignment.CenterHorizontally)
+                color = MaterialTheme.appColors.primary
             )
 
 

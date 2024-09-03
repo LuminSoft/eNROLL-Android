@@ -30,7 +30,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRou
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
-import deviceIdAuthUpdateModule
+import com.luminsoft.enroll_sdk.features_auth_update.device_id_auth_update.device_id_auth_update_di.deviceIdAuthUpdateModule
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
 import mailAuthUpdateModule
