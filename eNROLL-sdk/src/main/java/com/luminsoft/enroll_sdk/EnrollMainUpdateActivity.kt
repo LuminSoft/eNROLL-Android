@@ -45,6 +45,8 @@ import passwordAuthUpdateModule
 import passwordAuthUpdateRouter
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
+import updateDeviceIdModule
+import updateDeviceIdRouter
 import updateLocationModule
 import updateNationalIdConfirmationModule
 
@@ -94,6 +96,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     updateNationalIdRouter(navController = navController, updateViewModel)
                     mailAuthUpdateRouter(navController = navController, updateViewModel)
                     passwordAuthUpdateRouter(navController = navController, updateViewModel)
+                    updateDeviceIdRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -117,6 +120,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(updateNationalIdConfirmationModule)
                 modules(passwordAuthUpdateModule)
                 modules(mailAuthUpdateModule)
+                modules(updateDeviceIdModule)
             }.koin
         }
     }

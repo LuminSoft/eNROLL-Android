@@ -94,6 +94,7 @@ fun UpdateLocationScreenContent(
                 updateLocationUseCase = updateLocationUseCase
             )
         }
+
     val updateLocationVM = remember { updateLocationViewModel }
 
 
