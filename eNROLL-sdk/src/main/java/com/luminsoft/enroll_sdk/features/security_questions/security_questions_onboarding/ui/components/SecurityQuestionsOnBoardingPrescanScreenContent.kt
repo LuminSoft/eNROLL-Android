@@ -20,9 +20,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -180,6 +181,8 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
@@ -277,6 +280,7 @@ private fun AnswerTextField(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -338,6 +342,7 @@ fun DropdownList(
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.info_icon),
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )
@@ -427,10 +432,10 @@ fun Step(
 
         //Line
         if (!isFirstItem)
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.align(Alignment.CenterStart),
-                color = color,
-                thickness = 2.dp
+                thickness = 2.dp,
+                color = color
             )
 
         //Circle

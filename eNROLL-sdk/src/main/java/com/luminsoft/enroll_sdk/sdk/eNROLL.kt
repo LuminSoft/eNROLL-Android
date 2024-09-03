@@ -1,8 +1,11 @@
 package com.luminsoft.enroll_sdk.sdk
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.content.res.Resources.Theme
+import android.util.TypedValue
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
@@ -11,8 +14,10 @@ import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.ThemeContextWrapper
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import java.util.Locale
+
 
 object eNROLL {
     @Throws(Exception::class)
@@ -27,7 +32,8 @@ object eNROLL {
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
-        appColors: AppColors = AppColors()
+        appColors: AppColors = AppColors(),
+        correlationId: String = ""
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -48,12 +54,15 @@ object eNROLL {
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
+        EnrollSDK.correlationId = correlationId
+
 
     }
 
     fun launch(
         activity: Activity,
     ) {
+
         if (EnrollSDK.tenantId.isEmpty())
             throw Exception("Invalid tenant id")
         if (EnrollSDK.tenantSecret.isEmpty())

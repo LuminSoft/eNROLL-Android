@@ -13,8 +13,18 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_data.main_update_models.get_update_configurations.StepUpdateModel
@@ -28,17 +38,17 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateSt
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
+import phoneAuthUpdateScreenContent
+import passwordAuthUpdateScreenContent
+import mailAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
     private val updateStepConfigurationsUsecase: UpdateStepsConfigurationsUsecase,
     private val updateStepIntRequestUseCase: UpdateStepsInitRequestUsecase,
-    private val updateAuthenticationMethodUsecase: GetUpdateAuthenticationMethodUsecase,
-    private val context: Context
+    private val updateAuthenticationMethodUsecase: GetUpdateAuthenticationMethodUsecase
 
 ) : ViewModel(),
     MainViewModel {
@@ -52,7 +62,9 @@ class UpdateViewModel(
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
+    var fullPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
+    var phoneValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
     var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
     var steps: MutableStateFlow<List<StepUpdateModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
@@ -78,12 +90,17 @@ class UpdateViewModel(
     var updateAuthenticationStep: MutableStateFlow<UpdateVerificationMethodResponse?> =
         MutableStateFlow(null)
     var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
+    var userPhone: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailId: MutableStateFlow<Int?> = MutableStateFlow(null)
+    var phoneId: MutableStateFlow<Int?> = MutableStateFlow(null)
+    var verifiedPhones: MutableStateFlow<List<GetVerifiedPhonesResponseModel>?> =
+        MutableStateFlow(null)
+    var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
+        MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
-
 
 
     fun enableLoading() {
@@ -198,15 +215,15 @@ class UpdateViewModel(
 
     private fun navigateToAuthStep(navController: NavController, stepId: Int) {
         val route = when (stepId) {
-            1 -> null   //TODO: password not in our scope
-            2 -> null   //TODO: email is blocked
+            1 -> passwordAuthUpdateScreenContent
+            2 -> mailAuthUpdateScreenContent
             3 -> securityQuestionAuthUpdateScreenContent
             4 -> checkDeviceIdAuthUpdateScreenContent
-            5 -> null   //TODO: phone is blocked
+            5 -> phoneAuthUpdateScreenContent
             6 -> faceCaptureAuthUpdatePreScanScreenContent
             else -> securityQuestionAuthUpdateScreenContent
         }
-        route?.let {
+        route.let {
             navController.navigate(it)
         }
     }
@@ -216,7 +233,7 @@ class UpdateViewModel(
         val route = when (updateStepId.value) {
             1 -> updateNationalIdPreScanScreen
             2 -> testUpdateScreenContent
-            3 -> testUpdateScreenContent
+            3 -> multiplePhonesUpdateScreenContent
             4 -> multipleMailsUpdateScreenContent
             5 -> testUpdateScreenContent
             6 -> updateLocationScreenContent
@@ -289,5 +306,9 @@ class UpdateViewModel(
 
     fun updateMailId(id: Int) {
         mailId.value = id
+    }
+
+    fun updatePhoneId(id: Int) {
+        phoneId.value = id
     }
 }

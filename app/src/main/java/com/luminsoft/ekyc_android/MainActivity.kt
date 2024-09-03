@@ -27,7 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,9 +47,15 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
 import appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
-import com.luminsoft.enroll_sdk.*
+import com.luminsoft.enroll_sdk.AppColors
+import com.luminsoft.enroll_sdk.EnrollCallback
+import com.luminsoft.enroll_sdk.EnrollEnvironment
+import com.luminsoft.enroll_sdk.EnrollFailedModel
+import com.luminsoft.enroll_sdk.EnrollMode
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
+import com.luminsoft.enroll_sdk.LocalizationCode
+import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
-
 import io.github.cdimascio.dotenv.dotenv
 
 
@@ -57,13 +63,13 @@ var dotenv = dotenv {
     directory = "/assets"
 //    filename = "env_andrew"
 //    filename = "env_radwan"
-    filename = "env_org_1"
+//    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
 //    filename = "env_lumin_production"
 //    filename = "env_naspas_production"
-//    filename = "env_test_2"
+    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -253,8 +259,9 @@ class MainActivity : ComponentActivity() {
                 appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
+                correlationId = "123456"
 
-                )
+            )
         } catch (e: Exception) {
             Log.e("error", e.toString())
         }
@@ -318,7 +325,7 @@ class MainActivity : ComponentActivity() {
 
                             itemList.onEachIndexed { index, item ->
                                 if (index != 0) {
-                                    Divider(thickness = 1.dp, color = Color.LightGray)
+                                    HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
                                 }
                                 Box(
                                     modifier = Modifier

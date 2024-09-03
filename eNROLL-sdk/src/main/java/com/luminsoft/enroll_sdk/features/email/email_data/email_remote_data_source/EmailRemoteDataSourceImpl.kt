@@ -1,11 +1,11 @@
 package com.luminsoft.enroll_sdk.features.email.email_data.email_remote_data_source
 
+import ValidateOTPRequestModel
 import com.luminsoft.enroll_sdk.core.network.BaseRemoteDataSource
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.features.email.email_data.email_api.EmailApi
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.mail_info.MailInfoRequestModel
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.make_default.MakeDefaultRequestModel
-import com.luminsoft.enroll_sdk.features.email.email_data.email_models.validate_otp.ValidateOTPRequestModel
 
 
 class EmailRemoteDataSourceImpl(

@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -131,6 +132,8 @@ fun SecurityQuestionAuthUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
@@ -159,6 +162,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
                                 painter = painterResource(R.drawable.info_icon),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds,
+                                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
@@ -169,10 +173,10 @@ fun SecurityQuestionAuthUpdateScreenContent(
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
-                        Divider(
-                            color = MaterialTheme.appColors.primary,
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
                             thickness = 1.2.dp,
-                            modifier = Modifier.fillMaxWidth()
+                            color = MaterialTheme.appColors.primary
                         )
                     }
                 }
@@ -193,13 +197,13 @@ fun SecurityQuestionAuthUpdateScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 ButtonView(
                     onClick = {
                         navController.popBackStack()
                               },
-                    stringResource(id = R.string.skip),
+                    stringResource(id = R.string.cancel),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                     textColor = MaterialTheme.appColors.primary,
@@ -241,6 +245,7 @@ private fun AnswerTextFieldWidget(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },

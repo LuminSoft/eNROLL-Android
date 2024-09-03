@@ -170,7 +170,9 @@
     <string name="required_email">Mail is required</string>
     <string name="timerOtpMessage">Didn\'t receive the OTP? It will be sent again</string>
     <string name="emailOtpGuide">Please enter the verification code sent to your email</string>
+    <string name="emailOtpGuideWithMailVariable">Please enter the verification code sent to </string>
     <string name="smsOtpGuide">Please enter the verification code sent to your phone number</string>
+    <string name="smsOtpGuideWithDynamicVariable">Please enter the verification code sent to </string>
     <string name="emailOtpMessage">Didn\'t receive the OTP? It will be sent in</string>
     <string name="second">Seconds</string>
     <string name="youAddedTheFollowingPhoneNumbers">You added the following phone numbers</string>
@@ -323,6 +325,7 @@
     <string name="updateElectronicSignature">Update Electronic Signature</string>
     <string name="cancelUpdate">Cancel Update</string>
     <string name="deleteConfirmationMessage">Are you sure you want to delete this mail? \n </string>
+    <string name="phoneDeleteConfirmationMessage">Are you sure you want to delete this phone? \n </string>
     <string name="delete">Delete</string>
 
 
