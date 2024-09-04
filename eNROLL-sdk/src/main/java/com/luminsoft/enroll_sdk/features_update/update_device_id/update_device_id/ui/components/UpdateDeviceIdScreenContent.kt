@@ -20,21 +20,11 @@ fun UpdateDeviceIdScreenContent(
     navController: NavController
 ) {
     val context = LocalContext.current
-
-//    val updateDeviceIdUseCase = UpdateDeviceIdUseCase(koinInject())
-
     val updateDeviceIdViewModel: UpdateDeviceIdViewModel = koinViewModel()
-
-//    val updateDeviceIdViewModel =
-//        remember {
-//            UpdateDeviceIdViewModel( updateDeviceIdUseCase= updateDeviceIdUseCase, context = context)
-//        }
-
     val activity = context.findActivity()
     val loading = updateDeviceIdViewModel.loading.collectAsState()
     val failure = updateDeviceIdViewModel.failure.collectAsState()
     val deviceUpdated = updateDeviceIdViewModel.deviceIdUpdated.collectAsState()
-
 
     BackGroundView(navController = navController, showAppBar = false) {
         if (deviceUpdated.value) {

@@ -96,7 +96,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     updateNationalIdRouter(navController = navController, updateViewModel)
                     mailAuthUpdateRouter(navController = navController, updateViewModel)
                     passwordAuthUpdateRouter(navController = navController, updateViewModel)
-                    updateDeviceIdRouter(navController = navController, updateViewModel)
+                    updateDeviceIdRouter(navController = navController)
 
                 }
             }
