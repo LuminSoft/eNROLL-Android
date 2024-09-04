@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -70,14 +71,28 @@ fun FaceCaptureAuthUpdatePreScanScreenContent(
                 .padding(horizontal = 20.dp)
         ) {
             EnrollItemView(R.drawable.step_02_smile_liveness, R.string.facePreCapContent)
-            ButtonView(
-                onClick = {
-                    val intent =
-                        Intent(activity.applicationContext, SmileLivenessActivity::class.java)
-                    startForResult.launch(intent)
-                },
-                stringResource(id = R.string.start),
-            )
+
+            Column {
+                ButtonView(
+                    onClick = {
+                        val intent =
+                            Intent(activity.applicationContext, SmileLivenessActivity::class.java)
+                        startForResult.launch(intent)
+                    },
+                    stringResource(id = R.string.start),
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ButtonView(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    stringResource(id = R.string.cancel),
+                    color = MaterialTheme.appColors.backGround,
+                    borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
+                ) }
+
             Spacer(
                 modifier = Modifier
                     .safeContentPadding()
