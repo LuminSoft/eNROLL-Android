@@ -1,7 +1,6 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model
 
 import UpdateScanType
-import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -17,8 +16,6 @@ import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
@@ -41,8 +38,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import phoneAuthUpdateScreenContent
 import passwordAuthUpdateScreenContent
 import mailAuthUpdateScreenContent
+import passwordAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
+import updateDeviceIdScreenContent
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
@@ -154,10 +153,23 @@ class UpdateViewModel(
                             failure.value = it
                             loading.value = false
                         }, { list ->
-                            steps.value = list
+                            val mutableList = list.toMutableList()
+
+                            // Check if the list contains updateStepId = 5
+                            if (!mutableList.any { it.updateStepId == 5 }) {
+                                // If not found, create a new UpdateStep object and insert it
+                                val newUpdateStep = StepUpdateModel(
+                                    updateStepId = 5,
+                                    lastUpdatedDate = "2024-09-02T17:44:00.0000000"
+                                )
+                                mutableList.add(newUpdateStep)
+                            }
+
+                            // Update the steps with the new list
+                            steps.value = mutableList
+
                             loading.value = false
                         })
-
                     }
                 })
         }
@@ -229,13 +241,12 @@ class UpdateViewModel(
     }
 
     fun navigateToUpdateAfterAuthStep() {
-        //TODO: will navigate to update modules
         val route = when (updateStepId.value) {
             1 -> updateNationalIdPreScanScreen
             2 -> testUpdateScreenContent
             3 -> multiplePhonesUpdateScreenContent
             4 -> multipleMailsUpdateScreenContent
-            5 -> testUpdateScreenContent
+            5 -> updateDeviceIdScreenContent
             6 -> updateLocationScreenContent
             7 -> testUpdateScreenContent
             8 -> testUpdateScreenContent

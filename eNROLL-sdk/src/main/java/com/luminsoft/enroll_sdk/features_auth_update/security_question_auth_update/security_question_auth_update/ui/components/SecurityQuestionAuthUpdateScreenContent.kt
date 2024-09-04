@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -84,11 +85,14 @@ fun SecurityQuestionAuthUpdateScreenContent(
     val securityQuestionAPI = securityQuestionViewModel.securityQuestion.collectAsState()
     val answerError = securityQuestionViewModel.answerError.collectAsState()
 
-    BackGroundView(navController = navController, showAppBar = true) {
+    LaunchedEffect(securityQuestionApproved.value) {
         if (securityQuestionApproved.value) {
-              updateViewModel.navigateToUpdateAfterAuthStep()
+            updateViewModel.navigateToUpdateAfterAuthStep()
         }
-       else if (loading.value) LoadingView()
+    }
+    BackGroundView(navController = navController, showAppBar = true) {
+
+        if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
