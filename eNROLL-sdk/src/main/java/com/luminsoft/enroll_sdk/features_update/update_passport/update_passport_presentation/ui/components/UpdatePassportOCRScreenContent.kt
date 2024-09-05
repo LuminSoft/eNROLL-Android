@@ -160,7 +160,7 @@ private fun MainContent(
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = it.message,
-                        buttonText = stringResource(id = R.string.exit),
+                        buttonText = stringResource(id = R.string.cancel),
                         onPressedButton = {
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
@@ -194,7 +194,7 @@ private fun MainContent(
                             intent.putExtra("localCode", EnrollSDK.localizationCode.name)
                             startForResult.launch(intent)
                         },
-                        secondButtonText = stringResource(id = R.string.exit),
+                        secondButtonText = stringResource(id = R.string.cancel),
                         onPressedSecondButton = {
                             activity.finish()
                             EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))

@@ -110,7 +110,7 @@ fun UpdatePassportErrorScreen(
                                 errorMessage.value!!, errorMessage
                             )
                         )
-                    }, title = stringResource(id = R.string.exit)
+                    }, title = stringResource(id = R.string.cancel)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
