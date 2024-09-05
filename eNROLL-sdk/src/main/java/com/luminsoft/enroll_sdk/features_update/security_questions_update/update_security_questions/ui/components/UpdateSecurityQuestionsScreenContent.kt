@@ -1,4 +1,3 @@
-package com.luminsoft.enroll_sdk.features.security_questions.security_questions_onboarding.ui.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -20,9 +19,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,20 +46,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.GetSecurityQuestionsUseCase
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.PostSecurityQuestionsUseCase
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsOnBoardingScreenContent
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_onboarding.view_model.SecurityQuestionsOnBoardingViewModel
-import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
-import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
+import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
@@ -70,29 +62,28 @@ import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import org.koin.compose.koinInject
 
 
-var answerValidate = mutableStateOf(false)
+var updateAnswerValidate = mutableStateOf(false)
 
 @Composable
-fun SecurityQuestionsOnBoardingScreenContent(
-    onBoardingViewModel: OnBoardingViewModel,
+fun UpdateSecurityQuestionsScreenContent(
+    updateViewModel: UpdateViewModel,
     navController: NavController,
 ) {
     val getSecurityQuestionsUseCase =
-        GetSecurityQuestionsUseCase(koinInject())
+        GetSecurityQuestionsUpdateUseCase(koinInject())
 
-    val postSecurityQuestionsUseCase =
-        PostSecurityQuestionsUseCase(koinInject())
+    val updateSecurityQuestionsUseCase =
+        UpdateSecurityQuestionsUseCase(koinInject())
 
     val securityQuestionsViewModel =
         remember {
-            SecurityQuestionsOnBoardingViewModel(
+            UpdateSecurityQuestionsViewModel(
                 getSecurityQuestionsUseCase = getSecurityQuestionsUseCase,
-                onBoardingViewModel = onBoardingViewModel,
-                postSecurityQuestionsUseCase = postSecurityQuestionsUseCase
+                updateViewModel = updateViewModel,
+                postSecurityQuestionsUseCase = updateSecurityQuestionsUseCase
             )
         }
 
-    val securityQuestionsOnBoardingVM = remember { securityQuestionsViewModel }
 
     val context = LocalContext.current
     val activity = context.findActivity()
@@ -103,9 +94,9 @@ fun SecurityQuestionsOnBoardingScreenContent(
     val selectedQuestion = securityQuestionsViewModel.selectedQuestion.collectAsState()
     val answer = securityQuestionsViewModel.answer.collectAsState()
     val selectedSecurityQuestions =
-        onBoardingViewModel.selectedSecurityQuestions.collectAsState()
-    val securityQuestions = onBoardingViewModel.securityQuestionsList.collectAsState()
-    val securityQuestionsAPI = onBoardingViewModel.securityQuestions.collectAsState()
+        updateViewModel.selectedSecurityQuestions.collectAsState()
+    val securityQuestions = updateViewModel.securityQuestionsList.collectAsState()
+    val securityQuestionsAPI = updateViewModel.securityQuestions.collectAsState()
     val selectQuestionError = securityQuestionsViewModel.selectQuestionError.collectAsState()
     val answerError = securityQuestionsViewModel.answerError.collectAsState()
 
@@ -113,23 +104,20 @@ fun SecurityQuestionsOnBoardingScreenContent(
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (securityQuestionsApproved.value) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.SecurityQuestions.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulUpdate),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.error(
+                        EnrollFailedModel(
+                            activity.getString(R.string.successfulUpdate),
+                            activity.getString(R.string.successfulUpdate)
                         )
-                    },
-                )
+                    )
+                },
+            )
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -156,7 +144,7 @@ fun SecurityQuestionsOnBoardingScreenContent(
                         text = it.message,
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
-                            securityQuestionsOnBoardingVM.getSecurityQuestions()
+                            securityQuestionsViewModel.getSecurityQuestions()
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -182,8 +170,6 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
@@ -211,24 +197,24 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     securityQuestions.value,
                     securityQuestionsViewModel,
                     selectedQuestion,
-                    onBoardingViewModel,
+                    updateViewModel,
                     selectQuestionError
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
-                AnswerTextField(answer, securityQuestionsOnBoardingVM, answerError)
-                Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+                AnswerUpdateTextField(answer, securityQuestionsViewModel, answerError)
+                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
                 ButtonView(
                     onClick = {
-                        answerValidate.value = true
-                        securityQuestionsOnBoardingVM.onChangeValue(securityQuestionsOnBoardingVM.answer.value)
+                        updateAnswerValidate.value = true
+                        securityQuestionsViewModel.onChangeValue(securityQuestionsViewModel.answer.value)
 
-                        val securityQuestionModel = GetSecurityQuestionsResponseModel()
+                        val securityQuestionModel = GetSecurityQuestionsUpdateResponseModel()
 
                         val isAnswerValid = answer.value.text.isNotEmpty() && answer.value.text.length < 150
                         val isQuestionSelected = selectedQuestion.value != null
-                        var selectedQuestionValue: GetSecurityQuestionsResponseModel? = null
+                        var selectedQuestionValue: GetSecurityQuestionsUpdateResponseModel? = null
 
                         if (isAnswerValid) {
                             securityQuestionModel.answer = answer.value.text
@@ -237,9 +223,8 @@ fun SecurityQuestionsOnBoardingScreenContent(
                             securityQuestionsViewModel.answerError.value = ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
                         }
 
-
                         if (isQuestionSelected) {
-                            selectedQuestionValue = selectedQuestion.value!!
+                             selectedQuestionValue = selectedQuestion.value!!
                             securityQuestionModel.question = selectedQuestionValue.question
                             securityQuestionModel.id = selectedQuestionValue.id
 
@@ -248,11 +233,12 @@ fun SecurityQuestionsOnBoardingScreenContent(
                         }
 
                         if (isAnswerValid && isQuestionSelected) {
-                            onBoardingViewModel.selectedSecurityQuestions.value.add(securityQuestionModel)
-                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestionValue)
 
-                            if (onBoardingViewModel.selectedSecurityQuestions.value.size < 3) {
-                                navController.navigate(securityQuestionsOnBoardingScreenContent)
+                            updateViewModel.selectedSecurityQuestions.value.add(securityQuestionModel)
+                            updateViewModel.securityQuestionsList.value.remove(selectedQuestionValue)
+
+                            if (updateViewModel.selectedSecurityQuestions.value.size < 3) {
+                                navController.navigate(updateSecurityQuestionsScreenContent)
                             } else {
                                 securityQuestionsViewModel.postSecurityQuestionsCall()
                             }
@@ -260,7 +246,19 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
+                Spacer(modifier = Modifier.height(8.dp))
 
+                ButtonView(
+                    onClick = {
+                        updateViewModel.securityQuestions.value = null
+                        updateViewModel.selectedSecurityQuestions.value.clear()
+                        navController.navigate(updateListScreenContent)
+                    },
+                    stringResource(id = R.string.cancel),
+                    color = MaterialTheme.appColors.backGround,
+                    borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
+                )
                 Spacer(modifier = Modifier.height(20.dp))
 
             }
@@ -269,9 +267,9 @@ fun SecurityQuestionsOnBoardingScreenContent(
 }
 
 @Composable
-private fun AnswerTextField(
+private fun AnswerUpdateTextField(
     answer: State<TextFieldValue>,
-    securityQuestionsOnBoardingVM: SecurityQuestionsOnBoardingViewModel,
+    securityQuestionsOnBoardingVM: UpdateSecurityQuestionsViewModel,
     answerError: State<String?>
 ) {
     val maxChar = 150
@@ -298,7 +296,6 @@ private fun AnswerTextField(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -318,10 +315,10 @@ private fun AnswerTextField(
 
 @Composable
 fun DropdownList(
-    value: List<GetSecurityQuestionsResponseModel>,
-    securityQuestionsViewModel: SecurityQuestionsOnBoardingViewModel,
-    selectedQuestion: State<GetSecurityQuestionsResponseModel?>,
-    onBoardingViewModel: OnBoardingViewModel,
+    value: List<GetSecurityQuestionsUpdateResponseModel>,
+    securityQuestionsViewModel: UpdateSecurityQuestionsViewModel,
+    selectedQuestion: State<GetSecurityQuestionsUpdateResponseModel?>,
+    updateViewModel: UpdateViewModel,
     selectQuestionError: State<Boolean>,
 ) {
 
@@ -338,7 +335,7 @@ fun DropdownList(
             enabled = false,
             onValueChange = { it1 ->
                 securityQuestionsViewModel.selectedQuestion.value =
-                    onBoardingViewModel.securityQuestions.value?.first { it.question == it1 }
+                    updateViewModel.securityQuestions.value?.first { it.question == it1 }
             },
             modifier = Modifier
                 .clickable { mExpanded = !mExpanded }
@@ -360,7 +357,6 @@ fun DropdownList(
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.info_icon),
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )
@@ -396,7 +392,7 @@ fun DropdownList(
                         },
                         onClick = {
                             securityQuestionsViewModel.selectedQuestion.value =
-                                onBoardingViewModel.securityQuestions.value?.first { it == label }
+                                updateViewModel.securityQuestions.value?.first { it == label }
                             mExpanded = false
                             securityQuestionsViewModel.selectQuestionError.value = false
                         })
@@ -450,10 +446,10 @@ fun Step(
 
         //Line
         if (!isFirstItem)
-            HorizontalDivider(
+            Divider(
                 modifier = Modifier.align(Alignment.CenterStart),
-                thickness = 2.dp,
-                color = color
+                color = color,
+                thickness = 2.dp
             )
 
         //Circle

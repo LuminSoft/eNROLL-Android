@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model
 
+import GetSecurityQuestionsUpdateResponseModel
 import UpdateScanType
 import android.graphics.Bitmap
 import androidx.compose.ui.text.input.TextFieldValue
@@ -14,11 +15,7 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
-import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdPreScanScreen
@@ -35,13 +32,13 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateSt
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
-import phoneAuthUpdateScreenContent
-import passwordAuthUpdateScreenContent
 import mailAuthUpdateScreenContent
 import passwordAuthUpdateScreenContent
+import phoneAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
 import updateDeviceIdScreenContent
+import updateSecurityQuestionsScreenContent
 
 class UpdateViewModel(
     private val generateUpdateSessionToken: GenerateUpdateSessionTokenUsecase,
@@ -75,11 +72,11 @@ class UpdateViewModel(
     var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var preScanLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isNotFirstMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var securityQuestions: MutableStateFlow<List<GetSecurityQuestionsResponseModel>?> =
+    var securityQuestions: MutableStateFlow<List<GetSecurityQuestionsUpdateResponseModel>?> =
         MutableStateFlow(null)
-    var selectedSecurityQuestions: MutableStateFlow<ArrayList<GetSecurityQuestionsResponseModel>> =
+    var selectedSecurityQuestions: MutableStateFlow<ArrayList<GetSecurityQuestionsUpdateResponseModel>> =
         MutableStateFlow(arrayListOf())
-    var securityQuestionsList: MutableStateFlow<ArrayList<GetSecurityQuestionsResponseModel>> =
+    var securityQuestionsList: MutableStateFlow<ArrayList<GetSecurityQuestionsUpdateResponseModel>> =
         MutableStateFlow(arrayListOf())
     var isPassportAndMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isPassportAndMailFinal: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -248,7 +245,7 @@ class UpdateViewModel(
             4 -> multipleMailsUpdateScreenContent
             5 -> updateDeviceIdScreenContent
             6 -> updateLocationScreenContent
-            7 -> testUpdateScreenContent
+            7 -> updateSecurityQuestionsScreenContent
             8 -> testUpdateScreenContent
             else -> null
         }
