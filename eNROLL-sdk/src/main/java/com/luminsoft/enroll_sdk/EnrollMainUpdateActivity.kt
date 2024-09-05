@@ -41,6 +41,8 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import passwordAuthUpdateModule
+import passwordAuthUpdateRouter
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
 import updateLocationModule
@@ -93,6 +95,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     phoneUpdateRouter(navController = navController, updateViewModel)
                     updateNationalIdRouter(navController = navController, updateViewModel)
                     mailAuthUpdateRouter(navController = navController, updateViewModel)
+                    passwordAuthUpdateRouter(navController = navController, updateViewModel)
                     updateSecurityQuestionsRouter(navController = navController, updateViewModel)
 
                 }
@@ -115,6 +118,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(emailUpdateModule)
                 modules(phoneUpdateModule)
                 modules(updateNationalIdConfirmationModule)
+                modules(passwordAuthUpdateModule)
                 modules(mailAuthUpdateModule)
                 modules(updateSecurityQuestionsModule)
             }.koin

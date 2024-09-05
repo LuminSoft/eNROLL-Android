@@ -13,6 +13,7 @@ object EnrollSDK {
     var googleApiKey = ""
     var tenantSecret = ""
     var applicantId = ""
+    var correlationId = ""
     var levelOfTrustToken = ""
     var updateSteps = arrayListOf<String>()
 
@@ -27,8 +28,8 @@ object EnrollSDK {
 
     private fun getBaseUrl(): String {
         return when (environment) {
-            EnrollEnvironment.STAGING -> "http://197.44.231.206"
-//            EnrollEnvironment.STAGING -> "http://197.168.1.39"
+//            EnrollEnvironment.STAGING -> "http://197.44.231.206"
+            EnrollEnvironment.STAGING -> "http://197.168.1.39"
             EnrollEnvironment.PRODUCTION -> "https://enroll.nasps.org.eg"
         }
     }
