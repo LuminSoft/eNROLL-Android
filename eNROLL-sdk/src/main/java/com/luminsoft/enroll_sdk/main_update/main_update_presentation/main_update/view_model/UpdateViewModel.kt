@@ -13,6 +13,9 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
+import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationScreenContent
@@ -33,10 +36,13 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateSt
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import faceCaptureAuthUpdatePreScanScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
+import phoneAuthUpdateScreenContent
 import passwordAuthUpdateScreenContent
 import mailAuthUpdateScreenContent
+import passwordAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
+import updateDeviceIdScreenContent
 import updateSecurityQuestionsScreenContent
 
 class UpdateViewModel(
@@ -88,6 +94,10 @@ class UpdateViewModel(
     var userPhone: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailId: MutableStateFlow<Int?> = MutableStateFlow(null)
     var phoneId: MutableStateFlow<Int?> = MutableStateFlow(null)
+    var verifiedPhones: MutableStateFlow<List<GetVerifiedPhonesResponseModel>?> =
+        MutableStateFlow(null)
+    var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
+        MutableStateFlow(null)
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -145,10 +155,23 @@ class UpdateViewModel(
                             failure.value = it
                             loading.value = false
                         }, { list ->
-                            steps.value = list
+                            val mutableList = list.toMutableList()
+
+                            // Check if the list contains updateStepId = 5
+                            if (!mutableList.any { it.updateStepId == 5 }) {
+                                // If not found, create a new UpdateStep object and insert it
+                                val newUpdateStep = StepUpdateModel(
+                                    updateStepId = 5,
+                                    lastUpdatedDate = "2024-09-02T17:44:00.0000000"
+                                )
+                                mutableList.add(newUpdateStep)
+                            }
+
+                            // Update the steps with the new list
+                            steps.value = mutableList
+
                             loading.value = false
                         })
-
                     }
                 })
         }
@@ -210,23 +233,22 @@ class UpdateViewModel(
             2 -> mailAuthUpdateScreenContent
             3 -> securityQuestionAuthUpdateScreenContent
             4 -> checkDeviceIdAuthUpdateScreenContent
-            5 -> null   //TODO: phone is blocked
+            5 -> phoneAuthUpdateScreenContent
             6 -> faceCaptureAuthUpdatePreScanScreenContent
             else -> securityQuestionAuthUpdateScreenContent
         }
-        route?.let {
+        route.let {
             navController.navigate(it)
         }
     }
 
     fun navigateToUpdateAfterAuthStep() {
-        //TODO: will navigate to update modules
         val route = when (updateStepId.value) {
             1 -> updateNationalIdPreScanScreen
             2 -> testUpdateScreenContent
             3 -> multiplePhonesUpdateScreenContent
             4 -> multipleMailsUpdateScreenContent
-            5 -> testUpdateScreenContent
+            5 -> updateDeviceIdScreenContent
             6 -> updateLocationScreenContent
             7 -> updateSecurityQuestionsScreenContent
             8 -> testUpdateScreenContent

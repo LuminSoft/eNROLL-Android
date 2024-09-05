@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -50,8 +51,10 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components.OtpInputField
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.UpdatePhoneAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.ValidateOtpPhoneUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.view_model.ValidateOtpPhonesUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -61,9 +64,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import kotlinx.coroutines.delay
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import org.koin.compose.koinInject
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phonesUpdateScreenContent
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -76,7 +77,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
     val validateOtpPhoneUseCase =
         ValidateOtpPhoneUpdateUseCase(koinInject())
     val phoneSendOtpUseCase =
-        UpdatePhoneAddUpdateUseCase(koinInject())
+        SendOtpUpdateUseCase(koinInject())
 
     val validateOtpPhonesViewModel =
         remember {
@@ -175,6 +176,8 @@ fun ValidateOtpPhonesUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.validate_sms_otp),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.25f)
                 )
@@ -248,10 +251,11 @@ fun ValidateOtpPhonesUpdateScreenContent(
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
-                                phonesUpdateVM.callSendOtp(
-                                    phone = updateViewModel.currentPhoneNumber.value!!,
-                                    code = updateViewModel.currentPhoneNumberCode.value!!
-                                )
+                                updateViewModel.phoneId.value?.let {
+                                    phonesUpdateVM.callSendOtp(
+                                        it
+                                    )
+                                }
                                 ticks = 60
                                 ticksF = 1.0f
                                 counter++
@@ -277,10 +281,11 @@ fun ValidateOtpPhonesUpdateScreenContent(
                 if (!isNotFirstPhone.value)
                     ButtonView(
                         onClick = {
-                            phonesUpdateVM.callSendOtp(
-                                phone = updateViewModel.currentPhoneNumber.value!!,
-                                code = updateViewModel.currentPhoneNumberCode.value!!
-                            )
+                            updateViewModel.phoneId.value?.let {
+                                phonesUpdateVM.callSendOtp(
+                                    it
+                                )
+                            }
                             ticks = 60
                             ticksF = 1.0f
                             counter++
@@ -295,7 +300,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                         onClick = {
                             updateViewModel.phoneValue.value = TextFieldValue()
                             updateViewModel.currentPhoneNumber.value = null
-                            navController.navigate(multiplePhonesUpdateScreenContent)
+                            navController.navigate(updateListScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
                         color = MaterialTheme.appColors.backGround,

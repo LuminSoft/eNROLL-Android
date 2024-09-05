@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,6 +46,7 @@ import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.DeletePhoneUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.GetApplicantPhonesUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.MakeDefaultPhoneUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.view_model.MultiplePhonesUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -55,9 +57,9 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 import org.koin.compose.koinInject
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phonesUpdateScreenContent
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MultiplePhonesUpdateScreenContent(
     updateViewModel: UpdateViewModel,
@@ -96,7 +98,7 @@ fun MultiplePhonesUpdateScreenContent(
         if (isDeletePhoneClicked.value) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.WARNING,
-                text = stringResource(id = R.string.deleteConfirmationMessage) + phoneToDelete.value,
+                text = stringResource(id = R.string.phoneDeleteConfirmationMessage) + phoneToDelete.value,
                 buttonText = stringResource(id = R.string.delete),
                 secondButtonText = stringResource(id = R.string.cancel),
                 onPressedButton = {
@@ -152,7 +154,9 @@ fun MultiplePhonesUpdateScreenContent(
                         })
                 }
             }
-        } else if (!verifiedPhones.value.isNullOrEmpty()) {
+        }
+        else if (!verifiedPhones.value.isNullOrEmpty()) {
+            updateViewModel.verifiedPhones.value = verifiedPhones.value
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -164,6 +168,7 @@ fun MultiplePhonesUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.step_03_phone),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
@@ -244,6 +249,7 @@ private fun PhoneItem(
                 Image(
                     painterResource(R.drawable.mobile_icon),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(50.dp)
                 )

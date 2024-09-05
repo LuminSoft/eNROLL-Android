@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -170,6 +171,7 @@ fun ValidateOtpMailsScreenContent(
                     painterResource(R.drawable.validate_mail_otp),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier.fillMaxHeight(0.25f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
@@ -294,16 +296,16 @@ fun ValidateOtpMailsScreenContent(
 private fun Timer(ticksF: Float, ticks: Int) {
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            progress = 1f,
+            progress = { 1f },
             modifier = Modifier.size(30.dp),
             color = MaterialTheme.appColors.secondary.copy(alpha = 0.5f),
-            strokeWidth = 3.dp
+            strokeWidth = 3.dp,
         )
         CircularProgressIndicator(
-            progress = ticksF,
+            progress = { ticksF },
             modifier = Modifier.size(30.dp),
+            color = MaterialTheme.appColors.secondary,
             strokeWidth = 3.dp,
-            color = MaterialTheme.appColors.secondary
         )
         Text(
             text = ticks.toString(),

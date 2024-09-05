@@ -1,5 +1,3 @@
-
-
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -90,6 +89,7 @@ fun FaceCaptureAuthUpdateErrorScreen(
                 painterResource(R.drawable.face_recognition_capture_error),
                 contentDescription = "",
                 contentScale = ContentScale.FillHeight,
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                 modifier = Modifier.fillMaxHeight(0.35f)
             )
             Spacer(modifier = Modifier.height(30.dp))

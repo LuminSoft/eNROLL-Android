@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -162,6 +163,7 @@ fun MultiplePhoneNumbersScreenContent(
                     painterResource(R.drawable.step_03_phone),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
@@ -235,6 +237,7 @@ private fun PhoneItem(
                 Image(
                     painterResource(R.drawable.mobile_icon),
                     contentDescription = "",
+                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(50.dp)
                 )

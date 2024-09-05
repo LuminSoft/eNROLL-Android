@@ -28,7 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -230,10 +230,10 @@ private fun NationalIdOrPassport(
         Text(text = stringResource(id = R.string.choosePersonalConfirmation))
         Spacer(modifier = Modifier.height(10.dp))
 
-        Divider(
-            color = MaterialTheme.appColors.secondary,
+        HorizontalDivider(
+            modifier = Modifier.width(50.dp),
             thickness = 3.dp,
-            modifier = Modifier.width(50.dp)
+            color = MaterialTheme.appColors.secondary
         )
 
         Spacer(modifier = Modifier.height(80.dp))

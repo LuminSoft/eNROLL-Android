@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features.device_data.device_data_navigation
 
-import DeviceDataOnBoardingPrescanScreenContent
+import com.luminsoft.enroll_sdk.features.device_data.device_data_onboarding.ui.components.DeviceDataOnBoardingPrescanScreenContent
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions

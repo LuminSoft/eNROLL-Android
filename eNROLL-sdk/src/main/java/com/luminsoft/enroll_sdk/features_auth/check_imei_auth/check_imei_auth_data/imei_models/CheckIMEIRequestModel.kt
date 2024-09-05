@@ -1,3 +1,4 @@
+package com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_data.imei_models
 
 import com.google.gson.annotations.SerializedName
 

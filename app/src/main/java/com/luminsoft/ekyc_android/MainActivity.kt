@@ -69,6 +69,8 @@ var dotenv = dotenv {
 //    filename = "env_azimut_production"
 //    filename = "env_lumin_production"
 //    filename = "env_naspas_production"
+//    filename = "env_naspas_staging"
+//    filename = "env_fra_staging"
 //    filename = "env_test_2"
 }
 
@@ -259,8 +261,7 @@ class MainActivity : ComponentActivity() {
                 appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
-                correlationId = "123456"
-
+                correlationId = "correlationId"
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())

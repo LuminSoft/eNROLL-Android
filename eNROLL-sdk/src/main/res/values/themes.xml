@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.EkycSDK" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.EkycSDK" parent="android:Theme.Material.Light.NoActionBar">
+<!--        <item name="pathColor1">@color/pathColor1</item>-->
+<!--        <item name="pathColor2">@color/pathColor2</item>-->
+<!--        <item name="pathColor3">@color/pathColor3</item>-->
+    </style>
+
 </resources>

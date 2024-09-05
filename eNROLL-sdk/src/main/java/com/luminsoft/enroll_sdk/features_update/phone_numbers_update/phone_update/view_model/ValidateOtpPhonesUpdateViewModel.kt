@@ -5,16 +5,14 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_data_update.phone_models_update.phone_add_new_update.PhoneUpdateAddNewResponseModel
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.UpdatePhoneAddUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.UpdatePhoneAddUseCaseParams
+import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.ValidateOtpPhoneUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.ValidateOtpPhoneUpdateUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ValidateOtpPhonesUpdateViewModel(
     private val validateOtpPhoneUseCase: ValidateOtpPhoneUpdateUseCase,
-    private val phoneSendOtpUseCase: UpdatePhoneAddUpdateUseCase
+    private val phoneSendOtpUseCase: SendOtpUpdateUseCase
 ) :
     ViewModel() {
 
@@ -30,8 +28,8 @@ class ValidateOtpPhonesUpdateViewModel(
         validateOtp(otp, id)
     }
 
-    fun callSendOtp(phone: String, code: String) {
-        sendOtpCall(phone, code)
+    fun callSendOtp(id: Int) {
+        sendOtpCall(id)
     }
 
     private fun validateOtp(otp: String, id: Int) {
@@ -61,17 +59,11 @@ class ValidateOtpPhonesUpdateViewModel(
     }
 
 
-    private fun sendOtpCall(phone: String, code: String) {
+    private fun sendOtpCall(id: Int) {
         loading.value = true
         ui {
-            params.value =
-                UpdatePhoneAddUseCaseParams(
-                    phone = phone,
-                    code = code
-                )
-            val response: Either<SdkFailure, PhoneUpdateAddNewResponseModel> =
-                phoneSendOtpUseCase.call(params.value as UpdatePhoneAddUseCaseParams)
-
+            val response: Either<SdkFailure, Null> =
+                phoneSendOtpUseCase.call(id)
             response.fold(
                 {
                     failure.value = it
