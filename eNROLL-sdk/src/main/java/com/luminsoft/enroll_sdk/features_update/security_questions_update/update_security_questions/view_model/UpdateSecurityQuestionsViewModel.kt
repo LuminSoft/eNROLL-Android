@@ -107,7 +107,6 @@ class UpdateSecurityQuestionsViewModel(
         }
 
         value.isEmpty() -> {
-            println("value is empty")
             answerError.value =
                 ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
         }

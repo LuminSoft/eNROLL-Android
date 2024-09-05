@@ -50,7 +50,9 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -201,33 +203,62 @@ fun UpdateSecurityQuestionsScreenContent(
 
                 Spacer(modifier = Modifier.height(20.dp))
                 AnswerUpdateTextField(answer, securityQuestionsViewModel, answerError)
-                Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
                 ButtonView(
                     onClick = {
                         updateAnswerValidate.value = true
                         securityQuestionsViewModel.onChangeValue(securityQuestionsViewModel.answer.value)
-                        if (selectedQuestion.value != null) {
-                            val securityQuestionModel = GetSecurityQuestionsUpdateResponseModel()
-                            securityQuestionModel.question = selectedQuestion.value!!.question
-                            securityQuestionModel.id = selectedQuestion.value!!.id
+
+                        val securityQuestionModel = GetSecurityQuestionsUpdateResponseModel()
+
+                        val isAnswerValid = answer.value.text.isNotEmpty() && answer.value.text.length < 150
+                        val isQuestionSelected = selectedQuestion.value != null
+                        var selectedQuestionValue: GetSecurityQuestionsUpdateResponseModel? = null
+
+                        if (isAnswerValid) {
                             securityQuestionModel.answer = answer.value.text
+                        }
+                        else {
+                            securityQuestionsViewModel.answerError.value = ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
+                        }
 
-                            updateViewModel.selectedSecurityQuestions.value.add(
-                                securityQuestionModel
-                            )
-                            updateViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
+                        if (isQuestionSelected) {
+                             selectedQuestionValue = selectedQuestion.value!!
+                            securityQuestionModel.question = selectedQuestionValue.question
+                            securityQuestionModel.id = selectedQuestionValue.id
 
-                            if (selectedSecurityQuestions.value.size < 3)
-                                navController.navigate(updateSecurityQuestionsScreenContent)
-                            else
-                                securityQuestionsViewModel.postSecurityQuestionsCall()
-                        } else
+                        } else {
                             securityQuestionsViewModel.selectQuestionError.value = true
+                        }
+
+                        if (isAnswerValid && isQuestionSelected) {
+
+                            updateViewModel.selectedSecurityQuestions.value.add(securityQuestionModel)
+                            updateViewModel.securityQuestionsList.value.remove(selectedQuestionValue)
+
+                            if (updateViewModel.selectedSecurityQuestions.value.size < 3) {
+                                navController.navigate(updateSecurityQuestionsScreenContent)
+                            } else {
+                                securityQuestionsViewModel.postSecurityQuestionsCall()
+                            }
+                        }
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
+                Spacer(modifier = Modifier.height(8.dp))
 
+                ButtonView(
+                    onClick = {
+                        updateViewModel.securityQuestions.value = null
+                        updateViewModel.selectedSecurityQuestions.value.clear()
+                        navController.navigate(updateListScreenContent)
+                    },
+                    stringResource(id = R.string.cancel),
+                    color = MaterialTheme.appColors.backGround,
+                    borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
+                )
                 Spacer(modifier = Modifier.height(20.dp))
 
             }

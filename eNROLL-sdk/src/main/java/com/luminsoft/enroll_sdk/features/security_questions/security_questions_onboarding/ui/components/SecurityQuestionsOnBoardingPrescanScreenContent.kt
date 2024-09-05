@@ -52,6 +52,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.GetSecurityQuestionsUseCase
@@ -219,23 +220,40 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     onClick = {
                         answerValidate.value = true
                         securityQuestionsOnBoardingVM.onChangeValue(securityQuestionsOnBoardingVM.answer.value)
-                        if (selectedQuestion.value != null) {
-                            val securityQuestionModel = GetSecurityQuestionsResponseModel()
-                            securityQuestionModel.question = selectedQuestion.value!!.question
-                            securityQuestionModel.id = selectedQuestion.value!!.id
+
+                        val securityQuestionModel = GetSecurityQuestionsResponseModel()
+
+                        val isAnswerValid = answer.value.text.isNotEmpty() && answer.value.text.length < 150
+                        val isQuestionSelected = selectedQuestion.value != null
+                        var selectedQuestionValue: GetSecurityQuestionsResponseModel? = null
+
+                        if (isAnswerValid) {
                             securityQuestionModel.answer = answer.value.text
+                        }
+                        else {
+                            securityQuestionsViewModel.answerError.value = ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
+                        }
 
-                            onBoardingViewModel.selectedSecurityQuestions.value.add(
-                                securityQuestionModel
-                            )
-                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
 
-                            if (selectedSecurityQuestions.value.size < 3)
-                                navController.navigate(securityQuestionsOnBoardingScreenContent)
-                            else
-                                securityQuestionsOnBoardingVM.postSecurityQuestionsCall()
-                        } else
+                        if (isQuestionSelected) {
+                            selectedQuestionValue = selectedQuestion.value!!
+                            securityQuestionModel.question = selectedQuestionValue.question
+                            securityQuestionModel.id = selectedQuestionValue.id
+
+                        } else {
                             securityQuestionsViewModel.selectQuestionError.value = true
+                        }
+
+                        if (isAnswerValid && isQuestionSelected) {
+                            onBoardingViewModel.selectedSecurityQuestions.value.add(securityQuestionModel)
+                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestionValue)
+
+                            if (onBoardingViewModel.selectedSecurityQuestions.value.size < 3) {
+                                navController.navigate(securityQuestionsOnBoardingScreenContent)
+                            } else {
+                                securityQuestionsViewModel.postSecurityQuestionsCall()
+                            }
+                        }
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
