@@ -41,8 +41,6 @@ fun UpdatePassportPreScanScreen(
     updateViewModel: UpdateViewModel
 ) {
 
-    println("radwan here")
-
     val rememberedViewModel = remember { updateViewModel }
     val context = LocalContext.current
     val activity=context.findActivity()
@@ -109,7 +107,6 @@ private fun PassportOnly(
     startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     rememberedViewModel: UpdateViewModel
 ) {
-    println("radwan here alse")
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,

@@ -37,6 +37,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.features_update.update_passport.update_passport_domain.usecases.UpdatePassportIsTranslationStepEnabledUseCase
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -66,12 +67,16 @@ fun UpdatePassportConfirmationScreen(
     val updatePasswordApproveUseCase =
         UpdatePassportApproveUseCase(koinInject())
 
+    val isTranslationEnabledUseCase =
+        UpdatePassportIsTranslationStepEnabledUseCase(koinInject())
+
     val passportOcrVM =
         document.value?.let {
             remember {
                 UpdatePassportOcrViewModel(
                     updatePassportUploadImageUseCase,
                     updatePasswordApproveUseCase,
+                    isTranslationEnabledUseCase,
                     it
                 )
             }
@@ -126,6 +131,7 @@ private fun MainContent(
 
     val customerData = passportOcrVMOcrViewModel.customerData.collectAsState()
     val loading = passportOcrVMOcrViewModel.loading.collectAsState()
+    val isTranslationStepEnabled = passportOcrVMOcrViewModel.isTranslationStepEnabled.collectAsState()
     val passportApproved = passportOcrVMOcrViewModel.passportApproved.collectAsState()
     val failure = passportOcrVMOcrViewModel.failure.collectAsState()
     val userHasModifiedText = remember { mutableStateOf(false) }
@@ -208,10 +214,13 @@ private fun MainContent(
                 }
             }
         } else if (customerData.value != null) {
-            if (customerData.value!!.fullNameAr != null)
-                if (!userHasModifiedText.value) {
-                    userNameArValue.value = TextFieldValue(customerData.value!!.fullNameAr!!)
-                }
+
+            if (!userHasModifiedText.value) {
+                userNameArValue.value = customerData.value!!.fullNameAr?.let {
+                    TextFieldValue(it)
+                } ?: TextFieldValue("")
+            }
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -230,13 +239,16 @@ private fun MainContent(
                         R.drawable.user_icon,
                         80.0
                     )
-                    if (customerData.value!!.fullNameAr != null) Spacer(
+
+
+                    if (customerData.value!!.fullNameAr != null|| isTranslationStepEnabled.value)
+                        Spacer(
                         modifier = Modifier.height(
                             10.dp
                         )
                     )
 
-                    if (customerData.value!!.fullNameAr != null)
+                    if (customerData.value!!.fullNameAr != null|| isTranslationStepEnabled.value)
                         NormalTextField(
                             label = ResourceProvider.instance.getStringResource(R.string.nameAr),
                             value = userNameArValue.value,

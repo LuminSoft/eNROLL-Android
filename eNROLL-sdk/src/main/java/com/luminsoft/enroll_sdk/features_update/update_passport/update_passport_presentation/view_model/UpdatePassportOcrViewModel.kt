@@ -7,17 +7,20 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features_update.update_passport.update_passport_domain.usecases.UpdatePassportIsTranslationStepEnabledUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class UpdatePassportOcrViewModel(
     private val updatePassportUploadImageUseCase: UpdatePassportUploadImageUseCase,
     private val updatePassportApproveUseCase: UpdatePassportApproveUseCase,
+    private val isTranslationStepEnabledUseCase: UpdatePassportIsTranslationStepEnabledUseCase,
     private val passportImage: Bitmap
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
     var passportApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
+    var isTranslationStepEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var customerData: MutableStateFlow<UpdatePassportCustomerData?> = MutableStateFlow(null)
     var navController: NavController? = null
@@ -40,6 +43,32 @@ class UpdatePassportOcrViewModel(
         sendPassportImage()
     }
 
+
+
+    private fun checkIsTranslationStepEnabled() {
+        ui {
+
+            val response: Either<SdkFailure, IsTranslationEnabledResponse> =
+                isTranslationStepEnabledUseCase.call(null)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                { s ->
+                    s.let { it1 ->
+                        isTranslationStepEnabled.value = it1.isTranslationEnabled!!
+                        loading.value = false
+                    }
+                })
+        }
+
+
+    }
+
+
+
     private fun sendPassportImage() {
         ui {
             params.value =
@@ -58,7 +87,7 @@ class UpdatePassportOcrViewModel(
                         customerData.value = it1
                         loading.value = false
                         Log.e("customerData", customerData.toString())
-
+                        checkIsTranslationStepEnabled()
                     }
                 })
         }
