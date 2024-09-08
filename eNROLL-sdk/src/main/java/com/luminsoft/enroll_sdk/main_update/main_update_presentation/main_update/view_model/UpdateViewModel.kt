@@ -38,6 +38,7 @@ import phoneAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
 import testUpdateScreenContent
 import updateDeviceIdScreenContent
+import updatePassportPreScanScreen
 import updateSecurityQuestionsScreenContent
 
 class UpdateViewModel(
@@ -240,7 +241,7 @@ class UpdateViewModel(
     fun navigateToUpdateAfterAuthStep() {
         val route = when (updateStepId.value) {
             1 -> updateNationalIdPreScanScreen
-            2 -> testUpdateScreenContent
+            2 -> updatePassportPreScanScreen
             3 -> multiplePhonesUpdateScreenContent
             4 -> multipleMailsUpdateScreenContent
             5 -> updateDeviceIdScreenContent
