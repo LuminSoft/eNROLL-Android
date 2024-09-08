@@ -301,7 +301,7 @@ private fun ApplyForSignatureOrAlreadyHave(
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.25f))
 
-        Text(text = stringResource(id = R.string.eSignature))
+        Text(text = stringResource(id = R.string.eSignature), color = MaterialTheme.appColors.textColor)
         Spacer(modifier = Modifier.height(10.dp))
 
         HorizontalDivider(
@@ -430,7 +430,8 @@ private fun Card(
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = if (step == ElectronicSignatureChooseStep.AlreadyHaveSignature) R.string.haveSignature else R.string.applyForSignature),
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                color = MaterialTheme.appColors.primary
             )
         }
 

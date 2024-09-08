@@ -159,7 +159,7 @@ fun SecurityQuestionAuthScreenContent(
                 Text(
                     text = stringResource(id = R.string.youMustAnswerSecurityQuestion),
                     fontSize = 12.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center
 
                 )
@@ -185,7 +185,7 @@ fun SecurityQuestionAuthScreenContent(
                             Text(
                                 text = it,
                                 fontSize = 12.sp,
-                                color = Color.Black
+                                color = MaterialTheme.appColors.textColor
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
@@ -264,7 +264,6 @@ private fun AnswerTextField(
             )
         )
         if (answerError.value != null) {
-            println(" second answerError.value ${answerError.value}")
             Text(
                 answerError.value!!,
                 color = MaterialTheme.appColors.errorColor,
