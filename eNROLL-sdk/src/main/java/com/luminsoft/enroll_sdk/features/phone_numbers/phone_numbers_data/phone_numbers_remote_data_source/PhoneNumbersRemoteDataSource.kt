@@ -13,4 +13,5 @@ interface PhoneNumbersRemoteDataSource {
     suspend fun validateOTP(request: ValidateOTPRequestModel): BaseResponse<Any>
     suspend fun getVerifiedPhones(): BaseResponse<Any>
     suspend fun makeDefault(request: MakeDefaultRequestModel): BaseResponse<Any>
+    suspend fun deletePhone(request: MakeDefaultRequestModel): BaseResponse<Any>
 }

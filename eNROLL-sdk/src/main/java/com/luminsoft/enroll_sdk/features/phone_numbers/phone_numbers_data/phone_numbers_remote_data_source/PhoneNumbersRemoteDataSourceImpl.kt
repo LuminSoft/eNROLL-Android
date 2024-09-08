@@ -40,7 +40,9 @@ class PhoneNumbersRemoteDataSourceImpl(
         return network.apiRequest { phoneNumbersApi.makeDefault(request) }
     }
 
-
+    override suspend fun deletePhone(request: MakeDefaultRequestModel): BaseResponse<Any> {
+        return network.apiRequest { phoneNumbersApi.deletePhone(request) }
+    }
 }
 
 

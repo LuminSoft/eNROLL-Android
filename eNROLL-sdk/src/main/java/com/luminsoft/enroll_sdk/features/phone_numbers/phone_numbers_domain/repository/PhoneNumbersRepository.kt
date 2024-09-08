@@ -18,4 +18,5 @@ interface PhoneNumbersRepository {
     suspend fun validateOTP(request: ValidateOTPRequestModel): Either<SdkFailure, Null>
     suspend fun getVerifiedPhones(): Either<SdkFailure, List<GetVerifiedPhonesResponseModel>>
     suspend fun makeDefault(request: MakeDefaultRequestModel): Either<SdkFailure, Null>
+    suspend fun deletePhone(request: MakeDefaultRequestModel): Either<SdkFailure, Null>
 }
