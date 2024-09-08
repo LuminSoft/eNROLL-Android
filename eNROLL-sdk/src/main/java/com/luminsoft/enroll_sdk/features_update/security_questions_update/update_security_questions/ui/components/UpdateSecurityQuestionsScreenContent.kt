@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -163,7 +164,7 @@ fun UpdateSecurityQuestionsScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 30.dp)
-
+                    .systemBarsPadding()
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 Image(
@@ -212,7 +213,7 @@ fun UpdateSecurityQuestionsScreenContent(
 
                         val securityQuestionModel = GetSecurityQuestionsUpdateResponseModel()
 
-                        val isAnswerValid = answer.value.text.isNotEmpty() && answer.value.text.length < 150
+                        val isAnswerValid = answer.value.text.isNotEmpty() && answer.value.text.length <= 150
                         val isQuestionSelected = selectedQuestion.value != null
                         var selectedQuestionValue: GetSecurityQuestionsUpdateResponseModel? = null
 
