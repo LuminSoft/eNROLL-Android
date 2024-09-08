@@ -12,7 +12,7 @@ import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_
 import com.luminsoft.enroll_sdk.features.email.email_data.email_remote_data_source.EmailRemoteDataSource
 import com.luminsoft.enroll_sdk.features.email.email_domain.repository.EmailRepository
 
-class EmailRepositoryImplementation(private val emailRemoteDataSource: EmailRemoteDataSource):
+class EmailRepositoryImplementation(private val emailRemoteDataSource: EmailRemoteDataSource) :
     EmailRepository {
 
     override suspend fun mailInfo(request: MailInfoRequestModel): Either<SdkFailure, Null> {
@@ -72,6 +72,7 @@ class EmailRepositoryImplementation(private val emailRemoteDataSource: EmailRemo
             is BaseResponse.Success -> {
                 Either.Right((response.data as List<GetVerifiedMailsResponseModel>))
             }
+
             is BaseResponse.Error -> {
                 Either.Left(response.error)
             }
@@ -88,7 +89,18 @@ class EmailRepositoryImplementation(private val emailRemoteDataSource: EmailRemo
             is BaseResponse.Error -> {
                 Either.Left(response.error)
             }
+        }
+    }
 
+    override suspend fun deleteMail(request: MakeDefaultRequestModel): Either<SdkFailure, Null> {
+        return when (val response = emailRemoteDataSource.deleteMail(request)) {
+            is BaseResponse.Success -> {
+                Either.Right(null)
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
         }
     }
 }

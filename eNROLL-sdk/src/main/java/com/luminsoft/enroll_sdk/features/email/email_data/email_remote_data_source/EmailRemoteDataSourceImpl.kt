@@ -39,7 +39,9 @@ class EmailRemoteDataSourceImpl(
         return network.apiRequest { emailApi.makeDefault(request) }
     }
 
-
+    override suspend fun deleteMail(request: MakeDefaultRequestModel): BaseResponse<Any> {
+        return network.apiRequest { emailApi.makeDefault(request) }
+    }
 }
 
 
