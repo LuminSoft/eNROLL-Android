@@ -7,6 +7,7 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ApprovePhonesUseCase
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.DeletePhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MakeDefaultPhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MakeDefaultPhoneUseCaseParams
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MultiplePhoneUseCase
@@ -16,6 +17,7 @@ class MultiplePhoneNumbersViewModel(
     private val multiplePhoneUseCase: MultiplePhoneUseCase,
     private val approvePhonesUseCase: ApprovePhonesUseCase,
     private val makeDefaultPhoneUseCase: MakeDefaultPhoneUseCase,
+    private val deletePhoneUseCase: DeletePhoneUseCase,
 ) :
     ViewModel() {
 
@@ -25,6 +27,8 @@ class MultiplePhoneNumbersViewModel(
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var verifiedPhones: MutableStateFlow<List<GetVerifiedPhonesResponseModel>?> =
         MutableStateFlow(null)
+    var phoneToDelete: MutableStateFlow<String?> = MutableStateFlow(null)
+    var isDeletePhoneClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
 
 
@@ -103,6 +107,31 @@ class MultiplePhoneNumbersViewModel(
         }
 
 
+    }
+
+    fun callDeletePhone(phone: String) {
+        deletePhone(phone)
+    }
+
+    private fun deletePhone(phone: String) {
+        loading.value = true
+        ui {
+            params.value =
+                MakeDefaultPhoneUseCaseParams(
+                    phoneInfoId = phone
+                )
+            val response: Either<SdkFailure, Null> =
+                deletePhoneUseCase.call(params.value as MakeDefaultPhoneUseCaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    getVerifiedPhones()
+                })
+        }
     }
 
 }

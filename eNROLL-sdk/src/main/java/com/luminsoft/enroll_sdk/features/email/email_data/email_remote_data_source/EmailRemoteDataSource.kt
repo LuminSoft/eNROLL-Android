@@ -12,4 +12,5 @@ interface EmailRemoteDataSource {
     suspend fun validateOTP(request: ValidateOTPRequestModel): BaseResponse<Any>
     suspend fun getVerifiedMails(): BaseResponse<Any>
     suspend fun makeDefault(request: MakeDefaultRequestModel): BaseResponse<Any>
+    suspend fun deleteMail(request: MakeDefaultRequestModel): BaseResponse<Any>
 }
