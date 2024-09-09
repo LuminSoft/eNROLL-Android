@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -65,14 +66,29 @@ fun SplashScreenUpdateContent(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                Image(
-                    painterResource(R.drawable.logo),
-                    contentScale = ContentScale.FillBounds,
-                    contentDescription = "",
+                Box(
                     modifier = Modifier
-                        .width(ScreenHelper.sw(0.46))
-                        .height(ScreenHelper.sh(0.12)),
-                )
+
+                        .height(ScreenHelper.sh(0.12)).width(ScreenHelper.sw(0.46)) // Adjust height as per your need
+                ) {
+                    Image(
+                        painterResource(R.drawable.enroll_logo_part1),
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = "",
+                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    )
+                    Image(
+                        painterResource(R.drawable.enroll_logo_part2),
+                        contentScale = ContentScale.FillBounds,
+                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.secondary),
+
+                        contentDescription = "",
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    )
+                }
                 ComposeLottieAnimation(
                     modifier = Modifier
                         .size(150.dp)
