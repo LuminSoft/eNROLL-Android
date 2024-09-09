@@ -55,7 +55,7 @@ fun OtpInputField(
     otp: MutableState<String>, // The current OTP value.
     count: Int = 6, // Number of OTP boxes.
     otpTextType: KeyboardType = KeyboardType.Number,
-    textColor: Color = MaterialTheme.appColors.primary,
+    textColor: Color = MaterialTheme.appColors.textColor,
 ) {
 
     val scope = rememberCoroutineScope()

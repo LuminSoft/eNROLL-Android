@@ -196,7 +196,7 @@ fun MailsUpdateScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.sendEmailOtpContent),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp
                 )

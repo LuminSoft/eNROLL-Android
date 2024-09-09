@@ -173,7 +173,7 @@ private fun MainContent(
             position.animateTo(
                 targetValue = endPosition,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 4500,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -183,7 +183,7 @@ private fun MainContent(
             position1.animateTo(
                 targetValue = endPosition1,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 4500,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -194,7 +194,7 @@ private fun MainContent(
             scale.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 4500,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -253,7 +253,7 @@ private fun MainContent(
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.ekycSuccessfullyDone),
-                        color = Color.Black
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 

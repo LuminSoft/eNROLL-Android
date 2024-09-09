@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_onboarding.ui.components
 
-import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases.AcceptTermsUseCase
 import GetTermsIdUseCase
 import GetTermsPdfFileByIdUseCase
 import TermsConditionsOnBoardingViewModel
@@ -48,6 +47,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases.AcceptTermsUseCase
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -192,7 +192,7 @@ fun PdfViewerWidget(
                 text = stringResource(id = R.string.readTermsAndConditions),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.appColors.primary,
+                color = MaterialTheme.appColors.textColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -197,9 +197,12 @@ fun PhonesUpdateScreenContent(
                             errorBorderColor = MaterialTheme.appColors.errorColor,
                             unfocusedBorderColor = MaterialTheme.appColors.primary,
                             errorLabelColor = MaterialTheme.appColors.errorColor,
-                            focusedLabelColor = MaterialTheme.appColors.primary,
-                            disabledLabelColor = MaterialTheme.appColors.primary,
-                            unfocusedLabelColor = MaterialTheme.appColors.primary,
+                            textColor =  MaterialTheme.appColors.textColor,
+                            focusedLabelColor = MaterialTheme.appColors.textColor,
+                            placeholderColor = MaterialTheme.appColors.textColor.copy(alpha = 0.5f),
+
+                            disabledLabelColor = MaterialTheme.appColors.textColor,
+                            unfocusedLabelColor = MaterialTheme.appColors.textColor,
                         ),
                         shape = RoundedCornerShape(8.dp),
                         onValueChange = { (code, phone), isValid ->
@@ -228,7 +231,7 @@ fun PhonesUpdateScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.sendPhoneOtpContent),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp
                 )
