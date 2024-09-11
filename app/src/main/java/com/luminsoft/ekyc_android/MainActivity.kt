@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activity = LocalContext.current as Activity
 
-            val itemList = listOf("Onboarding", "Auth", "Update")
+            val itemList = listOf("Onboarding", "Auth", "Update", "Forget Profile Data")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
 
@@ -236,7 +236,13 @@ class MainActivity : ComponentActivity() {
             eNROLL.init(
                 tenantId = tenantIdText.value.text,
                 tenantSecret = tenantSecretText.value.text,
-                enrollMode = if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
+                enrollMode = when (selectedIndex) {
+                    0 -> EnrollMode.ONBOARDING
+                    1 -> EnrollMode.AUTH
+                    2 -> EnrollMode.UPDATE
+                    3 -> EnrollMode.FORGET_PROFILE_DATA
+                    else -> EnrollMode.ONBOARDING
+                },
                 environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
