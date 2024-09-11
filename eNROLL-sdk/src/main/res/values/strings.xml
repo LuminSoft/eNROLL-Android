@@ -327,6 +327,16 @@
     <string name="deleteConfirmationMessage">Are you sure you want to delete this mail? \n </string>
     <string name="phoneDeleteConfirmationMessage">Are you sure you want to delete this phone? \n </string>
     <string name="delete">Delete</string>
+    <string name="forgetNationalId">Forget National Id</string>
+    <string name="forgetPassport">Forget Passport</string>
+    <string name="forgetPhoneNumber">Forget Phone Number</string>
+    <string name="forgetMail">Forget E-Mail</string>
+    <string name="forgetSecurityQuestion">Forget Security Question</string>
+    <string name="forgetLocation">Forget Location</string>
+    <string name="forgetDevice">Forget Device</string>
+    <string name="forgetPassword">Forget Password</string>
+    <string name="forgetAml">Forget Aml</string>
+    <string name="forgetElectronicSignature">Forget Electronic Signature</string>
 
 
 </resources>

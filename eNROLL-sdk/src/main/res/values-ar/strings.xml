@@ -328,5 +328,15 @@
     <string name="deleteConfirmationMessage">هل أنت متأكد من حذف هذا البريد الإلكتروني ؟ \n </string>
     <string name="phoneDeleteConfirmationMessage">هل أنت متأكد من حذف هذا الهاتف ؟ \n </string>
     <string name="delete">حذف</string>
+    <string name="forgetNationalId">نسيت البطاقة</string>
+    <string name="forgetPassport">نسيت جواز السفر</string>
+    <string name="forgetPhoneNumber">نسيت رقم الهاتف</string>
+    <string name="forgetMail">نسيت البريد الإلكتروني</string>
+    <string name="forgetSecurityQuestion">نسيت سؤال الأمان</string>
+    <string name="forgetLocation">نسيت الموقع</string>
+    <string name="forgetDevice">نسيت الرقم التعريفي</string>
+    <string name="forgetPassword">نسيت كلمة المرور</string>
+    <string name="forgetAml">نسيت غسيل الاموال</string>
+    <string name="forgetElectronicSignature">نسيت التوقيع الإلكتروني</string>
 
 </resources>
