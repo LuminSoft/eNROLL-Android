@@ -104,6 +104,7 @@
     <string name="digitalOnBoardingClosed">Failed</string>
     <string name="expiredId">Sorry, your ID is expired</string>
     <string name="exit">Exit</string>
+    <string name="too_many_attempts">You have exceeded the allowed number of attempts.</string>
     <string name="rescan">Rescan</string>
     <string name="login">Login</string>
     <string name="createAccount">Create account</string>
