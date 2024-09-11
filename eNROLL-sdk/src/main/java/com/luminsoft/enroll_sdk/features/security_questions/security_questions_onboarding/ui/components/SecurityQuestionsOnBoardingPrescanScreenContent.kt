@@ -182,7 +182,7 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
@@ -205,7 +205,7 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     fontSize = 12.sp,
                     color = MaterialTheme.appColors.textColor,
 
-                )
+                    )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 DropdownList(
@@ -227,15 +227,16 @@ fun SecurityQuestionsOnBoardingScreenContent(
 
                         val securityQuestionModel = GetSecurityQuestionsResponseModel()
 
-                        val isAnswerValid = answer.value.text.isNotEmpty() && answer.value.text.length < 150
+                        val isAnswerValid =
+                            answer.value.text.isNotEmpty() && answer.value.text.length < 150
                         val isQuestionSelected = selectedQuestion.value != null
                         var selectedQuestionValue: GetSecurityQuestionsResponseModel? = null
 
                         if (isAnswerValid) {
                             securityQuestionModel.answer = answer.value.text
-                        }
-                        else {
-                            securityQuestionsViewModel.answerError.value = ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
+                        } else {
+                            securityQuestionsViewModel.answerError.value =
+                                ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
                         }
 
 
@@ -249,8 +250,12 @@ fun SecurityQuestionsOnBoardingScreenContent(
                         }
 
                         if (isAnswerValid && isQuestionSelected) {
-                            onBoardingViewModel.selectedSecurityQuestions.value.add(securityQuestionModel)
-                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestionValue)
+                            onBoardingViewModel.selectedSecurityQuestions.value.add(
+                                securityQuestionModel
+                            )
+                            onBoardingViewModel.securityQuestionsList.value.remove(
+                                selectedQuestionValue
+                            )
 
                             if (onBoardingViewModel.selectedSecurityQuestions.value.size < 3) {
                                 navController.navigate(securityQuestionsOnBoardingScreenContent)
@@ -289,6 +294,7 @@ private fun AnswerTextField(
                     text = "${answer.value.text.length} / $maxChar",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
+                    color = MaterialTheme.appColors.secondary
                 )
             },
             modifier = Modifier
@@ -299,7 +305,7 @@ private fun AnswerTextField(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -361,7 +367,7 @@ fun DropdownList(
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.info_icon),
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )

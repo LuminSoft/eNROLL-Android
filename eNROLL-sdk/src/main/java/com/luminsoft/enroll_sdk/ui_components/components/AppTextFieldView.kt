@@ -50,13 +50,13 @@ fun NormalTextField(
         focusedContainerColor = Color.Transparent,
         unfocusedContainerColor = Color.Transparent,
         errorContainerColor = Color.Transparent,
-        focusedIndicatorColor = MaterialTheme.appColors.textColor,
-        unfocusedIndicatorColor = MaterialTheme.appColors.textColor,
+        focusedIndicatorColor = MaterialTheme.appColors.primary,
+        unfocusedIndicatorColor = MaterialTheme.appColors.primary,
         errorIndicatorColor = MaterialTheme.appColors.errorColor,
-        focusedTextColor = MaterialTheme.appColors.textColor,
-        cursorColor = MaterialTheme.appColors.textColor,
-        errorCursorColor = MaterialTheme.appColors.errorColor,
-        errorTextColor = MaterialTheme.appColors.textColor,
+        focusedTextColor = MaterialTheme.appColors.primary,
+        cursorColor = MaterialTheme.appColors.primary,
+        errorCursorColor = MaterialTheme.appColors.primary,
+        errorTextColor = MaterialTheme.appColors.primary,
     ),
 ) {
 //    var focusedBorderThickness = 1.2.dp
@@ -77,7 +77,7 @@ fun NormalTextField(
                 .fillMaxWidth(width)
                 .height(height.dp),
             textStyle = MaterialTheme.typography.labelSmall.copy(
-                color = MaterialTheme.appColors.textColor,
+                color = MaterialTheme.appColors.primary,
                 fontSize = 14.sp,
 
                 ),
