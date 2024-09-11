@@ -61,7 +61,7 @@ import io.github.cdimascio.dotenv.dotenv
 
 var dotenv = dotenv {
     directory = "/assets"
-    filename = "env_andrew"
+//    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
@@ -71,7 +71,7 @@ var dotenv = dotenv {
 //    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
-//    filename = "env_test_2"
+    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -264,7 +264,17 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors = AppColors(),
+                appColors = AppColors(
+                    warningColor = Color(0xFFFFD500),
+                    successColor = Color(0xff0FDE00),
+                    white = Color(0xffffffff),
+                    primary = Color(0xff2481D2),
+                    appBlack = Color(0xff060B27),
+                    backGround = Color(0xff060B27),
+                    secondary = Color(0xff0E1A5D),
+                    errorColor = Color(0xffD2001C),
+                    textColor = Color(0xffffffff)
+                ),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
                 correlationId = "correlationId"

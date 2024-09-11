@@ -190,7 +190,7 @@ fun UpdateSecurityQuestionsScreenContent(
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor,
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 

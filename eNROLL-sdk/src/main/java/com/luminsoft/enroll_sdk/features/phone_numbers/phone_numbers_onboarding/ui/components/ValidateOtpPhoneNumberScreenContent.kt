@@ -180,7 +180,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.otpSendTo),
                         fontSize = 10.sp,
-                        color = MaterialTheme.appColors.primary
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     if (onBoardingViewModel.currentPhoneNumber.value != null)
@@ -218,20 +218,21 @@ fun ValidateOtpPhoneNumberScreenContent(
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
                         otp = otpValue,
-                        count = 6,
-                    )
+                        count = 6,                        textColor =           MaterialTheme.appColors.textColor,
+
+                        )
                 }
                 Spacer(modifier = Modifier.height(15.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                 }
@@ -310,7 +311,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.appColors.secondary,
+            color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )
