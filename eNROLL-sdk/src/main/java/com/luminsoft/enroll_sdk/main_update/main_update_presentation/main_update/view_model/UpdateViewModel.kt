@@ -3,6 +3,7 @@ package com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_updat
 import GetSecurityQuestionsUpdateResponseModel
 import UpdateScanType
 import android.graphics.Bitmap
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -36,9 +37,9 @@ import mailAuthUpdateScreenContent
 import passwordAuthUpdateScreenContent
 import phoneAuthUpdateScreenContent
 import securityQuestionAuthUpdateScreenContent
-import testUpdateScreenContent
 import updateDeviceIdScreenContent
 import updatePassportPreScanScreen
+import updatePasswordScreenContent
 import updateSecurityQuestionsScreenContent
 
 class UpdateViewModel(
@@ -94,6 +95,22 @@ class UpdateViewModel(
         MutableStateFlow(null)
     var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
         MutableStateFlow(null)
+
+
+    var retryCount = mutableStateOf(0) // Add retry count to ViewModel
+    val maxRetries = 2
+
+    // Add logic to increment retry count
+    fun incrementRetryCount() {
+        retryCount.value++
+    }
+
+    // Add logic to check if retry limit is reached
+    fun isMaxRetriesReached(): Boolean {
+        return retryCount.value >= maxRetries
+    }
+
+
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -247,7 +264,7 @@ class UpdateViewModel(
             5 -> updateDeviceIdScreenContent
             6 -> updateLocationScreenContent
             7 -> updateSecurityQuestionsScreenContent
-            8 -> testUpdateScreenContent
+            8 -> updatePasswordScreenContent
             else -> null
         }
         route?.let {
