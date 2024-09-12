@@ -6,6 +6,7 @@
     <string name="contactUs">Contact us</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="enterPassword">Enter your password</string>
     <string name="signInTitle">Sign In</string>
     <string name="fullName">Full name</string>
     <string name="mail">Mail</string>
@@ -64,6 +65,8 @@
     <string name="allCorrect">Correct Data</string>
     <string name="incorrectTryAgain">Error! Please try again</string>
     <string name="cancel">Cancel</string>
+    <string name="enterNationalIDorMRZ">Enter national Id Or MRZ</string>
+
     <string name="wrongOtpFiveTimes">You Entered wrong OTP for 5 times</string>
     <string name="profession">Occupation</string>
     <string name="professionRequired">Profession is Required</string>

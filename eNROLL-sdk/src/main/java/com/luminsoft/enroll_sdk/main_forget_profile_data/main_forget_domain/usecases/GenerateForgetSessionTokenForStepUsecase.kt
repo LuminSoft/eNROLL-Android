@@ -23,6 +23,6 @@ class GenerateForgetSessionForStepTokenUsecase(private val mainRepository: MainF
 }
 
 data class GenerateForgetSessionTokenForStepUsecaseParams(
-    val step: String,
+    val step: Int,
     val nationalIdOrPassportNumber: String,
 )
