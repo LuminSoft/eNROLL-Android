@@ -13,8 +13,13 @@
     <string name="mobileNumber">Mobile number</string>
     <string name="confirmPassword">Confirm password</string>
     <string name="errorEmptyPassword">Please enter your password</string>
-    <string name="errorLengthPassword">Password must not be less than 6 characters</string>
-    <string name="errorMaxLengthPassword">Password must not be more than 128 characters</string>
+    <string name="errorLengthPassword">Password must be at least 6 characters long</string>
+    <string name="errorMaxLengthPassword">Password cannot be longer than 128 characters</string>
+    <string name="errorMissingUppercase">Password must contain at least one uppercase letter</string>
+    <string name="errorMissingLowercase">Password must contain at least one lowercase letter</string>
+    <string name="errorMissingNumber">Password must contain at least one number</string>
+    <string name="errorMissingSymbol">Password must contain at least one symbol</string>
+
     <string name="errorFormatPassword">Incorrect password</string>
     <string name="scanIDFrontSide">Scan ID front side</string>
     <string name="takeAPictureOfFrontSide">Take a picture of the ID front side</string>

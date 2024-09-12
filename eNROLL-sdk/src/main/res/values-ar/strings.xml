@@ -14,7 +14,12 @@
     <string name="confirmPassword">تأكيد كلمة المرور</string>
     <string name="errorEmptyPassword">من فضلك أدخل كلمة المرور</string>
     <string name="errorLengthPassword">يجب ألا تقل كلمة المرور عن سته أحرف</string>
-    <string name="errorMaxLengthPassword">يجب ألا تزيد كلمة المرور عن 128 حرف</string>
+    <string name="errorMaxLengthPassword">لا يمكن أن تتجاوز كلمة المرور 128 حرفًا</string>
+    <string name="errorMissingUppercase">يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل</string>
+    <string name="errorMissingLowercase">يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل</string>
+    <string name="errorMissingNumber">يجب أن تحتوي كلمة المرور على رقم واحد على الأقل</string>
+    <string name="errorMissingSymbol">يجب أن تحتوي كلمة المرور على رمز واحد على الأقل</string>
+
     <string name="errorFormatPassword">كلمة المرور غير صحيحة</string>
     <string name="scanIDFrontSide">مسح الوجه الأمامي لبطاقة الهوية ضوئيا</string>
     <string name="takeAPictureOfFrontSide">التقاط صورة الوجه الأمامي لبطاقة الهوية</string>

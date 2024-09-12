@@ -192,6 +192,8 @@ fun UpdatePasswordScreenContent(
 
                         // Trigger password validation immediately as user types
                         passwordError = updatePasswordViewModel.passwordValidation()
+                        confirmPasswordError = updatePasswordViewModel.confirmPasswordValidation()
+
                     },
                     height = 60.0,
                     trailingIcon = {
