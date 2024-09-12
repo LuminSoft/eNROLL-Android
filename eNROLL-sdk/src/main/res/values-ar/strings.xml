@@ -339,5 +339,12 @@
     <string name="forgetPassword">نسيت كلمة المرور</string>
     <string name="forgetAml">نسيت غسيل الاموال</string>
     <string name="forgetElectronicSignature">نسيت التوقيع الإلكتروني</string>
+    <string name="forgetPhoneNumberDescription">هل فقدت رقم الهاتف المرتبط بحساب التسجيل الخاص بك؟</string>
+    <string name="forgetMailDescription">هل نسيت البريد الإلكتروني المرتبط بحساب التسجيل الخاص بك؟</string>
+    <string name="forgetDeviceDescription">هل فقدت لهاتفك ولا يمكنك تسجيل الدخول للتسجيل؟</string>
+    <string name="forgetLocationDescription">هل تواجه مشاكل في الوصول إلى موقعك على التسجيل؟</string>
+    <string name="forgetPasswordDescription">هل تواجه مشكلة في تذكر كلمة المرور الخاصة بك للتسجيل؟</string>
+    <string name="cannotLogin">هناك بعض الأسباب التي قد تجعلك غير قادر على تسجيل الدخول. حدد الخيار أدناه لمعرفة الحل المحتمل</string>
+    <string name="cancelForget">إلغاء لا استطيع الدخول</string>
 
 </resources>

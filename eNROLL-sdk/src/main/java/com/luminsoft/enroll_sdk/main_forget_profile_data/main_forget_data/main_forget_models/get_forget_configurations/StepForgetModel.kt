@@ -107,16 +107,29 @@ enum class EkycStepForgetType {
         }
     }
 
+    fun getStepDescriptionIntSource(): Int {
+        return when (this) {
+            NationalID -> R.string.forgetMailDescription
+            Passport -> R.string.forgetMailDescription
+            Phone -> R.string.forgetPhoneNumberDescription
+            Email -> R.string.forgetMailDescription
+            Device -> R.string.forgetDeviceDescription
+            Location -> R.string.forgetLocationDescription
+            SecurityQuestions -> R.string.forgetMailDescription
+            Password -> R.string.forgetPasswordDescription
+        }
+    }
+
     fun getStepIconIntSource(): Int {
         return when (this) {
             NationalID -> R.drawable.update_id_card_icon
             Passport -> R.drawable.update_passport
-            Phone -> R.drawable.update_mobile_icon
-            Email -> R.drawable.update_mail_icon
-            Device -> R.drawable.update_device_icon
-            Location -> R.drawable.update_address_icon
+            Phone -> R.drawable.forget_phone
+            Email -> R.drawable.forget_mail
+            Device -> R.drawable.forget_device
+            Location -> R.drawable.forget_location
             SecurityQuestions -> R.drawable.update_answer_icon
-            Password -> R.drawable.update_password_icon
+            Password -> R.drawable.forget_password
         }
     }
 }

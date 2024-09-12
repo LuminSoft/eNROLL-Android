@@ -338,6 +338,13 @@
     <string name="forgetPassword">Forget Password</string>
     <string name="forgetAml">Forget Aml</string>
     <string name="forgetElectronicSignature">Forget Electronic Signature</string>
+    <string name="forgetPhoneNumberDescription">Have you lost the phone number associated with your registration account?</string>
+    <string name="forgetMailDescription">Did you forget the email associated with your registration account?</string>
+    <string name="forgetDeviceDescription">Have you lost your phone and can\'t log in?</string>
+    <string name="forgetLocationDescription">Are you having problems accessing your site on registration?</string>
+    <string name="forgetPasswordDescription">Having trouble remembering your password to register?</string>
+    <string name="cannotLogin">There are a few reasons why you may not be able to sign in. Select the option below to see the possible solution.</string>
+    <string name="cancelForget">Cancel Cannot Login</string>
 
 
 </resources>
