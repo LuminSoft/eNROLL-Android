@@ -54,25 +54,45 @@ class UpdatePasswordViewModel(private val updatePasswordUseCase: UpdatePasswordU
     fun clearError() {
         failure.value = null
     }
+
+
     fun passwordValidation(): String? = when {
+        // Case 1: Password is empty
         password.value.text.isEmpty() -> {
             ResourceProvider.instance.getStringResource(R.string.errorEmptyPassword)
         }
 
+        // Case 2: Password is too short (less than 6 characters)
         password.value.text.length < 6 -> {
             ResourceProvider.instance.getStringResource(R.string.errorLengthPassword)
         }
 
+        // Case 3: Password is too long (more than 128 characters)
         password.value.text.length > 128 -> {
             ResourceProvider.instance.getStringResource(R.string.errorMaxLengthPassword)
         }
 
-        !Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\u0021-\\u002F \\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E])[A-Za-z\\d\\u0021-\\u002F\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E]{6,128}\$").matches(
-            password.value.text
-        ) -> {
-            ResourceProvider.instance.getStringResource(R.string.errorFormatPassword)
+        // Case 4: No capital letter found
+        !password.value.text.any { it.isUpperCase() } -> {
+            ResourceProvider.instance.getStringResource(R.string.errorMissingUppercase)
         }
 
+        // Case 5: No lowercase letter found
+        !password.value.text.any { it.isLowerCase() } -> {
+            ResourceProvider.instance.getStringResource(R.string.errorMissingLowercase)
+        }
+
+        // Case 6: No digit found
+        !password.value.text.any { it.isDigit() } -> {
+            ResourceProvider.instance.getStringResource(R.string.errorMissingNumber)
+        }
+
+        // Case 7: No symbol found (symbols defined by your regex pattern)
+        !password.value.text.any { it in "!@#\$%^&*()-_=+[]{}|;:'\",.<>?/\\`~" } -> {
+            ResourceProvider.instance.getStringResource(R.string.errorMissingSymbol)
+        }
+
+        // If all criteria are met, return null (no error)
         else -> null
     }
 
@@ -92,53 +112,4 @@ class UpdatePasswordViewModel(private val updatePasswordUseCase: UpdatePasswordU
         else -> null
     }
 
-
-    /*    fun passwordValidation() = when {
-            !validate.value -> {
-                null
-            }
-
-            password.value.text.isEmpty() -> {
-                ResourceProvider.instance.getStringResource(R.string.errorEmptyPassword)
-            }
-
-            password.value.text.length < 6 -> {
-                ResourceProvider.instance.getStringResource(R.string.errorLengthPassword)
-            }
-
-            password.value.text.length > 128 -> {
-                ResourceProvider.instance.getStringResource(R.string.errorMaxLengthPassword)
-            }
-
-            !Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\u0021-\\u002F \\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E])[A-Za-z\\d\\u0021-\\u002F\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B-\\u007E]{6,128}\$").matches(
-                password.value.text
-            ) -> {
-                ResourceProvider.instance.getStringResource(R.string.errorFormatPassword)
-
-            }
-
-            else -> null
-        }
-
-
-        fun confirmPasswordValidation() = when {
-            !validate.value -> {
-                null
-            }
-
-            confirmPassword.value.text.isEmpty() -> {
-                ResourceProvider.instance.getStringResource(R.string.required_confirm_password)
-            }
-
-            passwordValidation() != null -> {
-                ResourceProvider.instance.getStringResource(R.string.enterValidPasswordFirst)
-            }
-
-            password.value != confirmPassword.value -> {
-                ResourceProvider.instance.getStringResource(R.string.confirmPasswordError)
-            }
-
-
-            else -> null
-        }*/
 }
