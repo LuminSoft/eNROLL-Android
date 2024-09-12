@@ -6,7 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -74,28 +76,30 @@ fun ForgetListScreenContent(
             Spacer(modifier = Modifier.height(50.dp))
 
             Image(
-                painterResource(R.drawable.update_icon),
+                painterResource(R.drawable.forget_icon),
                 contentDescription = "",
                 colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxHeight(0.1f)
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxHeight(0.17f)
             )
             Spacer(modifier = Modifier.height(15.dp))
             Text(
-                text = stringResource(id = R.string.youCanSelectOneItem),
-                color = MaterialTheme.colorScheme.outline,
+                text = stringResource(id = R.string.cannotLogin),
+                color = MaterialTheme.appColors.primary,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp
             )
 
             Spacer(modifier = Modifier.height(20.dp))
-            LazyColumn(
+            LazyVerticalGrid(
                 modifier = Modifier.fillMaxHeight(0.77f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(steps.value!!.size) { index ->
-                    ForgetStepItem(steps.value!![index], forgetViewModel)
+                    ForgetStepItem(steps.value!![index])
                 }
             }
             ButtonView(
@@ -104,7 +108,7 @@ fun ForgetListScreenContent(
                     EnrollSDK.enrollCallback?.error(
                         EnrollFailedModel(
                             ResourceProvider.instance.getStringResource(
-                                R.string.cancelUpdate
+                                R.string.cancelForget
                             ), null
                         )
                     )
@@ -118,7 +122,6 @@ fun ForgetListScreenContent(
 @Composable
 private fun ForgetStepItem(
     step: StepForgetModel,
-    forgetViewModel: ForgetViewModel,
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
@@ -133,30 +136,44 @@ private fun ForgetStepItem(
 //                forgetViewModel.forgetStepsInitRequestCall(step)
             }
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+
             ) {
-                Spacer(modifier = Modifier.width(15.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Image(
                     painterResource(step.parseForgetStepType().getStepIconIntSource()),
                     contentDescription = "",
                     colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-
                     modifier = Modifier
-                        .height(50.dp),
+                        .height(80.dp),
 
                     )
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
                     text = stringResource(id = step.parseForgetStepType().getStepNameIntSource()),
-                    color = MaterialTheme.colorScheme.inverseSurface,
-                    fontSize = 12.sp
+                    color = MaterialTheme.appColors.primary,
+                    fontSize = 13.sp
                 )
+                Text(
+                    text = stringResource(
+                        id = step.parseForgetStepType().getStepDescriptionIntSource()
+                    ),
+                    color = MaterialTheme.appColors.appBlack,
+                    minLines = 3,
+                    textAlign = TextAlign.Center,
+                    fontSize = 11.sp
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
             }
 
         }
