@@ -187,17 +187,13 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    StepsProgressBar(
-                        modifier = Modifier
-                            .fillMaxWidth(0.4f),
-                        numberOfSteps = 2,
-                        currentStep = selectedSecurityQuestions.value.size,
-                    )
-                }
+                StepsProgressBar(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f)
+                        .align(Alignment.CenterHorizontally),
+                    numberOfSteps = 2,
+                    currentStep = selectedSecurityQuestions.value.size,
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
@@ -299,7 +295,13 @@ private fun AnswerTextField(
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            placeholder = {
+                Text(
+                    stringResource(id = R.string.answer),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.appColors.secondary
+                )
+            },
             colors = textFieldColors(),
             leadingIcon = {
                 Image(
@@ -353,7 +355,8 @@ fun DropdownList(
             placeholder = {
                 Text(
                     stringResource(id = R.string.chooseAQuestions),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    color = MaterialTheme.appColors.secondary
                 )
             },
             colors = textFieldColors(),
@@ -415,12 +418,12 @@ fun DropdownList(
 
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color.White,
-    focusedTextColor = Color.Black,
-    unfocusedTextColor = Color.Black,
-    disabledTextColor = Color.Black,
+    focusedContainerColor = MaterialTheme.appColors.white,
+    unfocusedContainerColor = MaterialTheme.appColors.white,
+    disabledContainerColor = MaterialTheme.appColors.white,
+    focusedTextColor = MaterialTheme.appColors.appBlack,
+    unfocusedTextColor = MaterialTheme.appColors.appBlack,
+    disabledTextColor = MaterialTheme.appColors.appBlack,
     focusedIndicatorColor = MaterialTheme.appColors.primary,
     unfocusedIndicatorColor = MaterialTheme.appColors.primary,
     disabledIndicatorColor = MaterialTheme.appColors.primary,
@@ -429,7 +432,8 @@ private fun textFieldColors() = TextFieldDefaults.colors(
 @Composable
 fun StepsProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentStep: Int) {
     Row(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(), // Ensure full width of the Row is used
+        horizontalArrangement = Arrangement.Center, // Center items within the Row
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (step in 0..numberOfSteps) {
@@ -451,7 +455,7 @@ fun Step(
     isFirstItem: Boolean
 ) {
     val color =
-        if (isCompete || isCurrent) MaterialTheme.appColors.primary else Color(0xffEBEBEB)
+        if (isCompete || isCurrent) MaterialTheme.appColors.primary else MaterialTheme.appColors.secondary
 
     Box(modifier = modifier) {
 
