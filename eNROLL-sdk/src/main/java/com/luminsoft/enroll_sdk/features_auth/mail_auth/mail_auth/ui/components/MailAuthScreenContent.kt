@@ -165,14 +165,15 @@ fun MailAuthScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.emailOtpGuide),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.height(30.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,
+                        otp = otpValue,                        textColor =     MaterialTheme.appColors.textColor,
+
                         count = 6,
                     )
                 }
@@ -180,13 +181,13 @@ fun MailAuthScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                 }
@@ -239,7 +240,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.appColors.secondary,
+            color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )

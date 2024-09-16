@@ -1,4 +1,9 @@
+package com.luminsoft.enroll_sdk.features_update.security_questions_update.update_security_questions.ui.components
 
+import GetSecurityQuestionsUpdateResponseModel
+import GetSecurityQuestionsUpdateUseCase
+import UpdateSecurityQuestionsUseCase
+import UpdateSecurityQuestionsViewModel
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,9 +25,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -61,6 +67,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import org.koin.compose.koinInject
+import updateSecurityQuestionsScreenContent
 
 
 var updateAnswerValidate = mutableStateOf(false)
@@ -190,7 +197,7 @@ fun UpdateSecurityQuestionsScreenContent(
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor,
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
@@ -213,19 +220,20 @@ fun UpdateSecurityQuestionsScreenContent(
 
                         val securityQuestionModel = GetSecurityQuestionsUpdateResponseModel()
 
-                        val isAnswerValid = answer.value.text.isNotEmpty() && answer.value.text.length <= 150
+                        val isAnswerValid =
+                            answer.value.text.isNotEmpty() && answer.value.text.length <= 150
                         val isQuestionSelected = selectedQuestion.value != null
                         var selectedQuestionValue: GetSecurityQuestionsUpdateResponseModel? = null
 
                         if (isAnswerValid) {
                             securityQuestionModel.answer = answer.value.text
-                        }
-                        else {
-                            securityQuestionsViewModel.answerError.value = ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
+                        } else {
+                            securityQuestionsViewModel.answerError.value =
+                                ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
                         }
 
                         if (isQuestionSelected) {
-                             selectedQuestionValue = selectedQuestion.value!!
+                            selectedQuestionValue = selectedQuestion.value!!
                             securityQuestionModel.question = selectedQuestionValue.question
                             securityQuestionModel.id = selectedQuestionValue.id
 
@@ -235,7 +243,9 @@ fun UpdateSecurityQuestionsScreenContent(
 
                         if (isAnswerValid && isQuestionSelected) {
 
-                            updateViewModel.selectedSecurityQuestions.value.add(securityQuestionModel)
+                            updateViewModel.selectedSecurityQuestions.value.add(
+                                securityQuestionModel
+                            )
                             updateViewModel.securityQuestionsList.value.remove(selectedQuestionValue)
 
                             if (updateViewModel.selectedSecurityQuestions.value.size < 3) {
@@ -405,12 +415,12 @@ fun DropdownList(
 
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color.White,
-    focusedTextColor = Color.Black,
-    unfocusedTextColor = Color.Black,
-    disabledTextColor = Color.Black,
+    focusedContainerColor = MaterialTheme.appColors.white,
+    unfocusedContainerColor = MaterialTheme.appColors.white,
+    disabledContainerColor = MaterialTheme.appColors.white,
+    focusedTextColor = MaterialTheme.appColors.appBlack,
+    unfocusedTextColor = MaterialTheme.appColors.appBlack,
+    disabledTextColor = MaterialTheme.appColors.appBlack,
     focusedIndicatorColor = MaterialTheme.appColors.primary,
     unfocusedIndicatorColor = MaterialTheme.appColors.primary,
     disabledIndicatorColor = MaterialTheme.appColors.primary,
@@ -419,7 +429,8 @@ private fun textFieldColors() = TextFieldDefaults.colors(
 @Composable
 fun StepsProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentStep: Int) {
     Row(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(), // Ensure full width of the Row is used
+        horizontalArrangement = Arrangement.Center, // Center items within the Row
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (step in 0..numberOfSteps) {
@@ -441,16 +452,16 @@ fun Step(
     isFirstItem: Boolean
 ) {
     val color =
-        if (isCompete || isCurrent) MaterialTheme.appColors.primary else Color(0xffEBEBEB)
+        if (isCompete || isCurrent) MaterialTheme.appColors.primary else MaterialTheme.appColors.secondary
 
     Box(modifier = modifier) {
 
         //Line
         if (!isFirstItem)
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.align(Alignment.CenterStart),
-                color = color,
-                thickness = 2.dp
+                thickness = 2.dp,
+                color = color
             )
 
         //Circle

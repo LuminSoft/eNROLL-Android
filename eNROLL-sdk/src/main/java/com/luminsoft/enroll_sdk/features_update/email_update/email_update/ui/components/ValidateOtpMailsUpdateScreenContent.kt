@@ -187,7 +187,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
                         fontSize = 8.sp,
-                        color = MaterialTheme.appColors.primary
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
@@ -223,7 +223,8 @@ fun ValidateOtpMailsUpdateScreenContent(
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,
+                        otp = otpValue,                        textColor =           MaterialTheme.appColors.textColor,
+
                         count = 6,
                     )
                 }
@@ -231,13 +232,13 @@ fun ValidateOtpMailsUpdateScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                 }
@@ -322,7 +323,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.appColors.secondary,
+            color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )
