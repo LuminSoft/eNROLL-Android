@@ -28,6 +28,7 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usec
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.VerifyPasswordUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.VerifyPasswordUsecaseParams
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.verifyPasswordScreenContent
+import forgetLocationScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
 import passwordAuthUpdateScreenContent
 
@@ -180,11 +181,11 @@ class ForgetViewModel(
                     responseData.fold({
                         failure.value = it
                         loading.value = false
-                    }, { list ->
+                    }, {
+                        nationalIdValue.value = TextFieldValue("")
                         loading.value = false
                         navigateToAuthStep(navController!!, forgetStepId.value!!)
                     })
-
                 })
         }
     }
@@ -197,7 +198,6 @@ class ForgetViewModel(
                     password = passwordValue.value.text,
                     updateStepId = forgetStepId.value!!,
                 )
-            println("password value ${passwordValue.value.text} forgetStepId ${forgetStepId.value!!} ")
             val response: Either<SdkFailure, Null> =
                 verifyPasswordUsecase.call(params.value as VerifyPasswordUsecaseParams)
 
@@ -207,8 +207,9 @@ class ForgetViewModel(
                     loading.value = false
                 },
                 {
+                    passwordValue.value = TextFieldValue("")
                     loading.value = false
-println("navigate To Forget Step")
+                    navigateToForgetAfterAuthStep()
                 })
         }
     }
@@ -220,7 +221,7 @@ println("navigate To Forget Step")
             3 -> passwordAuthUpdateScreenContent //TODO Phone
             4 -> passwordAuthUpdateScreenContent //TODO Email
             5 -> passwordAuthUpdateScreenContent //TODO Device
-            6 -> verifyPasswordScreenContent //TODO Location
+            6 -> verifyPasswordScreenContent
             7 -> passwordAuthUpdateScreenContent //TODO Security Questions
             8 -> passwordAuthUpdateScreenContent //TODO Password
             9 -> passwordAuthUpdateScreenContent //TODO Check AML
@@ -232,14 +233,14 @@ println("navigate To Forget Step")
         }
     }
 
-    fun navigateToForgetAfterAuthStep() {
+    private fun navigateToForgetAfterAuthStep() {
         val route = when (forgetStepId.value) {
             1 -> passwordAuthUpdateScreenContent //TODO
             2 -> passwordAuthUpdateScreenContent //TODO
             3 -> passwordAuthUpdateScreenContent //TODO
             4 -> passwordAuthUpdateScreenContent //TODO
             5 -> passwordAuthUpdateScreenContent //TODO
-            6 -> passwordAuthUpdateScreenContent //TODO
+            6 -> forgetLocationScreenContent
             7 -> passwordAuthUpdateScreenContent //TODO
             8 -> passwordAuthUpdateScreenContent //TODO
             else -> null
