@@ -60,7 +60,6 @@ fun ForgetListScreenContent(
     val loading = forgetViewModel.loading.collectAsState()
     val failure = forgetViewModel.failure.collectAsState()
 
-
     BackGroundView(navController = navController, showAppBar = true) {
         if (forgetStepModel.value != null) {
             Log.d("forgetStepModel", "forgetStepModel")
@@ -94,7 +93,7 @@ fun ForgetListScreenContent(
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxHeight(0.77f),
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -146,7 +145,6 @@ private fun ForgetStepItem(
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
-
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Image(
@@ -161,7 +159,10 @@ private fun ForgetStepItem(
                 Text(
                     text = stringResource(id = step.parseForgetStepType().getStepNameIntSource()),
                     color = MaterialTheme.appColors.primary,
-                    fontSize = 13.sp
+                    minLines = 2,
+                    maxLines = 2,
+                    textAlign = TextAlign.Center,
+                    fontSize = 15.sp
                 )
                 Text(
                     text = stringResource(
@@ -173,14 +174,9 @@ private fun ForgetStepItem(
                     fontSize = 11.sp
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-
             }
-
         }
-
     }
 }
-
-
 
 
