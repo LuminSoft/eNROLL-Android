@@ -24,6 +24,8 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+import forgetLocationModule
+import forgetLocationRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -68,6 +70,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
                     startDestination = getStartingRoute()
                 ) {
                     mainForgetRouter(navController = navController, forgetViewModel)
+                    forgetLocationRouter(navController = navController, forgetViewModel)
 
 
                 }
@@ -83,6 +86,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
                 androidContext(activity.applicationContext)
                 modules(sdkModule)
                 modules(mainForgetModule)
+                modules(forgetLocationModule)
             }.koin
         }
     }

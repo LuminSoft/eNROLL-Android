@@ -6,6 +6,7 @@
     <string name="contactUs">اتصل بنا</string>
     <string name="username">اسم المستخدم</string>
     <string name="password">كلمة المرور</string>
+    <string name="enterPassword">أدخل كلمة المرور</string>
     <string name="signInTitle">تسجيل الدخول</string>
     <string name="fullName">الاسم بالكامل</string>
     <string name="mail">البريد الإلكتروني</string>
@@ -68,6 +69,8 @@
     <string name="allCorrect">جميع البيانات صحيحة</string>
     <string name="incorrectTryAgain">خطأ! يرجى المحاولة مرة أخرى</string>
     <string name="cancel">إلغاء</string>
+    <string name="enterNationalIDorMRZ">ادخل جواز سفر أو بطاقة هوية</string>
+
     <string name="profession">المهنة</string>
     <string name="status">الحالة</string>
     <string name="religion">الديانة</string>

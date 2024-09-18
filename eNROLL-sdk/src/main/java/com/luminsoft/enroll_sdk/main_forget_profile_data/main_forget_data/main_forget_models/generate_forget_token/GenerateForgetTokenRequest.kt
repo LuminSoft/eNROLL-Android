@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 open class GenerateForgetTokenRequest {
 
     @SerializedName("step")
-    internal var step: String? = null
+    internal var step: Int? = null
 
     @SerializedName("nationalIdOrPassportNumber")
     internal var nationalIdOrPassportNumber: String? = null
