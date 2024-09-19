@@ -26,6 +26,8 @@ import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenU
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import forgetLocationModule
 import forgetLocationRouter
+import forgetPasswordModule
+import forgetPasswordRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -71,6 +73,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
                 ) {
                     mainForgetRouter(navController = navController, forgetViewModel)
                     forgetLocationRouter(navController = navController, forgetViewModel)
+                    forgetPasswordRouter(navController = navController, forgetViewModel)
 
 
                 }
@@ -87,6 +90,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
                 modules(sdkModule)
                 modules(mainForgetModule)
                 modules(forgetLocationModule)
+                modules(forgetPasswordModule)
             }.koin
         }
     }

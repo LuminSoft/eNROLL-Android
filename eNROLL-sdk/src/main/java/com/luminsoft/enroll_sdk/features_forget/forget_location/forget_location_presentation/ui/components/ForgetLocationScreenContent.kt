@@ -184,7 +184,8 @@ fun ForgetLocationScreenContent(
                     }
                 }
             }
-        } else if (permissionDenied.value) {
+        }
+        else if (permissionDenied.value) {
             PermissionDenied(
                 permissions,
                 context,

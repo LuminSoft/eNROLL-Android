@@ -177,12 +177,6 @@ fun ApplyForElectronicSignatureScreenContent(
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
                             showDialog = false
-     /*                       electronicSignatureOnBoardingViewModel.insertSignatureInfo(
-                                2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) "" else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) "" else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) "" else electronicSignatureOnBoardingViewModel.emailValue.value.text
-                            )*/
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {

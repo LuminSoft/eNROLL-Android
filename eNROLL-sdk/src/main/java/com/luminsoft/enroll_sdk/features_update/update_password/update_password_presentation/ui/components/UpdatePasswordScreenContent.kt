@@ -1,15 +1,18 @@
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -70,7 +73,7 @@ fun UpdatePasswordScreenContent(
     val failure = updatePasswordViewModel.failure.collectAsState()
     val password = updatePasswordViewModel.password.collectAsState()
     val confirmPassword = updatePasswordViewModel.confirmPassword.collectAsState()
-    val retryCount = updateViewModel.retryCount.value
+    val scrollState = rememberScrollState()
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
@@ -162,108 +165,114 @@ fun UpdatePasswordScreenContent(
         }
 
         else
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp)
             ) {
-                Spacer(modifier = Modifier.height(25.dp))
 
-                Image(
-                    painterResource(R.drawable.step_07_password),
-                    contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .verticalScroll(scrollState) // Enable scrolling
+                        .fillMaxSize() // Ensure the column fills the width
+                        .imePadding() // Adjust the layout when the keyboard is visible
+                        .padding(bottom = 16.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(25.dp))
 
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight(0.3f)
-                )
-                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
-// Add these states to store the validation messages dynamically
-                var passwordError by rememberSaveable { mutableStateOf<String?>(null) }
-                var confirmPasswordError by rememberSaveable { mutableStateOf<String?>(null) }
+                    Image(
+                        painter = painterResource(R.drawable.step_07_password),
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxHeight(0.3f)// Set a fixed height for the image
+                    )
 
-                NormalTextField(
-                    label = ResourceProvider.instance.getStringResource(R.string.password),
-                    value = password.value,
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    onValueChange = { newValue ->
-                        updatePasswordViewModel.password.value = newValue
+                    Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
-                        // Trigger password validation immediately as user types
-                        passwordError = updatePasswordViewModel.passwordValidation()
-                        confirmPasswordError = updatePasswordViewModel.confirmPasswordValidation()
+                    var passwordError by rememberSaveable { mutableStateOf<String?>(null) }
+                    var confirmPasswordError by rememberSaveable { mutableStateOf<String?>(null) }
 
-                    },
-                    height = 60.0,
-                    trailingIcon = {
-                        val imageResource = if (passwordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
-                        val description = if (passwordVisible) "Hide password" else "Show password"
+                    NormalTextField(
+                        label = ResourceProvider.instance.getStringResource(R.string.password),
+                        value = password.value,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        onValueChange = { newValue ->
+                            updatePasswordViewModel.password.value = newValue
+                            passwordError = updatePasswordViewModel.passwordValidation()
+                            confirmPasswordError = updatePasswordViewModel.confirmPasswordValidation()
+                        },
+                        height = 60.0,
+                        trailingIcon = {
+                            val imageResource = if (passwordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
+                            val description = if (passwordVisible) "Hide password" else "Show password"
+                            Image(
+                                painter = painterResource(imageResource),
+                                contentDescription = description,
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                                modifier = Modifier
+                                    .clickable { passwordVisible = !passwordVisible }
+                                    .size(20.dp)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Next,
+                        ),
+                        error = passwordError
+                    )
 
-                        Image(
-                            painterResource(imageResource),
-                            contentDescription = description,
-                            colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-                            modifier = Modifier
-                                .clickable { passwordVisible = !passwordVisible }
-                                .size(20.dp)
-                        )
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Next,
-                    ),
-                    error = passwordError // Dynamically show password error
-                )
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    NormalTextField(
+                        label = ResourceProvider.instance.getStringResource(R.string.confirmPassword),
+                        value = confirmPassword.value,
+                        onValueChange = { newValue ->
+                            updatePasswordViewModel.confirmPassword.value = newValue
+                            confirmPasswordError = updatePasswordViewModel.confirmPasswordValidation()
+                        },
+                        visualTransformation = if (rePasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                        height = 60.0,
+                        trailingIcon = {
+                            val imageResource = if (rePasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
+                            val description = if (rePasswordVisible) "Hide password" else "Show password"
+                            Image(
+                                painter = painterResource(imageResource),
+                                contentDescription = description,
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                                modifier = Modifier
+                                    .clickable { rePasswordVisible = !rePasswordVisible }
+                                    .size(20.dp)
+                            )
+                        },
+                        error = confirmPasswordError
+                    )
 
-                NormalTextField(
-                    label = ResourceProvider.instance.getStringResource(R.string.confirmPassword),
-                    value = confirmPassword.value,
-                    onValueChange = { newValue ->
-                        updatePasswordViewModel.confirmPassword.value = newValue
+                    Spacer(modifier = Modifier.height(100.dp))
 
-                        // Trigger confirm password validation immediately as user types
-                        confirmPasswordError = updatePasswordViewModel.confirmPasswordValidation()
-                    },
-                    visualTransformation = if (rePasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
-                    ),
-                    height = 60.0,
-                    trailingIcon = {
-                        val imageResource = if (rePasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
-                        val description = if (rePasswordVisible) "Hide password" else "Show password"
+                    ButtonView(
+                        onClick = {
+                            updatePasswordViewModel.validate.value = true
+                            if (updatePasswordViewModel.passwordValidation() == null && updatePasswordViewModel.confirmPasswordValidation() == null) {
+                                updatePasswordViewModel.callUpdatePassword(password.value.text)
+                            }
+                        },
+                        title = ResourceProvider.instance.getStringResource(R.string.send)
+                    )
 
-                        Image(
-                            painterResource(imageResource),
-                            contentDescription = description,
-                            colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-                            modifier = Modifier
-                                .clickable { rePasswordVisible = !rePasswordVisible }
-                                .size(20.dp)
-                        )
-                    },
-                    error = confirmPasswordError // Dynamically show confirm password error
-                )
-
-                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
-                ButtonView(
-                    onClick = {
-                        updatePasswordViewModel.validate.value = true
-                        if (updatePasswordViewModel.passwordValidation() == null && updatePasswordViewModel.confirmPasswordValidation() == null) {
-                            updatePasswordViewModel.callUpdatePassword(password.value.text)
-                        }
-                    },
-                    title = ResourceProvider.instance.getStringResource(R.string.send)
-                )
+                    Spacer(modifier = Modifier.height(50.dp)) // Extra space at the bottom
+                }
             }
 
     }
 
 }
+
 
 
 

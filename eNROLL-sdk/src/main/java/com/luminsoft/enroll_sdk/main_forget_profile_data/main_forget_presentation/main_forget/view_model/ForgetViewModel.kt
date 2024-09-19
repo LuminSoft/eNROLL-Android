@@ -29,6 +29,7 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usec
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.VerifyPasswordUsecaseParams
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.verifyPasswordScreenContent
 import forgetLocationScreenContent
+import forgetPasswordValidateOtpScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
 import passwordAuthUpdateScreenContent
 
@@ -86,6 +87,7 @@ class ForgetViewModel(
         MutableStateFlow(null)
     var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
         MutableStateFlow(null)
+
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -223,7 +225,7 @@ class ForgetViewModel(
             5 -> passwordAuthUpdateScreenContent //TODO Device
             6 -> verifyPasswordScreenContent
             7 -> passwordAuthUpdateScreenContent //TODO Security Questions
-            8 -> passwordAuthUpdateScreenContent //TODO Password
+            8 ->  forgetPasswordValidateOtpScreenContent
             9 -> passwordAuthUpdateScreenContent //TODO Check AML
             10 -> passwordAuthUpdateScreenContent //TODO Electronic Signature
             else -> passwordAuthUpdateScreenContent //TODO
@@ -250,7 +252,6 @@ class ForgetViewModel(
         }
     }
 
-
     fun convertStepForgetIdToTitle(): String {
         val title = when (forgetStepId.value) {
             1 -> "Forget NationalID"
@@ -266,7 +267,6 @@ class ForgetViewModel(
         return title
 
     }
-
 
     fun removeCurrentStep(id: Int): Boolean {
         // Check if 'steps' is not null

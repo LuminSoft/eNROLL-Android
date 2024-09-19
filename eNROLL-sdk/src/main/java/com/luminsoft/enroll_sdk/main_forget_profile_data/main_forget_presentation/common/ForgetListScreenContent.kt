@@ -99,7 +99,7 @@ fun ForgetListScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(steps.value!!.size) { index ->
-                    ForgetStepItem(steps.value!![index])
+                    ForgetStepItem(steps.value!![index],forgetViewModel,navController = navController)
                     ForgetStepItem(steps.value!![index], forgetViewModel,navController = navController)
                 }
             }
@@ -123,6 +123,7 @@ fun ForgetListScreenContent(
 @Composable
 private fun ForgetStepItem(
     step: StepForgetModel,
+    forgetViewModel: ForgetViewModel,
     navController: NavController = NavController(LocalContext.current)
 ) {
     Card(
