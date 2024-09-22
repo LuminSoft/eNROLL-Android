@@ -31,6 +31,7 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.
 import forgetLocationScreenContent
 import forgetPasswordValidateOtpScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
+import lostDeviceIdScreenContent
 import passwordAuthUpdateScreenContent
 
 class ForgetViewModel(
@@ -145,6 +146,15 @@ class ForgetViewModel(
                             loading.value = false
                         }, { list ->
                             val mutableList = list.toMutableList()
+                            // Check if the list contains updateStepId = 5
+                            if (!mutableList.any { it.forgetStepId == 5 }) {
+                                // If not found, create a new UpdateStep object and insert it
+                                val newUpdateStep = StepForgetModel(
+                                    forgetStepId = 5,
+                                    lastForgetDate = "2024-09-02T17:44:00.0000000"
+                                )
+                                mutableList.add(newUpdateStep)
+                            }
                             steps.value = mutableList
                             loading.value = false
                         })
@@ -222,7 +232,7 @@ class ForgetViewModel(
             2 -> passwordAuthUpdateScreenContent //TODO Passport
             3 -> passwordAuthUpdateScreenContent //TODO Phone
             4 -> passwordAuthUpdateScreenContent //TODO Email
-            5 -> passwordAuthUpdateScreenContent //TODO Device
+            5 -> verifyPasswordScreenContent
             6 -> verifyPasswordScreenContent
             7 -> passwordAuthUpdateScreenContent //TODO Security Questions
             8 ->  forgetPasswordValidateOtpScreenContent
@@ -241,7 +251,7 @@ class ForgetViewModel(
             2 -> passwordAuthUpdateScreenContent //TODO
             3 -> passwordAuthUpdateScreenContent //TODO
             4 -> passwordAuthUpdateScreenContent //TODO
-            5 -> passwordAuthUpdateScreenContent //TODO
+            5 -> lostDeviceIdScreenContent
             6 -> forgetLocationScreenContent
             7 -> passwordAuthUpdateScreenContent //TODO
             8 -> passwordAuthUpdateScreenContent //TODO

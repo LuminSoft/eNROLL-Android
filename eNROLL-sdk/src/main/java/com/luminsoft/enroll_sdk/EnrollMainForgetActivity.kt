@@ -28,6 +28,8 @@ import forgetLocationModule
 import forgetLocationRouter
 import forgetPasswordModule
 import forgetPasswordRouter
+import lostDeviceIdModule
+import lostDeviceIdRouter
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -74,6 +76,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
                     mainForgetRouter(navController = navController, forgetViewModel)
                     forgetLocationRouter(navController = navController, forgetViewModel)
                     forgetPasswordRouter(navController = navController, forgetViewModel)
+                    lostDeviceIdRouter(navController = navController)
 
 
                 }
@@ -91,6 +94,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
                 modules(mainForgetModule)
                 modules(forgetLocationModule)
                 modules(forgetPasswordModule)
+                modules(lostDeviceIdModule)
             }.koin
         }
     }
