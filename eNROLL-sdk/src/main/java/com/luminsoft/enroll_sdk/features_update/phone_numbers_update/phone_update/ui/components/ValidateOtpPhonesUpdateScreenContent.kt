@@ -53,7 +53,6 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_on
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.ValidateOtpPhoneUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.view_model.ValidateOtpPhonesUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
@@ -176,7 +175,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.validate_sms_otp),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.25f)
@@ -223,7 +222,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,                        textColor =           MaterialTheme.appColors.textColor,
+                        otp = otpValue, textColor = MaterialTheme.appColors.textColor,
 
                         count = 6,
                     )
