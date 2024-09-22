@@ -2,11 +2,13 @@ package com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentati
 
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
-
+import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -15,19 +17,29 @@ import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
-import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.ForgetStepsConfigurationsUsecase
-import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GenerateForgetSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_data.main_forget_models.get_forget_configurations.StepForgetModel
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.ForgetStepsConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GenerateForgetSessionForStepTokenUsecase
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GenerateForgetSessionTokenForStepUsecaseParams
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GenerateForgetSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GenerateForgetSessionTokenUsecaseParams
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GetForgetStepConfigurationsUsecaseParams
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.InitializeForgetRequestUsecase
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.VerifyPasswordUsecase
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.VerifyPasswordUsecaseParams
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.verifyPasswordScreenContent
+import forgetLocationScreenContent
+import forgetPasswordValidateOtpScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
+import lostDeviceIdScreenContent
 import passwordAuthUpdateScreenContent
 
 class ForgetViewModel(
     private val generateForgetSessionToken: GenerateForgetSessionTokenUsecase,
     private val forgetStepConfigurationsUsecase: ForgetStepsConfigurationsUsecase,
     private val generateForgetSessionForStepTokenUsecase: GenerateForgetSessionForStepTokenUsecase,
+    private val initializeForgetRequestUsecase: InitializeForgetRequestUsecase,
+    private val verifyPasswordUsecase: VerifyPasswordUsecase,
 
     ) : ViewModel(),
     MainViewModel {
@@ -36,6 +48,8 @@ class ForgetViewModel(
     override var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
+     var forgetStepToken: MutableStateFlow<String?> = MutableStateFlow(null)
+     var originalToken: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
     var forgetStepModel: MutableStateFlow<StepForgetModel?> = MutableStateFlow(null)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -43,6 +57,10 @@ class ForgetViewModel(
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var fullPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
+    var nationalIdValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
+    var nationalIdError: MutableState<String?> = mutableStateOf(null)
+    var passwordValue: MutableStateFlow<TextFieldValue> = MutableStateFlow(TextFieldValue())
+    var passwordError: MutableState<String?> = mutableStateOf(null)
     var phoneValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
     var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
     var steps: MutableStateFlow<List<StepForgetModel>?> = MutableStateFlow(null)
@@ -70,6 +88,7 @@ class ForgetViewModel(
         MutableStateFlow(null)
     var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
         MutableStateFlow(null)
+
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -118,6 +137,7 @@ class ForgetViewModel(
                     s.let { it1 ->
                         token.value = it1
                         RetroClient.setToken(it1)
+
                         params.value = GetForgetStepConfigurationsUsecaseParams()
                         val responseData: Either<SdkFailure, List<StepForgetModel>> =
                             forgetStepConfigurationsUsecase.call(params.value as GetForgetStepConfigurationsUsecaseParams)
@@ -126,9 +146,16 @@ class ForgetViewModel(
                             loading.value = false
                         }, { list ->
                             val mutableList = list.toMutableList()
-
+                            // Check if the list contains updateStepId = 5
+                            if (!mutableList.any { it.forgetStepId == 5 }) {
+                                // If not found, create a new UpdateStep object and insert it
+                                val newUpdateStep = StepForgetModel(
+                                    forgetStepId = 5,
+                                    lastForgetDate = "2024-09-02T17:44:00.0000000"
+                                )
+                                mutableList.add(newUpdateStep)
+                            }
                             steps.value = mutableList
-
                             loading.value = false
                         })
                     }
@@ -137,14 +164,80 @@ class ForgetViewModel(
     }
 
 
+     fun generateForgetTokenForStep() {
+        loading.value = true
+        ui {
+            params.value =
+                GenerateForgetSessionTokenForStepUsecaseParams(
+                    step = forgetStepId.value!!,
+                    nationalIdOrPassportNumber =nationalIdValue.value?.text.toString(),
+                )
+
+            val response: Either<SdkFailure, String> =
+                generateForgetSessionForStepTokenUsecase.call(params.value as GenerateForgetSessionTokenForStepUsecaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    // here we saved the original token to restore it later
+                    originalToken.value = token.value
+                    token.value = it
+                    RetroClient.setToken(it)
+
+                    params.value = forgetStepId.value
+                    val responseData: Either<SdkFailure, Null> =
+                        initializeForgetRequestUsecase.call(params.value as Int)
+                    responseData.fold({
+                        failure.value = it
+                        loading.value = false
+                    }, {
+                        nationalIdValue.value = TextFieldValue("")
+                        loading.value = false
+                        navigateToAuthStep(navController!!, forgetStepId.value!!)
+                    })
+                })
+        }
+    }
+
+    fun verifyPassword() {
+        loading.value = true
+        ui {
+            params.value =
+                VerifyPasswordUsecaseParams(
+                    password = passwordValue.value.text,
+                    updateStepId = forgetStepId.value!!,
+                )
+            val response: Either<SdkFailure, Null> =
+                verifyPasswordUsecase.call(params.value as VerifyPasswordUsecaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    passwordValue.value = TextFieldValue("")
+                    loading.value = false
+                    navigateToForgetAfterAuthStep()
+                })
+        }
+    }
+
     private fun navigateToAuthStep(navController: NavController, stepId: Int) {
         val route = when (stepId) {
-            1 -> passwordAuthUpdateScreenContent //TODO
-            2 -> passwordAuthUpdateScreenContent //TODO
-            3 -> passwordAuthUpdateScreenContent //TODO
-            4 -> passwordAuthUpdateScreenContent //TODO
-            5 -> passwordAuthUpdateScreenContent //TODO
-            6 -> passwordAuthUpdateScreenContent //TODO
+            1 -> passwordAuthUpdateScreenContent //TODO National ID
+            2 -> passwordAuthUpdateScreenContent //TODO Passport
+            3 -> passwordAuthUpdateScreenContent //TODO Phone
+            4 -> passwordAuthUpdateScreenContent //TODO Email
+            5 -> verifyPasswordScreenContent
+            6 -> verifyPasswordScreenContent
+            7 -> passwordAuthUpdateScreenContent //TODO Security Questions
+            8 ->  forgetPasswordValidateOtpScreenContent
+            9 -> passwordAuthUpdateScreenContent //TODO Check AML
+            10 -> passwordAuthUpdateScreenContent //TODO Electronic Signature
             else -> passwordAuthUpdateScreenContent //TODO
         }
         route.let {
@@ -152,14 +245,14 @@ class ForgetViewModel(
         }
     }
 
-    fun navigateToForgetAfterAuthStep() {
+    private fun navigateToForgetAfterAuthStep() {
         val route = when (forgetStepId.value) {
             1 -> passwordAuthUpdateScreenContent //TODO
             2 -> passwordAuthUpdateScreenContent //TODO
             3 -> passwordAuthUpdateScreenContent //TODO
             4 -> passwordAuthUpdateScreenContent //TODO
-            5 -> passwordAuthUpdateScreenContent //TODO
-            6 -> passwordAuthUpdateScreenContent //TODO
+            5 -> lostDeviceIdScreenContent
+            6 -> forgetLocationScreenContent
             7 -> passwordAuthUpdateScreenContent //TODO
             8 -> passwordAuthUpdateScreenContent //TODO
             else -> null
@@ -168,7 +261,6 @@ class ForgetViewModel(
             navController?.navigate(it)
         }
     }
-
 
     fun convertStepForgetIdToTitle(): String {
         val title = when (forgetStepId.value) {
@@ -185,7 +277,6 @@ class ForgetViewModel(
         return title
 
     }
-
 
     fun removeCurrentStep(id: Int): Boolean {
         // Check if 'steps' is not null

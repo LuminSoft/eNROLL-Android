@@ -41,6 +41,7 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_data.main_forget_models.get_forget_configurations.StepForgetModel
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.enterNIDorMRZScreenContent
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
@@ -98,7 +99,8 @@ fun ForgetListScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(steps.value!!.size) { index ->
-                    ForgetStepItem(steps.value!![index])
+                    ForgetStepItem(steps.value!![index],forgetViewModel,navController = navController)
+                    ForgetStepItem(steps.value!![index], forgetViewModel,navController = navController)
                 }
             }
             ButtonView(
@@ -121,6 +123,8 @@ fun ForgetListScreenContent(
 @Composable
 private fun ForgetStepItem(
     step: StepForgetModel,
+    forgetViewModel: ForgetViewModel,
+    navController: NavController = NavController(LocalContext.current)
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
@@ -132,7 +136,8 @@ private fun ForgetStepItem(
             .padding(top = 5.dp)
             .padding(top = 0.dp)
             .clickable {
-//                forgetViewModel.forgetStepsInitRequestCall(step)
+                forgetViewModel.forgetStepId.value = step.forgetStepId
+                navController.navigate(enterNIDorMRZScreenContent)
             }
     ) {
         Column(

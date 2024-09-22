@@ -4,6 +4,7 @@ import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_data.main_forget_api.MainForgetApi
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_data.main_forget_models.generate_forget_token.GenerateForgetTokenRequest
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_data.main_forget_models.generate_forget_token.VerifyPasswordRequestModel
 
 class MainForgetRemoteDataSourceImpl(
     private val network: com.luminsoft.enroll_sdk.core.network.BaseRemoteDataSource,
@@ -27,6 +28,16 @@ class MainForgetRemoteDataSourceImpl(
 
         return network.apiRequest { mainApi.generateForgetRequestTokenForStep(request) }
 
+    }
+
+    override suspend fun initializeForgetRequest(stepId: Int): BaseResponse<Any> {
+
+        return network.apiRequest { mainApi.initializeForgetRequest(stepId) }
+    }
+
+    override suspend fun verifyPassword(request: VerifyPasswordRequestModel): BaseResponse<Any> {
+
+        return network.apiRequest { mainApi.verifyPassword(request) }
     }
 
 

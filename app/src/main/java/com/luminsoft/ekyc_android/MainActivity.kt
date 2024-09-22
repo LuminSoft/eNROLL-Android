@@ -47,7 +47,6 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
 import appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
-import com.luminsoft.enroll_sdk.AppColors
 import com.luminsoft.enroll_sdk.EnrollCallback
 import com.luminsoft.enroll_sdk.EnrollEnvironment
 import com.luminsoft.enroll_sdk.EnrollFailedModel
@@ -62,7 +61,7 @@ import io.github.cdimascio.dotenv.dotenv
 var dotenv = dotenv {
     directory = "/assets"
 //    filename = "env_andrew"
-//    filename = "env_radwan"
+    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
@@ -71,7 +70,7 @@ var dotenv = dotenv {
 //    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
-    filename = "env_test_2"
+//    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -264,17 +263,17 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors = AppColors(
-                    warningColor = Color(0xFFFFD500),
-                    successColor = Color(0xff0FDE00),
-                    white = Color(0xffffffff),
-                    primary = Color(0xff2481D2),
-                    appBlack = Color(0xff060B27),
-                    backGround = Color(0xff060B27),
-                    secondary = Color(0xff0E1A5D),
-                    errorColor = Color(0xffD2001C),
-                    textColor = Color(0xffffffff)
-                ),
+//                appColors = AppColors(
+//                    warningColor = Color(0xFFFFD500),
+//                    successColor = Color(0xff0FDE00),
+//                    white = Color(0xffffffff),
+//                    primary = Color(0xff2481D2),
+//                    appBlack = Color(0xff060B27),
+//                    backGround = Color(0xff060B27),
+//                    secondary = Color(0xff0E1A5D),
+//                    errorColor = Color(0xffD2001C),
+//                    textColor = Color(0xffffffff)
+//                ),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
                 correlationId = "correlationId"

@@ -10,6 +10,8 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.repo
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.ForgetStepsConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GenerateForgetSessionForStepTokenUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.GenerateForgetSessionTokenUsecase
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.InitializeForgetRequestUsecase
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.VerifyPasswordUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -23,6 +25,13 @@ val mainForgetModule = module {
     }
     single {
         GenerateForgetSessionForStepTokenUsecase(get())
+    }
+
+    single {
+        VerifyPasswordUsecase(get())
+    }
+    single {
+        InitializeForgetRequestUsecase(get())
     }
 
 
@@ -41,7 +50,7 @@ val mainForgetModule = module {
     }
     viewModel {
         ForgetViewModel(
-            get(), get(), get(),
+            get(), get(), get(),get(),get()
         )
     }
 

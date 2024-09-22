@@ -6,6 +6,7 @@
     <string name="contactUs">اتصل بنا</string>
     <string name="username">اسم المستخدم</string>
     <string name="password">كلمة المرور</string>
+    <string name="enterPassword">أدخل كلمة المرور</string>
     <string name="signInTitle">تسجيل الدخول</string>
     <string name="fullName">الاسم بالكامل</string>
     <string name="mail">البريد الإلكتروني</string>
@@ -19,7 +20,6 @@
     <string name="errorMissingLowercase">يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل</string>
     <string name="errorMissingNumber">يجب أن تحتوي كلمة المرور على رقم واحد على الأقل</string>
     <string name="errorMissingSymbol">يجب أن تحتوي كلمة المرور على رمز واحد على الأقل</string>
-
     <string name="errorFormatPassword">كلمة المرور غير صحيحة</string>
     <string name="scanIDFrontSide">مسح الوجه الأمامي لبطاقة الهوية ضوئيا</string>
     <string name="takeAPictureOfFrontSide">التقاط صورة الوجه الأمامي لبطاقة الهوية</string>
@@ -68,6 +68,8 @@
     <string name="allCorrect">جميع البيانات صحيحة</string>
     <string name="incorrectTryAgain">خطأ! يرجى المحاولة مرة أخرى</string>
     <string name="cancel">إلغاء</string>
+    <string name="enterNationalIDorMRZ">ادخل جواز سفر أو بطاقة هوية</string>
+
     <string name="profession">المهنة</string>
     <string name="status">الحالة</string>
     <string name="religion">الديانة</string>
@@ -199,7 +201,7 @@
     <string name="invalid_pin_code">الرقم المتغير غير صحيح</string>
     <string name="required_pin_code">مطلوب الرقم المتغير</string>
     <string name="required_password">مطلوب كلمة مرور</string>
-    <string name="required_confirm_password">مطلوب كلمة تأكيد المرور</string>
+    <string name="required_confirm_password">مطلوب تأكيد كلمة المرور</string>
     <string name="required_english_name">الاسم باللغه الانجليزيه مطلوب</string>
     <string name="required_arabic_name">لاسم باللغه العربية مطلوب</string>
     <string name="save_mobile_device">يوجد خطأ في جواز السفر</string>
