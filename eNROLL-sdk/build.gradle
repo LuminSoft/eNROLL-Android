@@ -110,7 +110,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '1.0.2'
+                version = '1.0.3'
             }
         }
     }
