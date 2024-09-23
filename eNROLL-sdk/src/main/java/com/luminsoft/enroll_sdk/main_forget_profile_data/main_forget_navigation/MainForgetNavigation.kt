@@ -1,7 +1,7 @@
 package com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation
 
-import EnterNationalIdOrMRZScreenContent
-import VerifyPasswordScreenContent
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.common.EnterNationalIdOrMRZScreenContent
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.common.VerifyPasswordScreenContent
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable

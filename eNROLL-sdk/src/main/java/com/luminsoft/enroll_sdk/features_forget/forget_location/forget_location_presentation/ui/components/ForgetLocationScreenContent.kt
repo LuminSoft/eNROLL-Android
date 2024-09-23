@@ -1,4 +1,8 @@
+package com.luminsoft.enroll_sdk.features_forget.forget_location.forget_location_presentation.ui.components
 
+import ForgetLocationUseCase
+import ForgetLocationViewModel
+import LocationDetails
 import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -27,6 +31,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -51,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import appColors
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.android.gms.common.api.ResolvableApiException
@@ -75,6 +81,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
+import findActivity
 import org.koin.compose.koinInject
 
 
@@ -184,8 +191,7 @@ fun ForgetLocationScreenContent(
                     }
                 }
             }
-        }
-        else if (permissionDenied.value) {
+        } else if (permissionDenied.value) {
             PermissionDenied(
                 permissions,
                 context,
@@ -261,7 +267,7 @@ private fun RequestLocation(
             )
             ButtonView(
                 onClick = {
-                    forgetViewModel.token.value=forgetViewModel.originalToken.value
+                    forgetViewModel.token.value = forgetViewModel.originalToken.value
                     RetroClient.setToken(forgetViewModel.originalToken.value.toString())
                     navController.navigate(forgetListScreenContent)
                 },
@@ -394,7 +400,7 @@ private fun GotLocation(
                         .fillMaxWidth(0.8f),
                     painter = painterResource(id = R.drawable.step_00_location),
                     contentScale = ContentScale.Fit,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     contentDescription = "Victor Ekyc Item"
                 )

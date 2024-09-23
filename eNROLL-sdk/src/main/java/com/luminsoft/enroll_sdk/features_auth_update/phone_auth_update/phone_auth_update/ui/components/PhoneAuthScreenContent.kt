@@ -1,7 +1,9 @@
 package com.luminsoft.enroll_sdk.features_auth_update.phone_auth_update.phone_auth_update.ui.components
+
 import PhoneAuthUpdateSendOTPUseCase
 import PhoneAuthUpdateViewModel
 import ValidateOtpPhoneAuthUpdateUseCase
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +57,7 @@ import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.seconds
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PhoneAuthUpdateScreenContent(
     updateViewModel: UpdateViewModel,
@@ -162,7 +165,7 @@ fun PhoneAuthUpdateScreenContent(
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,                        textColor =           MaterialTheme.appColors.textColor,
+                        otp = otpValue, textColor = MaterialTheme.appColors.textColor,
 
                         count = 6,
                     )

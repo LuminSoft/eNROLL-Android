@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk.features_auth_update.mail_auth_update.mail_auth
 import MailAuthUpdateSendOTPUseCase
 import MailAuthUpdateViewModel
 import ValidateOtpMailAuthUpdateUseCase
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,6 +57,7 @@ import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.seconds
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MailAuthUpdateScreenContent(
     updateViewModel: UpdateViewModel,

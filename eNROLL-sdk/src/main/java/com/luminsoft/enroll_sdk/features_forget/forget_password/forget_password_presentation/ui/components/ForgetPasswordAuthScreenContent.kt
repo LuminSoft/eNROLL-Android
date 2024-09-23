@@ -1,4 +1,5 @@
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,6 +53,7 @@ import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.seconds
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun ForgetPasswordAuthScreenContent(
     forgetViewModel: ForgetViewModel,

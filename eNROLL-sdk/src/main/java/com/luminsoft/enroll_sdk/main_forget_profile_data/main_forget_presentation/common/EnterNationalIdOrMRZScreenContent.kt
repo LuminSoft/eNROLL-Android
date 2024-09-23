@@ -1,3 +1,4 @@
+package com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.common
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -38,7 +40,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "SuspiciousIndentation")
 @Composable
 fun EnterNationalIdOrMRZScreenContent(
     forgetViewModel: ForgetViewModel,
@@ -60,8 +62,7 @@ fun EnterNationalIdOrMRZScreenContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
-        }
-        else if (!failure.value?.message.isNullOrEmpty()) {
+        } else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(
@@ -95,8 +96,7 @@ fun EnterNationalIdOrMRZScreenContent(
                     }
                 }
             }
-        }
-        else {
+        } else {
 
 
             Column(
@@ -109,7 +109,7 @@ fun EnterNationalIdOrMRZScreenContent(
             ) {
                 Spacer(modifier = Modifier.weight(0.5f))
 
-                    NationalIdTextField(forgetViewModel)
+                NationalIdTextField(forgetViewModel)
 
                 Spacer(modifier = Modifier.weight(1f))
                 ButtonView(
@@ -117,11 +117,11 @@ fun EnterNationalIdOrMRZScreenContent(
 
                         var isValid = true
 
-                            if (forgetViewModel.nationalIdValue.value!!.text.isEmpty()) {
-                                forgetViewModel.nationalIdError.value =
-                                    ResourceProvider.instance.getStringResource(R.string.emptyError)
-                                isValid = false
-                            }
+                        if (forgetViewModel.nationalIdValue.value!!.text.isEmpty()) {
+                            forgetViewModel.nationalIdError.value =
+                                ResourceProvider.instance.getStringResource(R.string.emptyError)
+                            isValid = false
+                        }
 
                         if (isValid) {
                             forgetViewModel.generateForgetTokenForStep()

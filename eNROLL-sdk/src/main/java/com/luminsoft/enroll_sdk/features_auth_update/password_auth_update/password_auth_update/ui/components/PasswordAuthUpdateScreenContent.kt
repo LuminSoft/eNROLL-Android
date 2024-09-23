@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk.features_auth_update.password_auth_update.passw
 
 import PasswordAuthUpdateUseCase
 import PasswordAuthUpdateViewModel
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import org.koin.compose.koinInject
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PasswordAuthUpdateScreenContent(
    updateViewModel: UpdateViewModel,
