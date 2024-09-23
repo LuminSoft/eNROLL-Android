@@ -42,7 +42,7 @@ object EnrollSDK {
 
     fun getImageUrl(): String {
         return if (environment == EnrollEnvironment.STAGING)
-            getBaseUrl() + ":4600/"
+            getBaseUrl() + ":7400/AdminPanel/"
         else getBaseUrl() + ":7400/AdminPanel/"
     }
 }
