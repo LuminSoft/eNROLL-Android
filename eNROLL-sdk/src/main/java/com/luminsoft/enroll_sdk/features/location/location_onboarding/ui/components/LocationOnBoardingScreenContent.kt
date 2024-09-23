@@ -421,12 +421,12 @@ private fun GotLocation(
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.latitude, currentLocation.latitude),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor
                 )
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.longitude, currentLocation.longitude),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor
                 )
             }
         }

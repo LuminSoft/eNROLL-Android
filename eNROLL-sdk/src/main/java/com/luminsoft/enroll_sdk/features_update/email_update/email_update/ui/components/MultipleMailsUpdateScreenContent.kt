@@ -177,7 +177,7 @@ fun MultipleMailsUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.step_04_email),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
@@ -259,7 +259,7 @@ private fun MailItem(
                 Image(
                     painterResource(R.drawable.mail_icon),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     modifier = Modifier
                         .height(50.dp)

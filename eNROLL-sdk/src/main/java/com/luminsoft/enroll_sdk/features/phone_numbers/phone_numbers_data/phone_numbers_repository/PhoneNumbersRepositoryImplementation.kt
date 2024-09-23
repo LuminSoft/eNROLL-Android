@@ -86,6 +86,7 @@ class PhoneNumbersRepositoryImplementation(private val phoneNumbersRemoteDataSou
             is BaseResponse.Success -> {
                 Either.Right((response.data as List<GetVerifiedPhonesResponseModel>))
             }
+
             is BaseResponse.Error -> {
                 Either.Left(response.error)
             }
@@ -95,6 +96,19 @@ class PhoneNumbersRepositoryImplementation(private val phoneNumbersRemoteDataSou
 
     override suspend fun makeDefault(request: MakeDefaultRequestModel): Either<SdkFailure, Null> {
         return when (val response = phoneNumbersRemoteDataSource.makeDefault(request)) {
+            is BaseResponse.Success -> {
+                Either.Right(null)
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+
+        }
+    }
+
+    override suspend fun deletePhone(request: MakeDefaultRequestModel): Either<SdkFailure, Null> {
+        return when (val response = phoneNumbersRemoteDataSource.deletePhone(request)) {
             is BaseResponse.Success -> {
                 Either.Right(null)
             }

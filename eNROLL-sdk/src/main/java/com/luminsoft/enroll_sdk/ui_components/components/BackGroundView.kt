@@ -17,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -45,7 +46,7 @@ fun BackGroundView(
                 onClick()
             }
         })
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.appColors.backGround) {
         Image(
             painterResource(R.drawable.bg_shapes),
             contentDescription = "",
@@ -65,7 +66,7 @@ fun BackGroundView(
                         painterResource(R.drawable.header_shapes),
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds,
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                         modifier = Modifier
                             .fillMaxSize()
                             .fillMaxWidth(),

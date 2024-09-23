@@ -6,6 +6,7 @@
     <string name="contactUs">Contact us</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="enterPassword">Enter your password</string>
     <string name="signInTitle">Sign In</string>
     <string name="fullName">Full name</string>
     <string name="mail">Mail</string>
@@ -13,8 +14,13 @@
     <string name="mobileNumber">Mobile number</string>
     <string name="confirmPassword">Confirm password</string>
     <string name="errorEmptyPassword">Please enter your password</string>
-    <string name="errorLengthPassword">Password must not be less than 6 characters</string>
-    <string name="errorMaxLengthPassword">Password must not be more than 128 characters</string>
+    <string name="errorLengthPassword">Password must be at least 6 characters long</string>
+    <string name="errorMaxLengthPassword">Password cannot be longer than 128 characters</string>
+    <string name="errorMissingUppercase">Password must contain at least one uppercase letter</string>
+    <string name="errorMissingLowercase">Password must contain at least one lowercase letter</string>
+    <string name="errorMissingNumber">Password must contain at least one number</string>
+    <string name="errorMissingSymbol">Password must contain at least one symbol</string>
+
     <string name="errorFormatPassword">Incorrect password</string>
     <string name="scanIDFrontSide">Scan ID front side</string>
     <string name="takeAPictureOfFrontSide">Take a picture of the ID front side</string>
@@ -64,6 +70,8 @@
     <string name="allCorrect">Correct Data</string>
     <string name="incorrectTryAgain">Error! Please try again</string>
     <string name="cancel">Cancel</string>
+    <string name="enterNationalIDorMRZ">Enter national Id Or MRZ</string>
+
     <string name="wrongOtpFiveTimes">You Entered wrong OTP for 5 times</string>
     <string name="profession">Occupation</string>
     <string name="professionRequired">Profession is Required</string>
@@ -104,6 +112,7 @@
     <string name="digitalOnBoardingClosed">Failed</string>
     <string name="expiredId">Sorry, your ID is expired</string>
     <string name="exit">Exit</string>
+    <string name="too_many_attempts">You have exceeded the allowed number of attempts.</string>
     <string name="rescan">Rescan</string>
     <string name="login">Login</string>
     <string name="createAccount">Create account</string>
@@ -327,6 +336,23 @@
     <string name="deleteConfirmationMessage">Are you sure you want to delete this mail? \n </string>
     <string name="phoneDeleteConfirmationMessage">Are you sure you want to delete this phone? \n </string>
     <string name="delete">Delete</string>
+    <string name="forgetNationalId">Forget National Id</string>
+    <string name="forgetPassport">Forget Passport</string>
+    <string name="forgetPhoneNumber">Forget Phone Number</string>
+    <string name="forgetMail">Forget E-Mail</string>
+    <string name="forgetSecurityQuestion">Forget Security Question</string>
+    <string name="forgetLocation">Forget Location</string>
+    <string name="forgetDevice">Forget Device</string>
+    <string name="forgetPassword">Forget Password</string>
+    <string name="forgetAml">Forget Aml</string>
+    <string name="forgetElectronicSignature">Forget Electronic Signature</string>
+    <string name="forgetPhoneNumberDescription">Have you lost the phone number associated with your registration account?</string>
+    <string name="forgetMailDescription">Did you forget the email associated with your registration account?</string>
+    <string name="forgetDeviceDescription">Have you lost your phone and can\'t log in?</string>
+    <string name="forgetLocationDescription">Are you having problems accessing your site on registration?</string>
+    <string name="forgetPasswordDescription">Having trouble remembering your password to register?</string>
+    <string name="cannotLogin">There are a few reasons why you may not be able to sign in. Select the option below to see the possible solution.</string>
+    <string name="cancelForget">Cancel Cannot Login</string>
 
 
 </resources>

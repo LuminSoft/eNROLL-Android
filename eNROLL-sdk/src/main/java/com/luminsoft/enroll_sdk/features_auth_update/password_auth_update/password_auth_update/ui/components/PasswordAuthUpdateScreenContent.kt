@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +46,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
+import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import org.koin.compose.koinInject
 
@@ -71,13 +73,21 @@ fun PasswordAuthUpdateScreenContent(
     val activity = context.findActivity()
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val passwordApproved = passwordAuthViewModel.passwordApproved.collectAsState()
+    val isButtonLoading = passwordAuthViewModel.isButtonLoading.collectAsState()
     val failure = passwordAuthViewModel.failure.collectAsState()
     val password = passwordAuthViewModel.password.collectAsState()
 
-    BackGroundView(navController = navController, showAppBar = true) {
+
+    LaunchedEffect(passwordApproved.value) {
         if (passwordApproved.value) {
             updateViewModel.navigateToUpdateAfterAuthStep()
-        } else if (!failure.value?.message.isNullOrEmpty()) {
+        }
+    }
+
+    BackGroundView(navController = navController, showAppBar = true) {
+
+        if (isButtonLoading.value) LoadingView()
+        else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(

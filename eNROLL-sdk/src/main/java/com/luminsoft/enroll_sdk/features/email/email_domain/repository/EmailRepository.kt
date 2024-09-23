@@ -9,9 +9,11 @@ import com.luminsoft.enroll_sdk.features.email.email_data.email_models.make_defa
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
 
 interface EmailRepository {
-     suspend fun mailInfo(request: MailInfoRequestModel): Either<SdkFailure, Null>
-     suspend fun sendOTP(): Either<SdkFailure, Null>
-     suspend fun approveMails(): Either<SdkFailure, Null>
-     suspend fun validateOTP(request: ValidateOTPRequestModel): Either<SdkFailure, Null>
-     suspend fun getVerifiedMails(): Either<SdkFailure, List<GetVerifiedMailsResponseModel>>
-     suspend fun makeDefault(request: MakeDefaultRequestModel): Either<SdkFailure, Null>}
+    suspend fun mailInfo(request: MailInfoRequestModel): Either<SdkFailure, Null>
+    suspend fun sendOTP(): Either<SdkFailure, Null>
+    suspend fun approveMails(): Either<SdkFailure, Null>
+    suspend fun validateOTP(request: ValidateOTPRequestModel): Either<SdkFailure, Null>
+    suspend fun getVerifiedMails(): Either<SdkFailure, List<GetVerifiedMailsResponseModel>>
+    suspend fun makeDefault(request: MakeDefaultRequestModel): Either<SdkFailure, Null>
+    suspend fun deleteMail(request: MakeDefaultRequestModel): Either<SdkFailure, Null>
+}

@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.ui.components
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -45,7 +46,6 @@ import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.usecases.UpdatePhoneAddUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.multiplePhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.validateOtpPhonesUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_update.view_model.AddPhoneUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
@@ -97,7 +97,6 @@ fun PhonesUpdateScreenContent(
 
     var phoneNumber: String by rememberSaveable { mutableStateOf("") }
     var phoneCode: String by rememberSaveable { mutableStateOf("") }
-//    var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
     var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
 
     BackGroundView(navController = navController, showAppBar = true) {
@@ -172,7 +171,7 @@ fun PhonesUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.step_03_phone),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.3f)
                 )
@@ -197,9 +196,12 @@ fun PhonesUpdateScreenContent(
                             errorBorderColor = MaterialTheme.appColors.errorColor,
                             unfocusedBorderColor = MaterialTheme.appColors.primary,
                             errorLabelColor = MaterialTheme.appColors.errorColor,
-                            focusedLabelColor = MaterialTheme.appColors.primary,
-                            disabledLabelColor = MaterialTheme.appColors.primary,
-                            unfocusedLabelColor = MaterialTheme.appColors.primary,
+                            textColor = MaterialTheme.appColors.textColor,
+                            focusedLabelColor = MaterialTheme.appColors.textColor,
+                            placeholderColor = MaterialTheme.appColors.textColor.copy(alpha = 0.5f),
+
+                            disabledLabelColor = MaterialTheme.appColors.textColor,
+                            unfocusedLabelColor = MaterialTheme.appColors.textColor,
                         ),
                         shape = RoundedCornerShape(8.dp),
                         onValueChange = { (code, phone), isValid ->
@@ -228,7 +230,7 @@ fun PhonesUpdateScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.sendPhoneOtpContent),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp
                 )
@@ -243,7 +245,7 @@ fun PhonesUpdateScreenContent(
                 if (!verifiedPhones.value.isNullOrEmpty())
                     ButtonView(
                         onClick = {
-                            navController.navigate(multiplePhonesUpdateScreenContent)
+                            navController.navigate(updateListScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
                         color = MaterialTheme.appColors.backGround,

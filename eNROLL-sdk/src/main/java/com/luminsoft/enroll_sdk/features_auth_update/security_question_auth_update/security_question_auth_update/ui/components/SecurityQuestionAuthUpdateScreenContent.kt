@@ -1,4 +1,3 @@
-
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +40,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth.ui.components.answerValidate
 import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.GetSecurityQuestionAuthUpdateUseCase
 import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.ValidateSecurityQuestionAuthUpdateUseCase
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -78,17 +79,21 @@ fun SecurityQuestionAuthUpdateScreenContent(
     val context = LocalContext.current
     val activity = context.findActivity()
     val loading = securityQuestionViewModel.loading.collectAsState()
-    val securityQuestionApproved = securityQuestionViewModel.securityQuestionApproved.collectAsState()
+    val securityQuestionApproved =
+        securityQuestionViewModel.securityQuestionApproved.collectAsState()
     val failure = securityQuestionViewModel.failure.collectAsState()
     val answer = securityQuestionViewModel.answer.collectAsState()
     val securityQuestionAPI = securityQuestionViewModel.securityQuestion.collectAsState()
     val answerError = securityQuestionViewModel.answerError.collectAsState()
 
-    BackGroundView(navController = navController, showAppBar = true) {
+    LaunchedEffect(securityQuestionApproved.value) {
         if (securityQuestionApproved.value) {
-              updateViewModel.navigateToUpdateAfterAuthStep()
+            updateViewModel.navigateToUpdateAfterAuthStep()
         }
-       else if (loading.value) LoadingView()
+    }
+    BackGroundView(navController = navController, showAppBar = true) {
+
+        if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
@@ -132,7 +137,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
@@ -162,7 +167,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
                                 painter = painterResource(R.drawable.info_icon),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds,
-                                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
@@ -202,7 +207,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
                 ButtonView(
                     onClick = {
                         navController.popBackStack()
-                              },
+                    },
                     stringResource(id = R.string.cancel),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
@@ -245,7 +250,7 @@ private fun AnswerTextFieldWidget(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -269,12 +274,12 @@ private fun AnswerTextFieldWidget(
 
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color.White,
-    focusedTextColor = Color.Black,
-    unfocusedTextColor = Color.Black,
-    disabledTextColor = Color.Black,
+    focusedContainerColor = MaterialTheme.appColors.white,
+    unfocusedContainerColor = MaterialTheme.appColors.white,
+    disabledContainerColor = MaterialTheme.appColors.white,
+    focusedTextColor = MaterialTheme.appColors.appBlack,
+    unfocusedTextColor = MaterialTheme.appColors.appBlack,
+    disabledTextColor = MaterialTheme.appColors.appBlack,
     focusedIndicatorColor = MaterialTheme.appColors.primary,
     unfocusedIndicatorColor = MaterialTheme.appColors.primary,
     disabledIndicatorColor = MaterialTheme.appColors.primary,

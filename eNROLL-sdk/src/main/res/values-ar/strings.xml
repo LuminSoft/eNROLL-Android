@@ -6,6 +6,7 @@
     <string name="contactUs">اتصل بنا</string>
     <string name="username">اسم المستخدم</string>
     <string name="password">كلمة المرور</string>
+    <string name="enterPassword">أدخل كلمة المرور</string>
     <string name="signInTitle">تسجيل الدخول</string>
     <string name="fullName">الاسم بالكامل</string>
     <string name="mail">البريد الإلكتروني</string>
@@ -14,7 +15,11 @@
     <string name="confirmPassword">تأكيد كلمة المرور</string>
     <string name="errorEmptyPassword">من فضلك أدخل كلمة المرور</string>
     <string name="errorLengthPassword">يجب ألا تقل كلمة المرور عن سته أحرف</string>
-    <string name="errorMaxLengthPassword">يجب ألا تزيد كلمة المرور عن 128 حرف</string>
+    <string name="errorMaxLengthPassword">لا يمكن أن تتجاوز كلمة المرور 128 حرفًا</string>
+    <string name="errorMissingUppercase">يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل</string>
+    <string name="errorMissingLowercase">يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل</string>
+    <string name="errorMissingNumber">يجب أن تحتوي كلمة المرور على رقم واحد على الأقل</string>
+    <string name="errorMissingSymbol">يجب أن تحتوي كلمة المرور على رمز واحد على الأقل</string>
     <string name="errorFormatPassword">كلمة المرور غير صحيحة</string>
     <string name="scanIDFrontSide">مسح الوجه الأمامي لبطاقة الهوية ضوئيا</string>
     <string name="takeAPictureOfFrontSide">التقاط صورة الوجه الأمامي لبطاقة الهوية</string>
@@ -63,6 +68,8 @@
     <string name="allCorrect">جميع البيانات صحيحة</string>
     <string name="incorrectTryAgain">خطأ! يرجى المحاولة مرة أخرى</string>
     <string name="cancel">إلغاء</string>
+    <string name="enterNationalIDorMRZ">ادخل جواز سفر أو بطاقة هوية</string>
+
     <string name="profession">المهنة</string>
     <string name="status">الحالة</string>
     <string name="religion">الديانة</string>
@@ -194,7 +201,7 @@
     <string name="invalid_pin_code">الرقم المتغير غير صحيح</string>
     <string name="required_pin_code">مطلوب الرقم المتغير</string>
     <string name="required_password">مطلوب كلمة مرور</string>
-    <string name="required_confirm_password">مطلوب كلمة تأكيد المرور</string>
+    <string name="required_confirm_password">مطلوب تأكيد كلمة المرور</string>
     <string name="required_english_name">الاسم باللغه الانجليزيه مطلوب</string>
     <string name="required_arabic_name">لاسم باللغه العربية مطلوب</string>
     <string name="save_mobile_device">يوجد خطأ في جواز السفر</string>
@@ -208,6 +215,7 @@
     <string name="someThingWentWrong">حدث خطأ</string>
     <string name="re_createAccount">إعادة إنشاء الحساب</string>
     <string name="successfulRegistration">تم إنشاء الحساب بنجاح</string>
+    <string name="too_many_attempts">لقد تجاوزت عدد المحاولات المسموح بها.</string>
     <string name="successfulUpdate">تم تحديث الحساب بنجاح</string>
     <string name="you_would_be_required_to_sign_documents_later_on">سوف يُطلب منك التوقيع على المستندات لاحقًا</string>
     <string name="we_will_contact_you_to_receive_the_physical_token">سوف نتصل بك لإستلام التوقيع الإلكتروني</string>
@@ -328,5 +336,22 @@
     <string name="deleteConfirmationMessage">هل أنت متأكد من حذف هذا البريد الإلكتروني ؟ \n </string>
     <string name="phoneDeleteConfirmationMessage">هل أنت متأكد من حذف هذا الهاتف ؟ \n </string>
     <string name="delete">حذف</string>
+    <string name="forgetNationalId">نسيت البطاقة</string>
+    <string name="forgetPassport">نسيت جواز السفر</string>
+    <string name="forgetPhoneNumber">نسيت رقم الهاتف</string>
+    <string name="forgetMail">نسيت البريد الإلكتروني</string>
+    <string name="forgetSecurityQuestion">نسيت سؤال الأمان</string>
+    <string name="forgetLocation">نسيت الموقع</string>
+    <string name="forgetDevice">نسيت الرقم التعريفي</string>
+    <string name="forgetPassword">نسيت كلمة المرور</string>
+    <string name="forgetAml">نسيت غسيل الاموال</string>
+    <string name="forgetElectronicSignature">نسيت التوقيع الإلكتروني</string>
+    <string name="forgetPhoneNumberDescription">هل فقدت رقم الهاتف المرتبط بحساب التسجيل الخاص بك؟</string>
+    <string name="forgetMailDescription">هل نسيت البريد الإلكتروني المرتبط بحساب التسجيل الخاص بك؟</string>
+    <string name="forgetDeviceDescription">هل فقدت لهاتفك ولا يمكنك تسجيل الدخول للتسجيل؟</string>
+    <string name="forgetLocationDescription">هل تواجه مشاكل في الوصول إلى موقعك على التسجيل؟</string>
+    <string name="forgetPasswordDescription">هل تواجه مشكلة في تذكر كلمة المرور الخاصة بك للتسجيل؟</string>
+    <string name="cannotLogin">هناك بعض الأسباب التي قد تجعلك غير قادر على تسجيل الدخول. حدد الخيار أدناه لمعرفة الحل المحتمل</string>
+    <string name="cancelForget">إلغاء لا استطيع الدخول</string>
 
 </resources>

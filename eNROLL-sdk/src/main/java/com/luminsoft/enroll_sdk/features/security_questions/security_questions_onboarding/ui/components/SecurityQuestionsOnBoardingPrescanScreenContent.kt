@@ -53,6 +53,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.GetSecurityQuestionsUseCase
@@ -181,29 +182,26 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     painterResource(R.drawable.step_06_security_questions),
                     contentDescription = "",
                     contentScale = ContentScale.FillHeight,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    StepsProgressBar(
-                        modifier = Modifier
-                            .fillMaxWidth(0.4f),
-                        numberOfSteps = 2,
-                        currentStep = selectedSecurityQuestions.value.size,
-                    )
-                }
+                StepsProgressBar(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f)
+                        .align(Alignment.CenterHorizontally),
+                    numberOfSteps = 2,
+                    currentStep = selectedSecurityQuestions.value.size,
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
                     fontSize = 12.sp,
-                    color = Color.Black
-                )
+                    color = MaterialTheme.appColors.textColor,
+
+                    )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 DropdownList(
@@ -222,23 +220,45 @@ fun SecurityQuestionsOnBoardingScreenContent(
                     onClick = {
                         answerValidate.value = true
                         securityQuestionsOnBoardingVM.onChangeValue(securityQuestionsOnBoardingVM.answer.value)
-                        if (selectedQuestion.value != null) {
-                            val securityQuestionModel = GetSecurityQuestionsResponseModel()
-                            securityQuestionModel.question = selectedQuestion.value!!.question
-                            securityQuestionModel.id = selectedQuestion.value!!.id
-                            securityQuestionModel.answer = answer.value.text
 
+                        val securityQuestionModel = GetSecurityQuestionsResponseModel()
+
+                        val isAnswerValid =
+                            answer.value.text.isNotEmpty() && answer.value.text.length < 150
+                        val isQuestionSelected = selectedQuestion.value != null
+                        var selectedQuestionValue: GetSecurityQuestionsResponseModel? = null
+
+                        if (isAnswerValid) {
+                            securityQuestionModel.answer = answer.value.text
+                        } else {
+                            securityQuestionsViewModel.answerError.value =
+                                ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
+                        }
+
+
+                        if (isQuestionSelected) {
+                            selectedQuestionValue = selectedQuestion.value!!
+                            securityQuestionModel.question = selectedQuestionValue.question
+                            securityQuestionModel.id = selectedQuestionValue.id
+
+                        } else {
+                            securityQuestionsViewModel.selectQuestionError.value = true
+                        }
+
+                        if (isAnswerValid && isQuestionSelected) {
                             onBoardingViewModel.selectedSecurityQuestions.value.add(
                                 securityQuestionModel
                             )
-                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
+                            onBoardingViewModel.securityQuestionsList.value.remove(
+                                selectedQuestionValue
+                            )
 
-                            if (selectedSecurityQuestions.value.size < 3)
+                            if (onBoardingViewModel.selectedSecurityQuestions.value.size < 3) {
                                 navController.navigate(securityQuestionsOnBoardingScreenContent)
-                            else
-                                securityQuestionsOnBoardingVM.postSecurityQuestionsCall()
-                        } else
-                            securityQuestionsViewModel.selectQuestionError.value = true
+                            } else {
+                                securityQuestionsViewModel.postSecurityQuestionsCall()
+                            }
+                        }
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
@@ -270,17 +290,24 @@ private fun AnswerTextField(
                     text = "${answer.value.text.length} / $maxChar",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
+                    color = MaterialTheme.appColors.secondary
                 )
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            placeholder = {
+                Text(
+                    stringResource(id = R.string.answer),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.appColors.secondary
+                )
+            },
             colors = textFieldColors(),
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -328,7 +355,8 @@ fun DropdownList(
             placeholder = {
                 Text(
                     stringResource(id = R.string.chooseAQuestions),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    color = MaterialTheme.appColors.secondary
                 )
             },
             colors = textFieldColors(),
@@ -342,7 +370,7 @@ fun DropdownList(
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.info_icon),
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )
@@ -390,12 +418,12 @@ fun DropdownList(
 
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color.White,
-    focusedTextColor = Color.Black,
-    unfocusedTextColor = Color.Black,
-    disabledTextColor = Color.Black,
+    focusedContainerColor = MaterialTheme.appColors.white,
+    unfocusedContainerColor = MaterialTheme.appColors.white,
+    disabledContainerColor = MaterialTheme.appColors.white,
+    focusedTextColor = MaterialTheme.appColors.appBlack,
+    unfocusedTextColor = MaterialTheme.appColors.appBlack,
+    disabledTextColor = MaterialTheme.appColors.appBlack,
     focusedIndicatorColor = MaterialTheme.appColors.primary,
     unfocusedIndicatorColor = MaterialTheme.appColors.primary,
     disabledIndicatorColor = MaterialTheme.appColors.primary,
@@ -404,7 +432,8 @@ private fun textFieldColors() = TextFieldDefaults.colors(
 @Composable
 fun StepsProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentStep: Int) {
     Row(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(), // Ensure full width of the Row is used
+        horizontalArrangement = Arrangement.Center, // Center items within the Row
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (step in 0..numberOfSteps) {
@@ -426,7 +455,7 @@ fun Step(
     isFirstItem: Boolean
 ) {
     val color =
-        if (isCompete || isCurrent) MaterialTheme.appColors.primary else Color(0xffEBEBEB)
+        if (isCompete || isCurrent) MaterialTheme.appColors.primary else MaterialTheme.appColors.secondary
 
     Box(modifier = modifier) {
 

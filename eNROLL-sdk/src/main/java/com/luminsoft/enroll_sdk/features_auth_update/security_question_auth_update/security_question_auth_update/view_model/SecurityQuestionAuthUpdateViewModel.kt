@@ -98,7 +98,6 @@ class SecurityQuestionAuthUpdateViewModel(
                 },
                 {
                     securityQuestionApproved.value = true
-                    loading.value = false
                 })
         }
     }

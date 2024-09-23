@@ -17,6 +17,7 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
+import com.luminsoft.enroll_sdk.features_auth_update.device_id_auth_update.device_id_auth_update_di.deviceIdAuthUpdateModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.emailUpdateRouter
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_di_update.phoneUpdateModule
@@ -30,7 +31,6 @@ import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRou
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
-import com.luminsoft.enroll_sdk.features_auth_update.device_id_auth_update.device_id_auth_update_di.deviceIdAuthUpdateModule
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
 import mailAuthUpdateModule
@@ -41,14 +41,22 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
-import phoneAuthUpdateModule
-import phoneAuthUpdateRouter
 import passwordAuthUpdateModule
 import passwordAuthUpdateRouter
+import phoneAuthUpdateModule
+import phoneAuthUpdateRouter
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
+import updateDeviceIdModule
+import updateDeviceIdRouter
 import updateLocationModule
 import updateNationalIdConfirmationModule
+import updatePassportModule
+import updatePassportRouter
+import updatePasswordModule
+import updatePasswordRouter
+import updateSecurityQuestionsModule
+import updateSecurityQuestionsRouter
 
 
 @Suppress("DEPRECATION")
@@ -96,7 +104,11 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                     updateNationalIdRouter(navController = navController, updateViewModel)
                     mailAuthUpdateRouter(navController = navController, updateViewModel)
                     passwordAuthUpdateRouter(navController = navController, updateViewModel)
+                    updateDeviceIdRouter(navController = navController)
                     phoneAuthUpdateRouter(navController = navController, updateViewModel)
+                    updateSecurityQuestionsRouter(navController = navController, updateViewModel)
+                    updatePassportRouter(navController = navController, updateViewModel)
+                    updatePasswordRouter(navController = navController, updateViewModel)
 
                 }
             }
@@ -121,6 +133,10 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(passwordAuthUpdateModule)
                 modules(mailAuthUpdateModule)
                 modules(phoneAuthUpdateModule)
+                modules(updateDeviceIdModule)
+                modules(updateSecurityQuestionsModule)
+                modules(updatePassportModule)
+                modules(updatePasswordModule)
             }.koin
         }
     }

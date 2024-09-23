@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -154,8 +155,7 @@ fun MultiplePhonesUpdateScreenContent(
                         })
                 }
             }
-        }
-        else if (!verifiedPhones.value.isNullOrEmpty()) {
+        } else if (!verifiedPhones.value.isNullOrEmpty()) {
             updateViewModel.verifiedPhones.value = verifiedPhones.value
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -168,7 +168,7 @@ fun MultiplePhonesUpdateScreenContent(
                 Image(
                     painterResource(R.drawable.step_03_phone),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.fillMaxHeight(0.2f)
                 )
@@ -249,7 +249,7 @@ private fun PhoneItem(
                 Image(
                     painterResource(R.drawable.mobile_icon),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(50.dp)
                 )

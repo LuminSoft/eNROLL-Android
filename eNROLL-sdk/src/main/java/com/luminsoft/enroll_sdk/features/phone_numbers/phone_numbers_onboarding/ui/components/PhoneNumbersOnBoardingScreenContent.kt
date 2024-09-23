@@ -188,10 +188,11 @@ fun PhoneNumbersOnBoardingScreenContent(
                             disabledBorderColor = MaterialTheme.appColors.primary,
                             errorBorderColor = MaterialTheme.appColors.errorColor,
                             unfocusedBorderColor = MaterialTheme.appColors.primary,
+                            textColor =  MaterialTheme.appColors.textColor,
                             errorLabelColor = MaterialTheme.appColors.errorColor,
-                            focusedLabelColor = MaterialTheme.appColors.primary,
-                            disabledLabelColor = MaterialTheme.appColors.primary,
-                            unfocusedLabelColor = MaterialTheme.appColors.primary,
+                            placeholderColor = MaterialTheme.appColors.textColor.copy(alpha = 0.5f),
+                            focusedLabelColor = MaterialTheme.appColors.textColor,
+                            disabledLabelColor = MaterialTheme.appColors.textColor,
                         ),
                         shape = RoundedCornerShape(8.dp),
                         onValueChange = { (code, phone), isValid ->
@@ -208,7 +209,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                             Text(
                                 ResourceProvider.instance.getStringResource(R.string.phoneNumber),
                                 fontSize = 14.sp,
-                                color = MaterialTheme.appColors.primary
+                                color = MaterialTheme.appColors.textColor
                             )
                         },
                     )
@@ -219,7 +220,7 @@ fun PhoneNumbersOnBoardingScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.sendPhoneOtpContent),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))

@@ -69,6 +69,8 @@ var dotenv = dotenv {
 //    filename = "env_azimut_production"
 //    filename = "env_lumin_production"
 //    filename = "env_naspas_production"
+//    filename = "env_naspas_staging"
+//    filename = "env_fra_staging"
     filename = "env_test_2"
 }
 
@@ -125,7 +127,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activity = LocalContext.current as Activity
 
-            val itemList = listOf("Onboarding", "Auth", "Update")
+            val itemList = listOf("Onboarding", "Auth", "Update", "Forget Profile Data")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
 
@@ -234,7 +236,13 @@ class MainActivity : ComponentActivity() {
             eNROLL.init(
                 tenantId = tenantIdText.value.text,
                 tenantSecret = tenantSecretText.value.text,
-                enrollMode = if (selectedIndex == 0) EnrollMode.ONBOARDING else if (selectedIndex == 1) EnrollMode.AUTH else EnrollMode.UPDATE,
+                enrollMode = when (selectedIndex) {
+                    0 -> EnrollMode.ONBOARDING
+                    1 -> EnrollMode.AUTH
+                    2 -> EnrollMode.UPDATE
+                    3 -> EnrollMode.FORGET_PROFILE_DATA
+                    else -> EnrollMode.ONBOARDING
+                },
                 environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
                 enrollCallback = object :
                     EnrollCallback {
@@ -256,7 +264,17 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors = AppColors(),
+                appColors = AppColors(
+                    warningColor = Color(0xFFFFD500),
+                    successColor = Color(0xff0FDE00),
+                    white = Color(0xffffffff),
+                    primary = Color(0xff2481D2),
+                    appBlack = Color(0xff060B27),
+                    backGround = Color(0xff060B27),
+                    secondary = Color(0xff0E1A5D),
+                    errorColor = Color(0xffD2001C),
+                    textColor = Color(0xffffffff)
+                ),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
                 correlationId = "correlationId"
