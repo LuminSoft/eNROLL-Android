@@ -42,10 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -67,6 +64,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.location.location_domain.usecases.PostLocationUseCase
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationDetails
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
@@ -234,7 +232,9 @@ private fun RequestLocation(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.step_00_location, R.string.getLocationText)
+        EnrollItemView(
+            listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3)
+            , R.string.getLocationText)
         ButtonView(
             onClick = {
                 if (permissions.all {
@@ -284,7 +284,8 @@ private fun PermissionDenied(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.invalid_location_permission, R.string.locationAccessErrorText)
+        EnrollItemView(listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3),
+            R.string.locationAccessErrorText)
         ButtonView(
             onClick = {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -320,7 +321,6 @@ private fun PermissionDenied(
                 .safeContentPadding()
                 .height(10.dp)
         )
-
 
     }
 
@@ -375,15 +375,10 @@ private fun GotLocation(
                 )
             }
             if (apiKeyEmptyOrHasException) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f),
-                    painter = painterResource(id = R.drawable.step_00_location),
-                    contentScale = ContentScale.Fit,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
 
-                    contentDescription = "Victor Ekyc Item"
-                )
+
+                val images = listOf(R.drawable.location_saved_1, R.drawable.location_saved_2, R.drawable.location_saved_3)
+                ImagesBox(images = images,  modifier = Modifier.fillMaxWidth(0.8f))
             }
             if (isLoading) LoadingView()
         }

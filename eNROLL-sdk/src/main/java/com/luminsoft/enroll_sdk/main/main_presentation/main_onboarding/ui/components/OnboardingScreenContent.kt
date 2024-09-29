@@ -160,5 +160,5 @@ fun OnboardingScreenContent(
 
 @Composable
 fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    EnrollItemView(onBoardingPage.image, onBoardingPage.text)
+    EnrollItemView(onBoardingPage.images, onBoardingPage.text)
 }

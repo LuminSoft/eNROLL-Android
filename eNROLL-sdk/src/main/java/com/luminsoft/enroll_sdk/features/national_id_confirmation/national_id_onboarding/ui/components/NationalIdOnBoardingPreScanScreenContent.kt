@@ -194,7 +194,9 @@ private fun NationalIdOnly(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.step_01_national_id, R.string.documentPreScanContent)
+        EnrollItemView(
+            listOf(R.drawable.step_01_national_id_1, R.drawable.step_01_national_id_2, R.drawable.step_01_national_id_3)
+            , R.string.documentPreScanContent)
         ButtonView(
             onClick = {
                 rememberedViewModel.enableLoading()
@@ -336,7 +338,9 @@ private fun PassportOnly(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.step_01_passport, R.string.passportPreScanContent)
+        EnrollItemView(
+            listOf(R.drawable.step_01_passport_1, R.drawable.step_01_passport_2, R.drawable.step_01_passport_3)
+            , R.string.passportPreScanContent)
         ButtonView(
             onClick = {
                 rememberedViewModel.enableLoading()

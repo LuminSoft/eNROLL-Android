@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,6 +37,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth.view_model.PasswordAuthViewModel
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_domain.usecases.PasswordAuthUseCase
@@ -138,13 +138,9 @@ fun PasswordAuthScreenContent(
             ) {
                 Spacer(modifier = Modifier.height(50.dp))
 
-                Image(
-                    painterResource(R.drawable.step_07_password),
-                    contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight(0.3f)
-                )
+                val images= listOf(R.drawable.step_07_password_1,R.drawable.step_07_password_2,R.drawable.step_07_password_3)
+                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.3f))
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 NormalTextField(

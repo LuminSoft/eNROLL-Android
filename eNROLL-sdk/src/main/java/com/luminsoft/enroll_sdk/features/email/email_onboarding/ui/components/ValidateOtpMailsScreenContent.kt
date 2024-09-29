@@ -1,7 +1,6 @@
 package com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -31,11 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -50,6 +46,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ValidateOtpMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
@@ -163,19 +160,14 @@ fun ValidateOtpMailsScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 2.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.validate_mail_otp),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-                    modifier = Modifier.fillMaxHeight(0.25f)
-                )
+                val images = listOf(
+                    R.drawable.validate_mail_otp_1,R.drawable.validate_mail_otp_2,R.drawable.validate_mail_otp_3)
+                ImagesBox(images = images,  modifier = Modifier.fillMaxHeight(0.25f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
-
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
@@ -261,7 +253,7 @@ fun ValidateOtpMailsScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue),
                     isEnabled = otpValue.value.length == 6
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 if (!onBoardingViewModel.isNotFirstMail.value)
                     ButtonView(
                         onClick = {
