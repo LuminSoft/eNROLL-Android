@@ -233,7 +233,7 @@ fun PdfViewerWidget(
             Spacer(modifier = Modifier.height(30.dp))
 
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
             ) {
                 ButtonView(
                     onClick = onAcceptClick,

@@ -114,7 +114,9 @@ private fun PassportOnly(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.step_01_passport, R.string.passportPreScanContent)
+        EnrollItemView(
+            listOf(R.drawable.step_01_passport_1, R.drawable.step_01_passport_2, R.drawable.step_01_passport_3)
+            , R.string.passportPreScanContent)
         ButtonView(
             onClick = {
                 rememberedViewModel.enableLoading()

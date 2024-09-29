@@ -40,6 +40,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -131,13 +132,9 @@ fun PasswordAuthUpdateScreenContent(
                     .padding(horizontal = 20.dp)
             ) {
                 Spacer(modifier = Modifier.height(50.dp))
+                val images= listOf(R.drawable.step_07_password_1,R.drawable.step_07_password_2,R.drawable.step_07_password_3)
+                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.3f))
 
-                Image(
-                    painterResource(R.drawable.step_07_password),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight(0.3f)
-                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 NormalTextField(

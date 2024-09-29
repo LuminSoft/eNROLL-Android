@@ -1,3 +1,4 @@
+
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,7 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPostScanScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthErrorScreen
@@ -81,17 +82,16 @@ fun FaceCaptureAuthUpdateErrorScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 30.dp)
+                .padding(horizontal = 24.dp)
 
         ) {
             Spacer(modifier = Modifier.fillMaxHeight(0.25f))
-            Image(
-                painterResource(R.drawable.face_recognition_capture_error),
-                contentDescription = "",
-                contentScale = ContentScale.FillHeight,
-                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-                modifier = Modifier.fillMaxHeight(0.35f)
+            val images = listOf(
+                R.drawable.face_recognition_capture_error_1,
+                R.drawable.face_recognition_capture_error_2,
+                R.drawable.face_recognition_capture_error_3
             )
+            ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f))
             Spacer(modifier = Modifier.height(30.dp))
             errorMessage.value?.let { Text(text = it) }
             Spacer(modifier = Modifier.fillMaxHeight(0.35f))
@@ -106,7 +106,7 @@ fun FaceCaptureAuthUpdateErrorScreen(
                     )
                 }, title = stringResource(id = R.string.exit)
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             ButtonView(
                 onClick = {

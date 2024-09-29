@@ -70,7 +70,9 @@ fun FaceCaptureAuthUpdatePreScanScreenContent(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
         ) {
-            EnrollItemView(R.drawable.step_02_smile_liveness, R.string.facePreCapContent)
+            EnrollItemView(
+                listOf( R.drawable.step_02_smile_liveness_1, R.drawable.step_02_smile_liveness_2, R.drawable.step_02_smile_liveness_3)
+               , R.string.facePreCapContent)
 
             Column {
                 ButtonView(

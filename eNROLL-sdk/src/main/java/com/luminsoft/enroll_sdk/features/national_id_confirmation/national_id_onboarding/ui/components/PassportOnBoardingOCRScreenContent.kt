@@ -232,7 +232,7 @@ private fun MainContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 24.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -356,7 +356,7 @@ private fun MainContent(
                         },
                         title = stringResource(id = R.string.confirmAndContinue)
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     ButtonView(
                         onClick = {
