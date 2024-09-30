@@ -68,7 +68,7 @@ import io.github.cdimascio.dotenv.dotenv
 var dotenv = dotenv {
     directory = "/assets"
 //    filename = "env_andrew"
-    filename = "env_radwan"
+//    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
@@ -77,7 +77,7 @@ var dotenv = dotenv {
 //    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
-//    filename = "env_test_2"
+    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -138,12 +138,12 @@ class MainActivity : ComponentActivity() {
             val buttonModifier = Modifier.width(300.dp)
 
             var primaryColor by remember { mutableStateOf(Color(0xFF1D56B8)) }
-            var secondaryColor by remember { mutableStateOf( Color(0xff5791DB)) }
+            var secondaryColor by remember { mutableStateOf(Color(0xff5791DB)) }
             var textColor by remember { mutableStateOf(Color(0xff004194)) }
             var white by remember { mutableStateOf(Color(0xffffffff)) }
             var warningColor by remember { mutableStateOf(Color(0xFFF9D548)) }
             var successColor by remember { mutableStateOf(Color(0xff61CC3D)) }
-            var backGround by remember { mutableStateOf( Color(0xFFFFFFFF)) }
+            var backGround by remember { mutableStateOf(Color(0xFFFFFFFF)) }
             var appBlack by remember { mutableStateOf(Color(0xff333333)) }
             var errorColor by remember { mutableStateOf(Color(0xFFDB305B)) }
 
@@ -153,11 +153,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 15.dp)
-                        .verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.SpaceBetween
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
 
-                        Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             ColorPickerWidget(
                                 label = "Primary Color",
                                 pickedColor = primaryColor,
@@ -172,12 +176,21 @@ class MainActivity : ComponentActivity() {
                                 pickedColor = secondaryColor,
                                 onColorSelected = { color ->
                                     secondaryColor = color // Update the primary color state
-                                    println("Secondary Color: Color(${colorToHexString(secondaryColor)})")
+                                    println(
+                                        "Secondary Color: Color(${
+                                            colorToHexString(
+                                                secondaryColor
+                                            )
+                                        })"
+                                    )
                                 }
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             ColorPickerWidget(
                                 label = "Text Color",
                                 pickedColor = textColor,
@@ -197,13 +210,22 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             ColorPickerWidget(
                                 label = "Warning Color",
                                 pickedColor = warningColor,
                                 onColorSelected = { color ->
                                     warningColor = color // Update the primary color state
-                                    println("warningColor Color: Color(${colorToHexString(warningColor)})")
+                                    println(
+                                        "warningColor Color: Color(${
+                                            colorToHexString(
+                                                warningColor
+                                            )
+                                        })"
+                                    )
                                 }
                             )
                             ColorPickerWidget(
@@ -211,12 +233,21 @@ class MainActivity : ComponentActivity() {
                                 pickedColor = successColor,
                                 onColorSelected = { color ->
                                     successColor = color // Update the primary color state
-                                    println("successColor Color: Color(${colorToHexString(successColor)})")
+                                    println(
+                                        "successColor Color: Color(${
+                                            colorToHexString(
+                                                successColor
+                                            )
+                                        })"
+                                    )
                                 }
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             ColorPickerWidget(
                                 label = "App Black",
                                 pickedColor = appBlack,
@@ -236,8 +267,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-               Spacer(modifier = Modifier.height(8.dp))
-                        Row (horizontalArrangement = Arrangement.SpaceBetween) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
                             ColorPickerWidget(
                                 label = "BackGround Color",
                                 pickedColor = backGround,
@@ -279,12 +310,18 @@ class MainActivity : ComponentActivity() {
                             })
                         Spacer(modifier = Modifier.height(15.dp))
 
-                        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             ArabicCheckbox()
                             ProductionCheckbox()
                         }
                         Spacer(modifier = Modifier.height(15.dp))
-                        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             RememberMeCheckbox()
                             SkipTutorialCheckbox()
                         }
@@ -316,7 +353,19 @@ class MainActivity : ComponentActivity() {
                             border = border,
                             modifier = modifier,
                             onClick = {
-                                initEnroll(activity, selectedIndex, primaryColor, successColor, appBlack, backGround, errorColor, warningColor, textColor, white, secondaryColor)
+                                initEnroll(
+                                    activity,
+                                    selectedIndex,
+                                    primaryColor,
+                                    successColor,
+                                    appBlack,
+                                    backGround,
+                                    errorColor,
+                                    warningColor,
+                                    textColor,
+                                    white,
+                                    secondaryColor
+                                )
                             },
                             contentPadding = PaddingValues(0.dp),
                             shape = RoundedCornerShape(12.dp),
@@ -406,7 +455,7 @@ class MainActivity : ComponentActivity() {
 
                 appColors = AppColors(
                     warningColor = warningColor,
-                    successColor =successColor,
+                    successColor = successColor,
                     white = white,
                     primary = primaryColor,
                     appBlack = appBlack,
