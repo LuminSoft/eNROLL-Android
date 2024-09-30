@@ -236,7 +236,6 @@ private fun RequestLocation(
         EnrollItemView(   listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3), R.string.getLocationText)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             ButtonView(
