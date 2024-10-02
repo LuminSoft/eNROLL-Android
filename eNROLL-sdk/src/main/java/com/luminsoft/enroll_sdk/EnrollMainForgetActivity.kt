@@ -23,7 +23,6 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.splashScreenForgetContent
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
-import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import forgetLocationModule
 import forgetLocationRouter
 import forgetPasswordModule
@@ -68,7 +67,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
             val forgetViewModel: ForgetViewModel = koinViewModel<ForgetViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(appColors = AppColors()) {
+            EKYCsDKTheme(appColors = EnrollSDK.appColors) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()

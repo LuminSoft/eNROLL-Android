@@ -161,7 +161,7 @@ fun MultiplePhonesUpdateScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
@@ -197,7 +197,7 @@ fun MultiplePhonesUpdateScreenContent(
                     isEnabled = verifiedPhones.value!!.size < 5,
                     textColor = MaterialTheme.appColors.primary,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(
                     onClick = {
