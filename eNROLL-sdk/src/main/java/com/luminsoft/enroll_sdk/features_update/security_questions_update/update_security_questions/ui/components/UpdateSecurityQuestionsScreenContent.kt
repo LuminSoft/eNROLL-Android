@@ -188,7 +188,7 @@ fun UpdateSecurityQuestionsScreenContent(
                 ) {
                     StepsProgressBar(
                         modifier = Modifier
-                            .fillMaxWidth(0.4f),
+                            .fillMaxWidth(0.4f).padding(end = 16.dp),
                         numberOfSteps = 2,
                         currentStep = selectedSecurityQuestions.value.size,
                     )

@@ -449,7 +449,6 @@ private fun GotLocation(
         Spacer(modifier = Modifier.fillMaxHeight(0.3f))
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             ButtonView(
