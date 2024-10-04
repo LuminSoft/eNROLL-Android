@@ -7,6 +7,6 @@ class FaceAutoCaptureViewModelFactory : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return FaceAutoCaptureViewModel(ProcessDetectedFaceUseCase()) as T
+        return FaceAutoCaptureViewModel(CreateUiResultUseCase()) as T
     }
 }
