@@ -173,7 +173,7 @@ private fun MainContent(
             position.animateTo(
                 targetValue = endPosition,
                 animationSpec = tween(
-                    durationMillis = 4500,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -183,7 +183,7 @@ private fun MainContent(
             position1.animateTo(
                 targetValue = endPosition1,
                 animationSpec = tween(
-                    durationMillis = 4500,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -194,7 +194,7 @@ private fun MainContent(
             scale.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(
-                    durationMillis = 4500,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -269,7 +269,7 @@ private fun MainContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 24.dp)
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
@@ -292,7 +292,7 @@ private fun MainContent(
                         },
                         title = stringResource(id = R.string.rescan)
                     )
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     ButtonView(
                         onClick = {

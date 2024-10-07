@@ -1,8 +1,4 @@
-package com.luminsoft.enroll_sdk.features_forget.forget_location.forget_location_presentation.ui.components
 
-import ForgetLocationUseCase
-import ForgetLocationViewModel
-import LocationDetails
 import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -31,7 +27,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -46,17 +41,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import appColors
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.android.gms.common.api.ResolvableApiException
@@ -72,6 +63,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.forgetListScreenContent
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -81,7 +73,6 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
-import findActivity
 import org.koin.compose.koinInject
 
 
@@ -191,7 +182,8 @@ fun ForgetLocationScreenContent(
                     }
                 }
             }
-        } else if (permissionDenied.value) {
+        }
+        else if (permissionDenied.value) {
             PermissionDenied(
                 permissions,
                 context,
@@ -235,12 +227,14 @@ private fun RequestLocation(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.step_00_location, R.string.getLocationText)
+        EnrollItemView(
+            listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3)
+            , R.string.getLocationText)
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
         ) {
             ButtonView(
                 onClick = {
@@ -265,9 +259,10 @@ private fun RequestLocation(
                 },
                 stringResource(id = R.string.start),
             )
+            Spacer(modifier = Modifier.height(8.dp))
             ButtonView(
                 onClick = {
-                    forgetViewModel.token.value = forgetViewModel.originalToken.value
+                    forgetViewModel.token.value=forgetViewModel.originalToken.value
                     RetroClient.setToken(forgetViewModel.originalToken.value.toString())
                     navController.navigate(forgetListScreenContent)
                 },
@@ -304,7 +299,7 @@ private fun PermissionDenied(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.invalid_location_permission, R.string.locationAccessErrorText)
+        EnrollItemView(   listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3), R.string.locationAccessErrorText)
         ButtonView(
             onClick = {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -395,15 +390,8 @@ private fun GotLocation(
                 )
             }
             if (apiKeyEmptyOrHasException) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f),
-                    painter = painterResource(id = R.drawable.step_00_location),
-                    contentScale = ContentScale.Fit,
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-
-                    contentDescription = "Victor Ekyc Item"
-                )
+                val images= listOf(R.drawable.step_00_location_1,R.drawable.step_00_location_2,R.drawable.step_00_location_3)
+                ImagesBox(images = images,  modifier = Modifier.fillMaxWidth(0.8f),)
             }
             if (isLoading) LoadingView()
         }

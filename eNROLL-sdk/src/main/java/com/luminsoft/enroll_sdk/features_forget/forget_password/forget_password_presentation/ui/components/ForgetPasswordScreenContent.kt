@@ -1,5 +1,3 @@
-
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,6 +36,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -69,7 +67,7 @@ fun ForgetPasswordScreenContent(
     val forgetPasswordViewModel =
         remember {
             ForgetPasswordViewModel(
-                getDefaultEmailUseCase  = getDefaultEmailUseCase,
+                getDefaultEmailUseCase = getDefaultEmailUseCase,
                 mailSendOTPUseCase = mailSendOTPUseCase,
                 validateOtpMailUseCase = validateOtpMailUseCase,
                 forgetPasswordUseCase = forgetPasswordUseCase
@@ -104,12 +102,10 @@ fun ForgetPasswordScreenContent(
                     )
                 },
             )
-        }
-
-        else if (!failure.value?.message.isNullOrEmpty()) {
+        } else if (!failure.value?.message.isNullOrEmpty()) {
             var showDialog by remember { mutableStateOf(true) }
 
-             if (failure.value is AuthFailure) {
+            if (failure.value is AuthFailure) {
                 failure.value?.let { failureData ->
                     if (showDialog) {
                         DialogView(
@@ -118,7 +114,12 @@ fun ForgetPasswordScreenContent(
                             buttonText = stringResource(id = R.string.exit),
                             onPressedButton = {
                                 activity.finish()
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(failureData.message, failureData))
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        failureData.message,
+                                        failureData
+                                    )
+                                )
                                 showDialog = false
                             }
                         )
@@ -132,28 +133,31 @@ fun ForgetPasswordScreenContent(
                             text = failureData.message,
                             buttonText = stringResource(id = R.string.retry),
                             onPressedButton = {
-                                    showDialog = false
-                                    forgetPasswordViewModel.clearError()
+                                showDialog = false
+                                forgetPasswordViewModel.clearError()
 
-                                    navController.navigate(forgetPasswordScreenContent) {
-                                        popUpTo(navController.graph.startDestinationId) {
-                                            inclusive = true
-                                        }
+                                navController.navigate(forgetPasswordScreenContent) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
                                     }
+                                }
                             },
                             secondButtonText = stringResource(id = R.string.exit),
                             onPressedSecondButton = {
                                 activity.finish()
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(failureData.message, failureData))
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        failureData.message,
+                                        failureData
+                                    )
+                                )
                                 showDialog = false
                             }
                         )
                     }
                 }
             }
-        }
-
-        else
+        } else
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -163,15 +167,11 @@ fun ForgetPasswordScreenContent(
                     .padding(bottom = 16.dp, start = 20.dp, end = 20.dp)
             ) {
                 Spacer(modifier = Modifier.height(25.dp))
-
-                Image(
-                    painterResource(R.drawable.step_07_password),
-                    contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight(0.3f)
-                )
+                val images = listOf(
+                    R.drawable.step_07_password_1,
+                    R.drawable.step_07_password_2,
+                    R.drawable.step_07_password_3)
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 // Add these states to store the validation messages dynamically
                 var passwordError by rememberSaveable { mutableStateOf<String?>(null) }
@@ -191,7 +191,8 @@ fun ForgetPasswordScreenContent(
                     },
                     height = 60.0,
                     trailingIcon = {
-                        val imageResource = if (passwordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
+                        val imageResource =
+                            if (passwordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
                         val description = if (passwordVisible) "Hide password" else "Show password"
 
                         Image(
@@ -228,8 +229,10 @@ fun ForgetPasswordScreenContent(
                     ),
                     height = 60.0,
                     trailingIcon = {
-                        val imageResource = if (rePasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
-                        val description = if (rePasswordVisible) "Hide password" else "Show password"
+                        val imageResource =
+                            if (rePasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
+                        val description =
+                            if (rePasswordVisible) "Hide password" else "Show password"
 
                         Image(
                             painterResource(imageResource),

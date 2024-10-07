@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +32,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
@@ -150,18 +150,12 @@ fun MailsUpdateScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_04_email),
-                    contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.3f)
-                )
+                val images= listOf(R.drawable.step_04_email_1,R.drawable.step_04_email_2,R.drawable.step_04_email_3)
+                ImagesBox(images = images,     modifier = Modifier.fillMaxHeight(0.3f))
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
@@ -211,7 +205,7 @@ fun MailsUpdateScreenContent(
                             mailsUpdateViewModel.isClicked.value = true
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 if (!verifiedMails.value.isNullOrEmpty())
                     ButtonView(
                         onClick = {

@@ -40,6 +40,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
@@ -155,18 +156,16 @@ fun ForgetPasswordAuthScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.validate_mail_otp),
-                    contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.25f)
+                val images = listOf(
+                    R.drawable.validate_mail_otp_1,
+                    R.drawable.validate_mail_otp_2,
+                    R.drawable.validate_mail_otp_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.emailOtpGuideWithMailVariable),
@@ -211,7 +210,7 @@ fun ForgetPasswordAuthScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue),
                     isEnabled = otpValue.value.length == 6
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 ButtonView(
                     onClick = {
                         forgetPasswordViewModel.callGetDefaultEmail()

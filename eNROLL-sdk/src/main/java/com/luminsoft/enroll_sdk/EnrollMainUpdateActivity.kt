@@ -30,7 +30,6 @@ import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRouter
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
-import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
 import mailAuthUpdateModule
@@ -89,7 +88,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
             val updateViewModel: UpdateViewModel = koinViewModel<UpdateViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(appColors = AppColors()) {
+            EKYCsDKTheme(appColors = EnrollSDK.appColors) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()

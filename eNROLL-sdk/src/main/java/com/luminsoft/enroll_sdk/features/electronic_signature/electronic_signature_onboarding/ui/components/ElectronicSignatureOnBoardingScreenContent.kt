@@ -297,7 +297,7 @@ private fun ApplyForSignatureOrAlreadyHave(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 24.dp)
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.25f))
 
@@ -354,7 +354,7 @@ private fun ApplyForSignatureOrAlreadyHave(
             },
             stringResource(id = R.string.continue_to_next),
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         ButtonView(
             onClick = {

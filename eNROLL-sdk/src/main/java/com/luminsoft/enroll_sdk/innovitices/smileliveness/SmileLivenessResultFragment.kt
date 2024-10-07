@@ -1,5 +1,4 @@
 package com.luminsoft.enroll_sdk.innovitices.smileliveness
-
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -10,26 +9,24 @@ import com.luminsoft.ekyc_android_sdk.R
 class SmileLivenessResultFragment : Fragment(R.layout.fragment_smile_liveness_result) {
 
     private val smileLivenessViewModel: SmileLivenessViewModel by activityViewModels()
-    private lateinit var neutralExpressionImageView: ImageView
-    private lateinit var smileExpressionImageView: ImageView
+
+    private lateinit var imageView: ImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViews(view)
-        setupFaceAutoCaptureViewModel()
+        setupSmileLivenessViewModel()
     }
 
     private fun setViews(view: View) {
-        neutralExpressionImageView = view.findViewById(R.id.neutral_expression_image)
-        smileExpressionImageView = view.findViewById(R.id.smile_expression_image)
+        imageView = view.findViewById(R.id.image)
     }
 
-    private fun setupFaceAutoCaptureViewModel() {
+    private fun setupSmileLivenessViewModel() {
         smileLivenessViewModel.state.observe(viewLifecycleOwner) { showResult(it.result!!) }
     }
 
     private fun showResult(result: SmileLivenessResult) {
-        neutralExpressionImageView.setImageBitmap(result.neutralExpressionBitmap)
-        smileExpressionImageView.setImageBitmap(result.smileExpressionBitmap)
+        imageView.setImageBitmap(result.bitmap)
     }
 }

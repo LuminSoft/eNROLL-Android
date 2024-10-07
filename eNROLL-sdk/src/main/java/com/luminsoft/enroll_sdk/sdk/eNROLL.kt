@@ -65,7 +65,7 @@ object eNROLL {
         if (EnrollSDK.tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
         setLocale(EnrollSDK.localizationCode, activity)
-        when (EnrollSDK.enrollMode) {
+        when (EnrollSDK.enrollMode!!) {
             EnrollMode.ONBOARDING -> {
                 activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
             }

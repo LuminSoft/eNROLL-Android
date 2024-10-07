@@ -1,112 +1,98 @@
 package com.luminsoft.enroll_sdk.innovitices.faceautocapture
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import com.luminsoft.enroll_sdk.innovitices.MainViewModel
-import com.luminsoft.enroll_sdk.innovitices.activities.FaceCaptureActivity
-import com.luminsoft.enroll_sdk.innovitices.face.DotFaceViewModel
-import com.luminsoft.enroll_sdk.innovitices.face.DotFaceViewModelFactory
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.innovatrics.dot.face.autocapture.FaceAutoCaptureDetection
 import com.innovatrics.dot.face.autocapture.FaceAutoCaptureFragment
-import com.innovatrics.dot.face.autocapture.steps.CaptureStepId
-import com.innovatrics.dot.face.detection.DetectedFace
-import com.luminsoft.enroll_sdk.innovitices.core.RESULT_NO_CAMERA_PERMISSION
-import com.luminsoft.enroll_sdk.innovitices.core.RESULT_SUCCESS
-import com.luminsoft.enroll_sdk.innovitices.core.RESULT_TIME_OUT
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
+import com.innovatrics.dot.face.autocapture.FaceAutoCaptureResult
+import com.innovatrics.dot.face.detection.FaceDetectionQuery
+import com.innovatrics.dot.face.quality.ExpressionQuery
+import com.innovatrics.dot.face.quality.EyesExpressionQuery
+import com.innovatrics.dot.face.quality.FaceImageQualityQuery
+import com.innovatrics.dot.face.quality.FaceQualityQuery
+import com.innovatrics.dot.face.quality.HeadPoseQuery
+import com.innovatrics.dot.face.quality.WearablesQuery
+import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
+import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
+import com.luminsoft.enroll_sdk.innovitices.MainViewModel
+import kotlinx.coroutines.launch
 
 class BasicFaceAutoCaptureFragment : FaceAutoCaptureFragment() {
 
     private val mainViewModel: MainViewModel by activityViewModels()
-    private lateinit var dotFaceViewModel: DotFaceViewModel
-    private lateinit var faceAutoCaptureViewModel: FaceAutoCaptureViewModel
+    private val dotSdkViewModel: DotSdkViewModel by activityViewModels {
+        DotSdkViewModelFactory(
+            requireActivity().application
+        )
+    }
+    private val faceAutoCaptureViewModel: FaceAutoCaptureViewModel by activityViewModels { FaceAutoCaptureViewModelFactory() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupDotFaceViewModel()
+        setupDotSdkViewModel()
         setupFaceAutoCaptureViewModel()
     }
-    private val timer = object: CountDownTimer(60000, 60000) {
-        override fun onTick(millisUntilFinished: Long) {
-        }
 
-        override fun onFinish() {
-            activity?.setResult(RESULT_TIME_OUT)
-            activity?.finish()
-        }
-    }
+    override fun provideConfiguration() = Configuration(
+        query = FaceDetectionQuery(
+            faceQuality = FaceQualityQuery(
+                imageQuality = FaceImageQualityQuery(
+                    evaluateSharpness = true,
+                    evaluateBrightness = true,
+                    evaluateContrast = true,
+                    evaluateUniqueIntensityLevels = true,
+                    evaluateShadow = true,
+                    evaluateSpecularity = true,
+                ),
+                headPose = HeadPoseQuery(
+                    evaluateRoll = true,
+                    evaluateYaw = true,
+                    evaluatePitch = true,
+                ),
+                wearables = WearablesQuery(
+                    evaluateGlasses = true,
+                ),
+                expression = ExpressionQuery(
+                    eyes = EyesExpressionQuery(
+                        evaluateRightEye = true,
+                        evaluateLeftEye = true,
+                    ),
+                    evaluateMouth = true,
+                ),
+            ),
+        ),
+    )
 
-    private fun setupDotFaceViewModel() {
-        val dotFaceViewModelFactory = DotFaceViewModelFactory(requireActivity().application)
-        dotFaceViewModel = ViewModelProvider(this, dotFaceViewModelFactory).get(DotFaceViewModel::class.java)
-        dotFaceViewModel.state.observe(viewLifecycleOwner) { state ->
-            if (state.isInitialized) {
-                start()
-                timer.start()
-            }
-            state.errorMessage?.let {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
-                dotFaceViewModel.notifyErrorMessageShown()
+    private fun setupDotSdkViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                dotSdkViewModel.state.collect { state ->
+                    if (state.isInitialized) {
+                        start()
+                    }
+                    state.errorMessage?.let {
+                        Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                        dotSdkViewModel.notifyErrorMessageShown()
+                    }
+                }
             }
         }
-        dotFaceViewModel.initializeDotFaceIfNeeded()
+        dotSdkViewModel.initializeDotSdkIfNeeded()
     }
 
     private fun setupFaceAutoCaptureViewModel() {
-        val faceAutoCaptureViewModelFactory = FaceAutoCaptureViewModelFactory()
-        faceAutoCaptureViewModel = ViewModelProvider(requireActivity(), faceAutoCaptureViewModelFactory).get(
-            FaceAutoCaptureViewModel::class.java)
         faceAutoCaptureViewModel.initializeState()
         faceAutoCaptureViewModel.state.observe(viewLifecycleOwner) { state ->
             mainViewModel.setProcessing(state.isProcessing)
             state.result?.let {
-                val file = getDisc()
-
-                if (!file.exists() && !file.mkdirs()) {
-                    file.mkdir()
-                }
-                val dir = File(file.absolutePath)
-                val filename = String.format("${System.currentTimeMillis()}.jpeg")
-                val outfile = File(dir, filename)
-
-
-                val fOut: OutputStream =  FileOutputStream(outfile)
-                val pictureBitmap: Bitmap = it.bitmap // obtaining the Bitmap
-
-                pictureBitmap.compress(
-                        Bitmap.CompressFormat.JPEG,
-                        100,
-                        fOut
-                ) // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
-
-                fOut.flush() // Not really required
-
-                fOut.close() // do not forget to close the stream
-
-
-                val intent = Intent()
-                val uri: Uri = Uri.fromFile(outfile)
-
-
-                intent.data = uri
-                intent.putExtra(FaceCaptureActivity().OUT_PASSIVE_LIVENESS_RESULT_SCORE, it.passiveLivenessFaceAttribute.score)
-                intent.putExtra(FaceCaptureActivity().OUT_PASSIVE_LIVENESS_RESULT_DEPENDENCIES_FULFILLED, it.passiveLivenessFaceAttribute.isPreconditionsMet)
-
-                Log.e("score",it.passiveLivenessFaceAttribute.score.toString())
-                Log.e("score",it.passiveLivenessFaceAttribute.isPreconditionsMet.toString())
-
-
-                requireActivity().setResult(RESULT_SUCCESS, intent)
-                requireActivity().finish()
+                findNavController().navigate(R.id.action_BasicFaceAutoCaptureFragment_to_FaceAutoCaptureResultFragment)
             }
             state.errorMessage?.let {
                 Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
@@ -116,21 +102,13 @@ class BasicFaceAutoCaptureFragment : FaceAutoCaptureFragment() {
     }
 
     override fun onNoCameraPermission() {
-        activity?.setResult(RESULT_NO_CAMERA_PERMISSION)
-        activity?.finish()
+        mainViewModel.notifyNoCameraPermission()
     }
 
-    override fun onStepChanged(captureStepId: CaptureStepId, detectedFace: DetectedFace) {
+    override fun onCaptured(result: FaceAutoCaptureResult) {
+        faceAutoCaptureViewModel.process(result)
     }
 
-    override fun onCaptured(detectedFace: DetectedFace) {
-        faceAutoCaptureViewModel.process(detectedFace)
-    }
-
-    override fun onStopped() {
-    }
-    private fun getDisc(): File {
-        val file = requireContext().cacheDir
-        return File(file, "/scanned/")
+    override fun onProcessed(detection: FaceAutoCaptureDetection) {
     }
 }

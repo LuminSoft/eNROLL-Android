@@ -54,6 +54,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.GetSecurityQuestionsUseCase
@@ -175,33 +176,33 @@ fun SecurityQuestionsOnBoardingScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 30.dp)
-
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_06_security_questions),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
-                    modifier = Modifier.fillMaxHeight(0.2f)
+                val images = listOf(
+                    R.drawable.step_06_security_questions_1,
+                    R.drawable.step_06_security_questions_2,
+                    R.drawable.step_06_security_questions_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f))
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
+
                 StepsProgressBar(
-                    modifier = Modifier
-                        .fillMaxWidth(0.4f)
-                        .align(Alignment.CenterHorizontally),
+                    modifier = Modifier.fillMaxWidth(0.4f).padding(end = 16.dp)
+                    ,
                     numberOfSteps = 2,
-                    currentStep = selectedSecurityQuestions.value.size,
+                    currentStep = selectedSecurityQuestions.value.size
                 )
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
                     fontSize = 12.sp,
-                    color = MaterialTheme.appColors.textColor,
+                    color = MaterialTheme.appColors.textColor
+                )
 
-                    )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 DropdownList(
@@ -213,7 +214,9 @@ fun SecurityQuestionsOnBoardingScreenContent(
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
+
                 AnswerTextField(answer, securityQuestionsOnBoardingVM, answerError)
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.4f))
 
                 ButtonView(
@@ -235,12 +238,10 @@ fun SecurityQuestionsOnBoardingScreenContent(
                                 ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
                         }
 
-
                         if (isQuestionSelected) {
                             selectedQuestionValue = selectedQuestion.value!!
                             securityQuestionModel.question = selectedQuestionValue.question
                             securityQuestionModel.id = selectedQuestionValue.id
-
                         } else {
                             securityQuestionsViewModel.selectQuestionError.value = true
                         }
@@ -264,8 +265,8 @@ fun SecurityQuestionsOnBoardingScreenContent(
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
-
             }
+
         }
     }
 }

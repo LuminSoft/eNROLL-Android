@@ -53,7 +53,6 @@ fun SplashScreenUpdateContent(
 //    val context = LocalContext.current
     val activity = LocalContext.current as Activity
     viewModel.navController = navController
-
     Surface(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.appColors.backGround),) {

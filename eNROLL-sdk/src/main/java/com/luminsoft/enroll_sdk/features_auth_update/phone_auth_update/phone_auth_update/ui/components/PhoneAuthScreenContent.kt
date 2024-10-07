@@ -44,6 +44,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -140,16 +141,17 @@ fun PhoneAuthUpdateScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.validate_sms_otp),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.25f)
+                val images = listOf(
+                    R.drawable.validate_sms_otp_1,
+                    R.drawable.validate_sms_otp_2,
+                    R.drawable.validate_sms_otp_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.smsOtpGuideWithDynamicVariable),
@@ -194,7 +196,7 @@ fun PhoneAuthUpdateScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue),
                     isEnabled = otpValue.value.length == 6
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 ButtonView(
                     onClick = {
                         phoneViewModel.callSendOtp(updateStepId = updateViewModel.updateStepId.value!!)
