@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.common
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -85,7 +85,7 @@ fun ForgetListScreenContent(
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = stringResource(id = R.string.cannotLogin),
-                color = MaterialTheme.appColors.primary,
+                color = MaterialTheme.appColors.textColor,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp
             )
@@ -173,7 +173,7 @@ private fun ForgetStepItem(
                     text = stringResource(
                         id = step.parseForgetStepType().getStepDescriptionIntSource()
                     ),
-                    color = MaterialTheme.appColors.appBlack,
+                    color = MaterialTheme.appColors.textColor,
                     minLines = 3,
                     textAlign = TextAlign.Center,
                     fontSize = 11.sp
