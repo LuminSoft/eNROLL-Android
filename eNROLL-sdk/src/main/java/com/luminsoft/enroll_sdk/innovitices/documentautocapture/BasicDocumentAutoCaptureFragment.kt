@@ -4,54 +4,70 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import com.luminsoft.enroll_sdk.innovitices.face.DotFaceViewModel
-import com.luminsoft.enroll_sdk.innovitices.face.DotFaceViewModelFactory
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureDetection
 import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureFragment
 import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureResult
-import com.luminsoft.enroll_sdk.innovitices.core.RESULT_INTERRUPTED
-import com.luminsoft.enroll_sdk.innovitices.core.RESULT_NO_CAMERA_PERMISSION
+import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
+import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
+import com.luminsoft.enroll_sdk.innovitices.MainViewModel
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_SUCCESS
-import com.luminsoft.enroll_sdk.innovitices.core.RESULT_TIME_OUT
+
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 
-
 class BasicDocumentAutoCaptureFragment : DocumentAutoCaptureFragment() {
-    //    val CARD_VIEW_STROKE_WIDTH_PIXELS = 4
-    private lateinit var dotFaceViewModel: DotFaceViewModel
 
-
-    //    private val mainViewModel: MainViewModel by activityViewModels()
-    private val documentAutoCaptureViewModel: DocumentAutoCaptureViewModel by activityViewModels()
-    private val timer = object : CountDownTimer(60000, 60000) {
-        override fun onTick(millisUntilFinished: Long) {
-        }
-
-        override fun onFinish() {
-            activity?.setResult(RESULT_TIME_OUT)
-            activity?.finish()
-        }
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val dotSdkViewModel: DotSdkViewModel by activityViewModels {
+        DotSdkViewModelFactory(
+            requireActivity().application
+        )
     }
+    private val documentAutoCaptureViewModel: DocumentAutoCaptureViewModel by activityViewModels { DocumentAutoCaptureViewModelFactory() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupDotSdkViewModel()
         setupDocumentAutoCaptureViewModel()
-        setupDotFaceViewModel()
-        start()
-        timer.start()
+    }
+
+    override fun provideConfiguration(): Configuration {
+        return Configuration()
+    }
+
+    private fun setupDotSdkViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                dotSdkViewModel.state.collect { state ->
+                    if (state.isInitialized) {
+                        start()
+                    }
+                    state.errorMessage?.let {
+                        Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                        dotSdkViewModel.notifyErrorMessageShown()
+                    }
+                }
+            }
+        }
+        dotSdkViewModel.initializeDotSdkIfNeeded()
     }
 
     private fun setupDocumentAutoCaptureViewModel() {
         documentAutoCaptureViewModel.initializeState()
         documentAutoCaptureViewModel.state.observe(viewLifecycleOwner) { state ->
             state.result?.let {
+//                findNavController().navigate(R.id.action_BasicDocumentAutoCaptureFragment_to_DocumentAutoCaptureResultFragment)
+
                 val file = getDisc()
 
                 if (!file.exists() && !file.mkdirs()) {
@@ -88,42 +104,15 @@ class BasicDocumentAutoCaptureFragment : DocumentAutoCaptureFragment() {
         }
     }
 
-    private fun setupDotFaceViewModel() {
-        val dotFaceViewModelFactory = DotFaceViewModelFactory(requireActivity().application)
-        dotFaceViewModel =
-            ViewModelProvider(this, dotFaceViewModelFactory)[DotFaceViewModel::class.java]
-        dotFaceViewModel.state.observe(viewLifecycleOwner) { state ->
-            if (state.isInitialized) {
-                start()
-            }
-            state.errorMessage?.let {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
-                dotFaceViewModel.notifyErrorMessageShown()
-            }
-        }
-        dotFaceViewModel.initializeDotFaceIfNeeded()
-    }
-
     override fun onNoCameraPermission() {
-        activity?.setResult(RESULT_NO_CAMERA_PERMISSION)
-        activity?.finish()
+        mainViewModel.notifyNoCameraPermission()
     }
-
-    override fun onCandidateSelectionStarted() {
-    }
-
 
     override fun onCaptured(result: DocumentAutoCaptureResult) {
         documentAutoCaptureViewModel.process(result)
     }
 
-
     override fun onProcessed(detection: DocumentAutoCaptureDetection) {
-    }
-
-    override fun onStopped() {
-        activity?.setResult(RESULT_INTERRUPTED)
-        activity?.finish()
     }
 
     private fun getDisc(): File {
