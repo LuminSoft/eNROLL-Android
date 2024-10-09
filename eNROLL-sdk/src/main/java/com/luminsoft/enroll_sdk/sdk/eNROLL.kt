@@ -3,6 +3,7 @@ package com.luminsoft.enroll_sdk.sdk
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.util.Log
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
@@ -101,6 +102,7 @@ object eNROLL {
         }
 
         val config: Configuration = activity.baseContext.resources.configuration
+        Log.d("LocalizationCode", locale.displayName + " - " + locale.language + " - " + lang.name)
         config.setLocale(locale)
         activity.baseContext.resources.updateConfiguration(
             config,

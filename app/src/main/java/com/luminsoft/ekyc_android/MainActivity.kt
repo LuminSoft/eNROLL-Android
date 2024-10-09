@@ -96,7 +96,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setLocale("en")
 
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
         tenantIdText.value =
