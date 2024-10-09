@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +45,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_domain.usecases.CheckUserHasNationalIdUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -296,17 +297,17 @@ private fun ApplyForSignatureOrAlreadyHave(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 24.dp)
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.25f))
 
-        Text(text = stringResource(id = R.string.eSignature))
+        Text(text = stringResource(id = R.string.eSignature), color = MaterialTheme.appColors.textColor)
         Spacer(modifier = Modifier.height(10.dp))
 
-        Divider(
-            color = MaterialTheme.appColors.secondary,
+        HorizontalDivider(
+            modifier = Modifier.width(50.dp),
             thickness = 3.dp,
-            modifier = Modifier.width(50.dp)
+            color = MaterialTheme.appColors.secondary
         )
 
         Spacer(modifier = Modifier.height(80.dp))
@@ -353,7 +354,7 @@ private fun ApplyForSignatureOrAlreadyHave(
             },
             stringResource(id = R.string.continue_to_next),
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         ButtonView(
             onClick = {
@@ -429,7 +430,8 @@ private fun Card(
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = if (step == ElectronicSignatureChooseStep.AlreadyHaveSignature) R.string.haveSignature else R.string.applyForSignature),
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                color = MaterialTheme.appColors.primary
             )
         }
 

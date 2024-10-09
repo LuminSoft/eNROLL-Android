@@ -1,3 +1,6 @@
+package com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth.ui.components
+
+import SecurityQuestionAuthViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -23,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,10 +36,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth_domain.usecases.GetSecurityQuestionAuthUseCase
 import com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth_domain.usecases.ValidateSecurityQuestionUseCase
@@ -144,19 +150,14 @@ fun SecurityQuestionAuthScreenContent(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_06_security_questions),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.2f)
-                )
-
+                val images= listOf(R.drawable.step_06_security_questions_1,R.drawable.step_06_security_questions_2,R.drawable.step_06_security_questions_3)
+                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.2f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
                     text = stringResource(id = R.string.youMustAnswerSecurityQuestion),
                     fontSize = 12.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center
 
                 )
@@ -174,6 +175,7 @@ fun SecurityQuestionAuthScreenContent(
                             Image(
                                 painter = painterResource(R.drawable.info_icon),
                                 contentDescription = "",
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                 contentScale = ContentScale.FillBounds,
                                 modifier = Modifier.size(18.dp)
                             )
@@ -181,14 +183,14 @@ fun SecurityQuestionAuthScreenContent(
                             Text(
                                 text = it,
                                 fontSize = 12.sp,
-                                color = Color.Black
+                                color = MaterialTheme.appColors.textColor
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
-                        Divider(
-                            color = MaterialTheme.appColors.primary,
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
                             thickness = 1.2.dp,
-                            modifier = Modifier.fillMaxWidth()
+                            color = MaterialTheme.appColors.primary
                         )
                     }
                 }
@@ -250,6 +252,7 @@ private fun AnswerTextField(
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -259,7 +262,6 @@ private fun AnswerTextField(
             )
         )
         if (answerError.value != null) {
-            println(" second answerError.value ${answerError.value}")
             Text(
                 answerError.value!!,
                 color = MaterialTheme.appColors.errorColor,
@@ -270,15 +272,14 @@ private fun AnswerTextField(
     }
 }
 
-
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color.White,
-    focusedTextColor = Color.Black,
-    unfocusedTextColor = Color.Black,
-    disabledTextColor = Color.Black,
+    focusedContainerColor = MaterialTheme.appColors.white,
+    unfocusedContainerColor = MaterialTheme.appColors.white,
+    disabledContainerColor = MaterialTheme.appColors.white,
+    focusedTextColor = MaterialTheme.appColors.appBlack,
+    unfocusedTextColor = MaterialTheme.appColors.appBlack,
+    disabledTextColor = MaterialTheme.appColors.appBlack,
     focusedIndicatorColor = MaterialTheme.appColors.primary,
     unfocusedIndicatorColor = MaterialTheme.appColors.primary,
     disabledIndicatorColor = MaterialTheme.appColors.primary,

@@ -45,9 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -69,6 +67,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -94,6 +93,7 @@ fun UpdateLocationScreenContent(
                 updateLocationUseCase = updateLocationUseCase
             )
         }
+
     val updateLocationVM = remember { updateLocationViewModel }
 
 
@@ -231,12 +231,11 @@ private fun RequestLocation(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 24.dp)
     ) {
-        EnrollItemView(R.drawable.step_00_location, R.string.getLocationText)
+        EnrollItemView(   listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3), R.string.getLocationText)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             ButtonView(
@@ -262,6 +261,7 @@ private fun RequestLocation(
                 },
                 stringResource(id = R.string.start),
             )
+            Spacer(modifier = Modifier.height(8.dp))
             ButtonView(
                 onClick = {
                     navController.navigate(updateListScreenContent)
@@ -297,7 +297,7 @@ private fun PermissionDenied(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.invalid_location_permission, R.string.locationAccessErrorText)
+        EnrollItemView(   listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3), R.string.locationAccessErrorText)
         ButtonView(
             onClick = {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -351,7 +351,7 @@ private fun GotLocation(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 24.dp)
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.15f))
 
@@ -391,13 +391,12 @@ private fun GotLocation(
                 )
             }
             if (apiKeyEmptyOrHasException) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f),
-                    painter = painterResource(id = R.drawable.step_00_location),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Victor Ekyc Item"
+                val images= listOf(
+                    R.drawable.step_00_location_1,
+                    R.drawable.step_00_location_2,
+                    R.drawable.step_00_location_3
                 )
+                ImagesBox(images = images,  modifier = Modifier.fillMaxWidth(0.8f))
             }
             if (isLoading) LoadingView()
         }
@@ -437,12 +436,12 @@ private fun GotLocation(
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.latitude, currentLocation.latitude),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor
                 )
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.longitude, currentLocation.longitude),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor
                 )
             }
         }
@@ -450,7 +449,6 @@ private fun GotLocation(
         Spacer(modifier = Modifier.fillMaxHeight(0.3f))
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             ButtonView(
@@ -459,6 +457,7 @@ private fun GotLocation(
                 },
                 stringResource(id = R.string.continue_to_next),
             )
+            Spacer(modifier = Modifier.height(8.dp))
             ButtonView(
                 onClick = {
                     navController.navigate(updateListScreenContent)

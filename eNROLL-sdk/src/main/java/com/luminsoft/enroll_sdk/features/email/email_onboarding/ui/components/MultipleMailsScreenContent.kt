@@ -26,7 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,8 +39,10 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ApproveMailsUseCase
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.DeleteMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MakeDefaultMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MultipleMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
@@ -72,12 +74,16 @@ fun MultipleMailsScreenContent(
     val makeDefaultMailUseCase =
         MakeDefaultMailUseCase(koinInject())
 
+    val deleteMailUseCase =
+        DeleteMailUseCase(koinInject())
+
     val multipleMailsViewModel =
         remember {
             MultipleMailsViewModel(
                 multipleMailUseCase = multipleMailUseCase,
                 approveMailsUseCase = approveMailsUseCase,
-                makeDefaultMailUseCase = makeDefaultMailUseCase
+                makeDefaultMailUseCase = makeDefaultMailUseCase,
+                deleteMailUseCase = deleteMailUseCase
 
             )
         }
@@ -90,10 +96,28 @@ fun MultipleMailsScreenContent(
         multipleMailsViewModel.mailsApproved.collectAsState()
     val failure = multipleMailsViewModel.failure.collectAsState()
     val verifiedMails = multipleMailsViewModel.verifiedMails.collectAsState()
-
+    val mailToDelete = multipleMailsViewModel.mailToDelete.collectAsState()
+    val isDeleteMailClicked = multipleMailsViewModel.isDeleteMailClicked.collectAsState()
 
 
     BackGroundView(navController = navController, showAppBar = true) {
+        if (isDeleteMailClicked.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.WARNING,
+                text = stringResource(id = R.string.deleteConfirmationMessage) + mailToDelete.value,
+                buttonText = stringResource(id = R.string.delete),
+                secondButtonText = stringResource(id = R.string.cancel),
+                onPressedButton = {
+                    multipleMailsViewModel.isDeleteMailClicked.value = false
+                    multipleMailsViewModel.callDeleteMail(mailToDelete.value!!)
+                    multipleMailsViewModel.mailToDelete.value = null
+                },
+                onPressedSecondButton = {
+                    multipleMailsViewModel.isDeleteMailClicked.value = false
+                    multipleMailsViewModel.mailToDelete.value = null
+                }
+            )
+        }
         if (mailsApproved.value) {
             val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.EmailOtp.getStepId())
             if (isEmpty)
@@ -157,16 +181,12 @@ fun MultipleMailsScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_04_email),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.2f)
-                )
+                val images = listOf(R.drawable.select_mail1, R.drawable.select_mail2, R.drawable.select_mail3)
+                ImagesBox(images = images,  modifier = Modifier.fillMaxHeight(0.2f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
@@ -193,7 +213,7 @@ fun MultipleMailsScreenContent(
                     isEnabled = verifiedMails.value!!.size < 5,
                     textColor = MaterialTheme.appColors.primary,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(
                     onClick = {
@@ -238,6 +258,8 @@ private fun MailItem(
                 Image(
                     painterResource(R.drawable.mail_icon),
                     contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     modifier = Modifier
                         .height(50.dp)
                 )
@@ -294,6 +316,10 @@ private fun MailItem(
                         contentDescription = "",
                         modifier = Modifier
                             .height(50.dp)
+                            .clickable {
+                                multipleMailsVM.mailToDelete.value = model.email
+                                multipleMailsVM.isDeleteMailClicked.value = true
+                            }
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                 }

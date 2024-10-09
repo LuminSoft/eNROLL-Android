@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -245,7 +246,7 @@ private fun MainContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 24.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 TextItem(R.string.nameAr, customerData.value!!.fullName!!, R.drawable.user_icon)
@@ -260,6 +261,7 @@ private fun MainContent(
                             Image(
                                 painterResource(R.drawable.user_icon),
                                 contentDescription = "",
+                                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier
                                     .height(50.dp)
                             )
@@ -268,6 +270,8 @@ private fun MainContent(
                             Image(
                                 painterResource(R.drawable.edit_icon),
                                 contentDescription = "",
+                                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                                 modifier = Modifier
                                     .height(50.dp)
                             )
@@ -324,7 +328,7 @@ private fun MainContent(
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(
                     onClick = {
@@ -369,7 +373,8 @@ private fun TextItem(label: Int, value: String, icon: Int) {
                 painterResource(icon),
                 contentDescription = "",
                 modifier = Modifier
-                    .height(50.dp)
+                    .height(50.dp),
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         }
     )

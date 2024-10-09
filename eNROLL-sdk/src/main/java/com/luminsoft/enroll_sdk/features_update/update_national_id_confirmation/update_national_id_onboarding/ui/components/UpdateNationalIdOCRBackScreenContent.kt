@@ -155,7 +155,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 24.dp)
                 ) {
                     Spacer(modifier = Modifier.height(20.dp))
                     if (customerData.value!!.profession != null) TextItem(
@@ -199,7 +199,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                             nationalIdBackOcrViewModel.callApproveBack()
                         }, title = stringResource(id = R.string.confirmAndContinue)
                     )
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     ButtonView(
                         onClick = {

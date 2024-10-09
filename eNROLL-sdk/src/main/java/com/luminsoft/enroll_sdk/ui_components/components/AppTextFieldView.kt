@@ -55,7 +55,7 @@ fun NormalTextField(
         errorIndicatorColor = MaterialTheme.appColors.errorColor,
         focusedTextColor = MaterialTheme.appColors.primary,
         cursorColor = MaterialTheme.appColors.primary,
-        errorCursorColor = MaterialTheme.appColors.errorColor,
+        errorCursorColor = MaterialTheme.appColors.primary,
         errorTextColor = MaterialTheme.appColors.primary,
     ),
 ) {
@@ -101,7 +101,7 @@ fun NormalTextField(
                     label = {
                         Text(
                             text = label,
-                            color = MaterialTheme.appColors.primary.copy(alpha = 0.6f),
+                            color = MaterialTheme.appColors.textColor.copy(alpha = 0.6f),
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
