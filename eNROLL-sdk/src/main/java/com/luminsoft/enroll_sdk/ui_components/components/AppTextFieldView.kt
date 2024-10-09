@@ -55,8 +55,8 @@ fun NormalTextField(
         errorIndicatorColor = MaterialTheme.appColors.errorColor,
         focusedTextColor = MaterialTheme.appColors.primary,
         cursorColor = MaterialTheme.appColors.primary,
-        errorCursorColor = MaterialTheme.appColors.primary,
-        errorTextColor = MaterialTheme.appColors.primary,
+        errorCursorColor = MaterialTheme.appColors.errorColor,
+        errorTextColor = MaterialTheme.appColors.errorColor,
     ),
 ) {
 //    var focusedBorderThickness = 1.2.dp
