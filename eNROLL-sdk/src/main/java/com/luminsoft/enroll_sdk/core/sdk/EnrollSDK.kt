@@ -19,7 +19,7 @@ object EnrollSDK {
 
     // this info related to sdk initiation
     var environment = EnrollEnvironment.STAGING
-    var localizationCode = LocalizationCode.EN
+    var localizationCode = LocalizationCode.AR
     var skipTutorial = false
     var appColors = AppColors()
 
