@@ -375,7 +375,7 @@ fun DropdownList(
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
                 fontSize = 12.sp,
-                color = Color.Black
+                color = MaterialTheme.appColors.primary
             )
         )
         if (selectQuestionError.value)
@@ -399,7 +399,7 @@ fun DropdownList(
                             Text(
                                 text = label.question!!,
                                 fontSize = 12.sp,
-                                color = Color.Black
+                                color = MaterialTheme.appColors.primary
                             )
                         },
                         onClick = {
