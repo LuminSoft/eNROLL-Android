@@ -1,10 +1,13 @@
+package com.luminsoft.enroll_sdk.features_forget.lost_device_id.lost_device_id_presentation.ui.components
 
+import LostDeviceIdViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -34,10 +37,9 @@ fun LostDeviceIdScreenContent(
                 buttonText = stringResource(id = R.string.continue_to_next),
                 onPressedButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulUpdate),
-                            activity.getString(R.string.successfulUpdate)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication)
                         )
                     )
                 },

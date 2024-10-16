@@ -1,4 +1,8 @@
+package com.luminsoft.enroll_sdk.features_update.update_passport.update_passport_presentation.ui.components
 
+import UpdatePassportApproveUseCase
+import UpdatePassportOcrViewModel
+import UpdatePassportUploadImageUseCase
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -32,7 +36,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -47,7 +53,10 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import findActivity
 import org.koin.compose.koinInject
+import updatePassportConfirmationScreen
+import updatePassportErrorScreen
 
 var userNameArValue = mutableStateOf(TextFieldValue())
 
@@ -131,7 +140,8 @@ private fun MainContent(
 
     val customerData = passportOcrVMOcrViewModel.customerData.collectAsState()
     val loading = passportOcrVMOcrViewModel.loading.collectAsState()
-    val isTranslationStepEnabled = passportOcrVMOcrViewModel.isTranslationStepEnabled.collectAsState()
+    val isTranslationStepEnabled =
+        passportOcrVMOcrViewModel.isTranslationStepEnabled.collectAsState()
     val passportApproved = passportOcrVMOcrViewModel.passportApproved.collectAsState()
     val failure = passportOcrVMOcrViewModel.failure.collectAsState()
     val userHasModifiedText = remember { mutableStateOf(false) }
@@ -145,10 +155,9 @@ private fun MainContent(
                 buttonText = stringResource(id = R.string.continue_to_next),
                 onPressedButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulUpdate),
-                            activity.getString(R.string.successfulUpdate)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication)
                         )
                     )
                 },
@@ -241,14 +250,14 @@ private fun MainContent(
                     )
 
 
-                    if (customerData.value!!.fullNameAr != null|| isTranslationStepEnabled.value)
+                    if (customerData.value!!.fullNameAr != null || isTranslationStepEnabled.value)
                         Spacer(
-                        modifier = Modifier.height(
-                            10.dp
+                            modifier = Modifier.height(
+                                10.dp
+                            )
                         )
-                    )
 
-                    if (customerData.value!!.fullNameAr != null|| isTranslationStepEnabled.value)
+                    if (customerData.value!!.fullNameAr != null || isTranslationStepEnabled.value)
                         NormalTextField(
                             label = ResourceProvider.instance.getStringResource(R.string.nameAr),
                             value = userNameArValue.value,
@@ -257,7 +266,7 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.user_icon),
                                     contentDescription = "",
-                                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                     modifier = Modifier
                                         .height(50.dp)
                                 )
@@ -266,7 +275,7 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.edit_icon),
                                     contentDescription = "",
-                                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                                     modifier = Modifier
                                         .height(50.dp)
@@ -376,7 +385,6 @@ private fun MainContent(
 
     }
 }
-
 
 
 @Composable

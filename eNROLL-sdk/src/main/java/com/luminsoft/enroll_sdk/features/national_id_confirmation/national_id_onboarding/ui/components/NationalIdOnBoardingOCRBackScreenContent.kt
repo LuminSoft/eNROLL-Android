@@ -30,6 +30,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.NIFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
@@ -132,10 +133,9 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                         buttonText = stringResource(id = R.string.continue_to_next),
                         onPressedButton = {
                             activity.finish()
-                            EnrollSDK.enrollCallback?.error(
-                                EnrollFailedModel(
-                                    activity.getString(R.string.successfulRegistration),
-                                    activity.getString(R.string.successfulRegistration)
+                            EnrollSDK.enrollCallback?.success(
+                                EnrollSuccessModel(
+                                    activity.getString(R.string.successfulAuthentication)
                                 )
                             )
                         },

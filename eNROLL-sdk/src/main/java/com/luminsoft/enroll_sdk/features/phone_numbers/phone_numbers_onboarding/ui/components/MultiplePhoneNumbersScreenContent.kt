@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -126,10 +127,9 @@ fun MultiplePhoneNumbersScreenContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication)
                             )
                         )
                     },
@@ -182,8 +182,12 @@ fun MultiplePhoneNumbersScreenContent(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                val images= listOf(R.drawable.select_phone_number1,R.drawable.select_phone_number2,R.drawable.select_phone_number3)
-                ImagesBox(images = images,     modifier = Modifier.fillMaxHeight(0.2f))
+                val images = listOf(
+                    R.drawable.select_phone_number1,
+                    R.drawable.select_phone_number2,
+                    R.drawable.select_phone_number3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(

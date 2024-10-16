@@ -1,3 +1,10 @@
+package com.luminsoft.enroll_sdk.features_forget.forget_password.forget_password_presentation.ui.components
+
+import ForgetPasswordUseCase
+import ForgetPasswordViewModel
+import GetDefaultEmailUseCase
+import MailSendOTPUseCase
+import ValidateOtpMailUseCase
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,7 +38,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -44,6 +53,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
+import forgetPasswordScreenContent
 import org.koin.compose.koinInject
 
 @Composable
@@ -94,10 +104,9 @@ fun ForgetPasswordScreenContent(
                 buttonText = stringResource(id = R.string.continue_to_next),
                 onPressedButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulUpdate),
-                            activity.getString(R.string.successfulUpdate)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication)
                         )
                     )
                 },
@@ -170,7 +179,8 @@ fun ForgetPasswordScreenContent(
                 val images = listOf(
                     R.drawable.step_07_password_1,
                     R.drawable.step_07_password_2,
-                    R.drawable.step_07_password_3)
+                    R.drawable.step_07_password_3
+                )
                 ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 // Add these states to store the validation messages dynamically

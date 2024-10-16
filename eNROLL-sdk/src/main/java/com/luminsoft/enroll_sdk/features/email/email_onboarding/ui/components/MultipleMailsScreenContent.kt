@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -127,10 +129,9 @@ fun MultipleMailsScreenContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication)
                             )
                         )
                     },
@@ -185,8 +186,12 @@ fun MultipleMailsScreenContent(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                val images = listOf(R.drawable.select_mail1, R.drawable.select_mail2, R.drawable.select_mail3)
-                ImagesBox(images = images,  modifier = Modifier.fillMaxHeight(0.2f))
+                val images = listOf(
+                    R.drawable.select_mail1,
+                    R.drawable.select_mail2,
+                    R.drawable.select_mail3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(

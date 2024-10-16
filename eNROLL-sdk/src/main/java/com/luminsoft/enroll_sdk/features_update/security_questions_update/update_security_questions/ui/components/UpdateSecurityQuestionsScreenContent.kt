@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -119,10 +120,9 @@ fun UpdateSecurityQuestionsScreenContent(
                 buttonText = stringResource(id = R.string.continue_to_next),
                 onPressedButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulUpdate),
-                            activity.getString(R.string.successfulUpdate)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication)
                         )
                     )
                 },
@@ -180,7 +180,7 @@ fun UpdateSecurityQuestionsScreenContent(
                     R.drawable.step_06_security_questions_2,
                     R.drawable.step_06_security_questions_3
                 )
-                ImagesBox(images = images,    modifier = Modifier.fillMaxHeight(0.2f))
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -188,7 +188,8 @@ fun UpdateSecurityQuestionsScreenContent(
                 ) {
                     StepsProgressBar(
                         modifier = Modifier
-                            .fillMaxWidth(0.4f).padding(end = 16.dp),
+                            .fillMaxWidth(0.4f)
+                            .padding(end = 16.dp),
                         numberOfSteps = 2,
                         currentStep = selectedSecurityQuestions.value.size,
                     )
