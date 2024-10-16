@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.face_capture.face_capture_onboarding.ui.components
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -50,6 +51,7 @@ import androidx.navigation.NavController
 import appColors
 import coil.compose.AsyncImage
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -214,10 +216,9 @@ private fun MainContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication)
                             )
                         )
                     },
@@ -315,6 +316,7 @@ private fun MainContent(
 
 }
 
+@SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 private fun AnimationExtracted(
     position: Animatable<Offset, AnimationVector2D>,

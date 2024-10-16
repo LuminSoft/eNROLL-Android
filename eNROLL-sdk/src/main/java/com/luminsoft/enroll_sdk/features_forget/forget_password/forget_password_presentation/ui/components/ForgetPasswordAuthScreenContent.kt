@@ -1,6 +1,11 @@
+package com.luminsoft.enroll_sdk.features_forget.forget_password.forget_password_presentation.ui.components
 
+import ForgetPasswordUseCase
+import ForgetPasswordViewModel
+import GetDefaultEmailUseCase
+import MailSendOTPUseCase
+import ValidateOtpMailUseCase
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,20 +30,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
@@ -76,7 +80,7 @@ fun ForgetPasswordAuthScreenContent(
     val forgetPasswordViewModel =
         remember {
             ForgetPasswordViewModel(
-                getDefaultEmailUseCase  = getDefaultEmailUseCase,
+                getDefaultEmailUseCase = getDefaultEmailUseCase,
                 mailSendOTPUseCase = mailSendOTPUseCase,
                 validateOtpMailUseCase = validateOtpMailUseCase,
                 forgetPasswordUseCase = forgetPasswordUseCase
@@ -110,10 +114,9 @@ fun ForgetPasswordAuthScreenContent(
                 buttonText = stringResource(id = R.string.continue_to_next),
                 onPressedButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulUpdate),
-                            activity.getString(R.string.successfulUpdate)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication)
                         )
                     )
                 },
@@ -150,8 +153,7 @@ fun ForgetPasswordAuthScreenContent(
                     )
                 }
             }
-        }
-        else {
+        } else {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -181,7 +183,7 @@ fun ForgetPasswordAuthScreenContent(
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,                        textColor =     MaterialTheme.appColors.textColor,
+                        otp = otpValue, textColor = MaterialTheme.appColors.textColor,
 
                         count = 6,
                     )
@@ -205,7 +207,7 @@ fun ForgetPasswordAuthScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
                 ButtonView(
                     onClick = {
-                        forgetPasswordViewModel.callValidateOtp(otpValue.value,navController)
+                        forgetPasswordViewModel.callValidateOtp(otpValue.value, navController)
                     },
                     title = stringResource(id = R.string.confirmAndContinue),
                     isEnabled = otpValue.value.length == 6

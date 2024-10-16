@@ -1,4 +1,7 @@
+package com.luminsoft.enroll_sdk.features_update.update_password.update_password_presentation.ui.components
 
+import UpdatePasswordUseCase
+import UpdatePasswordViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -33,7 +36,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -47,6 +52,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import org.koin.compose.koinInject
+import updatePasswordScreenContent
 
 @Composable
 fun UpdatePasswordScreenContent(
@@ -83,17 +89,14 @@ fun UpdatePasswordScreenContent(
                 buttonText = stringResource(id = R.string.continue_to_next),
                 onPressedButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            activity.getString(R.string.successfulUpdate),
-                            activity.getString(R.string.successfulUpdate)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication)
                         )
                     )
                 },
             )
-        }
-
-        else if (!failure.value?.message.isNullOrEmpty()) {
+        } else if (!failure.value?.message.isNullOrEmpty()) {
             var showDialog by remember { mutableStateOf(true) }
             if (updateViewModel.isMaxRetriesReached()) {
                 DialogView(
@@ -112,9 +115,7 @@ fun UpdatePasswordScreenContent(
                     }
                 )
 
-            }
-
-            else if (failure.value is AuthFailure) {
+            } else if (failure.value is AuthFailure) {
                 failure.value?.let { failureData ->
                     if (showDialog) {
                         DialogView(
@@ -123,7 +124,12 @@ fun UpdatePasswordScreenContent(
                             buttonText = stringResource(id = R.string.exit),
                             onPressedButton = {
                                 activity.finish()
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(failureData.message, failureData))
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        failureData.message,
+                                        failureData
+                                    )
+                                )
                                 showDialog = false
                             }
                         )
@@ -131,7 +137,7 @@ fun UpdatePasswordScreenContent(
                 }
             } else {
                 failure.value?.let { failureData ->
-                    if (showDialog  &&!updateViewModel.isMaxRetriesReached()) {
+                    if (showDialog && !updateViewModel.isMaxRetriesReached()) {
                         DialogView(
                             bottomSheetStatus = BottomSheetStatus.ERROR,
                             text = failureData.message,
@@ -155,16 +161,19 @@ fun UpdatePasswordScreenContent(
                             secondButtonText = stringResource(id = R.string.exit),
                             onPressedSecondButton = {
                                 activity.finish()
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(failureData.message, failureData))
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        failureData.message,
+                                        failureData
+                                    )
+                                )
                                 showDialog = false
                             }
                         )
                     }
                 }
             }
-        }
-
-        else
+        } else
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -184,7 +193,8 @@ fun UpdatePasswordScreenContent(
                     val images = listOf(
                         R.drawable.step_07_password_1,
                         R.drawable.step_07_password_2,
-                        R.drawable.step_07_password_3)
+                        R.drawable.step_07_password_3
+                    )
                     ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
 
                     Spacer(modifier = Modifier.fillMaxHeight(0.1f))
@@ -199,12 +209,15 @@ fun UpdatePasswordScreenContent(
                         onValueChange = { newValue ->
                             updatePasswordViewModel.password.value = newValue
                             passwordError = updatePasswordViewModel.passwordValidation()
-                            confirmPasswordError = updatePasswordViewModel.confirmPasswordValidation()
+                            confirmPasswordError =
+                                updatePasswordViewModel.confirmPasswordValidation()
                         },
                         height = 60.0,
                         trailingIcon = {
-                            val imageResource = if (passwordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
-                            val description = if (passwordVisible) "Hide password" else "Show password"
+                            val imageResource =
+                                if (passwordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
+                            val description =
+                                if (passwordVisible) "Hide password" else "Show password"
                             Image(
                                 painter = painterResource(imageResource),
                                 contentDescription = description,
@@ -228,7 +241,8 @@ fun UpdatePasswordScreenContent(
                         value = confirmPassword.value,
                         onValueChange = { newValue ->
                             updatePasswordViewModel.confirmPassword.value = newValue
-                            confirmPasswordError = updatePasswordViewModel.confirmPasswordValidation()
+                            confirmPasswordError =
+                                updatePasswordViewModel.confirmPasswordValidation()
                         },
                         visualTransformation = if (rePasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(
@@ -237,8 +251,10 @@ fun UpdatePasswordScreenContent(
                         ),
                         height = 60.0,
                         trailingIcon = {
-                            val imageResource = if (rePasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
-                            val description = if (rePasswordVisible) "Hide password" else "Show password"
+                            val imageResource =
+                                if (rePasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
+                            val description =
+                                if (rePasswordVisible) "Hide password" else "Show password"
                             Image(
                                 painter = painterResource(imageResource),
                                 contentDescription = description,

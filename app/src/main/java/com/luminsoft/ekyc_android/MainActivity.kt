@@ -61,7 +61,7 @@ import io.github.cdimascio.dotenv.dotenv
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename = "env_andrew"
+    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"

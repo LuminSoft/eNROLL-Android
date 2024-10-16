@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -154,10 +155,9 @@ private fun MainContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication)
                             )
                         )
                     },
@@ -261,7 +261,7 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.user_icon),
                                     contentDescription = "",
-                                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                     modifier = Modifier
                                         .height(50.dp)
                                 )
@@ -270,7 +270,7 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.edit_icon),
                                     contentDescription = "",
-                                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                                     modifier = Modifier
                                         .height(50.dp)

@@ -1,4 +1,5 @@
 package com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth.ui.components
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +36,7 @@ import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
@@ -103,9 +105,8 @@ fun PhoneAuthScreenContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulAuthentication),
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
                                 activity.getString(R.string.successfulAuthentication)
                             )
                         )
@@ -154,8 +155,12 @@ fun PhoneAuthScreenContent(
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
 
-                val images= listOf(R.drawable.validate_sms_otp_1, R.drawable.validate_sms_otp_2, R.drawable.validate_sms_otp_3,)
-                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.25f))
+                val images = listOf(
+                    R.drawable.validate_sms_otp_1,
+                    R.drawable.validate_sms_otp_2,
+                    R.drawable.validate_sms_otp_3,
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.smsOtpGuide),
@@ -166,7 +171,7 @@ fun PhoneAuthScreenContent(
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,                        textColor =           MaterialTheme.appColors.textColor,
+                        otp = otpValue, textColor = MaterialTheme.appColors.textColor,
 
                         count = 6,
                     )

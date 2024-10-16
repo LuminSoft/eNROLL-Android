@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -60,6 +61,7 @@ import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -129,10 +131,9 @@ fun LocationOnBoardingScreenContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication)
                             )
                         )
                     },
@@ -233,8 +234,12 @@ private fun RequestLocation(
             .padding(horizontal = 20.dp)
     ) {
         EnrollItemView(
-            listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3)
-            , R.string.getLocationText)
+            listOf(
+                R.drawable.step_00_location_1,
+                R.drawable.step_00_location_2,
+                R.drawable.step_00_location_3
+            ), R.string.getLocationText
+        )
         ButtonView(
             onClick = {
                 if (permissions.all {
@@ -284,8 +289,14 @@ private fun PermissionDenied(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(listOf(R.drawable.step_00_location_1, R.drawable.step_00_location_2, R.drawable.step_00_location_3),
-            R.string.locationAccessErrorText)
+        EnrollItemView(
+            listOf(
+                R.drawable.step_00_location_1,
+                R.drawable.step_00_location_2,
+                R.drawable.step_00_location_3
+            ),
+            R.string.locationAccessErrorText
+        )
         ButtonView(
             onClick = {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -377,8 +388,12 @@ private fun GotLocation(
             if (apiKeyEmptyOrHasException) {
 
 
-                val images = listOf(R.drawable.location_saved_1, R.drawable.location_saved_2, R.drawable.location_saved_3)
-                ImagesBox(images = images,  modifier = Modifier.fillMaxWidth(0.8f))
+                val images = listOf(
+                    R.drawable.location_saved_1,
+                    R.drawable.location_saved_2,
+                    R.drawable.location_saved_3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxWidth(0.8f))
             }
             if (isLoading) LoadingView()
         }
