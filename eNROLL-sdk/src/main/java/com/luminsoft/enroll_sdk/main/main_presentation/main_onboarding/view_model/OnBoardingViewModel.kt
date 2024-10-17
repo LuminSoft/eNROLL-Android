@@ -44,6 +44,7 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var documentId: MutableStateFlow<String?> = MutableStateFlow(null)
 
     //    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
 //    var userPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
