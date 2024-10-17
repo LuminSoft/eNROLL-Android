@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_onboarding.ui.components
 
-import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases.AcceptTermsUseCase
 import GetTermsIdUseCase
 import GetTermsPdfFileByIdUseCase
 import TermsConditionsOnBoardingViewModel
@@ -21,7 +20,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,10 +43,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases.AcceptTermsUseCase
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -103,10 +104,10 @@ fun TermsConditionsOnBoardingScreenContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication),
+                                onBoardingViewModel.documentId.value
                             )
                         )
                     },
@@ -192,17 +193,19 @@ fun PdfViewerWidget(
                 text = stringResource(id = R.string.readTermsAndConditions),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.appColors.primary,
+                color = MaterialTheme.appColors.textColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
 
-            Divider(
-                color = MaterialTheme.appColors.primary,
+            HorizontalDivider(
+                modifier = Modifier
+                    .width(50.dp)
+                    .align(Alignment.CenterHorizontally),
                 thickness = 4.dp,
-                modifier = Modifier.width(50.dp).align(Alignment.CenterHorizontally)
+                color = MaterialTheme.appColors.primary
             )
 
 
@@ -233,7 +236,9 @@ fun PdfViewerWidget(
             Spacer(modifier = Modifier.height(30.dp))
 
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
             ) {
                 ButtonView(
                     onClick = onAcceptClick,

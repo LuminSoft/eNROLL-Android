@@ -5,16 +5,14 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
-import com.luminsoft.enroll_sdk.features_update.email_update.email_data_update.email_models_update.mail_add_new_update.MailUpdateAddNewResponseModel
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUseCaseParams
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.ValidateOtpMailUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.ValidateOtpMailUpdateUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ValidateOtpMailsUpdateViewModel(
     private val validateOtpMailUseCase: ValidateOtpMailUpdateUseCase,
-    private val mailSendOtpUseCase: UpdateMailAddUpdateUseCase
+    private val mailSendOtpUseCase: SendOtpUpdateUseCase
 ) :
     ViewModel() {
 
@@ -30,8 +28,8 @@ class ValidateOtpMailsUpdateViewModel(
         validateOtp(otp, id)
     }
 
-    fun callSendOtp(mail: String) {
-        sendOtpCall(mail)
+    fun callSendOtp(id: Int) {
+        sendOtpCall(id)
     }
 
 
@@ -62,15 +60,11 @@ class ValidateOtpMailsUpdateViewModel(
     }
 
 
-    private fun sendOtpCall(mail: String) {
+    private fun sendOtpCall(id: Int) {
         loading.value = true
         ui {
-            params.value =
-                UpdateMailAddUseCaseParams(
-                    email = mail
-                )
-            val response: Either<SdkFailure, MailUpdateAddNewResponseModel> =
-                mailSendOtpUseCase.call(params.value as UpdateMailAddUseCaseParams)
+            val response: Either<SdkFailure, Null> =
+                mailSendOtpUseCase.call(id)
 
             response.fold(
                 {

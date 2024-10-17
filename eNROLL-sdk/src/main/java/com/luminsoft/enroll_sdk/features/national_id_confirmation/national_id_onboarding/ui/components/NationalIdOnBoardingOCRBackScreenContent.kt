@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.NIFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
@@ -123,7 +125,8 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 onBoardingViewModel.isPassportAndMailFinal.value = true
                 navController.navigate(nationalIdOnBoardingPreScanScreen)
             } else {
-                val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
+                val isEmpty =
+                    onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
                 if (isEmpty)
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -131,10 +134,10 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                         buttonText = stringResource(id = R.string.continue_to_next),
                         onPressedButton = {
                             activity.finish()
-                            EnrollSDK.enrollCallback?.error(
-                                EnrollFailedModel(
-                                    activity.getString(R.string.successfulRegistration),
-                                    activity.getString(R.string.successfulRegistration)
+                            EnrollSDK.enrollCallback?.success(
+                                EnrollSuccessModel(
+                                    activity.getString(R.string.successfulAuthentication),
+                                    onBoardingViewModel.documentId.value
                                 )
                             )
                         },
@@ -152,7 +155,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 24.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 if (customerData.value!!.profession != null) TextItem(
@@ -196,7 +199,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                         nationalIdBackOcrViewModel.callApproveBack()
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(
                     onClick = {
@@ -313,7 +316,8 @@ private fun TextItem(label: Int, value: String, icon: Int) {
         enabled = false,
         icon = {
             Image(
-                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp)
+                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         })
 }

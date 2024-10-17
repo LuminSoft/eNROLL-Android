@@ -1,4 +1,6 @@
+package com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth.ui.components
 
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth.view_model.CheckIMEIAuthViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -31,10 +33,9 @@ fun CheckIMEIAuthScreenContent(
 
     val checkIMEIAuthViewModel =
         remember {
-            CheckIMEIAuthViewModel( authCheckIMEIUseCase= authCheckIMEIUseCase, context = context)
+            CheckIMEIAuthViewModel(authCheckIMEIUseCase = authCheckIMEIUseCase, context = context)
         }
     val checkIMEIAuthVM = remember { checkIMEIAuthViewModel }
-
 
 
     val activity = context.findActivity()

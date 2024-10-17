@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_onboarding.view_model.CheckAmlOnBoardingViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
@@ -67,10 +68,10 @@ fun CheckAmlOnBoardingScreenContent(
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            context.getString(R.string.successfulRegistration),
-                            context.getString(R.string.successfulRegistration)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value
                         )
                     )
                 }

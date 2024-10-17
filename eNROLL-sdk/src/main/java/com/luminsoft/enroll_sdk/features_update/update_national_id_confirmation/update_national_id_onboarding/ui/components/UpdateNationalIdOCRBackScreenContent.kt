@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.NIFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -135,10 +136,9 @@ fun UpdateNationalIdBackConfirmationScreen(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulUpdate),
-                                activity.getString(R.string.successfulUpdate)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication)
                             )
                         )
                     },
@@ -155,7 +155,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 24.dp)
                 ) {
                     Spacer(modifier = Modifier.height(20.dp))
                     if (customerData.value!!.profession != null) TextItem(
@@ -199,7 +199,7 @@ fun UpdateNationalIdBackConfirmationScreen(
                             nationalIdBackOcrViewModel.callApproveBack()
                         }, title = stringResource(id = R.string.confirmAndContinue)
                     )
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     ButtonView(
                         onClick = {

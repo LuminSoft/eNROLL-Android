@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.face_capture.face_capture_onboarding.ui.components
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -50,6 +51,7 @@ import androidx.navigation.NavController
 import appColors
 import coil.compose.AsyncImage
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -173,7 +175,7 @@ private fun MainContent(
             position.animateTo(
                 targetValue = endPosition,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -183,7 +185,7 @@ private fun MainContent(
             position1.animateTo(
                 targetValue = endPosition1,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -194,7 +196,7 @@ private fun MainContent(
             scale.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -214,10 +216,10 @@ private fun MainContent(
                     buttonText = stringResource(id = R.string.continue_to_next),
                     onPressedButton = {
                         activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
+                        EnrollSDK.enrollCallback?.success(
+                            EnrollSuccessModel(
+                                activity.getString(R.string.successfulAuthentication),
+                                onBoardingViewModel.documentId.value
                             )
                         )
                     },
@@ -253,7 +255,7 @@ private fun MainContent(
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.ekycSuccessfullyDone),
-                        color = Color.Black
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
@@ -269,7 +271,7 @@ private fun MainContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 24.dp)
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
@@ -292,7 +294,7 @@ private fun MainContent(
                         },
                         title = stringResource(id = R.string.rescan)
                     )
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     ButtonView(
                         onClick = {
@@ -315,6 +317,7 @@ private fun MainContent(
 
 }
 
+@SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 private fun AnimationExtracted(
     position: Animatable<Offset, AnimationVector2D>,

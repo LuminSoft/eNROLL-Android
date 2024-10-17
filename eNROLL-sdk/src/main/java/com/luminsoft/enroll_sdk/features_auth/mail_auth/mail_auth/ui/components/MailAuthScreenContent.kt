@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,10 +24,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
@@ -41,6 +38,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth.view_model.MailAuthViewModel
@@ -149,27 +147,28 @@ fun MailAuthScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 2.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.validate_mail_otp),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.25f)
+                val images = listOf(
+                    R.drawable.validate_mail_otp_1,
+                    R.drawable.validate_mail_otp_2,
+                    R.drawable.validate_mail_otp_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.emailOtpGuide),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.height(30.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,
+                        otp = otpValue,                        textColor =     MaterialTheme.appColors.textColor,
+
                         count = 6,
                     )
                 }
@@ -177,13 +176,13 @@ fun MailAuthScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                 }
@@ -197,7 +196,7 @@ fun MailAuthScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue),
                     isEnabled = otpValue.value.length == 6
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 ButtonView(
                     onClick = {
                         mailViewModel.callSendOtp()
@@ -223,20 +222,20 @@ fun MailAuthScreenContent(
 private fun Timer(ticksF: Float, ticks: Int) {
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            progress = 1f,
+            progress = { 1f },
             modifier = Modifier.size(30.dp),
             color = MaterialTheme.appColors.secondary.copy(alpha = 0.5f),
-            strokeWidth = 3.dp
+            strokeWidth = 3.dp,
         )
         CircularProgressIndicator(
-            progress = ticksF,
+            progress = { ticksF },
             modifier = Modifier.size(30.dp),
+            color = MaterialTheme.appColors.secondary,
             strokeWidth = 3.dp,
-            color = MaterialTheme.appColors.secondary
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.appColors.secondary,
+            color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )

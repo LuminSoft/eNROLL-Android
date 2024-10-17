@@ -3,7 +3,9 @@ package com.luminsoft.enroll_sdk.sdk
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.util.Log
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
+import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
@@ -13,6 +15,7 @@ import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import java.util.Locale
+
 
 object eNROLL {
     @Throws(Exception::class)
@@ -27,7 +30,8 @@ object eNROLL {
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
-        appColors: AppColors = AppColors()
+        appColors: AppColors = AppColors(),
+        correlationId: String = ""
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -48,18 +52,21 @@ object eNROLL {
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
+        EnrollSDK.correlationId = correlationId
+
 
     }
 
     fun launch(
         activity: Activity,
     ) {
+
         if (EnrollSDK.tenantId.isEmpty())
             throw Exception("Invalid tenant id")
         if (EnrollSDK.tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
         setLocale(EnrollSDK.localizationCode, activity)
-        when (EnrollSDK.enrollMode) {
+        when (EnrollSDK.enrollMode!!) {
             EnrollMode.ONBOARDING -> {
                 activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
             }
@@ -79,7 +86,10 @@ object eNROLL {
                 activity.startActivity(Intent(activity, EnrollMainUpdateActivity::class.java))
             }
 
-            EnrollMode.CANT_LOGIN -> TODO()
+            EnrollMode.FORGET_PROFILE_DATA -> {
+
+                activity.startActivity(Intent(activity, EnrollMainForgetActivity::class.java))
+            }
         }
     }
 
@@ -92,6 +102,7 @@ object eNROLL {
         }
 
         val config: Configuration = activity.baseContext.resources.configuration
+        Log.d("LocalizationCode", locale.displayName + " - " + locale.language + " - " + lang.name)
         config.setLocale(locale)
         activity.baseContext.resources.updateConfiguration(
             config,
