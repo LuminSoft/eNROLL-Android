@@ -125,7 +125,8 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 onBoardingViewModel.isPassportAndMailFinal.value = true
                 navController.navigate(nationalIdOnBoardingPreScanScreen)
             } else {
-                val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
+                val isEmpty =
+                    onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
                 if (isEmpty)
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -135,7 +136,8 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                             activity.finish()
                             EnrollSDK.enrollCallback?.success(
                                 EnrollSuccessModel(
-                                    activity.getString(R.string.successfulAuthentication)
+                                    activity.getString(R.string.successfulAuthentication),
+                                    onBoardingViewModel.documentId.value
                                 )
                             )
                         },
@@ -315,7 +317,7 @@ private fun TextItem(label: Int, value: String, icon: Int) {
         icon = {
             Image(
                 painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp),
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         })
 }

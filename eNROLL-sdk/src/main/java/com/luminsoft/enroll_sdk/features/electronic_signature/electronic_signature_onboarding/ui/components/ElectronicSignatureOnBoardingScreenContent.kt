@@ -1,4 +1,7 @@
+package com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_onboarding.ui.components
 
+import ElectronicSignatureOnBoardingViewModel
+import InsertSignatureInfoUseCase
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,9 +44,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import appColors
+import applyElectronicSignatureContent
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_domain.usecases.CheckUserHasNationalIdUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
@@ -74,7 +80,7 @@ fun ElectronicSignatureOnBoardingScreenContent(
         remember {
             ElectronicSignatureOnBoardingViewModel(
                 electronicSignatureUseCase = electronicSignatureUseCase,
-                checkUserHasNationalIdUseCase=checkUserHasNationalIdUseCase
+                checkUserHasNationalIdUseCase = checkUserHasNationalIdUseCase
             )
         }
 
@@ -85,7 +91,8 @@ fun ElectronicSignatureOnBoardingScreenContent(
     val failure = electronicSignatureOnBoardingViewModel.failure.collectAsState()
     val skipped = electronicSignatureOnBoardingViewModel.skippedSucceed.collectAsState()
     val haveSignature = electronicSignatureOnBoardingViewModel.haveSignatureSucceed.collectAsState()
-    val applySignatureSucceed = electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
+    val applySignatureSucceed =
+        electronicSignatureOnBoardingViewModel.applySignatureSucceed.collectAsState()
     val isStepSelected = electronicSignatureOnBoardingViewModel.isStepSelected.collectAsState()
     val chosenStep = electronicSignatureOnBoardingViewModel.chosenStep.collectAsState()
     val failedStatus = electronicSignatureOnBoardingViewModel.failedStatus.collectAsState()
@@ -106,9 +113,10 @@ fun ElectronicSignatureOnBoardingScreenContent(
     fun removeCurrentStep(id: Int): Boolean {
         if (onBoardingViewModel.steps.value != null) {
             val stepsSize = onBoardingViewModel.steps.value!!.size
-            onBoardingViewModel.steps.value = onBoardingViewModel.steps.value!!.toMutableList().apply {
-                removeIf { x -> x.registrationStepId == id }
-            }.toList()
+            onBoardingViewModel.steps.value =
+                onBoardingViewModel.steps.value!!.toMutableList().apply {
+                    removeIf { x -> x.registrationStepId == id }
+                }.toList()
             val newStepsSize = onBoardingViewModel.steps.value!!.size
             if (stepsSize != newStepsSize) {
                 return onBoardingViewModel.steps.value!!.isEmpty()
@@ -120,17 +128,18 @@ fun ElectronicSignatureOnBoardingScreenContent(
     LaunchedEffect(skipped.value) {
 
         if (skipped.value!!) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
+            val isEmpty =
+                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
                 dialogMessage = context.getString(R.string.successfulRegistration)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            context.getString(R.string.successfulRegistration),
-                            context.getString(R.string.successfulRegistration)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value
                         )
                     )
                 }
@@ -144,22 +153,23 @@ fun ElectronicSignatureOnBoardingScreenContent(
         if (haveSignature.value!!) {
             val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
+                dialogMessage =
+                    context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            context.getString(R.string.successfulRegistration),
-                            context.getString(R.string.successfulRegistration)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value
                         )
                     )
                 }
                 showDialog = true
-            }
-            else {
-                dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
+            } else {
+                dialogMessage =
+                    context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
@@ -175,22 +185,23 @@ fun ElectronicSignatureOnBoardingScreenContent(
         if (applySignatureSucceed.value!!) {
             val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+                dialogMessage =
+                    context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
                     activity.finish()
-                    EnrollSDK.enrollCallback?.error(
-                        EnrollFailedModel(
-                            context.getString(R.string.successfulRegistration),
-                            context.getString(R.string.successfulRegistration)
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value
                         )
                     )
                 }
                 showDialog = true
-            }
-            else {
-                dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+            } else {
+                dialogMessage =
+                    context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
                 dialogButtonText = context.getString(R.string.continue_to_next)
                 dialogStatus = BottomSheetStatus.SUCCESS
                 dialogOnPressButton = {
@@ -220,8 +231,7 @@ fun ElectronicSignatureOnBoardingScreenContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
-        }
-        else if (!failure.value?.message.isNullOrEmpty()) {
+        } else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(
@@ -239,8 +249,7 @@ fun ElectronicSignatureOnBoardingScreenContent(
 
                     }
                 }
-            }
-            else {
+            } else {
                 failure.value?.let {
                     DialogView(bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = it.message,
@@ -250,9 +259,11 @@ fun ElectronicSignatureOnBoardingScreenContent(
                                 1 -> {
                                     electronicSignatureOnBoardingViewModel.insertSignatureInfo(1)
                                 }
+
                                 2 -> {
                                     electronicSignatureOnBoardingViewModel.insertSignatureInfo(2)
                                 }
+
                                 3 -> {
                                     electronicSignatureOnBoardingViewModel.insertSignatureInfo(3)
                                 }
@@ -269,8 +280,7 @@ fun ElectronicSignatureOnBoardingScreenContent(
                     }
                 }
             }
-        }
-        else {
+        } else {
 
             if (!isStepSelected.value) {
                 ApplyForSignatureOrAlreadyHave(
@@ -301,7 +311,10 @@ private fun ApplyForSignatureOrAlreadyHave(
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.25f))
 
-        Text(text = stringResource(id = R.string.eSignature), color = MaterialTheme.appColors.textColor)
+        Text(
+            text = stringResource(id = R.string.eSignature),
+            color = MaterialTheme.appColors.textColor
+        )
         Spacer(modifier = Modifier.height(10.dp))
 
         HorizontalDivider(
@@ -339,12 +352,12 @@ private fun ApplyForSignatureOrAlreadyHave(
 
                 if (chosenStep.value == ElectronicSignatureChooseStep.AlreadyHaveSignature) {
                     signatureOnBoardingViewModel.insertSignatureInfo(1)
-                }
-
-                else if (chosenStep.value == ElectronicSignatureChooseStep.ApplyForSignature) {
+                } else if (chosenStep.value == ElectronicSignatureChooseStep.ApplyForSignature) {
 
                     if (signatureOnBoardingViewModel.userHasNationalId.value == true &&
-                        onBoardingViewModel.existingSteps.value!!.contains(3) && onBoardingViewModel.existingSteps.value!!.contains(4)
+                        onBoardingViewModel.existingSteps.value!!.contains(3) && onBoardingViewModel.existingSteps.value!!.contains(
+                            4
+                        )
                     ) {
                         signatureOnBoardingViewModel.insertSignatureInfo(2)
                     } else {
