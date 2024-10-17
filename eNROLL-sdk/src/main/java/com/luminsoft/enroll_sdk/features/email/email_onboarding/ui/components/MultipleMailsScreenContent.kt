@@ -131,7 +131,8 @@ fun MultipleMailsScreenContent(
                         activity.finish()
                         EnrollSDK.enrollCallback?.success(
                             EnrollSuccessModel(
-                                activity.getString(R.string.successfulAuthentication)
+                                activity.getString(R.string.successfulAuthentication),
+                                onBoardingViewModel.documentId.value
                             )
                         )
                     },

@@ -157,7 +157,8 @@ private fun MainContent(
                         activity.finish()
                         EnrollSDK.enrollCallback?.success(
                             EnrollSuccessModel(
-                                activity.getString(R.string.successfulAuthentication)
+                                activity.getString(R.string.successfulAuthentication),
+                                onBoardingViewModel.documentId.value
                             )
                         )
                     },
@@ -387,7 +388,7 @@ private fun setCustomerId(
     customerData: State<CustomerData?>
 ) {
     onBoardingViewModel.customerId.value = "1111"
-//    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.documentId.value = customerData.value?.documentNumber
     onBoardingViewModel.facePhotoPath.value = customerData.value?.photo
 }
 

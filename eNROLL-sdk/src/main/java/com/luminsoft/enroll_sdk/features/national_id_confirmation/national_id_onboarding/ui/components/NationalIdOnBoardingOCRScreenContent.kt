@@ -261,7 +261,7 @@ private fun MainContent(
                             Image(
                                 painterResource(R.drawable.user_icon),
                                 contentDescription = "",
-                                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier
                                     .height(50.dp)
                             )
@@ -270,7 +270,7 @@ private fun MainContent(
                             Image(
                                 painterResource(R.drawable.edit_icon),
                                 contentDescription = "",
-                                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                                 modifier = Modifier
                                     .height(50.dp)
@@ -356,7 +356,7 @@ private fun setCustomerId(
     customerData: State<CustomerData?>
 ) {
     onBoardingViewModel.customerId.value = "1111"
-//    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.documentId.value = customerData.value?.idNumber
     onBoardingViewModel.facePhotoPath.value = customerData.value?.photo
 }
 
@@ -374,7 +374,7 @@ private fun TextItem(label: Int, value: String, icon: Int) {
                 contentDescription = "",
                 modifier = Modifier
                     .height(50.dp),
-                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         }
     )

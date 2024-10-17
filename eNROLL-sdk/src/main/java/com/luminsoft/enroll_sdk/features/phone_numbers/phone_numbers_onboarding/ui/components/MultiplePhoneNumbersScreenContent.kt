@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -129,7 +130,8 @@ fun MultiplePhoneNumbersScreenContent(
                         activity.finish()
                         EnrollSDK.enrollCallback?.success(
                             EnrollSuccessModel(
-                                activity.getString(R.string.successfulAuthentication)
+                                activity.getString(R.string.successfulAuthentication),
+                                onBoardingViewModel.documentId.value
                             )
                         )
                     },
