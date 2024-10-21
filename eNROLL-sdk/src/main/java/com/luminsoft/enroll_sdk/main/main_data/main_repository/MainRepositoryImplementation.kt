@@ -4,6 +4,7 @@ package com.luminsoft.enroll_sdk.main.main_data.main_repository
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
+import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
@@ -45,6 +46,18 @@ class MainRepositoryImplementation(private val mainRemoteDataSource: MainRemoteD
         return when (val response = mainRemoteDataSource.initializeRequest(request)) {
             is BaseResponse.Success -> {
                 Either.Right(response.data as InitializeRequestResponse)
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+        }
+    }
+
+    override suspend fun getApplicantId(): Either<SdkFailure, BasicResponseModel> {
+        return when (val response = mainRemoteDataSource.getApplicantId()) {
+            is BaseResponse.Success -> {
+                Either.Right(response.data as BasicResponseModel)
             }
 
             is BaseResponse.Error -> {

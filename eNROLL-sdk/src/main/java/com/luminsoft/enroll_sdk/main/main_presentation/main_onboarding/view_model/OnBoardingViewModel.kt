@@ -175,6 +175,8 @@ class OnBoardingViewModel(
         }
     }
 
+
+
     fun removeCurrentStep(id: Int): Boolean {
         if (steps.value != null) {
             val stepsSize = steps.value!!.size

@@ -128,6 +128,7 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 val isEmpty =
                     onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
                 if (isEmpty)
+                //TODO get applicant id
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.SUCCESS,
                         text = stringResource(id = R.string.successfulRegistration),
