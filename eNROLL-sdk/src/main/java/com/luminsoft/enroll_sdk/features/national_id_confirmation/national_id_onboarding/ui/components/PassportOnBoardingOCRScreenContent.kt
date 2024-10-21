@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -143,26 +144,40 @@ private fun MainContent(
     val passportApproved = passportOcrVMOcrViewModel.passportApproved.collectAsState()
     val failure = passportOcrVMOcrViewModel.failure.collectAsState()
     val userHasModifiedText = remember { mutableStateOf(false) }
+    val showDialog = remember { mutableStateOf(false) }
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passportApproved.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.success(
-                            EnrollSuccessModel(
-                                activity.getString(R.string.successfulAuthentication),
-                                onBoardingViewModel.documentId.value
-                            )
+
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                       EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
                         )
-                    },
-                )
+                    )
+                }
+            )
         }
         if (loading.value)
             Column(

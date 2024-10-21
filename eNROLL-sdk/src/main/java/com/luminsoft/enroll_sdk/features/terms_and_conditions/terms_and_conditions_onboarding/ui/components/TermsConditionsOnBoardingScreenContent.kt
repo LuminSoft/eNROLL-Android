@@ -24,6 +24,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,6 +90,7 @@ fun TermsConditionsOnBoardingScreenContent(
     val termsIdReceived = termsConditionsOnBoardingVM.termsIdReceived.collectAsState()
     val pdfFileReceived = termsConditionsOnBoardingVM.termsPdfReceived.collectAsState()
     val termsAccepted = termsConditionsOnBoardingVM.termsAccepted.collectAsState()
+    val showDialog = remember { mutableStateOf(false) }
 
 
 
@@ -97,23 +99,35 @@ fun TermsConditionsOnBoardingScreenContent(
 
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.TermsConditions.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.success(
-                            EnrollSuccessModel(
-                                activity.getString(R.string.successfulAuthentication),
-                                onBoardingViewModel.documentId.value
-                            )
-                        )
-                    },
-                )
-        }
 
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
+                        )
+                    )
+                }
+            )
+        }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {

@@ -1,9 +1,9 @@
 package com.luminsoft.enroll_sdk.main.main_data.main_api
 
 
-import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_applicatnt_id.GetApplicantIdResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
@@ -23,5 +23,5 @@ interface MainApi {
     suspend fun initializeRequest(@Body request: InitializeRequestRequest): Response<InitializeRequestResponse>
 
     @GET("api/v1/Applicant/GetApplicantId")
-    suspend fun getApplicantId(): Response<BasicResponseModel>
+    suspend fun getApplicantId(): Response<GetApplicantIdResponse>
 }
