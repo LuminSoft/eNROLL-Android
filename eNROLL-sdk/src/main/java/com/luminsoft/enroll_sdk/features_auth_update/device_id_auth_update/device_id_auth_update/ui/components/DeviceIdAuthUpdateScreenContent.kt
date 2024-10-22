@@ -1,6 +1,7 @@
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -42,12 +43,15 @@ fun DeviceIdAuthUpdateScreenContent(
     val failure = checkDeviceIdAuthUpdateViewModel.failure.collectAsState()
     val deviceIdChecked = checkDeviceIdAuthUpdateViewModel.deviceIdChecked.collectAsState()
 
-
-    BackGroundView(navController = navController, showAppBar = false) {
-
+    LaunchedEffect(deviceIdChecked.value) {
         if (deviceIdChecked.value) {
             updateViewModel.navigateToUpdateAfterAuthStep()
-        } else if (loading.value) LoadingView()
+        }
+    }
+
+    BackGroundView(navController = navController, showAppBar = false) {
+        if (loading.value) LoadingView()
+        else if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {

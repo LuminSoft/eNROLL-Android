@@ -17,16 +17,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,12 +38,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ApprovePhonesUseCase
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.DeletePhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MakeDefaultPhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.MultiplePhoneUseCase
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumbersOnBoardingScreenContent
@@ -71,13 +77,16 @@ fun MultiplePhoneNumbersScreenContent(
     val makeDefaultPhoneUseCase =
         MakeDefaultPhoneUseCase(koinInject())
 
+    val deletePhoneUseCase =
+        DeletePhoneUseCase(koinInject())
+
     val multiplePhoneNumbersViewModel =
         remember {
             MultiplePhoneNumbersViewModel(
                 multiplePhoneUseCase = multiplePhoneUseCase,
                 approvePhonesUseCase = approvePhonesUseCase,
-                makeDefaultPhoneUseCase = makeDefaultPhoneUseCase
-
+                makeDefaultPhoneUseCase = makeDefaultPhoneUseCase,
+                deletePhoneUseCase = deletePhoneUseCase
             )
         }
     val multiplePhoneNumbersVM = remember { multiplePhoneNumbersViewModel }
@@ -89,27 +98,59 @@ fun MultiplePhoneNumbersScreenContent(
         multiplePhoneNumbersViewModel.phoneNumbersApproved.collectAsState()
     val failure = multiplePhoneNumbersViewModel.failure.collectAsState()
     val verifiedPhones = multiplePhoneNumbersViewModel.verifiedPhones.collectAsState()
+    val phoneToDelete = multiplePhoneNumbersViewModel.phoneToDelete.collectAsState()
+    val isDeletePhoneClicked = multiplePhoneNumbersViewModel.isDeletePhoneClicked.collectAsState()
+    val showDialog = remember { mutableStateOf(false) }
 
 
 
     BackGroundView(navController = navController, showAppBar = true) {
+        if (isDeletePhoneClicked.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.WARNING,
+                text = stringResource(id = R.string.phoneDeleteConfirmationMessage) + phoneToDelete.value,
+                buttonText = stringResource(id = R.string.delete),
+                secondButtonText = stringResource(id = R.string.cancel),
+                onPressedButton = {
+                    multiplePhoneNumbersVM.isDeletePhoneClicked.value = false
+                    multiplePhoneNumbersVM.callDeletePhone(phoneToDelete.value!!)
+                    multiplePhoneNumbersVM.phoneToDelete.value = null
+                },
+                onPressedSecondButton = {
+                    multiplePhoneNumbersVM.isDeletePhoneClicked.value = false
+                    multiplePhoneNumbersVM.phoneToDelete.value = null
+                }
+            )
+        }
         if (phoneNumbersApproved.value) {
             val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.PhoneOtp.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
+
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
                         )
-                    },
-                )
+                    )
+                }
+            )
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -154,16 +195,16 @@ fun MultiplePhoneNumbersScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_03_phone),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.2f)
+                val images = listOf(
+                    R.drawable.select_phone_number1,
+                    R.drawable.select_phone_number2,
+                    R.drawable.select_phone_number3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
@@ -190,7 +231,7 @@ fun MultiplePhoneNumbersScreenContent(
                     isEnabled = verifiedPhones.value!!.size < 5,
                     textColor = MaterialTheme.appColors.primary,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(
                     onClick = {
@@ -235,6 +276,7 @@ private fun PhoneItem(
                 Image(
                     painterResource(R.drawable.mobile_icon),
                     contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(50.dp)
                 )
@@ -290,6 +332,10 @@ private fun PhoneItem(
                         contentDescription = "",
                         modifier = Modifier
                             .height(50.dp)
+                            .clickable {
+                                multiplePhoneNumbersVM.phoneToDelete.value = model.phoneNumber
+                                multiplePhoneNumbersVM.isDeletePhoneClicked.value = true
+                            }
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                 }

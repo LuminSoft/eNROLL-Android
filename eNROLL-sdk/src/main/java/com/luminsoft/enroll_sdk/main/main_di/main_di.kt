@@ -9,6 +9,7 @@ import com.luminsoft.enroll_sdk.main.main_data.main_remote_data_source.MainRemot
 import com.luminsoft.enroll_sdk.main.main_data.main_repository.MainRepositoryImplementation
 import com.luminsoft.enroll_sdk.main.main_domain.repository.MainRepository
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
+import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetApplicantIdUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -26,6 +27,9 @@ val mainModule = module {
     single {
         InitializeRequestUsecase(get())
     }
+    single {
+        GetApplicantIdUsecase(get())
+    }
     single<MainRemoteDataSource> {
         MainRemoteDataSourceImpl(get(), get())
     }
@@ -40,7 +44,7 @@ val mainModule = module {
         ).create(MainApi::class.java)
     }
     viewModel {
-        OnBoardingViewModel(get(), get(), get(), context = androidApplication())
+        OnBoardingViewModel(get(), get(), get(),get(), context = androidApplication())
     }
     viewModel {
         LocationOnBoardingViewModel(get())

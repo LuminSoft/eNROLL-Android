@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,13 +40,13 @@ fun DialogView(
     onPressedSecondButton: (() -> Unit)? = null,
     onDismiss: () -> Unit = {},
 ) {
-    AlertDialog(
+    BasicAlertDialog(
         onDismissRequest = {
             onDismiss()
         },
         modifier = Modifier
             .clip(shape = RoundedCornerShape(15.dp))
-            .background(color = MaterialTheme.appColors.backGround),
+            .background(color = MaterialTheme.appColors.backGround)
     ) {
 
         Column(
@@ -85,7 +85,7 @@ fun DialogView(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = text,
-                    color = MaterialTheme.appColors.appBlack,
+                    color = MaterialTheme.appColors.textColor,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 10.dp)

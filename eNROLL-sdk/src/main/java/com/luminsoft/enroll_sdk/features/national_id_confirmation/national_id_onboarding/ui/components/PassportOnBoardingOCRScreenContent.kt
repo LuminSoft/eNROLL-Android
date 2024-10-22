@@ -20,12 +20,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -141,26 +144,40 @@ private fun MainContent(
     val passportApproved = passportOcrVMOcrViewModel.passportApproved.collectAsState()
     val failure = passportOcrVMOcrViewModel.failure.collectAsState()
     val userHasModifiedText = remember { mutableStateOf(false) }
+    val showDialog = remember { mutableStateOf(false) }
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passportApproved.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
+
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                       EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
                         )
-                    },
-                )
+                    )
+                }
+            )
         }
         if (loading.value)
             Column(
@@ -231,7 +248,7 @@ private fun MainContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 24.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -260,6 +277,7 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.user_icon),
                                     contentDescription = "",
+                                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                     modifier = Modifier
                                         .height(50.dp)
                                 )
@@ -268,6 +286,8 @@ private fun MainContent(
                                 Image(
                                     painterResource(R.drawable.edit_icon),
                                     contentDescription = "",
+                                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
                                     modifier = Modifier
                                         .height(50.dp)
                                 )
@@ -352,7 +372,7 @@ private fun MainContent(
                         },
                         title = stringResource(id = R.string.confirmAndContinue)
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     ButtonView(
                         onClick = {
@@ -383,7 +403,7 @@ private fun setCustomerId(
     customerData: State<CustomerData?>
 ) {
     onBoardingViewModel.customerId.value = "1111"
-//    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.documentId.value = customerData.value?.documentNumber
     onBoardingViewModel.facePhotoPath.value = customerData.value?.photo
 }
 

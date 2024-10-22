@@ -10,4 +10,6 @@ open class GetVerifiedPhonesResponseModel {
     @SerializedName("isDefault")
     internal var isDefault: Boolean? = null
 
+    @SerializedName("id")
+    internal var id: Int? = null
 }

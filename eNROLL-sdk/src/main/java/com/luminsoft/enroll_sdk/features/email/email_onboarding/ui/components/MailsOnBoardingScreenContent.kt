@@ -20,7 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +36,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailInfoUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
 import com.luminsoft.enroll_sdk.features.email.email_navigation.validateOtpMailsScreenContent
@@ -155,15 +156,9 @@ fun MailsOnBoardingScreenContent(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_04_email),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.3f)
-                )
-
+                val images = listOf(R.drawable.step_04_email_1, R.drawable.step_04_email_2, R.drawable.step_04_email_3)
+                ImagesBox(images = images,  modifier = Modifier.fillMaxHeight(0.3f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
-
                 NormalTextField(
                     label = ResourceProvider.instance.getStringResource(R.string.mailFormatError),
                     value = mailValue.value!!,
@@ -172,6 +167,8 @@ fun MailsOnBoardingScreenContent(
                         Image(
                             painterResource(R.drawable.mail_icon),
                             contentDescription = "",
+                            colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                             modifier = Modifier
                                 .height(50.dp)
                         )
@@ -191,7 +188,7 @@ fun MailsOnBoardingScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.sendEmailOtpContent),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp
                 )

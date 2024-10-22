@@ -16,11 +16,13 @@ import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_applicatnt_id.GetApplicantIdResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
+import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetApplicantIdUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecaseParams
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
@@ -34,6 +36,7 @@ class OnBoardingViewModel(
     private val generateOnboardingSessionToken: GenerateOnboardingSessionTokenUsecase,
     private val getOnboardingStepConfigurationsUsecase: GetOnboardingStepConfigurationsUsecase,
     private val initializeRequestUsecase: InitializeRequestUsecase,
+    private val getApplicantIdUsecase: GetApplicantIdUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -44,11 +47,14 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
-//    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var documentId: MutableStateFlow<String?> = MutableStateFlow(null)
+
+    //    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
 //    var userPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
 //    var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
     val existingSteps: MutableState<List<Int>?> = mutableStateOf(null)
     var requestId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var applicantId: MutableStateFlow<String?> = MutableStateFlow(null)
     var requestCallBackSent: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -75,6 +81,12 @@ class OnBoardingViewModel(
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
 
+
+
+
+    init {
+        generateToken()
+    }
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
@@ -122,9 +134,7 @@ class OnBoardingViewModel(
         loading.value = false
     }
 
-    init {
-        generateToken()
-    }
+
 
     private fun generateToken() {
         loading.value = true
@@ -133,7 +143,8 @@ class OnBoardingViewModel(
             params.value = GenerateOnboardingSessionTokenUsecaseParams(
                 EnrollSDK.tenantId,
                 EnrollSDK.tenantSecret,
-                uuid
+                uuid,
+                EnrollSDK.correlationId
             )
 
             val response: Either<SdkFailure, String> =
@@ -159,9 +170,9 @@ class OnBoardingViewModel(
                             loading.value = false
                             extractRegistrationStepIds(list)
 
-                            if(EnrollSDK.skipTutorial){
+                            if (EnrollSDK.skipTutorial) {
                                 initRequest()
-                            }else{
+                            } else {
                                 navController!!.navigate(onBoardingScreenContent)
                             }
 
@@ -171,6 +182,28 @@ class OnBoardingViewModel(
                 })
         }
     }
+
+    suspend fun getApplicantId(): Either<SdkFailure, GetApplicantIdResponse> {
+        loading.value = true
+
+        val response: Either<SdkFailure, GetApplicantIdResponse> =
+            getApplicantIdUsecase.call(null)
+
+
+        response.fold(
+            { failure ->
+                this.failure.value = failure
+                loading.value = false
+            },
+            { success ->
+                applicantId.value = success.applicantId
+                loading.value = false
+            }
+        )
+
+        return response  // Return the response
+    }
+
 
     fun removeCurrentStep(id: Int): Boolean {
         if (steps.value != null) {
