@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -79,27 +80,44 @@ fun SettingPasswordOnBoardingScreenContent(
     val password = passwordOnBoardingViewModel.password.collectAsState()
     val confirmPassword = passwordOnBoardingViewModel.confirmPassword.collectAsState()
     val scrollState = rememberScrollState()
+    val showDialog = remember { mutableStateOf(false) }
+
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.SettingPassword.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.success(
-                            EnrollSuccessModel(
-                                activity.getString(R.string.successfulAuthentication),
-                                onBoardingViewModel.documentId.value
-                            )
+
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
                         )
-                    },
-                )
-        } else if (!failure.value?.message.isNullOrEmpty()) {
+                    )
+                }
+            )
+        }
+
+        else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(

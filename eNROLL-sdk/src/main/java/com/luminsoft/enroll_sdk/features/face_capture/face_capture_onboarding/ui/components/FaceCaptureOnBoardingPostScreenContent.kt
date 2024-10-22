@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -169,6 +170,7 @@ private fun MainContent(
     val startPosition1 = Offset(-250f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
     val faceImageBaseUrl = "${EnrollSDK.getImageUrl()}api/v1/ApplicantProfile/GetImage?path="
+    val showDialog = remember { mutableStateOf(false) }
 
     if (!loading.value) {
         LaunchedEffect(endPosition) {
@@ -209,23 +211,34 @@ private fun MainContent(
         if (selfieImageApproved.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.SmileLiveness.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.success(
-                            EnrollSuccessModel(
-                                activity.getString(R.string.successfulAuthentication),
-                                onBoardingViewModel.documentId.value
-                            )
-                        )
-                    },
-                )
-        }
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
 
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
+                        )
+                    )
+                }
+            )
+        }
         if (loading.value)
             Column(
                 modifier = Modifier.fillMaxSize(),

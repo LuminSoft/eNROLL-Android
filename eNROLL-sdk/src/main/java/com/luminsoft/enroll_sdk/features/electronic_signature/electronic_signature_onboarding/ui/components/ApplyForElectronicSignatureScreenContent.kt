@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_onboarding.ui.components
 
-import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_domain.usecases.CheckUserHasNationalIdUseCase
 import ElectronicSignatureOnBoardingViewModel
 import InsertSignatureInfoUseCase
 import android.annotation.SuppressLint
@@ -32,6 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
@@ -40,6 +40,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_domain.usecases.CheckUserHasNationalIdUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -49,6 +50,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 
@@ -106,7 +108,8 @@ fun ApplyForElectronicSignatureScreenContent(
         return false
     }
 
-    fun showSuccessDialog(isEmpty: Boolean) {
+
+    fun showSuccessDialosg(isEmpty: Boolean) {
         dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
         dialogButtonText = context.getString(R.string.continue_to_next)
         dialogStatus = BottomSheetStatus.SUCCESS
@@ -119,6 +122,39 @@ fun ApplyForElectronicSignatureScreenContent(
                         onBoardingViewModel.documentId.value
                     )
                 )
+            } else {
+                navigateToNextStep()
+                showDialog = false
+            }
+        }
+        showDialog = true
+    }
+
+
+
+    fun showSuccessDialog(isEmpty: Boolean) {
+        dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+        dialogButtonText = context.getString(R.string.continue_to_next)
+        dialogStatus = BottomSheetStatus.SUCCESS
+
+        dialogOnPressButton = {
+            if (isEmpty) {
+                onBoardingViewModel.viewModelScope.launch {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ ->
+                                activity.finish()
+                                EnrollSDK.enrollCallback?.success(
+                                    EnrollSuccessModel(
+                                        activity.getString(R.string.successfulAuthentication),
+                                        onBoardingViewModel.documentId.value,
+                                        onBoardingViewModel.applicantId.value
+                                    )
+                                )
+                        }
+                    )
+                }
             } else {
                 navigateToNextStep()
                 showDialog = false
