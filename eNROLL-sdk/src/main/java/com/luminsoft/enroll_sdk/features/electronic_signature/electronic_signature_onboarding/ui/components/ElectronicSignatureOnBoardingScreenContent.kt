@@ -131,19 +131,26 @@ fun ElectronicSignatureOnBoardingScreenContent(
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.successfulRegistration)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value
-                        )
-                    )
-                }
-                showDialog = true
+                val apiResponse = onBoardingViewModel.getApplicantId()
+                apiResponse.fold(
+                    {},
+                    { _ ->
+                        dialogMessage = context.getString(R.string.successfulRegistration)
+                        dialogButtonText = context.getString(R.string.continue_to_next)
+                        dialogStatus = BottomSheetStatus.SUCCESS
+                        dialogOnPressButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.success(
+                                EnrollSuccessModel(
+                                    activity.getString(R.string.successfulAuthentication),
+                                    onBoardingViewModel.documentId.value,
+                                    onBoardingViewModel.applicantId.value
+                                )
+                            )
+                        }
+                        showDialog = true
+                    }
+                )
             }
 
         }
@@ -153,20 +160,27 @@ fun ElectronicSignatureOnBoardingScreenContent(
         if (haveSignature.value!!) {
             val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage =
-                    context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value
-                        )
-                    )
-                }
-                showDialog = true
+                val apiResponse = onBoardingViewModel.getApplicantId()
+                apiResponse.fold(
+                    {},
+                    { _ ->
+                        dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
+                        dialogButtonText = context.getString(R.string.continue_to_next)
+                        dialogStatus = BottomSheetStatus.SUCCESS
+                        dialogOnPressButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.success(
+                                EnrollSuccessModel(
+                                    activity.getString(R.string.successfulAuthentication),
+                                    onBoardingViewModel.documentId.value,
+                                    onBoardingViewModel.applicantId.value
+                                )
+                            )
+                        }
+                        showDialog = true
+                    }
+                )
+
             } else {
                 dialogMessage =
                     context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
@@ -185,20 +199,27 @@ fun ElectronicSignatureOnBoardingScreenContent(
         if (applySignatureSucceed.value!!) {
             val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             if (isEmpty) {
-                dialogMessage =
-                    context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value
-                        )
-                    )
-                }
-                showDialog = true
+                val apiResponse = onBoardingViewModel.getApplicantId()
+                apiResponse.fold(
+                    {},
+                    { _ ->
+                        dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+                        dialogButtonText = context.getString(R.string.continue_to_next)
+                        dialogStatus = BottomSheetStatus.SUCCESS
+                        dialogOnPressButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.success(
+                                EnrollSuccessModel(
+                                    activity.getString(R.string.successfulAuthentication),
+                                    onBoardingViewModel.documentId.value,
+                                    onBoardingViewModel.applicantId.value
+                                )
+                            )
+                        }
+                        showDialog = true
+                    }
+                )
+
             } else {
                 dialogMessage =
                     context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)

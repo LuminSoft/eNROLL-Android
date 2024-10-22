@@ -59,23 +59,32 @@ fun CheckAmlOnBoardingScreenContent(
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
 
+
+
     LaunchedEffect(amlChecked.value) {
         if (amlSucceeded.value != null && amlSucceeded.value!!) {
             val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.AmlCheck.getStepId())
             if (isEmpty) {
-                dialogMessage = context.getString(R.string.successfulRegistration)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value
-                        )
-                    )
-                }
-                showDialog = true
+                val apiResponse = onBoardingViewModel.getApplicantId()
+                apiResponse.fold(
+                    {},
+                    { _ ->
+                        dialogMessage = context.getString(R.string.successfulRegistration)
+                        dialogButtonText = context.getString(R.string.continue_to_next)
+                        dialogStatus = BottomSheetStatus.SUCCESS
+                        dialogOnPressButton = {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.success(
+                                EnrollSuccessModel(
+                                    activity.getString(R.string.successfulAuthentication),
+                                    onBoardingViewModel.documentId.value,
+                                    onBoardingViewModel.applicantId.value
+                                )
+                            )
+                        }
+                        showDialog = true
+                    }
+                )
             }
         } else if (amlSucceeded.value != null && !amlSucceeded.value!!) {
             dialogMessage = context.getString(R.string.kindly_check_aml_to_clear_your_name)
@@ -89,14 +98,10 @@ fun CheckAmlOnBoardingScreenContent(
                         R.string.kindly_check_aml_to_clear_your_name
                     )
                 )
-
             }
             showDialog = true
-
         }
-
     }
-
 
     BackGroundView(navController = navController, showAppBar = true) {
 
