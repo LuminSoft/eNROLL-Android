@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,7 +18,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 
 
 @Composable
@@ -47,13 +48,25 @@ fun BackGroundView(
             }
         })
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.appColors.backGround) {
-        Image(
-            painterResource(R.drawable.bg_shapes),
-            contentDescription = "",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .fillMaxSize()
+        /* Image(
+             painterResource(R.drawable.bg_shapes),
+             contentDescription = "",
+             contentScale = ContentScale.FillBounds,
+             modifier = Modifier
+                 .fillMaxSize()
+         )*/
+        val images = listOf(
+            R.drawable.main_lightblue_bg01,
+            R.drawable.main_lightblue_bg02,
+            R.drawable.main_lightblue_bg03
         )
+
+        ImagesBox(
+            images = images,
+            modifier = Modifier.fillMaxHeight(),
+            contentScale = ContentScale.FillHeight
+        )
+
         Column {
             if (showAppBar)
                 Box(

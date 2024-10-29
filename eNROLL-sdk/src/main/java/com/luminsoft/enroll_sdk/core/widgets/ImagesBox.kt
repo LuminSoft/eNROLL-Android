@@ -11,18 +11,22 @@ import androidx.compose.ui.res.painterResource
 import appColors
 
 @Composable
-fun ImagesBox(images: List<Int>,modifier: Modifier = Modifier ) {
+fun ImagesBox(
+    images: List<Int>,
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale? = null
+) {
     Box {
         images.forEachIndexed { index, imageResId ->
             Image(
-              modifier = modifier,
+                modifier = modifier,
                 painter = painterResource(id = imageResId),
-                contentScale = ContentScale.Fit,
+                contentScale = contentScale ?: ContentScale.Fit,
                 colorFilter = ColorFilter.tint(
                     when (index) {
                         0 -> MaterialTheme.appColors.primary
                         1 -> MaterialTheme.appColors.secondary
-                        else -> MaterialTheme.appColors.primary.copy(alpha = 0.3f)
+                        else -> MaterialTheme.appColors.primary.copy(alpha = 0.4f)
                     }
                 ),
                 contentDescription = "Victor Ekyc Item"

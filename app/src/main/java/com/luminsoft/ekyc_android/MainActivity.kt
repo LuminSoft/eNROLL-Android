@@ -454,15 +454,15 @@ class MainActivity : ComponentActivity() {
                 skipTutorial = skipTutorial.value,
 
                 appColors = AppColors(
-                    warningColor = warningColor,
-                    successColor = successColor,
-                    white = white,
-                    primary = primaryColor,
-                    appBlack = appBlack,
-                    backGround = backGround,
-                    secondary = secondaryColor,
-                    errorColor = errorColor,
-                    textColor = textColor
+                    warningColor = Color(0xFFFFD500),
+                    successColor = Color(0xff0FDE00),
+                    white = Color(0xffffffff),
+                    primary = Color(0xff2481D2),
+                    appBlack = Color(0xff060B27),
+                    backGround = Color(0xffFFFFFF),
+                    secondary = Color(0xff0E1A5D),
+                    errorColor = Color(0xffD2001C),
+                    textColor = Color(0xffffffff)
                 ),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
