@@ -39,10 +39,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -62,6 +64,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 
 
@@ -195,8 +198,12 @@ private fun NationalIdOnly(
             .padding(horizontal = 20.dp)
     ) {
         EnrollItemView(
-            listOf(R.drawable.step_01_national_id_1, R.drawable.step_01_national_id_2, R.drawable.step_01_national_id_3)
-            , R.string.documentPreScanContent)
+            listOf(
+                R.drawable.step_01_national_id_1,
+                R.drawable.step_01_national_id_2,
+                R.drawable.step_01_national_id_3
+            ), R.string.documentPreScanContent
+        )
         ButtonView(
             onClick = {
                 rememberedViewModel.enableLoading()
@@ -227,7 +234,7 @@ private fun NationalIdOrPassport(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        Spacer(modifier = Modifier.fillMaxHeight(0.25f))
+        Spacer(modifier = Modifier.fillMaxHeight(0.10f))
 
         Text(text = stringResource(id = R.string.choosePersonalConfirmation))
         Spacer(modifier = Modifier.height(10.dp))
@@ -239,20 +246,17 @@ private fun NationalIdOrPassport(
         )
 
         Spacer(modifier = Modifier.height(80.dp))
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(26.dp)
         ) {
-            Box(modifier = Modifier.weight(1f)) {
-                Card(ChooseStep.NationalId, chosenStep, rememberedViewModel)
-            }
+            Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
 
-            Box(modifier = Modifier.weight(1f)) {
-                Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
-            }
+            Card(ChooseStep.NationalId, chosenStep, rememberedViewModel)
+
         }
-        Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+        Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
         ButtonView(
             onClick = {
@@ -303,23 +307,38 @@ private fun Card(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.45f)
-                    .aspectRatio(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Victor Ekyc Item"
-                )
-            }
+
+            Image(
+                painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
+                contentScale = ContentScale.Fit,
+                contentDescription = "Victor Ekyc Item"
+            )
+
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalId else R.string.passport),
-                fontSize = 12.sp
+                fontSize = 14.sp
             )
+            Spacer(modifier = Modifier.height(5.dp))
+            Row(
+                modifier = Modifier.padding(horizontal = 15.dp)
+            ) {
+                Image(
+                    painterResource(R.drawable.mail_icon),
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
+                    modifier = Modifier
+                        .height(12.dp)
+                )
+                Text(
+                    text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalIdDescription else R.string.passportDescription),
+                    fontSize = 9.sp,
+                    color = AppColors().appBlack,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 15.sp,
+                )
+            }
         }
 
     }
@@ -339,8 +358,12 @@ private fun PassportOnly(
             .padding(horizontal = 20.dp)
     ) {
         EnrollItemView(
-            listOf(R.drawable.step_01_passport_1, R.drawable.step_01_passport_2, R.drawable.step_01_passport_3)
-            , R.string.passportPreScanContent)
+            listOf(
+                R.drawable.step_01_passport_1,
+                R.drawable.step_01_passport_2,
+                R.drawable.step_01_passport_3
+            ), R.string.passportPreScanContent
+        )
         ButtonView(
             onClick = {
                 rememberedViewModel.enableLoading()
