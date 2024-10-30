@@ -17,13 +17,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,6 +50,7 @@ import androidx.navigation.NavController
 import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
@@ -66,6 +66,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
+import java.util.Stack
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -248,12 +249,13 @@ private fun NationalIdOrPassport(
         Spacer(modifier = Modifier.height(80.dp))
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .fillMaxHeight(0.7f),
             verticalArrangement = Arrangement.spacedBy(26.dp)
         ) {
-            Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
 
             Card(ChooseStep.NationalId, chosenStep, rememberedViewModel)
+            Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
 
         }
         Spacer(modifier = Modifier.fillMaxHeight(0.2f))
@@ -301,43 +303,69 @@ private fun Card(
         ) {
         Column(
             modifier = Modifier
-                .fillMaxHeight(0.3f)
+                .height(200.dp)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
 
-            Image(
-                painter = painterResource(id = if (step == ChooseStep.NationalId) R.drawable.choose_national_id else R.drawable.choose_passport),
-                contentScale = ContentScale.Fit,
-                contentDescription = "Victor Ekyc Item"
+            val idImages = listOf(
+                R.drawable.id_scan_01, R.drawable.id_scan_02, R.drawable.id_scan_03
             )
+
+            val passportImages = listOf(
+                R.drawable.passport_scan_01,
+                R.drawable.passport_scan_02,
+                R.drawable.passport_scan_03
+            )
+            Box(modifier = Modifier.fillMaxHeight(0.35f), contentAlignment = Alignment.Center) {
+                Image(
+                    painterResource(R.drawable.icon_back_shape),
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary.copy(alpha = 0.1f)),
+                    modifier = Modifier.fillMaxHeight(1f)
+                )
+                ImagesBox(
+                    images = if (step == ChooseStep.NationalId) idImages else passportImages,
+                    modifier = Modifier.fillMaxHeight(0.7f)
+                )
+
+            }
+
+
 
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalId else R.string.passport),
-                fontSize = 14.sp
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(5.dp))
             Row(
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.padding(horizontal = 15.dp)
             ) {
                 Image(
-                    painterResource(R.drawable.mail_icon),
+                    painterResource(R.drawable.info_icon),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
 
                     modifier = Modifier
-                        .height(12.dp)
+                        .size(15.dp)
+
                 )
-                Text(
-                    text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalIdDescription else R.string.passportDescription),
-                    fontSize = 9.sp,
-                    color = AppColors().appBlack,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 15.sp,
-                )
+                Spacer(Modifier.width(5.dp))
+                Box(Modifier.fillMaxWidth(0.9f)) {
+                    Text(
+                        text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalIdDescription else R.string.passportDescription),
+                        fontSize = 9.sp,
+                        color = AppColors().appBlack,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 15.sp,
+                        modifier = Modifier.align(Alignment.TopStart)
+                    )
+                }
             }
         }
 
