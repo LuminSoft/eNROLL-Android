@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk
 
-import EKYCsDKTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -55,8 +55,6 @@ class EnrollMainAuthActivity : ComponentActivity() {
     }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
         setupServices()
@@ -73,7 +71,11 @@ class EnrollMainAuthActivity : ComponentActivity() {
             val authViewModel: AuthViewModel = koinViewModel<AuthViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(dynamicColor = false, appColors = EnrollSDK.appColors) {
+            EKYCsDKTheme(
+                dynamicColor = false,
+                appColors = EnrollSDK.appColors,
+                fontResource = EnrollSDK.fontResource
+            ) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()

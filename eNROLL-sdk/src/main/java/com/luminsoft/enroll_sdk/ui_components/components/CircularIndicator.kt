@@ -21,7 +21,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import kotlin.math.cos
 import kotlin.math.sin
 

@@ -26,6 +26,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable

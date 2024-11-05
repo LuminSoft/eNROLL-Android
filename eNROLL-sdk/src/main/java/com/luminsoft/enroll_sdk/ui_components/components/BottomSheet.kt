@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

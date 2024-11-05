@@ -2,6 +2,7 @@ package com.luminsoft.ekyc_android
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -51,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.AppColors
 import com.luminsoft.enroll_sdk.EnrollCallback
@@ -395,6 +396,7 @@ class MainActivity : ComponentActivity() {
         return String.format("#%02X%02X%02X%02X", alpha, red, green, blue)
     }
 
+
     private fun initEnroll(
         activity: Activity,
         selectedIndex: Int,
@@ -455,7 +457,8 @@ class MainActivity : ComponentActivity() {
                 appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
-                correlationId = "correlationId"
+                correlationId = "correlationId",
+                fontResource = R.font.itim_regular
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())

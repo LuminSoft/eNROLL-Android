@@ -25,7 +25,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)

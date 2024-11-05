@@ -22,6 +22,7 @@ object EnrollSDK {
     var localizationCode = LocalizationCode.AR
     var skipTutorial = false
     var appColors = AppColors()
+    var fontResource = 0
 
     var enrollCallback: EnrollCallback? = null
     var enrollMode: EnrollMode? = EnrollMode.ONBOARDING
