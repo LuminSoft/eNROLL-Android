@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -171,11 +171,13 @@ fun ForgetPasswordAuthScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.emailOtpGuideWithMailVariable),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.textColor,
                     fontSize = 12.sp
                 )
                 Text(
                     text = forgetPasswordViewModel.defaultMailValue.value,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.secondary,
                     fontSize = 12.sp
                 )
@@ -192,12 +194,14 @@ fun ForgetPasswordAuthScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
@@ -251,6 +255,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
         Text(
             text = ticks.toString(),
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp

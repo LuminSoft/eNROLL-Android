@@ -25,7 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -96,7 +96,7 @@ fun FaceCaptureAuthErrorScreen(
             )
             ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f))
             Spacer(modifier = Modifier.height(30.dp))
-            errorMessage.value?.let { Text(text = it) }
+            errorMessage.value?.let { Text(text = it,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) }
             Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
             ButtonView(

@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +61,7 @@ fun BottomSheet(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = text,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.appBlack,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 10.dp)

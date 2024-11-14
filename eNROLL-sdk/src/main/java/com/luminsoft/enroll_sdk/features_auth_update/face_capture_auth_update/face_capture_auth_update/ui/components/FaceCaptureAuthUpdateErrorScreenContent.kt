@@ -34,6 +34,7 @@ import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -93,7 +94,7 @@ fun FaceCaptureAuthUpdateErrorScreen(
             )
             ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f))
             Spacer(modifier = Modifier.height(30.dp))
-            errorMessage.value?.let { Text(text = it) }
+            errorMessage.value?.let { Text(text = it,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) }
             Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
             ButtonView(

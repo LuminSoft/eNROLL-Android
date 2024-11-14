@@ -47,7 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
@@ -237,7 +237,7 @@ private fun NationalIdOrPassport(
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.10f))
 
-        Text(text = stringResource(id = R.string.choosePersonalConfirmation))
+        Text(text = stringResource(id = R.string.choosePersonalConfirmation),fontFamily = MaterialTheme.typography.labelLarge.fontFamily,)
         Spacer(modifier = Modifier.height(10.dp))
 
         HorizontalDivider(
@@ -338,6 +338,7 @@ private fun Card(
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalId else R.string.passport),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(5.dp))
@@ -360,6 +361,7 @@ private fun Card(
                     Text(
                         text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalIdDescription else R.string.passportDescription),
                         fontSize = 9.sp,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = AppColors().appBlack,
                         textAlign = TextAlign.Center,
                         lineHeight = 15.sp,

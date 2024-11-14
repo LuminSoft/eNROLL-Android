@@ -26,7 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,6 +87,7 @@ fun DialogView(
                     text = text,
                     color = MaterialTheme.appColors.textColor,
                     style = MaterialTheme.typography.titleMedium,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )

@@ -40,7 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import kotlinx.coroutines.launch
 
 

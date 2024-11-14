@@ -49,7 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -216,6 +216,7 @@ fun SecurityQuestionsOnBoardingScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = MaterialTheme.appColors.textColor
                 )
@@ -306,6 +307,7 @@ private fun AnswerTextField(
             supportingText = {
                 Text(
                     text = "${answer.value.text.length} / $maxChar",
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
                     color = MaterialTheme.appColors.secondary
@@ -316,6 +318,7 @@ private fun AnswerTextField(
             placeholder = {
                 Text(
                     stringResource(id = R.string.answer),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = MaterialTheme.appColors.secondary
                 )
@@ -337,6 +340,7 @@ private fun AnswerTextField(
         if (answerError.value != null)
             Text(
                 answerError.value!!,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
@@ -373,6 +377,7 @@ fun DropdownList(
             placeholder = {
                 Text(
                     stringResource(id = R.string.chooseAQuestions),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = MaterialTheme.appColors.primary
                 )
@@ -401,6 +406,7 @@ fun DropdownList(
         if (selectQuestionError.value)
             Text(
                 text = stringResource(id = R.string.required_question),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
@@ -418,6 +424,7 @@ fun DropdownList(
                         text = {
                             Text(
                                 text = label.question!!,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.appColors.primary
                             )
