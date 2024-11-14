@@ -61,6 +61,7 @@ fun BottomSheet(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = text,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.appBlack,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 10.dp)

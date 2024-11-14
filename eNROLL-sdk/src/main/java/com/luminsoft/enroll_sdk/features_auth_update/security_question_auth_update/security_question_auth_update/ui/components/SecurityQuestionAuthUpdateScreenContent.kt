@@ -143,6 +143,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.youMustAnswerSecurityQuestion),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = Color.Black,
                     textAlign = TextAlign.Center
@@ -169,6 +170,7 @@ fun SecurityQuestionAuthUpdateScreenContent(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = it,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 fontSize = 12.sp,
                                 color = Color.Black
                             )
@@ -234,13 +236,15 @@ private fun AnswerTextFieldWidget(
             supportingText = {
                 Text(
                     text = "${answer.value.text.length} / $maxChar",
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
                 )
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) },
+
             colors = textFieldColors(),
             leadingIcon = {
                 Image(
@@ -259,6 +263,7 @@ private fun AnswerTextFieldWidget(
             println(" second answerError.value ${answerError.value}")
             Text(
                 answerError.value!!,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )

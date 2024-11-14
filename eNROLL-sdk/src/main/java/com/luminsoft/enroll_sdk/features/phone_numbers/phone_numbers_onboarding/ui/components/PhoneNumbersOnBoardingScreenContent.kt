@@ -200,6 +200,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                         label = {
                             Text(
                                 ResourceProvider.instance.getStringResource(R.string.phoneNumber),
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 fontSize = 14.sp,
                                 color = MaterialTheme.appColors.textColor
                             )
@@ -213,6 +214,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                 Text(
                     text = stringResource(id = R.string.sendPhoneOtpContent),
                     color = MaterialTheme.appColors.textColor,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))

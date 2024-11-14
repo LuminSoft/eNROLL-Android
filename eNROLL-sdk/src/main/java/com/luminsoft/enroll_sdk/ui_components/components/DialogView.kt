@@ -87,6 +87,7 @@ fun DialogView(
                     text = text,
                     color = MaterialTheme.appColors.textColor,
                     style = MaterialTheme.typography.titleMedium,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )

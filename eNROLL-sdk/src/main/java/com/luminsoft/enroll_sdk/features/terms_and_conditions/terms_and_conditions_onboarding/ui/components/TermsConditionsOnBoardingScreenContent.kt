@@ -205,6 +205,7 @@ fun PdfViewerWidget(
         ) {
             Text(
                 text = stringResource(id = R.string.readTermsAndConditions),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.appColors.textColor,

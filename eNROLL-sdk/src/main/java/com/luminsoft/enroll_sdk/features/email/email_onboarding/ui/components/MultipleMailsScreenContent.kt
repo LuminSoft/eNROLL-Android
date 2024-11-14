@@ -214,6 +214,7 @@ fun MultipleMailsScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.youAddedTheFollowingMails),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
@@ -306,6 +307,7 @@ private fun MailItem(
                 Text(
                     text = model.email!!,
                     color = MaterialTheme.appColors.appBlack,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp
                 )
             }
@@ -339,6 +341,7 @@ private fun MailItem(
                         Text(
                             text = stringResource(id = R.string.make_default),
                             color = MaterialTheme.appColors.backGround,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {

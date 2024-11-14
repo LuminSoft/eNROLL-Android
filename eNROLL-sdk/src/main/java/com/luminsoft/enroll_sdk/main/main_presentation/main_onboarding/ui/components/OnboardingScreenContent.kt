@@ -98,7 +98,8 @@ fun OnboardingScreenContent(
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.appColors.primary
+                            color = MaterialTheme.appColors.primary,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         ),
                         modifier = Modifier
                             .align(Alignment.CenterStart),
@@ -117,6 +118,7 @@ fun OnboardingScreenContent(
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 color = MaterialTheme.appColors.primary
                             ),
                             modifier = Modifier

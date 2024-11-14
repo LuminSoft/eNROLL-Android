@@ -86,9 +86,8 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
 
 
             EKYCsDKTheme(
-                dynamicColor = false,
                 appColors = EnrollSDK.appColors,
-                fontResource = EnrollSDK.fontResource
+                dynamicColor = false
             ) {
 
                 NavHost(

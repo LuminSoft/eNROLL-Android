@@ -108,6 +108,7 @@ fun SplashScreenContent(
             ) {
                 Text(
                     text = "Sponsored by",
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp

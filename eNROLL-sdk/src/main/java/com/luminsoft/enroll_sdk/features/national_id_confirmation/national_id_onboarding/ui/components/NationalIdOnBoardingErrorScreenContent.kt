@@ -156,7 +156,7 @@ fun NationalIdOnBoardingErrorScreen(
                 ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f))
 
                 Spacer(modifier = Modifier.height(30.dp))
-                errorMessage.value?.let { Text(text = it) }
+                errorMessage.value?.let { Text(text = it,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) }
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
                 ButtonView(

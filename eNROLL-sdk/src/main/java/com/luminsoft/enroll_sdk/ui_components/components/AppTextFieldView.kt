@@ -101,6 +101,7 @@ fun NormalTextField(
                     label = {
                         Text(
                             text = label,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             color = MaterialTheme.appColors.textColor.copy(alpha = 0.6f),
                             style = MaterialTheme.typography.labelSmall
                         )
@@ -146,6 +147,7 @@ fun NormalTextField(
         if (error != null) {
             Text(
                 text = error,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )

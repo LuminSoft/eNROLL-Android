@@ -164,6 +164,7 @@ fun PhoneAuthScreenContent(
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.smsOtpGuide),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.textColor,
                     fontSize = 12.sp
                 )
@@ -180,12 +181,14 @@ fun PhoneAuthScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
                         fontSize = 10.sp
                     )
@@ -239,6 +242,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
         Text(
             text = ticks.toString(),
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp

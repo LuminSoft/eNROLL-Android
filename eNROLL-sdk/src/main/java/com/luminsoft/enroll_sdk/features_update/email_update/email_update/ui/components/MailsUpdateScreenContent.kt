@@ -192,6 +192,7 @@ fun MailsUpdateScreenContent(
                     text = stringResource(id = R.string.sendEmailOtpContent),
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))

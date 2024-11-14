@@ -268,6 +268,7 @@ private fun MainContent(
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.ekycSuccessfullyDone),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
@@ -292,6 +293,7 @@ private fun MainContent(
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.facesNotMatch),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = Color.Black
                     )
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))

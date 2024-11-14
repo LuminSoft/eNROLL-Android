@@ -72,7 +72,7 @@ fun ButtonView(
 
 
         ) {
-        Text(text = title, style = MaterialTheme.typography.titleMedium, color = textColorF)
+        Text(text = title, style = MaterialTheme.typography.titleMedium, color = textColorF,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,)
 
     }
 }

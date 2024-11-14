@@ -37,6 +37,7 @@ fun EnrollItemView(  images: List<Int>,textResourceId: Int) {
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = textResourceId),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
         )

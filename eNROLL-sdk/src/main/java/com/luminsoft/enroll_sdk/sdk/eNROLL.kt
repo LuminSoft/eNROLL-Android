@@ -38,7 +38,7 @@ object eNROLL {
         skipTutorial: Boolean = false,
         appColors: AppColors = AppColors(),
         correlationId: String = "",
-        fontResource: Int
+        fontResource: Int? = 0
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -60,7 +60,7 @@ object eNROLL {
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
         EnrollSDK.correlationId = correlationId
-        EnrollSDK.fontResource = fontResource
+        EnrollSDK.fontResource = fontResource!!
 
 
     }

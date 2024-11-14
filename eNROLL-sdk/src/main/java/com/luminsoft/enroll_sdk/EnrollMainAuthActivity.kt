@@ -72,9 +72,8 @@ class EnrollMainAuthActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             EKYCsDKTheme(
-                dynamicColor = false,
                 appColors = EnrollSDK.appColors,
-                fontResource = EnrollSDK.fontResource
+                dynamicColor = false
             ) {
                 NavHost(
                     navController = navController,

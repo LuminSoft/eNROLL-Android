@@ -172,12 +172,14 @@ fun ValidateOtpMailsScreenContent(
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
                         fontSize = 8.sp,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         onBoardingViewModel.mailValue.value!!.text,
                         fontSize = 10.sp,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.secondary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
@@ -195,6 +197,7 @@ fun ValidateOtpMailsScreenContent(
                             ResourceProvider.instance.getStringResource(R.string.edit),
                             fontSize = 8.sp,
                             color = Color.White,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
@@ -218,12 +221,14 @@ fun ValidateOtpMailsScreenContent(
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
                         color = MaterialTheme.appColors.textColor,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
                         color = MaterialTheme.appColors.textColor,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp
                     )
                 }
@@ -233,6 +238,7 @@ fun ValidateOtpMailsScreenContent(
                     Text(
                         text = stringResource(id = R.string.resend),
                         color = MaterialTheme.appColors.primary,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 14.sp,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
@@ -304,6 +310,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             text = ticks.toString(),
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             fontSize = 12.sp
         )
     }

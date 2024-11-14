@@ -85,6 +85,7 @@ fun UpdateListScreenContent(
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = stringResource(id = R.string.youCanSelectOneItem),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp
@@ -155,6 +156,7 @@ private fun UpdateStepItem(
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
                     text = stringResource(id = step.parseUpdateStepType().getStepNameIntSource()),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.colorScheme.inverseSurface,
                     fontSize = 12.sp
                 )

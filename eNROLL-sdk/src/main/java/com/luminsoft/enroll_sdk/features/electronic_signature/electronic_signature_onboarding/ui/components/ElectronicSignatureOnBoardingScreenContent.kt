@@ -335,6 +335,7 @@ private fun ApplyForSignatureOrAlreadyHave(
 
         Text(
             text = stringResource(id = R.string.eSignature),
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             color = MaterialTheme.appColors.textColor
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -466,6 +467,7 @@ private fun Card(
             Text(
                 text = stringResource(id = if (step == ElectronicSignatureChooseStep.AlreadyHaveSignature) R.string.haveSignature else R.string.applyForSignature),
                 fontSize = 12.sp,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.primary
             )
         }

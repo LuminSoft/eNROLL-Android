@@ -89,7 +89,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             EKYCsDKTheme(
-                appColors = EnrollSDK.appColors, fontResource = EnrollSDK.fontResource
+                appColors = EnrollSDK.appColors
             ) {
                 NavHost(
                     navController = navController,

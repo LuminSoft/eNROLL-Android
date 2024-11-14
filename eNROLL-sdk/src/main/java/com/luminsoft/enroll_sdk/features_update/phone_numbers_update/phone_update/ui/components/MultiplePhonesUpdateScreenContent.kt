@@ -172,6 +172,7 @@ fun MultiplePhonesUpdateScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.youAddedTheFollowingPhoneNumbers),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))

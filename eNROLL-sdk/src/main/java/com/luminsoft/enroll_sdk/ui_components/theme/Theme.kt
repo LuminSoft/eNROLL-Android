@@ -32,16 +32,21 @@ fun EKYCsDKTheme(
     appColors: AppColors,
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
-    fontResource: Int,
     localizationCode: LocalizationCode = LocalizationCode.EN,
     content: @Composable () -> Unit
 ) {
 
     fun createCustomTypography(fontResId: Int): Typography {
+
+        var customFontFamily = sdkFontFamily
+        if (localizationCode == LocalizationCode.EN)
+            customFontFamily = sdkFontFamilyEn
         // Create a FontFamily using the font resource ID
-        val customFontFamily = FontFamily(
-            Font(fontResId, FontWeight.Normal)
-        )
+        if (fontResId != 0) {
+            customFontFamily = FontFamily(
+                Font(fontResId, FontWeight.Normal)
+            )
+        }
 
         // Define Typography with Material 3 using customFontFamily
         return Typography(
@@ -64,6 +69,9 @@ fun EKYCsDKTheme(
                 fontFamily = customFontFamily,
                 fontWeight = FontWeight.Light,
                 fontSize = 12.sp
+            ),
+            labelLarge = TextStyle(
+                fontFamily = customFontFamily,
             ),
             // Define other styles as needed
         )
