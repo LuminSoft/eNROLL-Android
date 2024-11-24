@@ -118,6 +118,7 @@
     <string name="facePreCapTitle">مطابقة الوجه</string>
     <string name="documentPreScanTitle">مسح البطاقة</string>
     <string name="passportPreScanTitle">مسح جواز السفر</string>
+    <string name="nationalIdAlreadyExist">الهوية الوطنية موجودة بالفعل</string>
     <string name="timeoutException">تعذر التقاط الصورة , برجاء إعادة المحاولة</string>
     <string name="isFrontSideWhileBackScan">يرجى مسح الوجة الخلفي للبطاقة</string>
     <string name="intro1">لإكمال عملية التسجيل يجب توافر بطاقة رقم قومي سارية</string>

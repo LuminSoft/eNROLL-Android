@@ -28,6 +28,7 @@ class PassportOcrViewModel(
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var customerData: MutableStateFlow<CustomerData?> = MutableStateFlow(null)
     var navController: NavController? = null
+    var errorCode: MutableStateFlow<String?> = MutableStateFlow(null)
 
 
     fun callApproveFront(arabicName: String) {
@@ -46,6 +47,18 @@ class PassportOcrViewModel(
     init {
         sendPassportImage()
     }
+    fun splitMessageAndId(response: String): Pair<String, String> {
+        // Extract the message and ID using a regular expression
+        val regex = """(.*?)(\d+)$""".toRegex() // Matches text followed by digits at the end
+        val matchResult = regex.find(response)
+
+        return if (matchResult != null) {
+            val (text, id) = matchResult.destructured
+            text.trim() to id.trim()
+        } else {
+            response to "" // Return full response and empty ID if no match
+        }
+    }
 
     private fun sendPassportImage() {
 //        loading.value = true
@@ -59,6 +72,7 @@ class PassportOcrViewModel(
 
             response.fold(
                 {
+                    errorCode.value = it.strInt.toString()
                     failure.value = it
                     loading.value = false
                 },

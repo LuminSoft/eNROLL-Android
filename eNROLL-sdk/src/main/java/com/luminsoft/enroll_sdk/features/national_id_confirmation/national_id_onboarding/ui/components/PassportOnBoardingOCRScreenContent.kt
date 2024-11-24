@@ -35,7 +35,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -59,6 +58,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
 var userNameArValue = mutableStateOf(TextFieldValue())
@@ -207,10 +207,15 @@ private fun MainContent(
             } else {
                 failure.value?.let {
                     val msg: String =
-                        if (it.message == "Object reference not set to an instance of an object.")
-                            stringResource(id = R.string.someThingWentWrong)
-                        else
-                            it.message
+                        when {
+                            it.message == "Object reference not set to an instance of an object." ->
+                                stringResource(id = R.string.someThingWentWrong)
+                            // 0 is the fallback value
+                            (it.strInt!=0 && it.strInt.toString() == "10103") ->
+                                stringResource(id = R.string.nationalIdAlreadyExist)
+                            else ->
+                                it.message
+                        }
 
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.ERROR,
@@ -228,8 +233,14 @@ private fun MainContent(
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
                             activity.finish()
-                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
+                            // 0 is the fallback value
+                            if((it.strInt!=0 && it.strInt.toString() == "10103")){
+                                val (message, id) = passportOcrVM.splitMessageAndId(it.message)
+                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(message, it, id))
+                            }
+                            else{
+                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                            }
                         }
                     )
                     {
