@@ -49,7 +49,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -70,6 +69,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
 
@@ -334,7 +334,8 @@ private fun AnswerTextField(
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
                 fontSize = 12.sp,
-                color = Color.Black
+                color = Color.Black,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             )
         )
         if (answerError.value != null)
@@ -400,6 +401,7 @@ fun DropdownList(
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
                 fontSize = 12.sp,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily ,
                 color = MaterialTheme.appColors.primary
             )
         )
