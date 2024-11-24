@@ -3,9 +3,9 @@
     "contract": {
         "customer": "Excel_Evaluation",
         "expiration": {
-            "day": 22,
-            "month": 11,
-            "year": 2024
+            "day": 24,
+            "month": 1,
+            "year": 2025
         },
         "hwids": [
             "A+PYBMZZuSjgIKID"
@@ -41,5 +41,5 @@
             "evaluation": true
         }
     },
-    "contract_signature": "OsZ3KvthQYwZVWIKWzAFXjdeZpgAHj5hy707lUv10eUCRz4W3d0RkCEK8krj73w2NQT8sWuHgOfAVywuuaPwpwXYQiER1u7YODyEkS/r7+6y9cwJfhNnL5dAUgRczVTG0byF5TCxuwwYv3P4+AMz7B6tNfjNk7AAfRt1lYnKkJg="
+    "contract_signature": "HM/lT//X8QFf1hb4kQuErHJDLo0LM9dgpVnlFNKH3j5wimliCI/1gh8blp44NbYqa3tRcPRB2WH4jbywPihhSRtFwK0lJLB+lK9h1ZtPEpog+GnRvPkn1ibdvqS7Z2TLlz+j/fJ+UuF4Mve4y59SvVC+SHTWgD/EgTUhIxWwClI="
 }

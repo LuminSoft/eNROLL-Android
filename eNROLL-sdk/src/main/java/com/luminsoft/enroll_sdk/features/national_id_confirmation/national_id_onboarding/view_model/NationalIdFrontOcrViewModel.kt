@@ -27,6 +27,8 @@ class NationalIdFrontOcrViewModel(
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var customerData: MutableStateFlow<CustomerData?> = MutableStateFlow(null)
+    var errorCode: MutableStateFlow<String?> = MutableStateFlow(null)
+
     var navController: NavController? = null
 
 
@@ -47,6 +49,19 @@ class NationalIdFrontOcrViewModel(
         sendFrontImage()
     }
 
+    fun splitMessageAndId(response: String): Pair<String, String> {
+        // Extract the message and ID using a regular expression
+        val regex = """(.*?)(\d+)$""".toRegex() // Matches text followed by digits at the end
+        val matchResult = regex.find(response)
+
+        return if (matchResult != null) {
+            val (text, id) = matchResult.destructured
+            text.trim() to id.trim()
+        } else {
+            response to "" // Return full response and empty ID if no match
+        }
+    }
+
     private fun sendFrontImage() {
 //        loading.value = true
         ui {
@@ -58,7 +73,9 @@ class NationalIdFrontOcrViewModel(
                 personalConfirmationUploadImageUseCase.call(params.value as PersonalConfirmationUploadImageUseCaseParams)
 
             response.fold(
+
                 {
+                    errorCode.value = it.strInt.toString()
                     failure.value = it
                     loading.value = false
                 },

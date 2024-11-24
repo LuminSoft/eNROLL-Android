@@ -6,6 +6,7 @@ data class NationalIDConfirmationResponse(
 
     @SerializedName("isSuccess") var isSuccess: Boolean? = null,
     @SerializedName("message") var message: String? = null,
+    @SerializedName("errorCode") var errorCode: String? = null,
     @SerializedName("passportData") var passportData: CustomerData? = CustomerData(),
     @SerializedName("customerData") var customerData: CustomerData? = CustomerData(),
 )
