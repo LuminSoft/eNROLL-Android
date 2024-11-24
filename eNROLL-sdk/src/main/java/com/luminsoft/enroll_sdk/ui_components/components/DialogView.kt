@@ -24,10 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,6 +90,7 @@ fun DialogView(
                     style = MaterialTheme.typography.titleMedium,
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
