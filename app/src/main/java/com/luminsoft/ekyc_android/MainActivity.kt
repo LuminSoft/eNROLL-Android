@@ -2,7 +2,6 @@ package com.luminsoft.ekyc_android
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -52,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.AppColors
 import com.luminsoft.enroll_sdk.EnrollCallback
@@ -63,13 +61,14 @@ import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.LocalizationCode
 import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import io.github.cdimascio.dotenv.dotenv
 
 
 var dotenv = dotenv {
     directory = "/assets"
-    filename = "env_andrew"
-//    filename = "env_radwan"
+//    filename = "env_andrew"
+    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"

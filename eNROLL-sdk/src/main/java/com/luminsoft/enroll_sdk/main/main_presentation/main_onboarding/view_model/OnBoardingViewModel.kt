@@ -120,6 +120,10 @@ class OnBoardingViewModel(
                 {
                     loading.value = false
                     requestId.value = it.requestId
+                    if(EnrollSDK.skipTutorial){
+                        EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
+                        changeRequestIdSentValue()
+                    }
                     navigateToNextStep()
                 })
 
