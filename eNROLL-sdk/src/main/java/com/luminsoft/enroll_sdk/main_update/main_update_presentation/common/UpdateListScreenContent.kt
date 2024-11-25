@@ -57,7 +57,7 @@ fun UpdateListScreenContent(
     val steps = updateViewModel.steps.collectAsState()
     val activity = context.findActivity()
     val loading = updateViewModel.loading.collectAsState()
-    val failure = updateViewModel.failure.collectAsState()
+//    val failure = updateViewModel.failure.collectAsState()
 
 
     BackGroundView(navController = navController, showAppBar = true) {
@@ -77,7 +77,7 @@ fun UpdateListScreenContent(
             Image(
                 painterResource(R.drawable.update_icon),
                 contentDescription = "",
-                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxHeight(0.1f)
@@ -147,7 +147,7 @@ private fun UpdateStepItem(
                 Image(
                     painterResource(step.parseUpdateStepType().getStepIconIntSource()),
                     contentDescription = "",
-                    colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                     modifier = Modifier
                         .height(50.dp),

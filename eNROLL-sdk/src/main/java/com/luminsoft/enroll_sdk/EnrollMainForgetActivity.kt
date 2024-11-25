@@ -101,7 +101,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
     }
 
     private fun getStartingRoute(): String {
-        return when (EnrollSDK.enrollMode!!) {
+        return when (EnrollSDK.enrollMode) {
             EnrollMode.ONBOARDING -> {
                 splashScreenOnBoardingContent
             }

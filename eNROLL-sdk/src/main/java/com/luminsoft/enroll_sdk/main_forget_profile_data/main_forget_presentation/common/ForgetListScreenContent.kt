@@ -59,7 +59,7 @@ fun ForgetListScreenContent(
     val steps = forgetViewModel.steps.collectAsState()
     val activity = context.findActivity()
     val loading = forgetViewModel.loading.collectAsState()
-    val failure = forgetViewModel.failure.collectAsState()
+//    val failure = forgetViewModel.failure.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (forgetStepModel.value != null) {
