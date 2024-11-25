@@ -267,7 +267,8 @@ class MainActivity : ComponentActivity() {
                 appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
-                correlationId = "correlationId"
+                correlationId = "correlationId",
+                fontResource = R.font.itim_regular
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
