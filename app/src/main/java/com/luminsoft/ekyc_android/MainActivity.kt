@@ -457,7 +457,7 @@ class MainActivity : ComponentActivity() {
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
                 correlationId = "correlationId",
-                fontResource = R.font.itim_regular
+                fontResource = R.font.notosansarabic_medium
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
