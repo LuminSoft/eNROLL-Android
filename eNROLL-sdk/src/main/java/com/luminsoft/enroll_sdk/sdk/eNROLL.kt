@@ -3,12 +3,14 @@ package com.luminsoft.enroll_sdk.sdk
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.util.Log
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.sp
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
@@ -101,9 +103,8 @@ object eNROLL {
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun setLocale(lang: LocalizationCode, activity: Activity) {
-        val locale = if (lang != LocalizationCode.AR) {
+        val locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
             Locale("en")
         } else {
             Locale("ar")
@@ -111,9 +112,11 @@ object eNROLL {
 
         val config: Configuration = activity.baseContext.resources.configuration
         config.setLocale(locale)
+
         activity.baseContext.resources.updateConfiguration(
             config,
             activity.baseContext.resources.displayMetrics
         )
     }
+
 }
