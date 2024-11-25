@@ -34,7 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -46,6 +45,7 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentatio
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -87,8 +87,10 @@ fun ForgetListScreenContent(
                 text = stringResource(id = R.string.cannotLogin),
                 color = MaterialTheme.appColors.textColor,
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp
-            )
+                fontSize = 16.sp,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+
+                )
 
             Spacer(modifier = Modifier.height(20.dp))
             LazyVerticalGrid(
@@ -164,6 +166,8 @@ private fun ForgetStepItem(
                 Text(
                     text = stringResource(id = step.parseForgetStepType().getStepNameIntSource()),
                     color = MaterialTheme.appColors.primary,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+
                     minLines = 2,
                     maxLines = 2,
                     textAlign = TextAlign.Center,
@@ -173,6 +177,8 @@ private fun ForgetStepItem(
                     text = stringResource(
                         id = step.parseForgetStepType().getStepDescriptionIntSource()
                     ),
+                    fontFamily = MaterialTheme.typography.labelSmall.fontFamily,
+
                     color = MaterialTheme.appColors.textColor,
                     minLines = 3,
                     textAlign = TextAlign.Center,

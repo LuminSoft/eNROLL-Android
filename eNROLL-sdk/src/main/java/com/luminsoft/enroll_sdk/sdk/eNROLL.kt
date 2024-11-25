@@ -4,6 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.util.Log
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.compose.material.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.unit.sp
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
@@ -31,7 +39,8 @@ object eNROLL {
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
         appColors: AppColors = AppColors(),
-        correlationId: String = ""
+        correlationId: String = "",
+        fontResource: Int? = 0
     ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -53,6 +62,7 @@ object eNROLL {
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
         EnrollSDK.correlationId = correlationId
+        EnrollSDK.fontResource = fontResource!!
 
 
     }
@@ -93,17 +103,16 @@ object eNROLL {
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun setLocale(lang: LocalizationCode, activity: Activity) {
-        val locale = if (lang != LocalizationCode.AR) {
+        val locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
             Locale("en")
         } else {
             Locale("ar")
         }
 
         val config: Configuration = activity.baseContext.resources.configuration
-        Log.d("LocalizationCode", locale.displayName + " - " + locale.language + " - " + lang.name)
         config.setLocale(locale)
+
         activity.baseContext.resources.updateConfiguration(
             config,
             activity.baseContext.resources.displayMetrics

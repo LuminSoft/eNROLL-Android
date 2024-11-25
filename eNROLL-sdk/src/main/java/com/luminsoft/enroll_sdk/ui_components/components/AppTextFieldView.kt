@@ -25,7 +25,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,6 +101,7 @@ fun NormalTextField(
                     label = {
                         Text(
                             text = label,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             color = MaterialTheme.appColors.textColor.copy(alpha = 0.6f),
                             style = MaterialTheme.typography.labelSmall
                         )
@@ -146,6 +147,7 @@ fun NormalTextField(
         if (error != null) {
             Text(
                 text = error,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )

@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -160,6 +160,7 @@ fun SecurityQuestionAuthScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.youMustAnswerSecurityQuestion),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center
@@ -186,6 +187,7 @@ fun SecurityQuestionAuthScreenContent(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = it,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.appColors.textColor
                             )
@@ -244,13 +246,14 @@ private fun AnswerTextField(
             supportingText = {
                 Text(
                     text = "${answer.value.text.length} / $maxChar",
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
                 )
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) },
             colors = textFieldColors(),
             leadingIcon = {
                 Image(
@@ -268,6 +271,7 @@ private fun AnswerTextField(
         if (answerError.value != null) {
             Text(
                 answerError.value!!,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )

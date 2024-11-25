@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -85,6 +85,7 @@ fun UpdateListScreenContent(
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = stringResource(id = R.string.youCanSelectOneItem),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp
@@ -155,6 +156,7 @@ private fun UpdateStepItem(
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
                     text = stringResource(id = step.parseUpdateStepType().getStepNameIntSource()),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.colorScheme.inverseSurface,
                     fontSize = 12.sp
                 )

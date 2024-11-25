@@ -53,7 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.android.gms.common.api.ResolvableApiException
@@ -421,6 +421,7 @@ private fun GotLocation(
         androidx.compose.material3.Text(
             modifier = Modifier
                 .fillMaxWidth(),
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             text = stringResource(id = R.string.locationSuccessText),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
             textAlign = TextAlign.Center,
@@ -450,11 +451,13 @@ private fun GotLocation(
 
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.latitude, currentLocation.latitude),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = Color.Black
                 )
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.longitude, currentLocation.longitude),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = Color.Black
                 )

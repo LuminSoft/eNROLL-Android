@@ -36,7 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -209,6 +209,7 @@ fun MultiplePhoneNumbersScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.youAddedTheFollowingPhoneNumbers),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
@@ -283,6 +284,7 @@ private fun PhoneItem(
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
                     text = model.phoneNumber!!,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.appBlack
                 )
             }
@@ -316,6 +318,7 @@ private fun PhoneItem(
                         Text(
                             text = stringResource(id = R.string.make_default),
                             color = MaterialTheme.appColors.backGround,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {

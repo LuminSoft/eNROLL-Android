@@ -35,6 +35,7 @@ import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -94,7 +95,7 @@ fun UpdatePassportErrorScreen(
                 val images= listOf(R.drawable.invalid_ni_icon_1,R.drawable.invalid_ni_icon_2,R.drawable.invalid_ni_icon_3)
                 ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.35f))
                 Spacer(modifier = Modifier.height(30.dp))
-                errorMessage.value?.let { Text(text = it) }
+                errorMessage.value?.let { Text(text = it,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) }
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
                 ButtonView(

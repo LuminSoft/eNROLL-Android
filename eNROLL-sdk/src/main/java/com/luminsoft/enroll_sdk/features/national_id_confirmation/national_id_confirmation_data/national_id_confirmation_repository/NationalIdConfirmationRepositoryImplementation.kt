@@ -28,7 +28,9 @@ class NationalIdConfirmationRepositoryImplementation(private val nationalIdConfi
                     else
                         Either.Right(nationalIDConfirmationResponse.customerData!!)
                 } else {
-                    Either.Left(NetworkFailure(mes = nationalIDConfirmationResponse.message!!))
+                    Either.Left(NetworkFailure(mes = nationalIDConfirmationResponse.message!!,
+                        errorCode = nationalIDConfirmationResponse.errorCode?.toInt()
+                    ))
                 }
             }
 

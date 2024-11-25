@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -171,6 +171,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.otpSendTo),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp,
                         color = MaterialTheme.appColors.textColor
                     )
@@ -179,6 +180,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                         Text(
                             onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
                             fontSize = 12.sp,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             color = MaterialTheme.appColors.secondary
                         )
                     Spacer(modifier = Modifier.width(7.dp))
@@ -196,6 +198,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                             ResourceProvider.instance.getStringResource(R.string.edit),
                             fontSize = 8.sp,
                             color = Color.White,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
@@ -219,12 +222,14 @@ fun ValidateOtpPhoneNumberScreenContent(
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
                         color = MaterialTheme.appColors.textColor,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
                         color = MaterialTheme.appColors.textColor,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp
                     )
                 }
@@ -233,6 +238,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                 if (onBoardingViewModel.isNotFirstPhone.value && ticks == 0)
                     Text(
                         text = stringResource(id = R.string.resend),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.primary,
                         fontSize = 14.sp,
                         textDecoration = TextDecoration.Underline,
@@ -303,6 +309,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
         Text(
             text = ticks.toString(),
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp

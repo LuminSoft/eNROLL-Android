@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk
 
-import EKYCsDKTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -88,7 +88,9 @@ class EnrollMainUpdateActivity : ComponentActivity() {
             val updateViewModel: UpdateViewModel = koinViewModel<UpdateViewModel>()
             val navController = rememberNavController()
 
-            EKYCsDKTheme(appColors = EnrollSDK.appColors) {
+            EKYCsDKTheme(
+                appColors = EnrollSDK.appColors
+            ) {
                 NavHost(
                     navController = navController,
                     startDestination = getStartingRoute()

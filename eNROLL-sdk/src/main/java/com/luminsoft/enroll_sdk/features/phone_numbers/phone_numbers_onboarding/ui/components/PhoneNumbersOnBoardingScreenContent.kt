@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -200,6 +200,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                         label = {
                             Text(
                                 ResourceProvider.instance.getStringResource(R.string.phoneNumber),
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 fontSize = 14.sp,
                                 color = MaterialTheme.appColors.textColor
                             )
@@ -213,6 +214,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                 Text(
                     text = stringResource(id = R.string.sendPhoneOtpContent),
                     color = MaterialTheme.appColors.textColor,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))

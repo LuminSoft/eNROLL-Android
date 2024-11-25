@@ -56,6 +56,7 @@ import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.LocalizationCode
 import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import io.github.cdimascio.dotenv.dotenv
 
 

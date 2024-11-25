@@ -1,3 +1,4 @@
+package com.luminsoft.enroll_sdk.ui_components.theme
 
 import android.app.Activity
 import android.os.Build
@@ -13,15 +14,17 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
-import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
-import com.luminsoft.enroll_sdk.ui_components.theme.sdkTypography
-import com.luminsoft.enroll_sdk.ui_components.theme.sdkTypographyEn
-
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import androidx.compose.material3.Typography
 
 val LocalAppColors = staticCompositionLocalOf { AppColors() }
-
 
 
 @Composable
@@ -33,6 +36,46 @@ fun EKYCsDKTheme(
     content: @Composable () -> Unit
 ) {
 
+    fun createCustomTypography(fontResId: Int): Typography {
+
+        var customFontFamily = sdkFontFamily
+        if (localizationCode == LocalizationCode.EN)
+            customFontFamily = sdkFontFamilyEn
+        // Create a FontFamily using the font resource ID
+        if (fontResId != 0) {
+            customFontFamily = FontFamily(
+                Font(fontResId, FontWeight.Normal)
+            )
+        }
+
+        // Define Typography with Material 3 using customFontFamily
+        return Typography(
+            displayLarge = TextStyle(
+                fontFamily = customFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 36.sp
+            ),
+            headlineMedium = TextStyle(
+                fontFamily = customFontFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = 24.sp
+            ),
+            bodyMedium = TextStyle(
+                fontFamily = customFontFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp
+            ),
+            labelSmall = TextStyle(
+                fontFamily = customFontFamily,
+                fontWeight = FontWeight.Light,
+                fontSize = 12.sp
+            ),
+            labelLarge = TextStyle(
+                fontFamily = customFontFamily,
+            ),
+            // Define other styles as needed
+        )
+    }
 
     val lightColorScheme = lightColorScheme(
         primary = appColors.primary,
@@ -54,6 +97,7 @@ fun EKYCsDKTheme(
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             lightColorScheme
         }
+
         darkTheme -> darkColorScheme
         else -> lightColorScheme
     }
@@ -71,10 +115,13 @@ fun EKYCsDKTheme(
     CompositionLocalProvider(LocalAppColors provides appColors) {
         MaterialTheme(
             colorScheme = selectedColorScheme,
-            typography = if (localizationCode == LocalizationCode.AR) sdkTypography else sdkTypographyEn,
+            typography =/* if (localizationCode == LocalizationCode.AR) sdkTypography else sdkTypographyEn*/createCustomTypography(
+                EnrollSDK.fontResource
+            ),
             content = content
         )
     }
+
 
 }
 
