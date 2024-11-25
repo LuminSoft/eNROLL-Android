@@ -208,56 +208,81 @@ private fun MainContent(
 
                     }
                 }
-            }
-
-            else {
+            } else {
                 failure.value?.let {
                     val msg: String =
                         when {
                             it.message == "Object reference not set to an instance of an object." ->
                                 stringResource(id = R.string.someThingWentWrong)
                             // 0 is the fallback value
-                            (it.strInt!=0 && it.strInt.toString() == "10103") ->
-                                stringResource(id = R.string.nationalIdAlreadyExist)
+                            (it.strInt != 0 && it.strInt.toString() == "10103") ->
+                                stringResource(id = R.string.orangeNationalIdAlreadyExist)
+
                             else ->
                                 it.message
                         }
 
-                    DialogView(
-                        bottomSheetStatus = BottomSheetStatus.ERROR,
-                        text = msg,
-                        buttonText = stringResource(id = R.string.retry),
-                        onPressedButton = {
-                            nationalIdFrontOcrViewModel.resetFailure()
-                            onBoardingViewModel.enableLoading()
-                            val intent =
-                                Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().frontScan)
-                            intent.putExtra("localCode", EnrollSDK.localizationCode.name)
-                            startForResult.launch(intent)
-                        },
-                        secondButtonText = stringResource(id = R.string.exit),
-                        onPressedSecondButton = {
-                            activity.finish()
-                            // 0 is the fallback value
-                            if((it.strInt!=0 && it.strInt.toString() == "10103")){
+
+                    if (it.strInt != 0 && it.strInt.toString() == "10103") {
+                        DialogView(
+                            bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                            text = msg,
+                            buttonText = stringResource(id = R.string.exit),
+                            onPressedButton = {
+                                activity.finish()
                                 val (message, id) = nationalIdFrontOcrVM.splitMessageAndId(it.message)
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(message, it, id))
-                            }
-                            else{
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-                            }
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        message,
+                                        it,
+                                        id
+                                    )
+                                )
+                            },
+                        )
+                        {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
                         }
-                    )
-                    {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
                     }
+                    else {
+                        DialogView(
+                            bottomSheetStatus = BottomSheetStatus.ERROR,
+                            text = msg,
+                            buttonText = stringResource(id = R.string.retry),
+                            onPressedButton = {
+                                nationalIdFrontOcrViewModel.resetFailure()
+                                onBoardingViewModel.enableLoading()
+                                val intent =
+                                    Intent(
+                                        activity.applicationContext,
+                                        DocumentActivity::class.java
+                                    )
+                                intent.putExtra("scanType", DocumentActivity().frontScan)
+                                intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+                                startForResult.launch(intent)
+                            },
+                            secondButtonText = stringResource(id = R.string.exit),
+                            onPressedSecondButton = {
+                                activity.finish()
+                                    EnrollSDK.enrollCallback?.error(
+                                        EnrollFailedModel(
+                                            it.message,
+                                            it
+                                        )
+                                    )
+
+                            }
+                        )
+                        {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                        }
+                    }
+
                 }
             }
-        }
-
-        else if (customerData.value != null) {
+        } else if (customerData.value != null) {
             if (customerData.value!!.fullNameEn != null)
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)

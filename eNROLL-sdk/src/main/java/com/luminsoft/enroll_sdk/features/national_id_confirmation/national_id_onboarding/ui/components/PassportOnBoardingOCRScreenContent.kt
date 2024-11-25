@@ -212,40 +212,66 @@ private fun MainContent(
                                 stringResource(id = R.string.someThingWentWrong)
                             // 0 is the fallback value
                             (it.strInt!=0 && it.strInt.toString() == "10103") ->
-                                stringResource(id = R.string.nationalIdAlreadyExist)
+                                stringResource(id = R.string.orangeNationalIdAlreadyExist)
                             else ->
                                 it.message
                         }
 
-                    DialogView(
-                        bottomSheetStatus = BottomSheetStatus.ERROR,
-                        text = msg,
-                        buttonText = stringResource(id = R.string.retry),
-                        onPressedButton = {
-                            passportOcrVMOcrViewModel.resetFailure()
-                            onBoardingViewModel.enableLoading()
-                            val intent =
-                                Intent(activity.applicationContext, DocumentActivity::class.java)
-                            intent.putExtra("scanType", DocumentActivity().passportScan)
-                            intent.putExtra("localCode", EnrollSDK.localizationCode.name)
-                            startForResult.launch(intent)
-                        },
-                        secondButtonText = stringResource(id = R.string.exit),
-                        onPressedSecondButton = {
-                            activity.finish()
-                            // 0 is the fallback value
-                            if((it.strInt!=0 && it.strInt.toString() == "10103")){
+                    if (it.strInt != 0 && it.strInt.toString() == "10103") {
+                        DialogView(
+                            bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                            text = msg,
+                            buttonText = stringResource(id = R.string.exit),
+                            onPressedButton = {
+                                activity.finish()
                                 val (message, id) = passportOcrVM.splitMessageAndId(it.message)
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(message, it, id))
-                            }
-                            else{
-                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-                            }
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        message,
+                                        it,
+                                        id
+                                    )
+                                )
+                            },
+                        )
+                        {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
                         }
-                    )
-                    {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                    }
+                    else {
+                        DialogView(
+                            bottomSheetStatus = BottomSheetStatus.ERROR,
+                            text = msg,
+                            buttonText = stringResource(id = R.string.retry),
+                            onPressedButton = {
+                                passportOcrVM.resetFailure()
+                                onBoardingViewModel.enableLoading()
+                                val intent =
+                                    Intent(
+                                        activity.applicationContext,
+                                        DocumentActivity::class.java
+                                    )
+                                intent.putExtra("scanType", DocumentActivity().frontScan)
+                                intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+                                startForResult.launch(intent)
+                            },
+                            secondButtonText = stringResource(id = R.string.exit),
+                            onPressedSecondButton = {
+                                activity.finish()
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        it.message,
+                                        it
+                                    )
+                                )
+
+                            }
+                        )
+                        {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                        }
                     }
                 }
             }
