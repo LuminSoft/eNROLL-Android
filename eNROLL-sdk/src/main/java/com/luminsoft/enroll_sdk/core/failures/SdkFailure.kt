@@ -12,11 +12,14 @@ interface SdkFailure {
 
 interface ConnectionFailure : SdkFailure
 
-class NetworkFailure(mes: String = ResourceProvider.instance.getStringResource(R.string.someThingWentWrong)) :
-    ConnectionFailure {
+class NetworkFailure(
+    mes: String = ResourceProvider.instance.getStringResource(R.string.someThingWentWrong),
+    val errorCode: Int? = null
+) : ConnectionFailure {
     override val message: String = mes
-    override val strInt: Int = 0
+    override val strInt: Int = errorCode ?: 0
 }
+
 
 class ServerFailure(apiErrorResponse: ApiErrorResponse) :
     ConnectionFailure {
