@@ -6,8 +6,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.luminsoft.enroll_sdk.innovitices.ui.createGson
 import com.luminsoft.ekyc_android_sdk.R
+
+import com.luminsoft.enroll_sdk.innovitices.ui.createGson
 
 class DocumentAutoCaptureResultFragment : Fragment(R.layout.fragment_document_auto_capture_result) {
 

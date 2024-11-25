@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 @Composable
 fun ButtonView(
@@ -72,7 +72,7 @@ fun ButtonView(
 
 
         ) {
-        Text(text = title, style = MaterialTheme.typography.titleMedium, color = textColorF)
+        Text(text = title, style = MaterialTheme.typography.titleMedium, color = textColorF,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,)
 
     }
 }
