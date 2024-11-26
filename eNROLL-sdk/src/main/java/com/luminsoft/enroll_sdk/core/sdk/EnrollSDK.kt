@@ -10,6 +10,7 @@ import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 object EnrollSDK {
     // this info related to organization
     var tenantId = ""
+    var token = ""
     var googleApiKey = ""
     var tenantSecret = ""
     var applicantId = ""

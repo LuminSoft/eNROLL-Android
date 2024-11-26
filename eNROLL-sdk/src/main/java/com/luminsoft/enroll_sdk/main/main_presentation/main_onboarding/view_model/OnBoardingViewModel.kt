@@ -140,8 +140,7 @@ class OnBoardingViewModel(
 
 
     private fun getOnboardingStepConfigurations() {
-        val generatedToken =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE3MzI2Mjc4Mjg3NjYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwianRpIjoiYzJmYTQ1YTEtN2MzYy00NDIyLTgzZTYtYzkyMjhjOWNjYzM3IiwiT3JnYW5pemF0aW9uSWQiOiJwRkFZclhSUmZOSFpSeHB4eGJVK1NnPT0iLCJPcmdSZWdTdGVwc1ZlcnNpb24iOiJRRWFxNVc5dWVvWG5yRzIwR2dVMzJBPT0iLCJSZXF1ZXN0VHlwZSI6Ik9uYm9hcmRpbmdSZXF1ZXN0IiwiQ29ycmVsYXRpb25JZCI6InpZTHhLSDhhTFQrV01mUUhPZi9SWGc9PSIsImV4cCI6MTczMjYyODcyOCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0NTAwIn0.ZZaoIubmQaT9clW4WYdq7GnhWeVzg-Lh_qk4NZ-o-gg"
+        val generatedToken = EnrollSDK.token
         loading.value = true
         token.value = generatedToken
         RetroClient.setToken(generatedToken)
