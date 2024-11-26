@@ -63,6 +63,7 @@ import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import io.github.cdimascio.dotenv.dotenv
+import java.io.File
 
 
 var dotenv = dotenv {
@@ -395,6 +396,16 @@ class MainActivity : ComponentActivity() {
         return String.format("#%02X%02X%02X%02X", alpha, red, green, blue)
     }
 
+    private fun checkCache() {
+        val cacheDir = File(this.cacheDir, "/scanned/") // Use 'this' for Activity context
+        if (cacheDir.exists()) {
+            println("cache exists")
+        }
+        else{
+            println("cache does not exist")
+        }
+    }
+
 
     private fun initEnroll(
         activity: Activity,
@@ -436,16 +447,20 @@ class MainActivity : ComponentActivity() {
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
+                        checkCache()
                         text.value =
                             "eNROLL Message: ${enrollSuccessModel.enrollMessage}"
+
                     }
 
                     override fun error(enrollFailedModel: EnrollFailedModel) {
+                        checkCache()
                         text.value = enrollFailedModel.failureMessage
 
                     }
 
                     override fun getRequestId(requestId: String) {
+                        checkCache()
                         Log.d("requestId", requestId)
                     }
 

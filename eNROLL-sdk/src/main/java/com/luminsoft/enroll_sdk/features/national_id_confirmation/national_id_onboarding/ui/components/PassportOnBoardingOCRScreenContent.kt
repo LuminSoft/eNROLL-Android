@@ -96,8 +96,6 @@ fun PassportOnBoardingConfirmationScreen(
         }
 
 
-
-
     val startForResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val documentFrontUri = it.data?.data
