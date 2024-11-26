@@ -1,17 +1,9 @@
 package com.luminsoft.enroll_sdk.sdk
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.util.Log
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Typography
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toLowerCase
-import androidx.compose.ui.unit.sp
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
@@ -28,9 +20,10 @@ import java.util.Locale
 object eNROLL {
     @Throws(Exception::class)
     fun init(
-        tenantId: String,
-        tenantSecret: String,
+//        tenantId: String,
+//        tenantSecret: String,
         applicantId: String = "",
+        token: String = "",
         levelOfTrustToken: String = "",
         enrollMode: EnrollMode,
         environment: EnrollEnvironment = EnrollEnvironment.STAGING,
@@ -42,18 +35,19 @@ object eNROLL {
         correlationId: String = "",
         fontResource: Int? = 0
     ) {
-        if (tenantId.isEmpty())
-            throw Exception("Invalid tenant id")
-        if (tenantSecret.isEmpty())
-            throw Exception("Invalid tenant secret")
+//        if (tenantId.isEmpty())
+//            throw Exception("Invalid tenant id")
+//        if (tenantSecret.isEmpty())
+//            throw Exception("Invalid tenant secret")
         if (enrollMode == EnrollMode.AUTH) {
             if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
                 throw Exception("Invalid Applicant Id or Level Of Trust Token")
         }
         EnrollSDK.environment = environment
-        EnrollSDK.tenantSecret = tenantSecret
-        EnrollSDK.tenantId = tenantId
+//        EnrollSDK.tenantSecret = tenantSecret
+//        EnrollSDK.tenantId = tenantId
         EnrollSDK.applicantId = applicantId
+        EnrollSDK.token = token
         EnrollSDK.levelOfTrustToken = levelOfTrustToken
         EnrollSDK.googleApiKey = googleApiKey!!
         EnrollSDK.localizationCode = localizationCode
@@ -71,10 +65,10 @@ object eNROLL {
         activity: Activity,
     ) {
 
-        if (EnrollSDK.tenantId.isEmpty())
-            throw Exception("Invalid tenant id")
-        if (EnrollSDK.tenantSecret.isEmpty())
-            throw Exception("Invalid tenant secret")
+//        if (EnrollSDK.tenantId.isEmpty())
+//            throw Exception("Invalid tenant id")
+//        if (EnrollSDK.tenantSecret.isEmpty())
+//            throw Exception("Invalid tenant secret")
         setLocale(EnrollSDK.localizationCode, activity)
         when (EnrollSDK.enrollMode!!) {
             EnrollMode.ONBOARDING -> {

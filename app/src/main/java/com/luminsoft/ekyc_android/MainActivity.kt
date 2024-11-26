@@ -106,8 +106,9 @@ class MainActivity : ComponentActivity() {
 //        setLocale("en")
 
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        tenantIdText.value =
-            TextFieldValue(text = sharedPref.getString("tenantId", tenantId.value.text)!!)
+        tenantIdText.value = TextFieldValue(
+
+        )
 
         tenantSecretText.value =
             TextFieldValue(
@@ -434,8 +435,10 @@ class MainActivity : ComponentActivity() {
         }
         try {
             eNROLL.init(
-                tenantId = tenantIdText.value.text,
-                tenantSecret = tenantSecretText.value.text,
+//                tenantId = tenantIdText.value.text,
+//                tenantSecret = tenantSecretText.value.text,
+                token = tenantIdText.value.text
+                ,
                 enrollMode = when (selectedIndex) {
                     0 -> EnrollMode.ONBOARDING
                     1 -> EnrollMode.AUTH
