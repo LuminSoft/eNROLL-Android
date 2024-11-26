@@ -9,13 +9,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.innovatrics.dot.face.autocapture.FaceAutoCaptureDetection
 import com.innovatrics.dot.face.liveness.smile.SmileLivenessFragment
 import com.innovatrics.dot.face.liveness.smile.SmileLivenessResult
-
-import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
 import com.luminsoft.enroll_sdk.innovitices.MainViewModel

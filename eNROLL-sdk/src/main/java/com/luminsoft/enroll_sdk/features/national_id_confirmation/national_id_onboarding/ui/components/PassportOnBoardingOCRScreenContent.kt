@@ -85,7 +85,7 @@ fun PassportOnBoardingConfirmationScreen(
                 PassportOcrViewModel(
                     personalConfirmationUploadImageUseCase,
                     personalConfirmationApproveUseCase,
-                    it
+                    it,context
                 )
             }
         }

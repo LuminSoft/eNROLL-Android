@@ -81,7 +81,8 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                 NationalIdFrontOcrViewModel(
                     personalConfirmationUploadImageUseCase,
                     personalConfirmationApproveUseCase,
-                    it
+                    it,
+                    context
                 )
             }
         }

@@ -396,12 +396,14 @@ class MainActivity : ComponentActivity() {
         return String.format("#%02X%02X%02X%02X", alpha, red, green, blue)
     }
 
-    private fun clearCache() {
+    private fun checkCache() {
         val cacheDir = File(this.cacheDir, "/scanned/") // Use 'this' for Activity context
         if (cacheDir.exists()) {
-            cacheDir.deleteRecursively() // Deletes the directory and its contents
+            println("cache exists")
         }
-
+        else{
+            println("cache does not exist")
+        }
     }
 
 
@@ -445,20 +447,20 @@ class MainActivity : ComponentActivity() {
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
-                        clearCache()
+                        checkCache()
                         text.value =
                             "eNROLL Message: ${enrollSuccessModel.enrollMessage}"
 
                     }
 
                     override fun error(enrollFailedModel: EnrollFailedModel) {
-                        clearCache()
+                        checkCache()
                         text.value = enrollFailedModel.failureMessage
 
                     }
 
                     override fun getRequestId(requestId: String) {
-                        clearCache()
+                        checkCache()
                         Log.d("requestId", requestId)
                     }
 

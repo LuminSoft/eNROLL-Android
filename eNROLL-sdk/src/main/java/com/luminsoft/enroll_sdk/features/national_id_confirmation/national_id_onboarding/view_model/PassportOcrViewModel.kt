@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -15,11 +16,14 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.io.File
 
 class PassportOcrViewModel(
     private val personalConfirmationUploadImageUseCase: PersonalConfirmationUploadImageUseCase,
     private val personalConfirmationApproveUseCase: PersonalConfirmationApproveUseCase,
-    private val passportImage: Bitmap
+    private val passportImage: Bitmap,
+    private val context: Context
+
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -47,6 +51,13 @@ class PassportOcrViewModel(
     init {
         sendPassportImage()
     }
+    private fun clearCache() {
+        val cacheDir = File(context.cacheDir, "/scanned/") // Use 'this' for Activity context
+        if (cacheDir.exists()) {
+            cacheDir.deleteRecursively() // Deletes the directory and its contents
+        }
+    }
+
     fun splitMessageAndId(response: String): Pair<String, String> {
         // Extract the message and ID using a regular expression
         val regex = """(.*?)(\d+)$""".toRegex() // Matches text followed by digits at the end
@@ -107,11 +118,13 @@ class PassportOcrViewModel(
 
             response.fold(
                 {
+                    clearCache()
                     failure.value = it
                     loading.value = false
 
                 },
                 {
+                    clearCache()
 //                    loading.value = false
                     passportApproved.value = true
 
