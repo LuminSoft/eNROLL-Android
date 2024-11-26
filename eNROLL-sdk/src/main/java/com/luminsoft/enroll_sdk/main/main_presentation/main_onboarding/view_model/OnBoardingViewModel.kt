@@ -64,9 +64,9 @@ class OnBoardingViewModel(
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var passportImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var nationalIdFrontImage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var passportImage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var nationalIdBackImage: MutableStateFlow<String?> = MutableStateFlow(null)
     var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
     var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isNotFirstMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -82,11 +82,11 @@ class OnBoardingViewModel(
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
 
 
-
-
     init {
-        generateToken()
+//        generateToken()
+        getOnboardingStepConfigurations()
     }
+
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
     }
@@ -120,7 +120,7 @@ class OnBoardingViewModel(
                 {
                     loading.value = false
                     requestId.value = it.requestId
-                    if(EnrollSDK.skipTutorial){
+                    if (EnrollSDK.skipTutorial) {
                         EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
                         changeRequestIdSentValue()
                     }
@@ -138,6 +138,37 @@ class OnBoardingViewModel(
         loading.value = false
     }
 
+
+    private fun getOnboardingStepConfigurations() {
+        val generatedToken =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE3MzI2Mjc4Mjg3NjYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwianRpIjoiYzJmYTQ1YTEtN2MzYy00NDIyLTgzZTYtYzkyMjhjOWNjYzM3IiwiT3JnYW5pemF0aW9uSWQiOiJwRkFZclhSUmZOSFpSeHB4eGJVK1NnPT0iLCJPcmdSZWdTdGVwc1ZlcnNpb24iOiJRRWFxNVc5dWVvWG5yRzIwR2dVMzJBPT0iLCJSZXF1ZXN0VHlwZSI6Ik9uYm9hcmRpbmdSZXF1ZXN0IiwiQ29ycmVsYXRpb25JZCI6InpZTHhLSDhhTFQrV01mUUhPZi9SWGc9PSIsImV4cCI6MTczMjYyODcyOCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0NTAwIn0.ZZaoIubmQaT9clW4WYdq7GnhWeVzg-Lh_qk4NZ-o-gg"
+        loading.value = true
+        token.value = generatedToken
+        RetroClient.setToken(generatedToken)
+        ui {
+            params.value = GetOnboardingStepConfigurationsUsecaseParams()
+            val responseData: Either<SdkFailure, List<StepModel>> =
+                getOnboardingStepConfigurationsUsecase.call(params.value as GetOnboardingStepConfigurationsUsecaseParams)
+            responseData.fold({
+                failure.value = it
+                loading.value = false
+            }, { list ->
+                steps.value = list
+                loading.value = false
+                extractRegistrationStepIds(list)
+                println("steps length = ${steps.value!!.size}")
+
+                if (EnrollSDK.skipTutorial) {
+                    initRequest()
+                } else {
+                    navController!!.navigate(onBoardingScreenContent)
+                }
+
+            })
+        }
+
+
+    }
 
 
     private fun generateToken() {

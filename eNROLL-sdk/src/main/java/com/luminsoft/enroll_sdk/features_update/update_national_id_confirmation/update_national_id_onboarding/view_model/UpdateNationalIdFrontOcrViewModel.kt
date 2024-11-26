@@ -1,5 +1,4 @@
 
-import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
@@ -12,7 +11,7 @@ class UpdateNationalIdFrontOcrViewModel(
     private val personalConfirmationUploadImageUseCase: UpdatePersonalConfirmationUploadImageUseCase,
     private val personalConfirmationApproveUseCase: UpdatePersonalConfirmationApproveUseCase,
     private val isTranslationStepEnabledUseCase: IsTranslationStepEnabledUseCase,
-    private val nationalIdFrontImage: Bitmap
+    private val nationalIdFrontImage: String
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)

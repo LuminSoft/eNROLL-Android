@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model
 
-import android.graphics.Bitmap
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -17,12 +17,14 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.PersonalConfirmationUploadImageUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.io.File
 
 class NationalIdBackOcrViewModel(
     private val personalConfirmationUploadImageUseCase: PersonalConfirmationUploadImageUseCase,
     private val personalConfirmationApproveUseCase: PersonalConfirmationApproveUseCase,
-    private val nationalIdBackImage: Bitmap,
-    private val customerId: String
+    private val nationalIdBackImage: String,
+    private val customerId: String,
+    private val context: Context
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -88,6 +90,13 @@ class NationalIdBackOcrViewModel(
 
     }
 
+    private fun clearCache() {
+        val cacheDir = File(context.cacheDir, "/scanned/") // Use 'this' for Activity context
+        if (cacheDir.exists()) {
+            cacheDir.deleteRecursively() // Deletes the directory and its contents
+        }
+    }
+
     private fun approveBack() {
         loading.value = true
         ui {
@@ -99,11 +108,13 @@ class NationalIdBackOcrViewModel(
 
             response.fold(
                 {
+                    clearCache()
                     failure.value = it
                     loading.value = false
                 },
                 {
-//                    loading.value = false
+                    clearCache()
+//                   loading.value = false
                     backNIApproved.value = true
                 })
         }

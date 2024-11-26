@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.update_passport.update_passport_presentation.ui.components
 
+import EncryptDecrypt
 import UpdatePassportApproveUseCase
 import UpdatePassportOcrViewModel
 import UpdatePassportUploadImageUseCase
@@ -36,7 +37,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -53,6 +53,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import findActivity
 import org.koin.compose.koinInject
 import updatePassportConfirmationScreen
@@ -100,8 +101,19 @@ fun UpdatePassportConfirmationScreen(
                     updateViewModel.enableLoading()
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-                    updateViewModel.passportImage.value =
-                        facialDocumentModel.documentImageBase64
+
+
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+
+                    updateViewModel.passportImage.value =encryptedImage
+
                     navController.navigate(updatePassportConfirmationScreen)
 
                 } catch (e: Exception) {

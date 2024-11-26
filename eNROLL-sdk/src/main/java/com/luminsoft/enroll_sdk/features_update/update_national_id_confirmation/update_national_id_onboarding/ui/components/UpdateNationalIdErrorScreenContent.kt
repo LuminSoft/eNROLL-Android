@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_onboarding.ui.components
 
+import EncryptDecrypt
 import UpdateScanType
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -25,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -38,6 +38,7 @@ import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import findActivity
 
 
@@ -62,8 +63,22 @@ fun UpdateNationalIdErrorScreen(
                 try {
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-                    rememberedViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImageBase64
+
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+
+                    rememberedViewModel.nationalIdFrontImage.value =encryptedImage
+
+
+
+
+
                     navController.navigate(updateNationalIdFrontConfirmationScreen)
                 } catch (e: Exception) {
                     updateViewModel.disableLoading()
@@ -88,8 +103,20 @@ fun UpdateNationalIdErrorScreen(
                 try {
                     val nonFacialDocumentModel =
                         DotHelper.documentNonFacial(documentBackUri, activity)
-                    updateViewModel.nationalIdBackImage.value =
-                        nonFacialDocumentModel.documentImageBase64
+
+
+
+
+                    val bitmap = nonFacialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+
+                    updateViewModel.nationalIdBackImage.value =encryptedImage
+
                     navController.navigate(updateNationalIdBackConfirmationScreen)
                 } catch (e: Exception) {
                     updateViewModel.disableLoading()
