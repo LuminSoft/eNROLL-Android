@@ -1,8 +1,6 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.view_model
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
