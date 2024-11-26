@@ -67,9 +67,9 @@ class UpdateViewModel(
     var steps: MutableStateFlow<List<StepUpdateModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var passportImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var nationalIdFrontImage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var passportImage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var nationalIdBackImage: MutableStateFlow<String?> = MutableStateFlow(null)
     var scanType: MutableStateFlow<UpdateScanType?> = MutableStateFlow(null)
     var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var preScanLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)

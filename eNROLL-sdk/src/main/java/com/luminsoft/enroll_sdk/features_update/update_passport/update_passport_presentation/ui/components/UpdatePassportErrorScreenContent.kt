@@ -58,8 +58,18 @@ fun UpdatePassportErrorScreen(
                 try {
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-                    rememberedViewModel.passportImage.value =
-                        facialDocumentModel.documentImageBase64
+
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+
+                    updateViewModel.passportImage.value =encryptedImage
+
                     navController.navigate(passportOnBoardingConfirmationScreen)
                 } catch (e: Exception) {
                     updateViewModel.disableLoading()

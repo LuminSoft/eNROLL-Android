@@ -64,9 +64,9 @@ class OnBoardingViewModel(
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var passportImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var nationalIdFrontImage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var passportImage: MutableStateFlow<String?> = MutableStateFlow(null)
+    var nationalIdBackImage: MutableStateFlow<String?> = MutableStateFlow(null)
     var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
     var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isNotFirstMail: MutableStateFlow<Boolean> = MutableStateFlow(false)

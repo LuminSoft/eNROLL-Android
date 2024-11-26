@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components
 
+import EncryptDecrypt
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -81,7 +82,8 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                 NationalIdFrontOcrViewModel(
                     personalConfirmationUploadImageUseCase,
                     personalConfirmationApproveUseCase,
-                    it
+                    it,
+                    context
                 )
             }
         }
@@ -95,8 +97,22 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
                     onBoardingViewModel.enableLoading()
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-                    onBoardingViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImageBase64
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+                    onBoardingViewModel.nationalIdFrontImage.value = encryptedImage
+
+
+
+
+
+
+
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()
@@ -119,10 +135,18 @@ fun NationalIdOnBoardingFrontConfirmationScreen(
             val documentBackUri = it.data?.data
             if (documentBackUri != null) {
                 try {
-                    val nonFacialDocumentModel =
-                        DotHelper.documentNonFacial(documentBackUri, activity)
-                    onBoardingViewModel.nationalIdBackImage.value =
-                        nonFacialDocumentModel.documentImageBase64
+                    val nonFacialDocumentModel = DotHelper.documentNonFacial(documentBackUri, activity)
+
+                    val bitmap = nonFacialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+                    onBoardingViewModel.nationalIdBackImage.value = encryptedImage
+
+
                     navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()

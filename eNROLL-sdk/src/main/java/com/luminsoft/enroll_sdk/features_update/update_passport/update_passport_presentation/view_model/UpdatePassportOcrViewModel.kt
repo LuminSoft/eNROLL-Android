@@ -14,7 +14,7 @@ class UpdatePassportOcrViewModel(
     private val updatePassportUploadImageUseCase: UpdatePassportUploadImageUseCase,
     private val updatePassportApproveUseCase: UpdatePassportApproveUseCase,
     private val isTranslationStepEnabledUseCase: UpdatePassportIsTranslationStepEnabledUseCase,
-    private val passportImage: Bitmap
+    private val passportImage: String
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)

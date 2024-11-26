@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_onboarding.ui.components
 
+import EncryptDecrypt
 import UpdateNationalIdBackOcrViewModel
 import UpdatePersonalConfirmationApproveUseCase
 import UpdatePersonalConfirmationUploadImageUseCase
@@ -28,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -47,6 +47,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import findActivity
 import org.koin.compose.koinInject
 
@@ -97,8 +98,15 @@ fun UpdateNationalIdBackConfirmationScreen(
                     val nonFacialDocumentModel =
                         DotHelper.documentNonFacial(documentBackUri, activity)
 
-                    updateViewModel.nationalIdBackImage.value =
-                        nonFacialDocumentModel.documentImageBase64
+                    val bitmap = nonFacialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+
+                    updateViewModel.nationalIdBackImage.value =encryptedImage
 
                     navController.navigate(updateNationalIdBackConfirmationScreen)
 

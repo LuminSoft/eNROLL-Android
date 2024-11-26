@@ -54,8 +54,20 @@ fun UpdateNationalIdPreScanScreen(
                 try {
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-                    rememberedViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImageBase64
+
+
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+
+                    updateViewModel.nationalIdFrontImage.value =encryptedImage
+
+
                     navController.navigate(updateNationalIdFrontConfirmationScreen)
 
                 } catch (e: Exception) {

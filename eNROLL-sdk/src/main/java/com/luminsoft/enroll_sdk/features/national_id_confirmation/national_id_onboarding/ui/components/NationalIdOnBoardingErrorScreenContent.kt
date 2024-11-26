@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components
 
 
+import EncryptDecrypt
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -42,6 +42,7 @@ import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -63,8 +64,17 @@ fun NationalIdOnBoardingErrorScreen(
                 try {
                     val facialDocumentModel =
                         DotHelper.documentNonFacial(documentFrontUri, activity)
-                    rememberedViewModel.nationalIdFrontImage.value =
-                        facialDocumentModel.documentImageBase64
+
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+                    onBoardingViewModel.nationalIdFrontImage.value = encryptedImage
+
                     navController.navigate(nationalIdOnBoardingFrontConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()
@@ -89,8 +99,17 @@ fun NationalIdOnBoardingErrorScreen(
                 try {
                     val nonFacialDocumentModel =
                         DotHelper.documentNonFacial(documentBackUri, activity)
-                    onBoardingViewModel.nationalIdBackImage.value =
-                        nonFacialDocumentModel.documentImageBase64
+
+
+                    val bitmap = nonFacialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+                    onBoardingViewModel.nationalIdBackImage.value = encryptedImage
+
                     navController.navigate(nationalIdOnBoardingBackConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()
@@ -114,10 +133,21 @@ fun NationalIdOnBoardingErrorScreen(
             val documentFrontUri = it.data?.data
             if (documentFrontUri != null) {
                 try {
-                    val facialDocumentModel =
-                        DotHelper.documentNonFacial(documentFrontUri, activity)
-                    rememberedViewModel.passportImage.value =
-                        facialDocumentModel.documentImageBase64
+                    val facialDocumentModel = DotHelper.documentNonFacial(documentFrontUri, activity)
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+                    onBoardingViewModel.passportImage.value = encryptedImage
+
+
+
+
+
                     navController.navigate(passportOnBoardingConfirmationScreen)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()

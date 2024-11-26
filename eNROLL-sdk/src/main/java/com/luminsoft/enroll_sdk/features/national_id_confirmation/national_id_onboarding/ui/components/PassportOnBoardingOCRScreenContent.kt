@@ -1,8 +1,11 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components
 
+import EncryptDecrypt
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.util.Base64
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -60,6 +63,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
+import java.io.ByteArrayOutputStream
 
 var userNameArValue = mutableStateOf(TextFieldValue())
 
@@ -85,10 +89,13 @@ fun PassportOnBoardingConfirmationScreen(
                 PassportOcrViewModel(
                     personalConfirmationUploadImageUseCase,
                     personalConfirmationApproveUseCase,
-                    it
+                    it,
+                    context
                 )
             }
         }
+
+
 
 
     val startForResult =
@@ -97,10 +104,22 @@ fun PassportOnBoardingConfirmationScreen(
             if (documentFrontUri != null) {
                 try {
                     onBoardingViewModel.enableLoading()
-                    val facialDocumentModel =
-                        DotHelper.documentNonFacial(documentFrontUri, activity)
-                    onBoardingViewModel.passportImage.value =
-                        facialDocumentModel.documentImageBase64
+
+
+
+                    val facialDocumentModel = DotHelper.documentNonFacial(documentFrontUri, activity)
+
+                    val bitmap = facialDocumentModel.documentImageBase64
+                    val base64Image = EncryptDecrypt.bitmapToBase64(bitmap)
+
+                    // Encrypt the Base64 string
+                    val encryptedImage = EncryptDecrypt.encrypt(base64Image)
+
+                    // Pass the encrypted image to the ViewModel
+                    onBoardingViewModel.passportImage.value = encryptedImage
+
+
+
                     navController.navigate(passportOnBoardingConfirmationScreen)
 
                 } catch (e: Exception) {

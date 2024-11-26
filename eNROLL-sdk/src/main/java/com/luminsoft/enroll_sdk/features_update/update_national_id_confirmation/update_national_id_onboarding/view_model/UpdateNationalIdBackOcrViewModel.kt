@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class UpdateNationalIdBackOcrViewModel(
     private val personalConfirmationUploadImageUseCase: UpdatePersonalConfirmationUploadImageUseCase,
     private val personalConfirmationApproveUseCase: UpdatePersonalConfirmationApproveUseCase,
-    private val nationalIdBackImage: Bitmap,
+    private val nationalIdBackImage: String,
     private val customerId: String
 ) :
     ViewModel() {
