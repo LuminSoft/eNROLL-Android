@@ -246,7 +246,6 @@ private fun MainContent(
                                 it.message
                         }
 
-
                     if (it.strInt != 0 && it.strInt.toString() == "10103") {
                         DialogView(
                             bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -254,12 +253,15 @@ private fun MainContent(
                             buttonText = stringResource(id = R.string.exit),
                             onPressedButton = {
                                 activity.finish()
-                                val (message, id) = nationalIdFrontOcrVM.splitMessageAndId(it.message)
+                                val (message, ids) = nationalIdFrontOcrVM.splitMessageAndIds(it.message)
+                                val applicantId=ids[0]
+                                val nationalId=ids[1]
                                 EnrollSDK.enrollCallback?.error(
                                     EnrollFailedModel(
                                         message,
                                         it,
-                                        id
+                                        applicantId,
+                                        nationalId
                                     )
                                 )
                             },

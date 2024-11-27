@@ -51,6 +51,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.edit
+import com.luminsoft.ekyc_android.api.RetrofitClient
+import com.luminsoft.ekyc_android.models.GenerateTokenRequest
+import com.luminsoft.ekyc_android.models.GenerateTokenResponse
 import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.AppColors
 import com.luminsoft.enroll_sdk.EnrollCallback
@@ -60,16 +63,17 @@ import com.luminsoft.enroll_sdk.EnrollMode
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.LocalizationCode
 import com.luminsoft.enroll_sdk.eNROLL
-import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import io.github.cdimascio.dotenv.dotenv
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
-
 
 var dotenv = dotenv {
     directory = "/assets"
 //    filename = "env_andrew"
-//    filename = "env_radwan"
+    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
@@ -78,7 +82,7 @@ var dotenv = dotenv {
 //    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
-    filename = "env_test_2"
+//    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -88,6 +92,7 @@ var levelOfTrustToken = mutableStateOf(TextFieldValue(text = dotenv["LEVEL_OF_TR
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
+var token = mutableStateOf("")
 var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 
@@ -101,36 +106,45 @@ class MainActivity : ComponentActivity() {
     private var levelOfTrustTokenText = mutableStateOf(TextFieldValue())
 
 
+
+    private fun getOnboardingSessionToken() {
+        val request = GenerateTokenRequest(
+            tenantId = tenantId.value.text,
+            tenantSecret = tenantSecret.value.text,
+            deviceId = "your_device_id",
+            correlationId = "your_correlation_id"
+        )
+
+        RetrofitClient.apiService.generateOnboardingSessionToken(request)
+            .enqueue(object : Callback<GenerateTokenResponse> {
+                override fun onResponse(
+                    call: Call<GenerateTokenResponse>,
+                    response: Response<GenerateTokenResponse>
+                ) {
+                    if (response.isSuccessful) {
+                         token.value = response.body()?.token.toString()
+                        println("Token: ${token.value}")
+                    } else {
+                        println("Error: ${response.message()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<GenerateTokenResponse>, t: Throwable) {
+                    println("Failure: ${t.message}")
+                }
+            })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getOnboardingSessionToken()
 //        setLocale("en")
 
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        tenantIdText.value = TextFieldValue(
-
-        )
-
-        tenantSecretText.value =
-            TextFieldValue(
-                text = sharedPref.getString(
-                    "tenantSecret",
-                    tenantSecret.value.text
-                )!!
-            )
-        applicationIdText.value =
-            TextFieldValue(
-                text = sharedPref.getString(
-                    "applicationId",
-                    applicationId.value.text
-                )!!
-            )
-        levelOfTrustTokenText.value =
-            TextFieldValue(
-                text = sharedPref.getString(
-                    "levelOfTrustToken",
-                    levelOfTrustToken.value.text
-                )!!
-            )
+        tenantIdText.value = TextFieldValue()
+        tenantSecretText.value = TextFieldValue()
+        applicationIdText.value = TextFieldValue()
+        levelOfTrustTokenText.value = TextFieldValue()
 
         setContent {
             val activity = LocalContext.current as Activity
@@ -282,10 +296,7 @@ class MainActivity : ComponentActivity() {
 
                         }
 
-
-
-
-                        Spacer(modifier = Modifier.height(20.dp))
+      /*                  Spacer(modifier = Modifier.height(20.dp))
                         NormalTextField(
                             label = "Tenant Id",
                             value = tenantIdText.value,
@@ -310,7 +321,7 @@ class MainActivity : ComponentActivity() {
                             onValueChange = {
                                 levelOfTrustTokenText.value = it
                             })
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(15.dp))*/
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -437,7 +448,7 @@ class MainActivity : ComponentActivity() {
             eNROLL.init(
 //                tenantId = tenantIdText.value.text,
 //                tenantSecret = tenantSecretText.value.text,
-                token = tenantIdText.value.text
+                token = token.value
                 ,
                 enrollMode = when (selectedIndex) {
                     0 -> EnrollMode.ONBOARDING
@@ -459,7 +470,6 @@ class MainActivity : ComponentActivity() {
                     override fun error(enrollFailedModel: EnrollFailedModel) {
                         checkCache()
                         text.value = enrollFailedModel.failureMessage
-
                     }
 
                     override fun getRequestId(requestId: String) {
