@@ -69,7 +69,7 @@ import java.io.File
 var dotenv = dotenv {
     directory = "/assets"
 //    filename = "env_andrew"
-//    filename = "env_radwan"
+    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
@@ -78,7 +78,7 @@ var dotenv = dotenv {
 //    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
-    filename = "env_test_2"
+//    filename = "env_test_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -106,30 +106,16 @@ class MainActivity : ComponentActivity() {
 //        setLocale("en")
 
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        tenantIdText.value = TextFieldValue(
-
-        )
+        tenantIdText.value = TextFieldValue()
 
         tenantSecretText.value =
-            TextFieldValue(
-                text = sharedPref.getString(
-                    "tenantSecret",
-                    tenantSecret.value.text
-                )!!
-            )
+            TextFieldValue()
         applicationIdText.value =
             TextFieldValue(
-                text = sharedPref.getString(
-                    "applicationId",
-                    applicationId.value.text
-                )!!
             )
         levelOfTrustTokenText.value =
             TextFieldValue(
-                text = sharedPref.getString(
-                    "levelOfTrustToken",
-                    levelOfTrustToken.value.text
-                )!!
+
             )
 
         setContent {
@@ -437,8 +423,7 @@ class MainActivity : ComponentActivity() {
             eNROLL.init(
 //                tenantId = tenantIdText.value.text,
 //                tenantSecret = tenantSecretText.value.text,
-                token = tenantIdText.value.text
-                ,
+                token = tenantIdText.value.text,
                 enrollMode = when (selectedIndex) {
                     0 -> EnrollMode.ONBOARDING
                     1 -> EnrollMode.AUTH

@@ -21,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -30,7 +29,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -44,6 +42,7 @@ import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_mode
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -68,7 +67,7 @@ fun SplashScreenContent(
                     .fillMaxSize()
             ) {
 
-                Box(
+           /*     Box(
                     modifier = Modifier
 
                         .height(ScreenHelper.sh(0.12)).width(ScreenHelper.sw(0.46)) // Adjust height as per your need
@@ -90,7 +89,7 @@ fun SplashScreenContent(
                         modifier = Modifier
                             .fillMaxSize(),
                     )
-                }
+                }*/
 
                 ComposeLottieAnimation(
                     modifier = Modifier

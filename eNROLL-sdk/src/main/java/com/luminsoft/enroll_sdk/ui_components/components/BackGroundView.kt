@@ -3,20 +3,15 @@ package com.luminsoft.enroll_sdk.ui_components.components
 import android.content.res.Resources
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -24,9 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -85,7 +80,7 @@ fun BackGroundView(
                             .fillMaxWidth(),
                     )
 
-                    Row(
+               /*     Row(
                         horizontalArrangement = Arrangement.Absolute.Left,
                         verticalAlignment = Alignment.Bottom, modifier = Modifier
                             .fillMaxSize()
@@ -103,7 +98,7 @@ fun BackGroundView(
                                 .width(ScreenHelper.sw(0.3))
                                 .height(ScreenHelper.sh(0.08)),
                         )
-                    }
+                    }*/
 
                 }
 
