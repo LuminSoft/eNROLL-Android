@@ -56,18 +56,21 @@ class NationalIdFrontOcrViewModel(
             cacheDir.deleteRecursively() // Deletes the directory and its contents
         }
     }
-    fun splitMessageAndId(response: String): Pair<String, String> {
-        // Extract the message and ID using a regular expression
-        val regex = """(.*?)(\d+)$""".toRegex() // Matches text followed by digits at the end
+
+    fun splitMessageAndIds(response: String): Pair<String, List<String>> {
+        // Extract the message and IDs using a regular expression
+        val regex = """(.*?)(\d[\d,]*)$""".toRegex() // Matches text followed by digits, which may be separated by commas
         val matchResult = regex.find(response)
 
         return if (matchResult != null) {
-            val (text, id) = matchResult.destructured
-            text.trim() to id.trim()
+            val (text, ids) = matchResult.destructured
+            val idList = ids.split(",").map { it.trim() } // Split the IDs by comma and trim any extra spaces
+            text.trim() to idList
         } else {
-            response to "" // Return full response and empty ID if no match
+            response to emptyList() // Return the full response and an empty list if no match
         }
     }
+
 
     private fun sendFrontImage() {
 //        loading.value = true
@@ -85,12 +88,14 @@ class NationalIdFrontOcrViewModel(
                     errorCode.value = it.strInt.toString()
                     failure.value = it
                     loading.value = false
+                    clearCache()
                 },
                 { s ->
                     s.let { it1 ->
                         customerData.value = it1
                         loading.value = false
                         Log.e("customerData", customerData.toString())
+                        clearCache()
 
                     }
                 })

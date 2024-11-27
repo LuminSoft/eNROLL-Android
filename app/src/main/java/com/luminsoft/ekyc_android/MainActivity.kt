@@ -470,7 +470,6 @@ class MainActivity : ComponentActivity() {
                     override fun error(enrollFailedModel: EnrollFailedModel) {
                         checkCache()
                         text.value = enrollFailedModel.failureMessage
-
                     }
 
                     override fun getRequestId(requestId: String) {

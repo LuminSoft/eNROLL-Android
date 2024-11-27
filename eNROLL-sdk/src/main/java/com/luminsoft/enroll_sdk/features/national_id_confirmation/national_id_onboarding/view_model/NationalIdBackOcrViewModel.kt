@@ -66,6 +66,7 @@ class NationalIdBackOcrViewModel(
                 {
                     failure.value = it
                     loading.value = false
+                    clearCache()
                 },
                 { s ->
                     s.let { it1 ->
@@ -82,7 +83,7 @@ class NationalIdBackOcrViewModel(
                             Log.e("customerData", customerData.toString())
                         }
                         loading.value = false
-
+                        clearCache()
                     }
                 })
         }
