@@ -131,7 +131,7 @@ object eNROLL {
                 config,
                 activity.baseContext.resources.displayMetrics
             )
-            Log.d("LocalizationLog1", Locale.getAvailableLocales().toString())
+            Log.d("LocalizationLog1", Locale.getDefault().displayName)
             Log.d("LocalizationLog2", locale.toString())
         } catch (e: Exception) {
             Log.d("LocalizationLog3", e.toString())
