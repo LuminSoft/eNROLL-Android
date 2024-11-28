@@ -72,11 +72,9 @@ object eNROLL {
 //        if (EnrollSDK.tenantSecret.isEmpty())
 //            throw Exception("Invalid tenant secret")
         val setLang = setLocale(EnrollSDK.localizationCode, activity)
-        Log.d("LocalizationLog8", setLang.toString())
         when (EnrollSDK.enrollMode!!) {
             EnrollMode.ONBOARDING -> {
                 val config: Configuration = activity.baseContext.resources.configuration
-                Log.d("LocalizationLog9", config.locale.displayName)
                 val intent =
                     Intent(activity.applicationContext, EnrollMainOnBoardingActivity::class.java)
                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
@@ -126,15 +124,11 @@ object eNROLL {
     @Suppress("DEPRECATION")
     private fun setLocale(lang: LocalizationCode, activity: Activity): Boolean {
         try {
-            var locale = Locale("ar")
-            if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
-                Log.d("LocalizationLog6", "en")
-                locale = Locale("en")
+          val  locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
+                Locale("en")
             } else {
-                Log.d("LocalizationLog7", "ar")
-                locale = Locale("ar")
+                Locale("ar")
             }
-            Log.d("LocalizationLog4", locale.language)
 
             Locale.setDefault(locale)
 
@@ -144,13 +138,10 @@ object eNROLL {
                 config,
                 activity.baseContext.resources.displayMetrics
             )
-            Log.d("LocalizationLog5", config.locale.displayName)
 
-            Log.d("LocalizationLog1", Locale.getDefault().displayName)
-            Log.d("LocalizationLog2", locale.toString())
             return true
         } catch (e: Exception) {
-            Log.d("LocalizationLog3", e.toString())
+            Log.d("LocalizationLog", e.toString())
         }
         return false
     }

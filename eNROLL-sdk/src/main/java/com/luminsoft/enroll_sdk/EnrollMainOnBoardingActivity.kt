@@ -82,9 +82,6 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
         if (extras != null) {
             val lang = extras.getString("localCode", "ar")
             setLocale(lang)
-            Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-                Log.d("LocalizationLog10", "Error in thread: ${thread.name}", throwable)
-            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode =
