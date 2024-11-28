@@ -117,11 +117,15 @@ object eNROLL {
     @Suppress("DEPRECATION")
     private fun setLocale(lang: LocalizationCode, activity: Activity) {
         try {
-            val locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
-                Locale("en")
+            var locale = Locale("ar")
+            if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
+                Log.d("LocalizationLog6", "en")
+                locale = Locale("en")
             } else {
-                Locale("ar")
+                Log.d("LocalizationLog7", "ar")
+                locale = Locale("ar")
             }
+            Log.d("LocalizationLog4", locale.language)
 
             Locale.setDefault(locale)
 
@@ -131,6 +135,8 @@ object eNROLL {
                 config,
                 activity.baseContext.resources.displayMetrics
             )
+            Log.d("LocalizationLog5", config.locale.displayName)
+
             Log.d("LocalizationLog1", Locale.getDefault().displayName)
             Log.d("LocalizationLog2", locale.toString())
         } catch (e: Exception) {
