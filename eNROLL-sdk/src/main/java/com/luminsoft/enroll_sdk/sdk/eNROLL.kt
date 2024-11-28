@@ -14,6 +14,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import java.util.Locale
 
@@ -76,7 +77,12 @@ object eNROLL {
             EnrollMode.ONBOARDING -> {
                 val config: Configuration = activity.baseContext.resources.configuration
                 Log.d("LocalizationLog9", config.locale.displayName)
-                activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
+                val intent =
+                    Intent(activity.applicationContext, EnrollMainOnBoardingActivity::class.java)
+                intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+
+                activity.startActivity(intent)
+//                activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
             }
 
             EnrollMode.AUTH -> {
