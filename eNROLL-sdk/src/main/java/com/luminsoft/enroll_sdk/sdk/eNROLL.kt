@@ -4,6 +4,7 @@ package com.luminsoft.enroll_sdk.sdk
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.util.Log
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
@@ -97,20 +98,44 @@ object eNROLL {
         }
     }
 
+//    private fun setLocale(lang: LocalizationCode, activity: Activity) {
+//        val locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
+//            Locale("en")
+//        } else {
+//            Locale("ar")
+//        }
+//
+//        val config: Configuration = activity.baseContext.resources.configuration
+//        config.setLocale(locale)
+//
+//        activity.baseContext.resources.updateConfiguration(
+//            config,
+//            activity.baseContext.resources.displayMetrics
+//        )
+//    }
+
+    @Suppress("DEPRECATION")
     private fun setLocale(lang: LocalizationCode, activity: Activity) {
-        val locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
-            Locale("en")
-        } else {
-            Locale("ar")
+        try {
+            val locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
+                Locale("en")
+            } else {
+                Locale("ar")
+            }
+
+            Locale.setDefault(locale)
+
+            val config: Configuration = activity.baseContext.resources.configuration
+            config.setLocale(locale)
+            activity.baseContext.resources.updateConfiguration(
+                config,
+                activity.baseContext.resources.displayMetrics
+            )
+            Log.d("LocalizationLog1", Locale.getAvailableLocales().toString())
+            Log.d("LocalizationLog2", locale.toString())
+        } catch (e: Exception) {
+            Log.d("LocalizationLog3", e.toString())
         }
-
-        val config: Configuration = activity.baseContext.resources.configuration
-        config.setLocale(locale)
-
-        activity.baseContext.resources.updateConfiguration(
-            config,
-            activity.baseContext.resources.displayMetrics
-        )
     }
 
 }
