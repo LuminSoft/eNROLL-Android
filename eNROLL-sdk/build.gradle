@@ -72,7 +72,7 @@ dependencies {
     implementation "com.innovatrics.dot:dot-face-detection-fast:8.4.0"
     implementation "com.innovatrics.dot:dot-face-expression-neutral:8.4.0"
     implementation "com.innovatrics.dot:dot-face-passive-liveness:8.4.0"
-    implementation "com.innovatrics.dot:dot-nfc:8.4.0"
+//    implementation "com.innovatrics.dot:dot-nfc:8.4.0"
     implementation "com.innovatrics.dot:dot-face-verification:8.4.0"
 
     implementation 'androidx.activity:activity-ktx:1.9.1'
