@@ -5,10 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.util.Log
-import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
-import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
-import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -83,25 +80,26 @@ object eNROLL {
 //                activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
             }
 
-            EnrollMode.AUTH -> {
-                if (EnrollSDK.applicantId.isEmpty())
-                    throw Exception("Invalid application id")
-                else if (EnrollSDK.levelOfTrustToken.isEmpty())
-                    throw Exception("Invalid level of trust token")
+//            EnrollMode.AUTH -> {
+//                if (EnrollSDK.applicantId.isEmpty())
+//                    throw Exception("Invalid application id")
+//                else if (EnrollSDK.levelOfTrustToken.isEmpty())
+//                    throw Exception("Invalid level of trust token")
+//
+//                activity.startActivity(Intent(activity, EnrollMainAuthActivity::class.java))
+//            }
 
-                activity.startActivity(Intent(activity, EnrollMainAuthActivity::class.java))
-            }
+//            EnrollMode.UPDATE -> {
+//                if (EnrollSDK.applicantId.isEmpty())
+//                    throw Exception("Invalid application id")
+//                activity.startActivity(Intent(activity, EnrollMainUpdateActivity::class.java))
+//            }
 
-            EnrollMode.UPDATE -> {
-                if (EnrollSDK.applicantId.isEmpty())
-                    throw Exception("Invalid application id")
-                activity.startActivity(Intent(activity, EnrollMainUpdateActivity::class.java))
-            }
-
-            EnrollMode.FORGET_PROFILE_DATA -> {
-
-                activity.startActivity(Intent(activity, EnrollMainForgetActivity::class.java))
-            }
+//            EnrollMode.FORGET_PROFILE_DATA -> {
+//
+//                activity.startActivity(Intent(activity, EnrollMainForgetActivity::class.java))
+//            }
+            else -> {}
         }
     }
 

@@ -15,7 +15,7 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
-import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
+//import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_applicatnt_id.GetApplicantIdResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
@@ -70,13 +70,7 @@ class OnBoardingViewModel(
     var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
     var isNotFirstPhone: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isNotFirstMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var securityQuestions: MutableStateFlow<List<GetSecurityQuestionsResponseModel>?> =
-        MutableStateFlow(null)
-    var selectedSecurityQuestions: MutableStateFlow<ArrayList<GetSecurityQuestionsResponseModel>> =
-        MutableStateFlow(arrayListOf())
-    var securityQuestionsList: MutableStateFlow<ArrayList<GetSecurityQuestionsResponseModel>> =
-        MutableStateFlow(arrayListOf())
-    var isPassportAndMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
+       var isPassportAndMail: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isPassportAndMailFinal: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)

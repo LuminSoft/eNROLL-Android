@@ -62,25 +62,25 @@ dependencies {
 
 
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'com.google.android.gms:play-services-maps:19.0.0'
+//    implementation 'com.google.android.gms:play-services-maps:19.0.0'
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
     implementation "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     implementation "com.airbnb.android:lottie-compose:6.0.1"
     implementation "com.innovatrics.dot:dot-document:8.4.0"
-    implementation "com.innovatrics.dot:dot-face-detection-fast:8.4.0"
-    implementation "com.innovatrics.dot:dot-face-expression-neutral:8.4.0"
-    implementation "com.innovatrics.dot:dot-face-passive-liveness:8.4.0"
+//    implementation "com.innovatrics.dot:dot-face-detection-fast:8.4.0"
+//    implementation "com.innovatrics.dot:dot-face-expression-neutral:8.4.0"
+//    implementation "com.innovatrics.dot:dot-face-passive-liveness:8.4.0"
 //    implementation "com.innovatrics.dot:dot-nfc:8.4.0"
-    implementation "com.innovatrics.dot:dot-face-verification:8.4.0"
+//    implementation "com.innovatrics.dot:dot-face-verification:8.4.0"
 
     implementation 'androidx.activity:activity-ktx:1.9.1'
     implementation 'androidx.fragment:fragment-ktx:1.8.2'
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "androidx.compose.material:material-icons-core:1.6.8"
 
-    implementation "com.google.android.gms:play-services-location:21.3.0"
+//    implementation "com.google.android.gms:play-services-location:21.3.0"
 
     //region retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -104,7 +104,7 @@ dependencies {
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
 
-    implementation("com.github.jump-sdk:jetpack_compose_country_code_picker_emoji:2.2.7")
+//    implementation("com.github.jump-sdk:jetpack_compose_country_code_picker_emoji:2.2.7")
     implementation 'androidx.navigation:navigation-fragment-ktx:2.8.2'
 
 }
