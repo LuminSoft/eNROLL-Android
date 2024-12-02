@@ -2,7 +2,7 @@ package com.luminsoft.enroll_sdk.main.main_di
 
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor
 import com.luminsoft.enroll_sdk.core.network.RetroClient
-import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
+//import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
 import com.luminsoft.enroll_sdk.main.main_data.main_api.MainApi
 import com.luminsoft.enroll_sdk.main.main_data.main_remote_data_source.MainRemoteDataSource
 import com.luminsoft.enroll_sdk.main.main_data.main_remote_data_source.MainRemoteDataSourceImpl
@@ -46,7 +46,7 @@ val mainModule = module {
     viewModel {
         OnBoardingViewModel(get(), get(), get(),get(), context = androidApplication())
     }
-    viewModel {
-        LocationOnBoardingViewModel(get())
-    }
+//    viewModel {
+//        LocationOnBoardingViewModel(get())
+//    }
 }
