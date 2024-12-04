@@ -25,7 +25,7 @@ object EnrollSDK {
     var fontResource = 0
 
     var enrollCallback: EnrollCallback? = null
-    lateinit var enrollMode: EnrollMode
+    var enrollMode: EnrollMode = EnrollMode.ONBOARDING
 
     private fun getBaseUrl(): String {
         return when (environment) {
