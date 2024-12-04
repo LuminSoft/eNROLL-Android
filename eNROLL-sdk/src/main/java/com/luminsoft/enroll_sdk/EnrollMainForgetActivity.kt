@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk
 
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -35,6 +36,7 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import java.util.Locale
 
 
 @Suppress("DEPRECATION")
@@ -54,6 +56,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
         setupServices()
+        setLocale()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -119,5 +122,18 @@ class EnrollMainForgetActivity : ComponentActivity() {
             }
 
         }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setLocale() {
+        val locale = EnrollSDK.localizationCode.name.let { Locale(it) }
+        Locale.setDefault(locale)
+
+        val config: Configuration = baseContext.resources.configuration
+        config.setLocale(locale)
+        baseContext.resources.updateConfiguration(
+            config,
+            baseContext.resources.displayMetrics
+        )
     }
 }
