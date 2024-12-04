@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk
 
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -10,6 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -50,6 +52,7 @@ import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import termsConditionsModule
 import termsConditionsRouter
+import java.util.Locale
 
 
 @Suppress("DEPRECATION")
@@ -71,6 +74,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
         setupServices()
+        setLocale()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -167,5 +171,18 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                 return splashScreenOnBoardingContent
 
         }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setLocale() {
+        val locale = EnrollSDK.localizationCode.name.let { Locale(it) }
+        Locale.setDefault(locale)
+
+        val config: Configuration = baseContext.resources.configuration
+        config.setLocale(locale)
+        baseContext.resources.updateConfiguration(
+            config,
+            baseContext.resources.displayMetrics
+        )
     }
 }

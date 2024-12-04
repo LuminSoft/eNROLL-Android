@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk
 
+import android.content.res.Configuration
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.os.Build
 import android.os.Bundle
@@ -43,6 +44,7 @@ import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import securityQuestionAuthModule
 import securityQuestionAuthRouter
+import java.util.Locale
 
 
 @Suppress("DEPRECATION")
@@ -58,6 +60,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         getKoin(this)
         setupServices()
+        setLocale()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -128,5 +131,18 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 return splashScreenOnBoardingContent
             }
         }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setLocale() {
+        val locale = EnrollSDK.localizationCode.name.let { Locale(it) }
+        Locale.setDefault(locale)
+
+        val config: Configuration = baseContext.resources.configuration
+        config.setLocale(locale)
+        baseContext.resources.updateConfiguration(
+            config,
+            baseContext.resources.displayMetrics
+        )
     }
 }

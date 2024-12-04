@@ -57,11 +57,12 @@ import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import io.github.cdimascio.dotenv.dotenv
+import java.io.File
 
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename = "env_andrew"
+    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
@@ -72,7 +73,6 @@ var dotenv = dotenv {
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
 //    filename = "env_test_2"
-    filename = "env_orange_staging"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -217,6 +217,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun clearCache() {
+        val cacheDir = File(this.cacheDir, "/scanned/") // Use 'this' for Activity context
+        if (cacheDir.exists()) {
+            cacheDir.deleteRecursively() // Deletes the directory and its contents
+        }
+
+    }
+
     private fun initEnroll(
         activity: Activity,
         selectedIndex: Int
@@ -247,16 +255,20 @@ class MainActivity : ComponentActivity() {
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
+                        clearCache()
                         text.value =
                             "eNROLL Message: ${enrollSuccessModel.enrollMessage}"
+
                     }
 
                     override fun error(enrollFailedModel: EnrollFailedModel) {
+                        clearCache()
                         text.value = enrollFailedModel.failureMessage
 
                     }
 
                     override fun getRequestId(requestId: String) {
+                        clearCache()
                         Log.d("requestId", requestId)
                     }
 
