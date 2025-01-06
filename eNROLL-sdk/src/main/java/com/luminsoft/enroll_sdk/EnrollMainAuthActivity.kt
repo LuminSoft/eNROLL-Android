@@ -1,7 +1,6 @@
 package com.luminsoft.enroll_sdk
 
 import android.content.res.Configuration
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -10,8 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_di.checkIMEIAuthModule
-import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_navigation.checkIMEIAuthRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
@@ -21,6 +18,8 @@ import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_di.checkExpiryDateAuthModule
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_navigation.checkExpiryDateAuthRouter
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_di.checkIMEIAuthModule
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_navigation.checkIMEIAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_di.faceCaptureAuthModule
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_di.locationAuthModule
@@ -31,11 +30,15 @@ import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_di.pas
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_navigation.passwordAuthRouter
 import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_di.phoneAuthModule
 import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_navigation.phoneAuthRouter
+import com.luminsoft.enroll_sdk.main.main_di.mainModule
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.mainAuthRouter
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_di.mainForgetModule
+import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.Koin
@@ -104,6 +107,10 @@ class EnrollMainAuthActivity : ComponentActivity() {
                 androidContext(activity.applicationContext)
                 modules(sdkModule)
                 modules(mainAuthModule)
+                modules(mainUpdateModule)
+                modules(mainForgetModule)
+                modules(mainAuthModule)
+                modules(mainModule)
                 modules(deviceDataModule)
                 modules(passwordAuthModule)
                 modules(mailAuthModule)

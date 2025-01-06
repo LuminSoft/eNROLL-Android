@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk
 
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
@@ -11,15 +10,14 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.luminsoft.ekyc_android_sdk.R
-import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
-import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlRouter
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataRouter
 import com.luminsoft.enroll_sdk.features.email.email_di.emailModule
@@ -40,7 +38,11 @@ import com.luminsoft.enroll_sdk.main.main_di.mainModule
 import com.luminsoft.enroll_sdk.main.main_navigation.mainRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_di.mainForgetModule
+import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import electronicSignatureModule
 import electronicSignatureRouter
 import org.koin.android.ext.koin.androidContext
@@ -142,6 +144,9 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                 androidContext(activity.applicationContext)
                 modules(termsConditionsModule)
                 modules(sdkModule)
+                modules(mainUpdateModule)
+                modules(mainForgetModule)
+                modules(mainAuthModule)
                 modules(mainModule)
                 modules(checkAmlModule)
                 modules(deviceDataModule)
