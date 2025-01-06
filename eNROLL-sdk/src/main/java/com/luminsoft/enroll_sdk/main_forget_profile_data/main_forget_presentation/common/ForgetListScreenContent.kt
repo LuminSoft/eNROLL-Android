@@ -1,7 +1,6 @@
 package com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.common
 
 //noinspection UsingMaterialAndMaterial3Libraries
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -54,18 +53,13 @@ fun ForgetListScreenContent(
     navController: NavController
 ) {
 
-    val forgetStepModel = forgetViewModel.forgetStepModel.collectAsState()
     val context = LocalContext.current
     val steps = forgetViewModel.steps.collectAsState()
     val activity = context.findActivity()
     val loading = forgetViewModel.loading.collectAsState()
-    val failure = forgetViewModel.failure.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (forgetStepModel.value != null) {
-            Log.d("forgetStepModel", "forgetStepModel")
 
-        } else
             if (loading.value) LoadingView()
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -101,8 +95,16 @@ fun ForgetListScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(steps.value!!.size) { index ->
-                    ForgetStepItem(steps.value!![index],forgetViewModel,navController = navController)
-                    ForgetStepItem(steps.value!![index], forgetViewModel,navController = navController)
+                    ForgetStepItem(
+                        steps.value!![index],
+                        forgetViewModel,
+                        navController = navController
+                    )
+                    ForgetStepItem(
+                        steps.value!![index],
+                        forgetViewModel,
+                        navController = navController
+                    )
                 }
             }
             ButtonView(

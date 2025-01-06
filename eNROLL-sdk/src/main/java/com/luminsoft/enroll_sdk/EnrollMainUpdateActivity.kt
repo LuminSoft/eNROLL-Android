@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk
 
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
@@ -25,12 +24,16 @@ import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_di_up
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phoneUpdateRouter
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationRouter
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
+import com.luminsoft.enroll_sdk.main.main_di.mainModule
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
+import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_di.mainForgetModule
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRouter
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
 import mailAuthUpdateModule
@@ -127,6 +130,9 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 androidContext(activity.applicationContext)
                 modules(sdkModule)
                 modules(mainUpdateModule)
+                modules(mainForgetModule)
+                modules(mainAuthModule)
+                modules(mainModule)
                 modules(deviceIdAuthUpdateModule)
                 modules(securityQuestionAuthUpdateModule)
                 modules(faceCaptureAuthUpdateModule)

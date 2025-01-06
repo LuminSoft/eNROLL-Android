@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk
 
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
@@ -17,13 +16,17 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
+import com.luminsoft.enroll_sdk.main.main_di.mainModule
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
+import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_di.mainForgetModule
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.mainForgetRouter
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_navigation.splashScreenForgetContent
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
+import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import forgetLocationModule
 import forgetLocationRouter
 import forgetPasswordModule
@@ -95,7 +98,10 @@ class EnrollMainForgetActivity : ComponentActivity() {
             GlobalContext.getOrNull() ?: startKoin {
                 androidContext(activity.applicationContext)
                 modules(sdkModule)
+                modules(mainUpdateModule)
                 modules(mainForgetModule)
+                modules(mainAuthModule)
+                modules(mainModule)
                 modules(forgetLocationModule)
                 modules(forgetPasswordModule)
                 modules(lostDeviceIdModule)
