@@ -47,7 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
@@ -66,7 +65,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
-import java.util.Stack
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -161,13 +160,17 @@ fun NationalIdOnBoardingPreScanScreen(
                         PassportOnly(activity, startPassportForResult, rememberedViewModel)
                     }
 
-                    RegistrationStepSetting.nationalIdOrPassport -> {
-                        NationalIdOrPassport(
-                            chosenStep, rememberedViewModel
-                        )
+                    (RegistrationStepSetting.nationalIdOrPassport) -> {
+                        if (EnrollSDK.egyptianNationalId) {
+                            NationalIdOnly(activity, startForResult, rememberedViewModel)
+                        } else {
+                            NationalIdOrPassport(chosenStep, rememberedViewModel)
+                        }
+
                     }
 
                     RegistrationStepSetting.nationalIdAndPassport -> {
+
                         onBoardingViewModel.isPassportAndMail.value = true
                         NationalIdOnly(activity, startForResult, rememberedViewModel)
                     }
