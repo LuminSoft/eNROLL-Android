@@ -28,7 +28,7 @@ interface EmailApi {
     @POST("api/v1/onboarding/EmailInfo/SetDefault")
     suspend fun makeDefault(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/EmailInfo/Delete")
+    @POST("api/v1/onboarding/EmailInfo/Delete")
     suspend fun deleteMail(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
 }
