@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,7 @@ import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtp
 import com.luminsoft.enroll_sdk.features.email.email_navigation.validateOtpMailsScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.MailsOnBoardingViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.validateOtpPhoneNumberScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -106,9 +108,12 @@ fun MailsOnBoardingScreenContent(
             )
         }
 
-        if (mailSentSuccessfully.value) {
-            navController.navigate(validateOtpMailsScreenContent)
+        LaunchedEffect(mailSentSuccessfully.value) {
+            if (mailSentSuccessfully.value) {
+                navController.navigate(validateOtpMailsScreenContent)
+            }
         }
+
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
@@ -156,8 +161,12 @@ fun MailsOnBoardingScreenContent(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                val images = listOf(R.drawable.step_04_email_1, R.drawable.step_04_email_2, R.drawable.step_04_email_3)
-                ImagesBox(images = images,  modifier = Modifier.fillMaxHeight(0.3f))
+                val images = listOf(
+                    R.drawable.step_04_email_1,
+                    R.drawable.step_04_email_2,
+                    R.drawable.step_04_email_3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 NormalTextField(
                     label = ResourceProvider.instance.getStringResource(R.string.mailFormatError),
@@ -167,7 +176,7 @@ fun MailsOnBoardingScreenContent(
                         Image(
                             painterResource(R.drawable.mail_icon),
                             contentDescription = "",
-                            colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                            colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                             modifier = Modifier
                                 .height(50.dp)

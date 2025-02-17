@@ -62,7 +62,7 @@ import java.io.File
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename = "env_andrew"
+    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
