@@ -21,6 +21,7 @@ object EnrollSDK {
     var environment = EnrollEnvironment.STAGING
     var localizationCode = LocalizationCode.AR
     var skipTutorial = false
+    var egyptianNationalId = false
     var appColors = AppColors()
     var fontResource = 0
 

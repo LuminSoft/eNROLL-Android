@@ -49,7 +49,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import coil.compose.AsyncImage
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
@@ -74,6 +73,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
 
@@ -294,7 +294,7 @@ private fun MainContent(
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.facesNotMatch),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        color = Color.Black
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 

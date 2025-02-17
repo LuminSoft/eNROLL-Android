@@ -1,17 +1,9 @@
 package com.luminsoft.enroll_sdk.sdk
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.util.Log
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Typography
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toLowerCase
-import androidx.compose.ui.unit.sp
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
@@ -38,6 +30,7 @@ object eNROLL {
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
+        egyptianNationalId: Boolean = false,
         appColors: AppColors = AppColors(),
         correlationId: String = "",
         fontResource: Int? = 0
@@ -60,6 +53,7 @@ object eNROLL {
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
+        EnrollSDK.egyptianNationalId = egyptianNationalId
         EnrollSDK.appColors = appColors
         EnrollSDK.correlationId = correlationId
         EnrollSDK.fontResource = fontResource!!

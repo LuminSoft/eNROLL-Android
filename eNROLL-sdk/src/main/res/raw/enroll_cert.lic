@@ -1,0 +1,22 @@
+{
+   "contract":{
+      "customer":"Excel_Evaluation",
+      "expiration":{
+         "day":22,
+         "month":11,
+         "year":2025
+      },
+      "id":"com.luminsoft.EnrollTestingApp",
+      "eNROLL":{
+         "mobile":{
+            "face":{
+               "enabled":true
+            },
+            "document":{
+               "enabled":true
+            }
+         }
+      }
+   },
+   "contractSignature":"dd5ec3698ad1d15f8b47adc1e4a8390986942280bf249e36064a2f4b7328a21873f5c38b0c425e801d6d836a9d68824d04a11d136bb4610335819a6960d1eb91"
+}
