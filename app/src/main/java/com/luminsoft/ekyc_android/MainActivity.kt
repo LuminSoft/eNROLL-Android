@@ -89,6 +89,7 @@ var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
+var egyptianNationalId = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
@@ -325,9 +326,10 @@ class MainActivity : ComponentActivity() {
                         ) {
                             RememberMeCheckbox()
                             SkipTutorialCheckbox()
+
                         }
-
-
+                        Spacer(modifier = Modifier.height(10.dp))
+                        EgyptianNationalIdCheckbox()
 
                         Spacer(modifier = Modifier.height(10.dp))
 
@@ -466,6 +468,7 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
+                egyptianNationalId = egyptianNationalId.value,
                 appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
@@ -610,6 +613,19 @@ fun SkipTutorialCheckbox() {
             onCheckedChange = { isChecked -> skipTutorial.value = isChecked }
         )
         Text("Skip Tutorial")
+    }
+}
+
+@Composable
+fun EgyptianNationalIdCheckbox() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = egyptianNationalId.value,
+            onCheckedChange = { isChecked -> egyptianNationalId.value = isChecked }
+        )
+        Text("Egyptian National Id")
     }
 }
 
