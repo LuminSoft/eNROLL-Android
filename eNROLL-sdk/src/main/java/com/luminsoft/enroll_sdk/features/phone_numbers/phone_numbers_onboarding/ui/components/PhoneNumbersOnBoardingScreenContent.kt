@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +51,9 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.togitech.ccp.component.TogiCountryCodePicker
+import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
+import kotlin.time.Duration.Companion.seconds
 
 
 @SuppressLint("UnrememberedMutableState", "StateFlowValueCalledInComposition")
@@ -108,9 +111,12 @@ fun PhoneNumbersOnBoardingScreenContent(
             )
         }
 
-        if (phoneNumberSentSuccessfully.value) {
-            navController.navigate(validateOtpPhoneNumberScreenContent)
+        LaunchedEffect(phoneNumberSentSuccessfully.value) {
+            if (phoneNumberSentSuccessfully.value) {
+                navController.navigate(validateOtpPhoneNumberScreenContent)
+            }
         }
+
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
@@ -158,8 +164,12 @@ fun PhoneNumbersOnBoardingScreenContent(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                val images= listOf(R.drawable.step_03_phone_1,R.drawable.step_03_phone_2,R.drawable.step_03_phone_3)
-                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.3f))
+                val images = listOf(
+                    R.drawable.step_03_phone_1,
+                    R.drawable.step_03_phone_2,
+                    R.drawable.step_03_phone_3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
@@ -180,7 +190,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                             disabledBorderColor = MaterialTheme.appColors.primary,
                             errorBorderColor = MaterialTheme.appColors.errorColor,
                             unfocusedBorderColor = MaterialTheme.appColors.primary,
-                            textColor =  MaterialTheme.appColors.textColor,
+                            textColor = MaterialTheme.appColors.textColor,
                             errorLabelColor = MaterialTheme.appColors.errorColor,
                             placeholderColor = MaterialTheme.appColors.textColor.copy(alpha = 0.5f),
                             focusedLabelColor = MaterialTheme.appColors.textColor,
@@ -223,7 +233,8 @@ fun PhoneNumbersOnBoardingScreenContent(
                     onClick = {
                         isClicked = true
                     },
-                    title = stringResource(id = R.string.confirmAndContinue), isEnabled = onBoardingViewModel.currentPhoneNumber.value != null || isNumberValid
+                    title = stringResource(id = R.string.confirmAndContinue),
+                    isEnabled = onBoardingViewModel.currentPhoneNumber.value != null || isNumberValid
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
