@@ -13,15 +13,15 @@ import retrofit2.http.Streaming
 interface TermsConditionsApi {
 
 
-    @GET("/api/v1/onboarding/TermsAndConditionInfo/GetDefaultTermsId")
+    @GET("api/v1/onboarding/TermsAndConditionInfo/GetDefaultTermsId")
     suspend fun getTermsId(): Response<TermsIdResponseModel>
 
     @Streaming
-    @GET("/api/v1/onboarding/TermsAndConditionFile/GetTemplateById/{id}")
+    @GET("api/v1/onboarding/TermsAndConditionFile/GetTemplateById/{id}")
     suspend fun getTermsPdfFileById(@Path("id") id: Int): Response<ResponseBody>
 
 
-    @POST("/api/v1/onboarding/TermsAndConditionInfo/InsertTermsAndConditionInfo")
+    @POST("api/v1/onboarding/TermsAndConditionInfo/InsertTermsAndConditionInfo")
     suspend fun acceptTerms(@Body request: AcceptTermsRequestModel): Response<TermsIdResponseModel>
 
 

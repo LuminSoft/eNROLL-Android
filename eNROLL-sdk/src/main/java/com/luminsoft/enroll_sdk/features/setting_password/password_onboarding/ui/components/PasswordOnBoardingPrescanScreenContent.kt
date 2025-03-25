@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,12 +35,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.setting_password.password_domain.usecases.OnboardingSettingPasswordUseCase
 import com.luminsoft.enroll_sdk.features.setting_password.password_onboarding.view_model.PasswordOnBoardingViewModel
@@ -74,27 +79,45 @@ fun SettingPasswordOnBoardingScreenContent(
     val failure = passwordOnBoardingViewModel.failure.collectAsState()
     val password = passwordOnBoardingViewModel.password.collectAsState()
     val confirmPassword = passwordOnBoardingViewModel.confirmPassword.collectAsState()
+    val scrollState = rememberScrollState()
+    val showDialog = remember { mutableStateOf(false) }
+
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (passwordApproved.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.SettingPassword.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
+
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
                         )
-                    },
-                )
-        } else if (!failure.value?.message.isNullOrEmpty()) {
+                    )
+                }
+            )
+        }
+
+        else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(
@@ -140,29 +163,41 @@ fun SettingPasswordOnBoardingScreenContent(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp)
+                    .verticalScroll(scrollState) // Enable scrolling
+                    .fillMaxSize() // Ensure the column fills the width
+                    .imePadding() // Adjust the layout when the keyboard is visible
+                    .padding(bottom = 16.dp, start = 20.dp, end = 20.dp)
             ) {
                 Spacer(modifier = Modifier.height(25.dp))
-
-                Image(
-                    painterResource(R.drawable.step_07_password),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight(0.3f)
+                val images = listOf(
+                    R.drawable.step_07_password_1,
+                    R.drawable.step_07_password_2,
+                    R.drawable.step_07_password_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+
+                var passwordError by rememberSaveable { mutableStateOf<String?>(null) }
+                var confirmPasswordError by rememberSaveable { mutableStateOf<String?>(null) }
 
                 NormalTextField(
                     label = ResourceProvider.instance.getStringResource(R.string.password),
                     value = password.value,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    onValueChange = { passwordOnBoardingViewModel.password.value = it },
+                    onValueChange = { newValue ->
+                        passwordOnBoardingViewModel.password.value = newValue
+
+                        // Trigger password validation immediately as user types
+                        passwordError = passwordOnBoardingViewModel.passwordValidation()
+                        confirmPasswordError = passwordOnBoardingViewModel.confirmPasswordValidation()
+
+                    },
                     height = 60.0,
+
                     trailingIcon = {
-                        val imageResource = if (passwordVisible)
-                            R.drawable.visibility_icon
-                        else R.drawable.visibility_off_icon
+                        val imageResource =
+                            if (passwordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
                         val description = if (passwordVisible) "Hide password" else "Show password"
 
                         Image(
@@ -170,9 +205,7 @@ fun SettingPasswordOnBoardingScreenContent(
                             contentDescription = description,
                             colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                             modifier = Modifier
-                                .clickable {
-                                    passwordVisible = !passwordVisible
-                                }
+                                .clickable { passwordVisible = !passwordVisible }
                                 .size(20.dp)
                         )
                     },
@@ -180,15 +213,20 @@ fun SettingPasswordOnBoardingScreenContent(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next,
                     ),
-                    error = passwordOnBoardingViewModel.passwordValidation(),
+                    error = passwordError // Dynamically show password error
+                )
 
-                    )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 NormalTextField(
                     label = ResourceProvider.instance.getStringResource(R.string.confirmPassword),
                     value = confirmPassword.value,
-                    onValueChange = { passwordOnBoardingViewModel.confirmPassword.value = it },
+                    onValueChange = { newValue ->
+                        passwordOnBoardingViewModel.confirmPassword.value = newValue
+
+                        // Trigger confirm password validation immediately as user types
+                        confirmPasswordError = passwordOnBoardingViewModel.confirmPasswordValidation()
+                    },
                     visualTransformation = if (rePasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
@@ -196,9 +234,8 @@ fun SettingPasswordOnBoardingScreenContent(
                     ),
                     height = 60.0,
                     trailingIcon = {
-                        val imageResource = if (rePasswordVisible)
-                            R.drawable.visibility_icon
-                        else R.drawable.visibility_off_icon
+                        val imageResource =
+                            if (rePasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_off_icon
                         val description =
                             if (rePasswordVisible) "Hide password" else "Show password"
 
@@ -207,15 +244,14 @@ fun SettingPasswordOnBoardingScreenContent(
                             contentDescription = description,
                             colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                             modifier = Modifier
-                                .clickable {
-                                    rePasswordVisible = !rePasswordVisible
-                                }
+                                .clickable { rePasswordVisible = !rePasswordVisible }
                                 .size(20.dp)
                         )
                     },
-                    error = passwordOnBoardingViewModel.confirmPasswordValidation(),
+                    error = confirmPasswordError // Dynamically show confirm password error
                 )
-                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+
+                Spacer(modifier = Modifier.height(100.dp))
                 ButtonView(
                     onClick = {
                         passwordOnBoardingViewModel.validate.value = true
@@ -225,6 +261,7 @@ fun SettingPasswordOnBoardingScreenContent(
                     },
                     title = ResourceProvider.instance.getStringResource(R.string.send)
                 )
+
             }
 
     }

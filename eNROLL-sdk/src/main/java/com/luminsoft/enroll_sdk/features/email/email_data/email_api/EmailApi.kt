@@ -1,11 +1,10 @@
 package com.luminsoft.enroll_sdk.features.email.email_data.email_api
 
+import ValidateOTPRequestModel
 import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.mail_info.MailInfoRequestModel
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.make_default.MakeDefaultRequestModel
-import com.luminsoft.enroll_sdk.features.email.email_data.email_models.validate_otp.ValidateOTPRequestModel
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
-
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -28,5 +27,8 @@ interface EmailApi {
 
     @POST("api/v1/onboarding/EmailInfo/SetDefault")
     suspend fun makeDefault(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
+
+    @POST("api/v1/onboarding/EmailInfo/Delete")
+    suspend fun deleteMail(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
 }

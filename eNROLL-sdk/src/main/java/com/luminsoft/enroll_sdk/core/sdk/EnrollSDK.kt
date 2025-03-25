@@ -13,17 +13,20 @@ object EnrollSDK {
     var googleApiKey = ""
     var tenantSecret = ""
     var applicantId = ""
+    var correlationId = ""
     var levelOfTrustToken = ""
     var updateSteps = arrayListOf<String>()
 
     // this info related to sdk initiation
     var environment = EnrollEnvironment.STAGING
-    var localizationCode = LocalizationCode.EN
+    var localizationCode = LocalizationCode.AR
     var skipTutorial = false
+    var egyptianNationalId = false
     var appColors = AppColors()
+    var fontResource = 0
 
     var enrollCallback: EnrollCallback? = null
-    lateinit var enrollMode: EnrollMode
+    var enrollMode: EnrollMode = EnrollMode.ONBOARDING
 
     private fun getBaseUrl(): String {
         return when (environment) {
@@ -33,15 +36,10 @@ object EnrollSDK {
     }
 
     fun getApisUrl(): String {
-        return if (environment == EnrollEnvironment.STAGING)
-//            getBaseUrl() + ":4800"
-            getBaseUrl() + ":7400/OnBoarding/"
-        else getBaseUrl() + ":7400/OnBoarding/"
+        return getBaseUrl() + ":7400/OnBoarding/"
     }
 
     fun getImageUrl(): String {
-        return if (environment == EnrollEnvironment.STAGING)
-            getBaseUrl() + ":4600/"
-        else getBaseUrl() + ":7400/AdminPanel/"
+        return getBaseUrl() + ":7400/AdminPanel/"
     }
 }

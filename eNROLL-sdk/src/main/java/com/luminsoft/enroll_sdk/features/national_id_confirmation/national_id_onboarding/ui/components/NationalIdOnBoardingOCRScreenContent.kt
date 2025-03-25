@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,7 +32,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -54,6 +54,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
 var userNameValue = mutableStateOf(TextFieldValue())
@@ -183,7 +184,12 @@ private fun MainContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
+
+
+
         else if (!failure.value?.message.isNullOrEmpty()) {
+
+
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(
@@ -202,13 +208,21 @@ private fun MainContent(
 
                     }
                 }
-            } else {
+            }
+
+            else {
                 failure.value?.let {
                     val msg: String =
-                        if (it.message == "Object reference not set to an instance of an object.")
-                            stringResource(id = R.string.someThingWentWrong)
-                        else
-                            it.message
+                        when {
+                            it.message == "Object reference not set to an instance of an object." ->
+                                stringResource(id = R.string.someThingWentWrong)
+                            // 0 is the fallback value
+                            (it.strInt!=0 && it.strInt.toString() == "10103") ->
+                                stringResource(id = R.string.nationalIdAlreadyExist)
+                            else ->
+                                it.message
+                        }
+
                     DialogView(
                         bottomSheetStatus = BottomSheetStatus.ERROR,
                         text = msg,
@@ -225,8 +239,14 @@ private fun MainContent(
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
                             activity.finish()
-                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
-
+                            // 0 is the fallback value
+                            if((it.strInt!=0 && it.strInt.toString() == "10103")){
+                                val (message, id) = nationalIdFrontOcrVM.splitMessageAndId(it.message)
+                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(message, it, id))
+                            }
+                            else{
+                                EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+                            }
                         }
                     )
                     {
@@ -235,7 +255,9 @@ private fun MainContent(
                     }
                 }
             }
-        } else if (customerData.value != null) {
+        }
+
+        else if (customerData.value != null) {
             if (customerData.value!!.fullNameEn != null)
                 if (!userHasModifiedText.value) {
                     userNameValue.value = TextFieldValue(customerData.value!!.fullNameEn!!)
@@ -245,7 +267,7 @@ private fun MainContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 24.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 TextItem(R.string.nameAr, customerData.value!!.fullName!!, R.drawable.user_icon)
@@ -260,6 +282,7 @@ private fun MainContent(
                             Image(
                                 painterResource(R.drawable.user_icon),
                                 contentDescription = "",
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier
                                     .height(50.dp)
                             )
@@ -268,6 +291,8 @@ private fun MainContent(
                             Image(
                                 painterResource(R.drawable.edit_icon),
                                 contentDescription = "",
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
                                 modifier = Modifier
                                     .height(50.dp)
                             )
@@ -324,7 +349,7 @@ private fun MainContent(
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(
                     onClick = {
@@ -352,7 +377,7 @@ private fun setCustomerId(
     customerData: State<CustomerData?>
 ) {
     onBoardingViewModel.customerId.value = "1111"
-//    onBoardingViewModel.customerId.value = customerData.value?.customerId
+    onBoardingViewModel.documentId.value = customerData.value?.idNumber
     onBoardingViewModel.facePhotoPath.value = customerData.value?.photo
 }
 
@@ -369,7 +394,8 @@ private fun TextItem(label: Int, value: String, icon: Int) {
                 painterResource(icon),
                 contentDescription = "",
                 modifier = Modifier
-                    .height(50.dp)
+                    .height(50.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         }
     )

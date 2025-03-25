@@ -40,7 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import kotlinx.coroutines.launch
 
 
@@ -55,7 +55,7 @@ fun OtpInputField(
     otp: MutableState<String>, // The current OTP value.
     count: Int = 6, // Number of OTP boxes.
     otpTextType: KeyboardType = KeyboardType.Number,
-    textColor: Color = MaterialTheme.appColors.primary,
+    textColor: Color = MaterialTheme.appColors.textColor,
 ) {
 
     val scope = rememberCoroutineScope()
