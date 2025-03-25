@@ -20,15 +20,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -39,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -75,10 +69,11 @@ var dotenv = dotenv {
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
 //    filename = "env_lumin_production"
-//    filename = "env_naspas_production"
+    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
 //    filename = "env_test_2"
+//    filename = "env_humat_staging"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -89,7 +84,6 @@ var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
-var egyptianNationalId = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
@@ -104,7 +98,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setLocale("en")
 
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
         tenantIdText.value =
@@ -139,152 +132,15 @@ class MainActivity : ComponentActivity() {
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
 
-            var primaryColor by remember { mutableStateOf(Color(0xFF1D56B8)) }
-            var secondaryColor by remember { mutableStateOf(Color(0xff5791DB)) }
-            var textColor by remember { mutableStateOf(Color(0xff004194)) }
-            var white by remember { mutableStateOf(Color(0xffffffff)) }
-            var warningColor by remember { mutableStateOf(Color(0xFFF9D548)) }
-            var successColor by remember { mutableStateOf(Color(0xff61CC3D)) }
-            var backGround by remember { mutableStateOf(Color(0xFFFFFFFF)) }
-            var appBlack by remember { mutableStateOf(Color(0xff333333)) }
-            var errorColor by remember { mutableStateOf(Color(0xFFDB305B)) }
 
 
             EnrollTheme {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 15.dp)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.SpaceBetween
+                        .padding(horizontal = 15.dp), verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ColorPickerWidget(
-                                label = "Primary Color",
-                                pickedColor = primaryColor,
-                                onColorSelected = { color ->
-                                    primaryColor = color // Update the primary color state
-                                    println("Primary Color: Color(${colorToHexString(primaryColor)})")
-                                }
-                            )
-
-                            ColorPickerWidget(
-                                label = "Secondary Color",
-                                pickedColor = secondaryColor,
-                                onColorSelected = { color ->
-                                    secondaryColor = color // Update the primary color state
-                                    println(
-                                        "Secondary Color: Color(${
-                                            colorToHexString(
-                                                secondaryColor
-                                            )
-                                        })"
-                                    )
-                                }
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ColorPickerWidget(
-                                label = "Text Color",
-                                pickedColor = textColor,
-                                onColorSelected = { color ->
-                                    textColor = color
-                                    println("textColor Color: Color(${colorToHexString(textColor)})")
-                                }
-                            )
-
-                            ColorPickerWidget(
-                                label = "White Color",
-                                pickedColor = white,
-                                onColorSelected = { color ->
-                                    white = color // Update the primary color state
-                                    println("white Color: Color(${colorToHexString(white)})")
-                                }
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ColorPickerWidget(
-                                label = "Warning Color",
-                                pickedColor = warningColor,
-                                onColorSelected = { color ->
-                                    warningColor = color // Update the primary color state
-                                    println(
-                                        "warningColor Color: Color(${
-                                            colorToHexString(
-                                                warningColor
-                                            )
-                                        })"
-                                    )
-                                }
-                            )
-                            ColorPickerWidget(
-                                label = "Success Color",
-                                pickedColor = successColor,
-                                onColorSelected = { color ->
-                                    successColor = color // Update the primary color state
-                                    println(
-                                        "successColor Color: Color(${
-                                            colorToHexString(
-                                                successColor
-                                            )
-                                        })"
-                                    )
-                                }
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ColorPickerWidget(
-                                label = "App Black",
-                                pickedColor = appBlack,
-                                onColorSelected = { color ->
-                                    appBlack = color // Update the primary color state
-                                    println("appBlack Color: Color(${colorToHexString(appBlack)})")
-                                }
-                            )
-
-                            ColorPickerWidget(
-                                label = "Error Color",
-                                pickedColor = errorColor,
-                                onColorSelected = { color ->
-                                    errorColor = color // Update the primary color state
-                                    println("errorColor Color: Color(${colorToHexString(errorColor)})")
-                                }
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            ColorPickerWidget(
-                                label = "BackGround Color",
-                                pickedColor = backGround,
-                                onColorSelected = { color ->
-                                    backGround = color // Update the primary color state
-                                    println("backGround Color: Color(${colorToHexString(backGround)})")
-                                }
-                            )
-
-                        }
-
-
-
-
                         Spacer(modifier = Modifier.height(20.dp))
                         NormalTextField(
                             label = "Tenant Id",
@@ -312,26 +168,11 @@ class MainActivity : ComponentActivity() {
                             })
                         Spacer(modifier = Modifier.height(15.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            ArabicCheckbox()
-                            ProductionCheckbox()
-                        }
-                        Spacer(modifier = Modifier.height(15.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            RememberMeCheckbox()
-                            SkipTutorialCheckbox()
-
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
-                        EgyptianNationalIdCheckbox()
-
-                        Spacer(modifier = Modifier.height(10.dp))
+                        ArabicCheckbox()
+                        ProductionCheckbox()
+                        RememberMeCheckbox()
+                        SkipTutorialCheckbox()
+                        Spacer(modifier = Modifier.height(20.dp))
 
                         DropdownList(
                             itemList = itemList,
@@ -356,19 +197,7 @@ class MainActivity : ComponentActivity() {
                             border = border,
                             modifier = modifier,
                             onClick = {
-                                initEnroll(
-                                    activity,
-                                    selectedIndex,
-                                    primaryColor,
-                                    successColor,
-                                    appBlack,
-                                    backGround,
-                                    errorColor,
-                                    warningColor,
-                                    textColor,
-                                    white,
-                                    secondaryColor
-                                )
+                                initEnroll(activity, selectedIndex)
                             },
                             contentPadding = PaddingValues(0.dp),
                             shape = RoundedCornerShape(12.dp),
@@ -389,15 +218,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun colorToHexString(color: Color): String {
-        val alpha = (color.alpha * 255).toInt()
-        val red = (color.red * 255).toInt()
-        val green = (color.green * 255).toInt()
-        val blue = (color.blue * 255).toInt()
-
-        return String.format("#%02X%02X%02X%02X", alpha, red, green, blue)
-    }
-
     private fun clearCache() {
         val cacheDir = File(this.cacheDir, "/scanned/") // Use 'this' for Activity context
         if (cacheDir.exists()) {
@@ -406,20 +226,9 @@ class MainActivity : ComponentActivity() {
 
     }
 
-
     private fun initEnroll(
         activity: Activity,
-        selectedIndex: Int,
-        primaryColor: Color,
-        successColor: Color,
-        appBlack: Color,
-        backGround: Color,
-        errorColor: Color,
-        warningColor: Color,
-        textColor: Color,
-        white: Color,
-        secondaryColor: Color
-
+        selectedIndex: Int
     ) {
         if (isRememberMe.value) {
             getPreferences(Context.MODE_PRIVATE).edit {
@@ -468,7 +277,6 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                egyptianNationalId = egyptianNationalId.value,
                 appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
@@ -616,132 +424,3 @@ fun SkipTutorialCheckbox() {
     }
 }
 
-@Composable
-fun EgyptianNationalIdCheckbox() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = egyptianNationalId.value,
-            onCheckedChange = { isChecked -> egyptianNationalId.value = isChecked }
-        )
-        Text("Egyptian National Id")
-    }
-}
-
-
-@Composable
-fun ColorPickerDialog(
-    initialColor: Color,
-    onColorSelected: (Color) -> Unit,
-    onDismissRequest: () -> Unit
-) {
-    var currentColor by remember { mutableStateOf(initialColor) }
-
-    // Define a list of main colors
-    val mainColors = listOf(
-        Color.Black,
-        Color.White,
-        Color.Blue,
-        Color.Green,
-        Color.Red,
-        Color(0xFFFFA500),  // Orange
-        Color.Yellow,
-        Color(0xFF8B4513),  // Brown
-        Color(0xFF800080),  // Purple
-        Color(0xFFFFC0CB),  // Pink
-        Color.Gray
-    )
-
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text(text = "Pick a color") },
-        text = {
-            Column {
-                // Display the current selected color
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .background(currentColor)
-                        .border(2.dp, Color.Black)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Display predefined main color boxes
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(5), // Display in a grid of 5 columns
-                    modifier = Modifier.height(200.dp) // Adjust height as needed
-                ) {
-                    items(mainColors) { color ->
-                        Box(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .background(color)
-                                .clickable {
-                                    currentColor = color // Update selected color
-                                }
-                        )
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(onClick = {
-                onColorSelected(currentColor) // Return the selected color
-            }) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismissRequest) {
-                Text("Cancel")
-            }
-        }
-    )
-}
-
-
-@Composable
-fun ColorPickerWidget(
-    label: String, // Label for the button (e.g. "Primary", "Secondary", etc.)
-    pickedColor: Color, // The current color
-    onColorSelected: (Color) -> Unit // Callback when a color is picked
-) {
-    var showColorPicker by remember { mutableStateOf(false) } // State to show/hide the color picker dialog
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        // Display the currently picked color in a box
-        Box(
-            modifier = Modifier
-                .size(20.dp)
-                .background(pickedColor)
-                .clickable {
-                    showColorPicker = true // Show color picker when clicked
-                }
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        // Button with the provided label (e.g. "Primary")
-        Button(onClick = { showColorPicker = true }) {
-            Text(label)
-        }
-    }
-
-    // Show Color Picker Dialog if needed
-    if (showColorPicker) {
-        ColorPickerDialog(
-            initialColor = pickedColor,
-            onColorSelected = { color ->
-                onColorSelected(color) // Call the callback with the selected color
-                showColorPicker = false // Close the dialog after selecting a color
-            },
-            onDismissRequest = {
-                showColorPicker = false // Close the dialog on cancel
-            }
-        )
-    }
-}

@@ -13,19 +13,19 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface MainForgetApi {
-    @POST("/api/v1/Auth/GenerateForgetSessionTokenForOrganization")
+    @POST("api/v1/Auth/GenerateForgetSessionTokenForOrganization")
     suspend fun generateForgetRequestSessionToken(@Body request: GenerateOnboardingSessionTokenRequest): Response<GenerateOnboardingSessionTokenResponse>
 
-    @GET("/api/v1/forget/ForgetRequest/GetCurrentRequestSteps")
+    @GET("api/v1/forget/ForgetRequest/GetCurrentRequestSteps")
     suspend fun getForgetStepsConfigurations(): Response<List<StepForgetModel>>
 
-    @POST("/api/v1/Auth/GenerateForgetRequestTokenForStep")
+    @POST("api/v1/Auth/GenerateForgetRequestTokenForStep")
     suspend fun generateForgetRequestTokenForStep(@Body request: GenerateForgetTokenRequest): Response<GenerateOnboardingSessionTokenResponse>
 
     @POST("api/v1/forget/ForgetRequest/Initialize/{stepid}")
     suspend fun initializeForgetRequest(@Path("stepid") stepId: Int): Response<BasicResponseModel>
 
-    @POST("/api/v1/forget/ForgetRequest/VerifyPassword")
+    @POST("api/v1/forget/ForgetRequest/VerifyPassword")
     suspend fun verifyPassword(@Body request: VerifyPasswordRequestModel): Response<BasicResponseModel>
 
 }

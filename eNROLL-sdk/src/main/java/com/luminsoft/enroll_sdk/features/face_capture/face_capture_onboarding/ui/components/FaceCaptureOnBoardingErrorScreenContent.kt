@@ -16,7 +16,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -40,6 +38,7 @@ import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -75,9 +74,10 @@ fun FaceCaptureOnBoardingErrorScreen(
             }
         }
 
-    val blurRadius = remember { mutableFloatStateOf(10f) }
+//    val blurRadius = remember { mutableFloatStateOf(10f) }
 
-    Surface(modifier = Modifier.fillMaxSize()
+    Surface(
+        modifier = Modifier.fillMaxSize()
 //        .graphicsLayer {
 //        renderEffect = BlurEffect(radiusX = blurRadius.floatValue, radiusY = blurRadius.floatValue) }
     ) {
@@ -102,7 +102,12 @@ fun FaceCaptureOnBoardingErrorScreen(
             )
             ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f))
             Spacer(modifier = Modifier.height(30.dp))
-            errorMessage.value?.let { Text(text = it,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) }
+            errorMessage.value?.let {
+                Text(
+                    text = it,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                )
+            }
             Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
             ButtonView(

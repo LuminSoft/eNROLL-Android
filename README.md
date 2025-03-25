@@ -8,7 +8,7 @@ This document is a guide for eNROLL Android SDK. In addition, following the belo
 
 ## REQUIREMENTS
 
-- Minimum Android SDK 34
+- Minimum Android SDK 24
 - Target API level 35
 
 
@@ -95,7 +95,8 @@ import com.luminsoft.enroll_sdk.*
                 appColors = AppColors(),
                 applicantId = "applicationIdText",
                 levelOfTrustToken = "levelOfTrustTokenText",
-                correlationId = "correlationId"
+                correlationId = "correlationId",
+                fontResource = R.font.itim_regular
 
                 )
         } catch (e: Exception) {
@@ -138,6 +139,7 @@ try {
 | `skipTutorial` | **Optional**. Choose to ignore the tutorial or not.                                                                                                                |
 | `appColors` | **Optional**. Collection of the app colors that you could override like (primary - secondary - backGround - successColor - warningColor - errorColor - textColor). |
 | `correlationId` | **Optional**. Correlation ID to connect your User ID with our Request ID                                                                                           |
+| `fontResource` | **Optional**. Font Resource to set your font family                                                                                           |
 
 
 

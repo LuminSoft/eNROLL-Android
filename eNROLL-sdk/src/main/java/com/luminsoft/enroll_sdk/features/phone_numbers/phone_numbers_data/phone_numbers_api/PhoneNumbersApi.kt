@@ -31,7 +31,7 @@ interface PhoneNumbersApi {
     @POST("api/v1/onboarding/PhoneInfo/SetDefault")
     suspend fun makeDefault(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
-    @POST("/api/v1/onboarding/PhoneInfo/Delete")
+    @POST("api/v1/onboarding/PhoneInfo/Delete")
     suspend fun deletePhone(@Body request: MakeDefaultRequestModel): Response<BasicResponseModel>
 
 }

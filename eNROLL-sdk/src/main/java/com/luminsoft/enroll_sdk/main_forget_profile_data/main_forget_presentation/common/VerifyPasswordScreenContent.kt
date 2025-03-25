@@ -1,3 +1,4 @@
+package com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.common
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -47,7 +48,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "SuspiciousIndentation")
 @Composable
 fun VerifyPasswordScreenContent(
     forgetViewModel: ForgetViewModel,
@@ -69,8 +70,7 @@ fun VerifyPasswordScreenContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
-        }
-        else if (!failure.value?.message.isNullOrEmpty()) {
+        } else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
                     DialogView(
@@ -104,8 +104,7 @@ fun VerifyPasswordScreenContent(
                     }
                 }
             }
-        }
-        else {
+        } else {
 
             Column(
                 modifier = Modifier
@@ -123,11 +122,11 @@ fun VerifyPasswordScreenContent(
 
                         var isValid = true
 
-                            if (forgetViewModel.passwordValue.value.text.isEmpty()) {
-                                forgetViewModel.passwordError.value =
-                                    ResourceProvider.instance.getStringResource(R.string.emptyError)
-                                isValid = false
-                            }
+                        if (forgetViewModel.passwordValue.value.text.isEmpty()) {
+                            forgetViewModel.passwordError.value =
+                                ResourceProvider.instance.getStringResource(R.string.emptyError)
+                            isValid = false
+                        }
 
                         if (isValid) {
                             forgetViewModel.verifyPassword()

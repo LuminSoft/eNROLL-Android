@@ -1,4 +1,3 @@
-
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -10,7 +9,7 @@ const val forgetLocationScreenContent = "forgetLocationScreenContent"
 
 fun NavGraphBuilder.forgetLocationRouter(
     navController: NavController,
-forgetViewModel: ForgetViewModel
+    forgetViewModel: ForgetViewModel
 ) {
     composable(route = forgetLocationScreenContent) {
         ForgetLocationScreenContent(

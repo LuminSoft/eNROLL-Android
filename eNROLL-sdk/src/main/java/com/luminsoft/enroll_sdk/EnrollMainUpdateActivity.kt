@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk
 
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
@@ -18,6 +17,22 @@ import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
+import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
+import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
+import com.luminsoft.enroll_sdk.features.email.email_di.emailModule
+import com.luminsoft.enroll_sdk.features.face_capture.face_capture_di.faceCaptureModule
+import com.luminsoft.enroll_sdk.features.location.location_di.locationModule
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_di.phoneNumbersModule
+import com.luminsoft.enroll_sdk.features.security_questions.security_questions_di.securityQuestionsModule
+import com.luminsoft.enroll_sdk.features.setting_password.password_di.passwordModule
+import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_di.checkExpiryDateAuthModule
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_di.checkIMEIAuthModule
+import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_di.faceCaptureAuthModule
+import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_di.locationAuthModule
+import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_di.mailAuthModule
+import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_di.passwordAuthModule
+import com.luminsoft.enroll_sdk.features_auth.phone_auth.phone_auth_di.phoneAuthModule
 import com.luminsoft.enroll_sdk.features_auth_update.device_id_auth_update.device_id_auth_update_di.deviceIdAuthUpdateModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.emailUpdateRouter
@@ -25,14 +40,22 @@ import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_di_up
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_navigation_update.phoneUpdateRouter
 import com.luminsoft.enroll_sdk.features_update.update_location.update_location_navigation.updateLocationRouter
 import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_navigation.updateNationalIdRouter
+import com.luminsoft.enroll_sdk.main.main_di.mainModule
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
+import com.luminsoft.enroll_sdk.main_auth.main_auth_di.mainAuthModule
 import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
+import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_di.mainForgetModule
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.mainUpdateRouter
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.splashScreenUpdateContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import electronicSignatureModule
 import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
+import forgetLocationModule
+import forgetPasswordModule
+import lostDeviceIdModule
 import mailAuthUpdateModule
 import mailAuthUpdateRouter
 import org.koin.android.ext.koin.androidContext
@@ -45,8 +68,10 @@ import passwordAuthUpdateModule
 import passwordAuthUpdateRouter
 import phoneAuthUpdateModule
 import phoneAuthUpdateRouter
+import securityQuestionAuthModule
 import securityQuestionAuthUpdateModule
 import securityQuestionAuthUpdateRouter
+import termsConditionsModule
 import updateDeviceIdModule
 import updateDeviceIdRouter
 import updateLocationModule
@@ -125,8 +150,35 @@ class EnrollMainUpdateActivity : ComponentActivity() {
         } else {
             GlobalContext.getOrNull() ?: startKoin {
                 androidContext(activity.applicationContext)
-                modules(sdkModule)
+
+                //TODO: refactor later
+                modules(forgetLocationModule)
+                modules(forgetPasswordModule)
+                modules(lostDeviceIdModule)
+                modules(passwordAuthModule)
+                modules(mailAuthModule)
+                modules(phoneAuthModule)
+                modules(locationAuthModule)
+                modules(checkExpiryDateAuthModule)
+                modules(checkIMEIAuthModule)
+                modules(faceCaptureAuthModule)
+                modules(securityQuestionAuthModule)
+                modules(termsConditionsModule)
                 modules(mainUpdateModule)
+                modules(mainAuthModule)
+                modules(checkAmlModule)
+                modules(deviceDataModule)
+                modules(emailModule)
+                modules(faceCaptureModule)
+                modules(locationModule)
+                modules(nationalIdConfirmationModule)
+                modules(phoneNumbersModule)
+                modules(securityQuestionsModule)
+                modules(passwordModule)
+                modules(electronicSignatureModule)
+                modules(sdkModule)
+                modules(mainForgetModule)
+                modules(mainModule)
                 modules(deviceIdAuthUpdateModule)
                 modules(securityQuestionAuthUpdateModule)
                 modules(faceCaptureAuthUpdateModule)
@@ -139,8 +191,8 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(phoneAuthUpdateModule)
                 modules(updateDeviceIdModule)
                 modules(updateSecurityQuestionsModule)
-                modules(updatePassportModule)
                 modules(updatePasswordModule)
+                modules(updatePassportModule)
             }.koin
         }
     }

@@ -1,4 +1,4 @@
-
+package com.luminsoft.enroll_sdk.features_update.update_passport.update_passport_presentation.ui.components
 
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -36,6 +36,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import findActivity
 
 
 @Composable
@@ -48,7 +49,7 @@ fun UpdatePassportErrorScreen(
     val context = LocalContext.current
     val activity = context.findActivity()
     val errorMessage = updateViewModel.errorMessage.collectAsState()
-    val scanType = updateViewModel.scanType.collectAsState()
+//    val scanType = updateViewModel.scanType.collectAsState()
     val loading = updateViewModel.loading.collectAsState()
 
     val startPassportForResult =
@@ -92,10 +93,19 @@ fun UpdatePassportErrorScreen(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.25f))
-                val images= listOf(R.drawable.invalid_ni_icon_1,R.drawable.invalid_ni_icon_2,R.drawable.invalid_ni_icon_3)
-                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.35f))
+                val images = listOf(
+                    R.drawable.invalid_ni_icon_1,
+                    R.drawable.invalid_ni_icon_2,
+                    R.drawable.invalid_ni_icon_3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f))
                 Spacer(modifier = Modifier.height(30.dp))
-                errorMessage.value?.let { Text(text = it,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) }
+                errorMessage.value?.let {
+                    Text(
+                        text = it,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                    )
+                }
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
                 ButtonView(
