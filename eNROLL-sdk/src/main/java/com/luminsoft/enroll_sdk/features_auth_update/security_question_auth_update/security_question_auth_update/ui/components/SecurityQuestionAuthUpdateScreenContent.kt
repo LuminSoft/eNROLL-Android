@@ -1,4 +1,3 @@
-
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -12,12 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -38,7 +39,9 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth.ui.components.answerValidate
 import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.GetSecurityQuestionAuthUpdateUseCase
 import com.luminsoft.enroll_sdk.features_auth_update.security_question_auth_update.security_question_auth_update_domain.usecases.ValidateSecurityQuestionAuthUpdateUseCase
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -47,6 +50,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
 
@@ -77,17 +81,21 @@ fun SecurityQuestionAuthUpdateScreenContent(
     val context = LocalContext.current
     val activity = context.findActivity()
     val loading = securityQuestionViewModel.loading.collectAsState()
-    val securityQuestionApproved = securityQuestionViewModel.securityQuestionApproved.collectAsState()
+    val securityQuestionApproved =
+        securityQuestionViewModel.securityQuestionApproved.collectAsState()
     val failure = securityQuestionViewModel.failure.collectAsState()
     val answer = securityQuestionViewModel.answer.collectAsState()
     val securityQuestionAPI = securityQuestionViewModel.securityQuestion.collectAsState()
     val answerError = securityQuestionViewModel.answerError.collectAsState()
 
-    BackGroundView(navController = navController, showAppBar = true) {
+    LaunchedEffect(securityQuestionApproved.value) {
         if (securityQuestionApproved.value) {
-              updateViewModel.navigateToUpdateAfterAuthStep()
+            updateViewModel.navigateToUpdateAfterAuthStep()
         }
-       else if (loading.value) LoadingView()
+    }
+    BackGroundView(navController = navController, showAppBar = true) {
+
+        if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
@@ -124,21 +132,18 @@ fun SecurityQuestionAuthUpdateScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_06_security_questions),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.2f)
-                )
+                val images= listOf(R.drawable.step_06_security_questions_1,R.drawable.step_06_security_questions_2,R.drawable.step_06_security_questions_3)
+                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.2f))
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
                     text = stringResource(id = R.string.youMustAnswerSecurityQuestion),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
                     color = Color.Black,
                     textAlign = TextAlign.Center
@@ -159,20 +164,22 @@ fun SecurityQuestionAuthUpdateScreenContent(
                                 painter = painterResource(R.drawable.info_icon),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillBounds,
+                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = it,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 fontSize = 12.sp,
                                 color = Color.Black
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
-                        Divider(
-                            color = MaterialTheme.appColors.primary,
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
                             thickness = 1.2.dp,
-                            modifier = Modifier.fillMaxWidth()
+                            color = MaterialTheme.appColors.primary
                         )
                     }
                 }
@@ -198,8 +205,8 @@ fun SecurityQuestionAuthUpdateScreenContent(
                 ButtonView(
                     onClick = {
                         navController.popBackStack()
-                              },
-                    stringResource(id = R.string.skip),
+                    },
+                    stringResource(id = R.string.cancel),
                     color = MaterialTheme.appColors.backGround,
                     borderColor = MaterialTheme.appColors.primary,
                     textColor = MaterialTheme.appColors.primary,
@@ -229,18 +236,21 @@ private fun AnswerTextFieldWidget(
             supportingText = {
                 Text(
                     text = "${answer.value.text.length} / $maxChar",
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
                 )
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) },
+
             colors = textFieldColors(),
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -253,6 +263,7 @@ private fun AnswerTextFieldWidget(
             println(" second answerError.value ${answerError.value}")
             Text(
                 answerError.value!!,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
@@ -264,12 +275,12 @@ private fun AnswerTextFieldWidget(
 
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color.White,
-    focusedTextColor = Color.Black,
-    unfocusedTextColor = Color.Black,
-    disabledTextColor = Color.Black,
+    focusedContainerColor = MaterialTheme.appColors.white,
+    unfocusedContainerColor = MaterialTheme.appColors.white,
+    disabledContainerColor = MaterialTheme.appColors.white,
+    focusedTextColor = MaterialTheme.appColors.appBlack,
+    unfocusedTextColor = MaterialTheme.appColors.appBlack,
+    disabledTextColor = MaterialTheme.appColors.appBlack,
     focusedIndicatorColor = MaterialTheme.appColors.primary,
     unfocusedIndicatorColor = MaterialTheme.appColors.primary,
     disabledIndicatorColor = MaterialTheme.appColors.primary,

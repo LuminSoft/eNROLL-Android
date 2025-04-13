@@ -3,9 +3,9 @@
     "contract": {
         "customer": "Excel_Evaluation",
         "expiration": {
-            "day": 21,
-            "month": 9,
-            "year": 2024
+            "day": 11,
+            "month": 6,
+            "year": 2025
         },
         "hwids": [
             "A+PYBMZZuSjgIKID"
@@ -20,23 +20,26 @@
         "dot": {
             "mobile": {
                 "face": {
-                    "enabled": true
+                    "enabled": "true"
                 },
                 "document": {
-                    "enabled": true
+                    "enabled": "true"
                 },
                 "faceLite": {
-                    "enabled": true
+                    "enabled": "true"
                 },
                 "nfc": {
-                    "enabled": true
+                    "enabled": "true"
                 },
                 "features": {
-                    "realTimeTransactionReportingEnabled": true
+                    "realTimeTransactionReportingEnabled": "true"
+                },
+                "palm": {
+                    "enabled": "true"
                 }
             },
-            "evaluation": true
+            "evaluation": "true"
         }
     },
-    "contract_signature": "LLgjZ164ZhzkTT4VPkV7sTjSEY++0nWkH+QoBSOy95BzCgXFrbeDTJGxzgZKWzFCV9gvXRfYfPxAUemU2rNY0NT0CEbp9oQt1QNWpomN5UvLVKd7gZOa3d0+cZWqrD+k7Wg1lXeNhLKQ+GCbyz/Txzi9kJLFUqHsreAXP+B5XlM="
+    "contract_signature": "AkvytvqqEEs9+F40Jq5dDElJZIm9RLRDiecYHQCGqXNFHE+EgOSPBeHd9Hm0xGEf/HGNVfzX38patvBZKGQHLC9mVBq/rKcD2a5e0x++ry8/ruktNs3zcv2N/KaXyvYMsF5v9BgIqobRrXtUmSPtXuwtt7y0wbV9DK1lIACqNT4="
 }
