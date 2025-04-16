@@ -362,4 +362,45 @@
     <string name="nationalIdDescription">يجب توافر بطاقة صادرة من جمهورية مصر العربية ، حيث أنه غير مسموح لأى بطاقة صادرة من أي دولة أخرى</string>
     <string name="passportDescription">يجب توافر جواز سفر ساري ، حيث أنه غير مسموح لأى جواز منتهي الصلاحية</string>
 
+    <string name="dot_face_magnifeye_liveness_instruction_eye_centering">ضع عينك داخل المربع</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_device_pitch_too_high">أمسك هاتفك بمستوى العين</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_face_not_detected">انظر للأمام</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_size_too_large">ابتعد قليلاً</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_size_too_small">اقترب قليلاً</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_initial_state">تابع العنصر</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_shadow_too_high">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_background_nonuniform">يجب أن تكون الخلفية بسيطة</string>
+    <string name="dot_face_face_auto_capture_instruction_candidate_selection">ابقَ ثابتًا&#8230;</string>
+    <string name="dot_face_face_auto_capture_instruction_device_pitch_too_high">أمسك هاتفك بمستوى العين</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_high">ابتسم :)</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_high_escalated">ابتسم أكثر!</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_low">حافظ على تعبير وجه محايد</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_low_escalated">لا تبتسم</string>
+    <string name="dot_face_face_auto_capture_instruction_eyes_too_closed">افتح عينيك</string>
+    <string name="dot_face_face_auto_capture_instruction_face_out_of_bounds">اجعل وجهك في المنتصف</string>
+    <string name="dot_face_face_auto_capture_instruction_face_not_detected">ضع وجهك داخل الدائرة</string>
+    <string name="dot_face_face_auto_capture_instruction_size_too_large">ابتعد قليلاً</string>
+    <string name="dot_face_face_auto_capture_instruction_size_too_small">اقترب قليلاً</string>
+    <string name="dot_face_face_auto_capture_instruction_glasses_present">أزل النظارات</string>
+    <string name="dot_face_face_auto_capture_instruction_brightness_too_high">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_brightness_too_low">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_contrast_too_high">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_contrast_too_low">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_shadow_too_high">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_sharpness_too_low">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_unique_intensity_levels_too_low">توجّه نحو الضوء</string>
+    <string name="dot_face_face_auto_capture_instruction_mask_present">أزل القناع</string>
+    <string name="dot_face_face_auto_capture_instruction_mouth_too_open">أغلق فمك</string>
+    <string name="dot_face_face_auto_capture_instruction_pitch_too_high">اخفض ذقنك</string>
+    <string name="dot_face_face_auto_capture_instruction_pitch_too_low">ارفع ذقنك</string>
+    <string name="dot_face_face_auto_capture_instruction_yaw_too_left">انظر يمينًا</string>
+    <string name="dot_face_face_auto_capture_instruction_yaw_too_right">انظر يسارًا</string>
+
+    <string name="dot_document_auto_capture_instruction_brightness_too_high_escalated">انقل المستند إلى منطقة أقل إضاءة</string>
+    <string name="dot_document_auto_capture_instruction_brightness_too_low_escalated">انقل المستند إلى منطقة أكثر إضاءة</string>
+    <string name="dot_document_auto_capture_instruction_sharpness_too_low_escalated">انقل المستند إلى منطقة أكثر إضاءة</string>
+    <string name="dot_document_auto_capture_instruction_size_too_small_escalated">قرّب المستند أكثر</string>
+
+
+
 </resources>
