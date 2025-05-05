@@ -362,4 +362,43 @@
     <string name="nationalIdDescription">A card issued by the Arab Republic of Egypt must be available, as any card issued by any other country is not permitted.</string>
     <string name="passportDescription">A valid passport is required, as any expired passport is not allowed.</string>
 
+    <string name="dot_face_magnifeye_liveness_instruction_eye_centering">Fit your eye into square</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_device_pitch_too_high">Hold your phone at eye level</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_face_not_detected">Look straight</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_size_too_large">Move back</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_size_too_small">Move closer</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_initial_state">Watch the object</string>
+    <string name="dot_face_eye_gaze_liveness_instruction_shadow_too_high">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_background_nonuniform">Plain background required</string>
+    <string name="dot_face_face_auto_capture_instruction_candidate_selection">Stay still&#8230;</string>
+    <string name="dot_face_face_auto_capture_instruction_device_pitch_too_high">Hold your phone at eye level</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_high">Smile :)</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_high_escalated">Smile more!</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_low">Keep neutral expression</string>
+    <string name="dot_face_face_auto_capture_instruction_expression_neutral_too_low_escalated">Don\'t smile</string>
+    <string name="dot_face_face_auto_capture_instruction_eyes_too_closed">Open your eyes</string>
+    <string name="dot_face_face_auto_capture_instruction_face_out_of_bounds">Center your face</string>
+    <string name="dot_face_face_auto_capture_instruction_face_not_detected">Position your face into the circle</string>
+    <string name="dot_face_face_auto_capture_instruction_size_too_large">Move back</string>
+    <string name="dot_face_face_auto_capture_instruction_size_too_small">Move closer</string>
+    <string name="dot_face_face_auto_capture_instruction_glasses_present">Remove glasses</string>
+    <string name="dot_face_face_auto_capture_instruction_brightness_too_high">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_brightness_too_low">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_contrast_too_high">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_contrast_too_low">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_shadow_too_high">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_sharpness_too_low">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_unique_intensity_levels_too_low">Turn towards light</string>
+    <string name="dot_face_face_auto_capture_instruction_mask_present">Remove mask</string>
+    <string name="dot_face_face_auto_capture_instruction_mouth_too_open">Close your mouth</string>
+    <string name="dot_face_face_auto_capture_instruction_pitch_too_high">Lower your chin</string>
+    <string name="dot_face_face_auto_capture_instruction_pitch_too_low">Lift your chin</string>
+    <string name="dot_face_face_auto_capture_instruction_yaw_too_left">Look right</string>
+    <string name="dot_face_face_auto_capture_instruction_yaw_too_right">Look left</string>
+
+    <string name="dot_document_auto_capture_instruction_brightness_too_high_escalated">Move document to darker area</string>
+    <string name="dot_document_auto_capture_instruction_brightness_too_low_escalated">Move document to brighter area</string>
+    <string name="dot_document_auto_capture_instruction_sharpness_too_low_escalated">Move document to brighter area</string>
+    <string name="dot_document_auto_capture_instruction_size_too_small_escalated">Move document closer</string>
+
 </resources>
