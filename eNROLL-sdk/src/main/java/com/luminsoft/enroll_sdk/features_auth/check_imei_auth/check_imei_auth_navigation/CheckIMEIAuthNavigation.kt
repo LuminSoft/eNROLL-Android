@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth_navigation
 
-import CheckIMEIAuthScreenContent
+import com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth.ui.components.CheckIMEIAuthScreenContent
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable

@@ -7,7 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface DeviceIdAuthUpdateApi {
-    @POST("api/v1/update/UpdateRequest/ValidateUpdatedDeviceInfo")
+    @POST("api/v1/update/DeviceUpdateAuthentication/ValidateUpdatedDeviceInfo")
     suspend fun checkDeviceIdAuthUpdate(@Body request: CheckDeviceIdAuthUpdateRequestModel): Response<BasicResponseModel>
 }
 

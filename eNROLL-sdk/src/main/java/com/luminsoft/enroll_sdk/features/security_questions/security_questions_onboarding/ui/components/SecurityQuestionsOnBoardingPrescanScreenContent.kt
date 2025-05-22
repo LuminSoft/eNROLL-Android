@@ -20,15 +20,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,11 +49,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.GetSecurityQuestionsUseCase
@@ -65,6 +69,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
 
@@ -106,6 +111,7 @@ fun SecurityQuestionsOnBoardingScreenContent(
     val securityQuestionsAPI = onBoardingViewModel.securityQuestions.collectAsState()
     val selectQuestionError = securityQuestionsViewModel.selectQuestionError.collectAsState()
     val answerError = securityQuestionsViewModel.answerError.collectAsState()
+    val showDialog = remember { mutableStateOf(false) }
 
 
 
@@ -113,21 +119,34 @@ fun SecurityQuestionsOnBoardingScreenContent(
         if (securityQuestionsApproved.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.SecurityQuestions.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
+
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
                         )
-                    },
-                )
+                    )
+                }
+            )
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -173,34 +192,35 @@ fun SecurityQuestionsOnBoardingScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 30.dp)
-
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_06_security_questions),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.2f)
+
+                val images = listOf(
+                    R.drawable.step_06_security_questions_1,
+                    R.drawable.step_06_security_questions_2,
+                    R.drawable.step_06_security_questions_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f))
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    StepsProgressBar(
-                        modifier = Modifier
-                            .fillMaxWidth(0.4f),
-                        numberOfSteps = 2,
-                        currentStep = selectedSecurityQuestions.value.size,
-                    )
-                }
+
+                StepsProgressBar(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f)
+                        .padding(end = 16.dp),
+                    numberOfSteps = 2,
+                    currentStep = selectedSecurityQuestions.value.size
+                )
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor
                 )
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 DropdownList(
@@ -212,37 +232,59 @@ fun SecurityQuestionsOnBoardingScreenContent(
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
+
                 AnswerTextField(answer, securityQuestionsOnBoardingVM, answerError)
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.4f))
 
                 ButtonView(
                     onClick = {
                         answerValidate.value = true
                         securityQuestionsOnBoardingVM.onChangeValue(securityQuestionsOnBoardingVM.answer.value)
-                        if (selectedQuestion.value != null) {
-                            val securityQuestionModel = GetSecurityQuestionsResponseModel()
-                            securityQuestionModel.question = selectedQuestion.value!!.question
-                            securityQuestionModel.id = selectedQuestion.value!!.id
-                            securityQuestionModel.answer = answer.value.text
 
+                        val securityQuestionModel = GetSecurityQuestionsResponseModel()
+
+                        val isAnswerValid =
+                            answer.value.text.isNotEmpty() && answer.value.text.length < 150
+                        val isQuestionSelected = selectedQuestion.value != null
+                        var selectedQuestionValue: GetSecurityQuestionsResponseModel? = null
+
+                        if (isAnswerValid) {
+                            securityQuestionModel.answer = answer.value.text
+                        } else {
+                            securityQuestionsViewModel.answerError.value =
+                                ResourceProvider.instance.getStringResource(R.string.errorEmptyAnswer)
+                        }
+
+                        if (isQuestionSelected) {
+                            selectedQuestionValue = selectedQuestion.value!!
+                            securityQuestionModel.question = selectedQuestionValue.question
+                            securityQuestionModel.id = selectedQuestionValue.id
+                        } else {
+                            securityQuestionsViewModel.selectQuestionError.value = true
+                        }
+
+                        if (isAnswerValid && isQuestionSelected) {
                             onBoardingViewModel.selectedSecurityQuestions.value.add(
                                 securityQuestionModel
                             )
-                            onBoardingViewModel.securityQuestionsList.value.remove(selectedQuestion.value!!)
+                            onBoardingViewModel.securityQuestionsList.value.remove(
+                                selectedQuestionValue
+                            )
 
-                            if (selectedSecurityQuestions.value.size < 3)
+                            if (onBoardingViewModel.selectedSecurityQuestions.value.size < 3) {
                                 navController.navigate(securityQuestionsOnBoardingScreenContent)
-                            else
-                                securityQuestionsOnBoardingVM.postSecurityQuestionsCall()
-                        } else
-                            securityQuestionsViewModel.selectQuestionError.value = true
+                            } else {
+                                securityQuestionsViewModel.postSecurityQuestionsCall()
+                            }
+                        }
                     },
                     title = stringResource(id = R.string.confirmAndContinue)
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
-
             }
+
         }
     }
 }
@@ -265,29 +307,41 @@ private fun AnswerTextField(
             supportingText = {
                 Text(
                     text = "${answer.value.text.length} / $maxChar",
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
+                    color = MaterialTheme.appColors.secondary
                 )
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            placeholder = {
+                Text(
+                    stringResource(id = R.string.answer),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.appColors.secondary
+                )
+            },
             colors = textFieldColors(),
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
                 fontSize = 12.sp,
-                color = Color.Black
+                color = Color.Black,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             )
         )
         if (answerError.value != null)
             Text(
                 answerError.value!!,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
@@ -324,7 +378,9 @@ fun DropdownList(
             placeholder = {
                 Text(
                     stringResource(id = R.string.chooseAQuestions),
-                    fontSize = 12.sp
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.appColors.primary
                 )
             },
             colors = textFieldColors(),
@@ -338,18 +394,21 @@ fun DropdownList(
             leadingIcon = {
                 Image(
                     painterResource(R.drawable.info_icon),
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
                 fontSize = 12.sp,
-                color = Color.Black
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily ,
+                color = MaterialTheme.appColors.primary
             )
         )
         if (selectQuestionError.value)
             Text(
                 text = stringResource(id = R.string.required_question),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )
@@ -367,8 +426,9 @@ fun DropdownList(
                         text = {
                             Text(
                                 text = label.question!!,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 fontSize = 12.sp,
-                                color = Color.Black
+                                color = MaterialTheme.appColors.primary
                             )
                         },
                         onClick = {
@@ -385,12 +445,12 @@ fun DropdownList(
 
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color.White,
-    focusedTextColor = Color.Black,
-    unfocusedTextColor = Color.Black,
-    disabledTextColor = Color.Black,
+    focusedContainerColor = MaterialTheme.appColors.white,
+    unfocusedContainerColor = MaterialTheme.appColors.white,
+    disabledContainerColor = MaterialTheme.appColors.white,
+    focusedTextColor = MaterialTheme.appColors.appBlack,
+    unfocusedTextColor = MaterialTheme.appColors.appBlack,
+    disabledTextColor = MaterialTheme.appColors.appBlack,
     focusedIndicatorColor = MaterialTheme.appColors.primary,
     unfocusedIndicatorColor = MaterialTheme.appColors.primary,
     disabledIndicatorColor = MaterialTheme.appColors.primary,
@@ -399,7 +459,8 @@ private fun textFieldColors() = TextFieldDefaults.colors(
 @Composable
 fun StepsProgressBar(modifier: Modifier = Modifier, numberOfSteps: Int, currentStep: Int) {
     Row(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(), // Ensure full width of the Row is used
+        horizontalArrangement = Arrangement.Center, // Center items within the Row
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (step in 0..numberOfSteps) {
@@ -421,16 +482,16 @@ fun Step(
     isFirstItem: Boolean
 ) {
     val color =
-        if (isCompete || isCurrent) MaterialTheme.appColors.primary else Color(0xffEBEBEB)
+        if (isCompete || isCurrent) MaterialTheme.appColors.primary else MaterialTheme.appColors.secondary
 
     Box(modifier = modifier) {
 
         //Line
         if (!isFirstItem)
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.align(Alignment.CenterStart),
-                color = color,
-                thickness = 2.dp
+                thickness = 2.dp,
+                color = color
             )
 
         //Circle
