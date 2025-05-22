@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
@@ -163,10 +164,18 @@ fun NationalIdOnBoardingPreScanScreen(
                     }
 
                     (RegistrationStepSetting.nationalIdOrPassport) -> {
-                        if (EnrollSDK.egyptianNationalId) {
-                            NationalIdOnly(activity, startForResult, rememberedViewModel)
-                        } else {
-                            NationalIdOrPassport(chosenStep, rememberedViewModel)
+                        when (EnrollSDK.enrollForcedDocumentType) {
+                            EnrollForcedDocumentType.NATIONAL_ID_ONLY -> {
+                                NationalIdOnly(activity, startForResult, rememberedViewModel)
+                            }
+
+                            EnrollForcedDocumentType.PASSPORT_ONLY -> {
+                                PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                            }
+
+                            else -> {
+                                NationalIdOrPassport(chosenStep, rememberedViewModel)
+                            }
                         }
 
                     }
@@ -245,7 +254,10 @@ private fun NationalIdOrPassport(
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.10f))
 
-        Text(text = stringResource(id = R.string.choosePersonalConfirmation),fontFamily = MaterialTheme.typography.labelLarge.fontFamily,)
+        Text(
+            text = stringResource(id = R.string.choosePersonalConfirmation),
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+        )
         Spacer(modifier = Modifier.height(10.dp))
 
         HorizontalDivider(

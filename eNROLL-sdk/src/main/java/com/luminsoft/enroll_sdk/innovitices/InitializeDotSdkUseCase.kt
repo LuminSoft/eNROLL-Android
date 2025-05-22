@@ -9,7 +9,7 @@ import com.innovatrics.dot.face.DotFaceLibrary
 import com.innovatrics.dot.face.DotFaceLibraryConfiguration
 import com.innovatrics.dot.face.detection.fast.DotFaceDetectionFastModule
 import com.innovatrics.dot.face.expressionneutral.DotFaceExpressionNeutralModule
-import com.innovatrics.dot.nfc.DotNfcLibrary
+//import com.innovatrics.dot.nfc.DotNfcLibrary
 import java.io.InputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +31,7 @@ class InitializeDotSdkUseCase(
         libraries = listOf(
             DotDocumentLibrary(),
             createDotFaceLibrary(),
-            DotNfcLibrary(),
+//            DotNfcLibrary(),
         ),
     )
 

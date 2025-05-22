@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk.core.sdk
 
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
+import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
@@ -21,12 +22,13 @@ object EnrollSDK {
     var environment = EnrollEnvironment.STAGING
     var localizationCode = LocalizationCode.AR
     var skipTutorial = false
-    var egyptianNationalId = false
     var appColors = AppColors()
     var fontResource = 0
 
     var enrollCallback: EnrollCallback? = null
     var enrollMode: EnrollMode = EnrollMode.ONBOARDING
+    var enrollForcedDocumentType: EnrollForcedDocumentType? =
+        EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT
 
     private fun getBaseUrl(): String {
         return when (environment) {
