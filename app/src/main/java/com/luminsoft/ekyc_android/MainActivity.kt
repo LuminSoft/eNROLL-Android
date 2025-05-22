@@ -53,6 +53,7 @@ import com.luminsoft.enroll_sdk.EnrollFailedModel
 import com.luminsoft.enroll_sdk.EnrollMode
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.LocalizationCode
+import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
@@ -281,7 +282,8 @@ class MainActivity : ComponentActivity() {
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
                 correlationId = "correlationId",
-                fontResource = R.font.itim_regular
+                fontResource = R.font.itim_regular,
+                enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())

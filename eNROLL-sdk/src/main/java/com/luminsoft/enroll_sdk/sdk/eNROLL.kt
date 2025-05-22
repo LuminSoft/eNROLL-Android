@@ -10,6 +10,7 @@ import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
+import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -30,11 +31,12 @@ object eNROLL {
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
-        egyptianNationalId: Boolean = false,
         appColors: AppColors = AppColors(),
         correlationId: String = "",
-        fontResource: Int? = 0
-    ) {
+        fontResource: Int? = 0,
+        enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
+
+        ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
         if (tenantSecret.isEmpty())
@@ -53,10 +55,10 @@ object eNROLL {
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
-        EnrollSDK.egyptianNationalId = egyptianNationalId
         EnrollSDK.appColors = appColors
         EnrollSDK.correlationId = correlationId
         EnrollSDK.fontResource = fontResource!!
+        EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
 
 
     }
