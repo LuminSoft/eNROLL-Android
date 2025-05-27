@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main.main_presentation.common
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,6 +47,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
 
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun SplashScreenContent(
     viewModel: OnBoardingViewModel,
@@ -55,12 +57,16 @@ fun SplashScreenContent(
     val activity = LocalContext.current as Activity
     viewModel.navController = navController
 
-    Surface(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.appColors.backGround),) {
-        Box(modifier = Modifier
+    Surface(
+        modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.appColors.backGround),) {
+            .background(MaterialTheme.appColors.backGround),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.appColors.backGround),
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -71,20 +77,21 @@ fun SplashScreenContent(
                 Box(
                     modifier = Modifier
 
-                        .height(ScreenHelper.sh(0.12)).width(ScreenHelper.sw(0.46)) // Adjust height as per your need
+                        .height(ScreenHelper.sh(0.12))
+                        .width(ScreenHelper.sw(0.46)) // Adjust height as per your need
                 ) {
                     Image(
                         painterResource(R.drawable.enroll_logo_part1),
                         contentScale = ContentScale.FillBounds,
                         contentDescription = "",
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                         modifier = Modifier
                             .fillMaxSize(),
                     )
                     Image(
                         painterResource(R.drawable.enroll_logo_part2),
                         contentScale = ContentScale.FillBounds,
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.secondary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
 
                         contentDescription = "",
                         modifier = Modifier
@@ -154,12 +161,8 @@ fun SplashScreenContent(
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.ERROR,
                     text = it.message,
-                    buttonText = stringResource(id = R.string.retry),
+                    buttonText = stringResource(id = R.string.exit),
                     onPressedButton = {
-                        viewModel.retry(navController)
-                    },
-                    secondButtonText = stringResource(id = R.string.exit),
-                    onPressedSecondButton = {
                         activity.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 

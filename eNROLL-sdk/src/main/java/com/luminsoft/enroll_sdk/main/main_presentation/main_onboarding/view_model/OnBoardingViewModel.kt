@@ -82,13 +82,12 @@ class OnBoardingViewModel(
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
 
 
-
-
     init {
         generateToken()
     }
+
     override fun retry(navController: NavController) {
-        TODO("Not yet implemented")
+        generateToken()
     }
 
 
@@ -98,6 +97,7 @@ class OnBoardingViewModel(
 
     fun initRequest() {
         loading.value = true
+        failure.value = null
         ui {
 
             val deviceId = DeviceIdentifier.getDeviceId(context)
@@ -120,7 +120,7 @@ class OnBoardingViewModel(
                 {
                     loading.value = false
                     requestId.value = it.requestId
-                    if(EnrollSDK.skipTutorial){
+                    if (EnrollSDK.skipTutorial) {
                         EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
                         changeRequestIdSentValue()
                     }
@@ -137,7 +137,6 @@ class OnBoardingViewModel(
     fun disableLoading() {
         loading.value = false
     }
-
 
 
     private fun generateToken() {
