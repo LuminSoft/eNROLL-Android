@@ -209,24 +209,29 @@ class OnBoardingViewModel(
 
 
     fun removeCurrentStep(id: Int): Boolean {
-        if (steps.value != null) {
-            val stepsSize = steps.value!!.size
-            steps.value = steps.value!!.toMutableList().apply {
-                removeIf { x -> x.registrationStepId == id }
-            }.toList()
-            val newStepsSize = steps.value!!.size
-            if (stepsSize != newStepsSize) {
-                return if (steps.value!!.isNotEmpty()) {
-                    navigateToNextStep()
-                    false
-                } else
-                    true
+        try {
+            if (steps.value != null) {
+                val stepsSize = steps.value!!.size
+                steps.value = steps.value!!.toMutableList().apply {
+                    removeIf { x -> x.registrationStepId == id }
+                }.toList()
+                val newStepsSize = steps.value!!.size
+                if (stepsSize != newStepsSize) {
+                    return if (steps.value!!.isNotEmpty()) {
+                        navigateToNextStep()
+                        false
+                    } else
+                        true
+                }
             }
+            return false
+        } catch (e: Exception) {
+            return false
         }
-        return false
     }
 
     private fun navigateToNextStep() {
+        if (navController == null || steps.value.isNullOrEmpty()) return
         mailValue.value = TextFieldValue()
         currentPhoneNumber.value = null
         navController!!.navigate(steps.value!!.first().stepNameNavigator())
