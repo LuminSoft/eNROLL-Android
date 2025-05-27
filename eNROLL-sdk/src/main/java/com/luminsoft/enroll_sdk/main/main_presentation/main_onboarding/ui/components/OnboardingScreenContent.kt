@@ -65,9 +65,14 @@ fun OnboardingScreenContent(
             EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
             viewModel.changeRequestIdSentValue()
         }
+        val pageList = pages.value
+        var pageSize = 0
+        if (!pageList.isNullOrEmpty()) {
+            pageSize = pageList.size
+        }
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             HorizontalPager(
-                count = pages.value?.size ?: 0,
+                count = pageSize,
                 state = pagerState,
                 verticalAlignment = Alignment.Top
             ) { position ->
@@ -149,7 +154,7 @@ fun OnboardingScreenContent(
                             .align(Alignment.CenterEnd),
                         painter = painterResource(id = R.drawable.arrow_icon),
                         contentDescription = "",
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
                         alignment = Alignment.Center
                     )

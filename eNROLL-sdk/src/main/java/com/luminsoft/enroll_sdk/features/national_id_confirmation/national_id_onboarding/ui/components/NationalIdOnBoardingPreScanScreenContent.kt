@@ -191,13 +191,11 @@ fun NationalIdOnBoardingPreScanScreen(
                     }
                 }
             }
-
     }
-
 }
 
 private fun organizationRegStepSettings(rememberedViewModel: OnBoardingViewModel) =
-    rememberedViewModel.steps.value?.first()?.organizationRegStepSettings!!
+    rememberedViewModel.steps.value?.first()?.organizationRegStepSettings ?: emptyList()
 
 @Composable
 private fun NationalIdOnly(
