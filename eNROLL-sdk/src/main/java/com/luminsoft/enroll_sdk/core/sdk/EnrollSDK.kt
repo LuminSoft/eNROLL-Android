@@ -42,6 +42,6 @@ object EnrollSDK {
     }
 
     fun getImageUrl(): String {
-        return getBaseUrl() + ":7400/AdminPanel/"
+        return getBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
     }
 }
