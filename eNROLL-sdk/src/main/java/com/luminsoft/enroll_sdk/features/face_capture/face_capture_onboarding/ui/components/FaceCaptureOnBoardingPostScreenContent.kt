@@ -34,8 +34,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,11 +52,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_domain.usecases.FaceCaptureUseCase
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_domain.usecases.SelfieImageApproveUseCase
@@ -132,15 +136,28 @@ fun FaceCaptureBoardingPostScanScreenContent(
             }
         }
 
+    // State to control whether to show MainContent
+    var showMainContent by remember { mutableStateOf(faceCaptureOnBoardingPostScanViewModel != null) }
 
+    // Handle navigation to error screen if view model is null
+    LaunchedEffect(faceCaptureOnBoardingPostScanViewModel) {
+        if (faceCaptureOnBoardingPostScanViewModel == null) {
+            onBoardingViewModel.errorMessage.value = "Required data is missing"
+            navController.navigate(faceCaptureOnBoardingErrorScreen)
+            showMainContent = false
+        }
+    }
 
-    MainContent(
-        navController,
-        onBoardingViewModel,
-        activity,
-        startForResult,
-        faceCaptureOnBoardingPostScanViewModel!!
-    )
+    // Render MainContent only if view model is not null
+    if (showMainContent && faceCaptureOnBoardingPostScanViewModel != null) {
+        MainContent(
+            navController,
+            onBoardingViewModel,
+            activity,
+            startForResult,
+            faceCaptureOnBoardingPostScanViewModel
+        )
+    }
 }
 
 
@@ -169,7 +186,7 @@ private fun MainContent(
     val scale = remember { Animatable(initialValue = 0f) }
     val startPosition1 = Offset(-250f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
-    val faceImageBaseUrl = "${EnrollSDK.getImageUrl()}api/v1/ApplicantProfile/GetImage?path="
+    val faceImageBaseUrl = EnrollSDK.getImageUrl()
     val showDialog = remember { mutableStateOf(false) }
 
     if (!loading.value) {
@@ -348,7 +365,13 @@ private fun AnimationExtracted(
         ) {
             Box {
                 AsyncImage(
-                    model = faceImageBaseUrl + facePhotoPath!!,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(faceImageBaseUrl)
+                        .addHeader(
+                            "Authorization",
+                            "Bearer ${RetroClient.token}"
+                        ) // Add Bearer token here
+                        .build(),
                     contentDescription = "face Photo Path",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

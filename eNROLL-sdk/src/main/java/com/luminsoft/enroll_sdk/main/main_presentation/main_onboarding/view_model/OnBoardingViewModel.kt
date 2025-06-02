@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.models.BuildInfo
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
@@ -82,13 +83,12 @@ class OnBoardingViewModel(
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
 
 
-
-
     init {
         generateToken()
     }
+
     override fun retry(navController: NavController) {
-        TODO("Not yet implemented")
+        generateToken()
     }
 
 
@@ -98,6 +98,7 @@ class OnBoardingViewModel(
 
     fun initRequest() {
         loading.value = true
+        failure.value = null
         ui {
 
             val deviceId = DeviceIdentifier.getDeviceId(context)
@@ -107,7 +108,9 @@ class OnBoardingViewModel(
             params.value = InitializeRequestUsecaseParams(
                 deviceId,
                 manufacturer,
-                deviceModel
+                deviceModel,
+                "Android",
+                BuildInfo.SDK_VERSION
             )
             val response: Either<SdkFailure, InitializeRequestResponse> =
                 initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)
@@ -120,7 +123,7 @@ class OnBoardingViewModel(
                 {
                     loading.value = false
                     requestId.value = it.requestId
-                    if(EnrollSDK.skipTutorial){
+                    if (EnrollSDK.skipTutorial) {
                         EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
                         changeRequestIdSentValue()
                     }
@@ -137,7 +140,6 @@ class OnBoardingViewModel(
     fun disableLoading() {
         loading.value = false
     }
-
 
 
     private fun generateToken() {
@@ -210,24 +212,29 @@ class OnBoardingViewModel(
 
 
     fun removeCurrentStep(id: Int): Boolean {
-        if (steps.value != null) {
-            val stepsSize = steps.value!!.size
-            steps.value = steps.value!!.toMutableList().apply {
-                removeIf { x -> x.registrationStepId == id }
-            }.toList()
-            val newStepsSize = steps.value!!.size
-            if (stepsSize != newStepsSize) {
-                return if (steps.value!!.isNotEmpty()) {
-                    navigateToNextStep()
-                    false
-                } else
-                    true
+        try {
+            if (steps.value != null) {
+                val stepsSize = steps.value!!.size
+                steps.value = steps.value!!.toMutableList().apply {
+                    removeIf { x -> x.registrationStepId == id }
+                }.toList()
+                val newStepsSize = steps.value!!.size
+                if (stepsSize != newStepsSize) {
+                    return if (steps.value!!.isNotEmpty()) {
+                        navigateToNextStep()
+                        false
+                    } else
+                        true
+                }
             }
+            return false
+        } catch (e: Exception) {
+            return false
         }
-        return false
     }
 
     private fun navigateToNextStep() {
+        if (navController == null || steps.value.isNullOrEmpty()) return
         mailValue.value = TextFieldValue()
         currentPhoneNumber.value = null
         navController!!.navigate(steps.value!!.first().stepNameNavigator())
