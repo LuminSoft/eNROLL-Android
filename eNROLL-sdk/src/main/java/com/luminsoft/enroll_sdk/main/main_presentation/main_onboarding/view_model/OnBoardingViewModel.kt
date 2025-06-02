@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.models.BuildInfo
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
@@ -107,7 +108,9 @@ class OnBoardingViewModel(
             params.value = InitializeRequestUsecaseParams(
                 deviceId,
                 manufacturer,
-                deviceModel
+                deviceModel,
+                "Android",
+                BuildInfo.SDK_VERSION
             )
             val response: Either<SdkFailure, InitializeRequestResponse> =
                 initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)

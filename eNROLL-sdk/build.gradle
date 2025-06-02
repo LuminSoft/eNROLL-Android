@@ -119,6 +119,7 @@ afterEvaluate {
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
                 version = '1.2.4'
+                //TODO change it inside core/models/BuildInfo file
             }
         }
     }
