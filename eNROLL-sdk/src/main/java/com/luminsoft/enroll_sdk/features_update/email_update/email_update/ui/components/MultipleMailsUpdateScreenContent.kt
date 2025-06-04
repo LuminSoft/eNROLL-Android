@@ -1,5 +1,7 @@
 package com.luminsoft.enroll_sdk.features_update.email_update.email_update.ui.components
 
+//noinspection UsingMaterialAndMaterial3Libraries
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,11 +36,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.DeleteMailUpdateUseCase
@@ -57,6 +60,7 @@ import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 import org.koin.compose.koinInject
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MultipleMailsUpdateScreenContent(
     updateViewModel: UpdateViewModel,
@@ -160,24 +164,23 @@ fun MultipleMailsUpdateScreenContent(
                 }
             }
         } else if (!verifiedMails.value.isNullOrEmpty()) {
+            updateViewModel.verifiedMails.value = verifiedMails.value
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_04_email),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.2f)
-                )
+                val images = listOf(R.drawable.select_mail1, R.drawable.select_mail2, R.drawable.select_mail3)
+                ImagesBox(images = images,     modifier = Modifier.fillMaxHeight(0.2f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
                     text = stringResource(id = R.string.youAddedTheFollowingMails),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
@@ -203,7 +206,7 @@ fun MultipleMailsUpdateScreenContent(
                     isEnabled = verifiedMails.value!!.size < 5,
                     textColor = MaterialTheme.appColors.primary,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(
                     onClick = {
@@ -251,6 +254,8 @@ private fun MailItem(
                 Image(
                     painterResource(R.drawable.mail_icon),
                     contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     modifier = Modifier
                         .height(50.dp)
                 )
@@ -258,6 +263,7 @@ private fun MailItem(
                 Text(
                     text = model.email!!,
                     color = MaterialTheme.appColors.appBlack,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp
                 )
             }
@@ -291,6 +297,7 @@ private fun MailItem(
                         Text(
                             text = stringResource(id = R.string.make_default),
                             color = MaterialTheme.appColors.backGround,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {

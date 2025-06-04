@@ -29,6 +29,12 @@ class MainRemoteDataSourceImpl(
         return network.apiRequest { mainApi.initializeRequest(request) }
 
     }
+
+    override suspend fun getApplicantId(): BaseResponse<Any> {
+
+        return network.apiRequest { mainApi.getApplicantId() }
+
+    }
 }
 
 

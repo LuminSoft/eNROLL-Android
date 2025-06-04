@@ -16,7 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,15 +26,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.validateOtpMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.AddMailUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
@@ -78,6 +80,7 @@ fun MailsUpdateScreenContent(
     val failure = mailsUpdateViewModel.failure.collectAsState()
     val isClicked = mailsUpdateViewModel.isClicked.collectAsState()
     val mailId = mailsUpdateViewModel.mailId.collectAsState()
+    val verifiedMails = updateViewModel.verifiedMails.collectAsState()
 
     val userHasModifiedText = remember { mutableStateOf(false) }
 
@@ -147,16 +150,12 @@ fun MailsUpdateScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.step_04_email),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.3f)
-                )
+                val images= listOf(R.drawable.step_04_email_1,R.drawable.step_04_email_2,R.drawable.step_04_email_3)
+                ImagesBox(images = images,     modifier = Modifier.fillMaxHeight(0.3f))
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
@@ -168,6 +167,8 @@ fun MailsUpdateScreenContent(
                         Image(
                             painterResource(R.drawable.mail_icon),
                             contentDescription = "",
+                            colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                             modifier = Modifier
                                 .height(50.dp)
                         )
@@ -189,8 +190,9 @@ fun MailsUpdateScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.sendEmailOtpContent),
-                    color = MaterialTheme.appColors.primary,
+                    color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
@@ -204,8 +206,18 @@ fun MailsUpdateScreenContent(
                             mailsUpdateViewModel.isClicked.value = true
                     }, title = stringResource(id = R.string.confirmAndContinue)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
-                ButtonView(
+                Spacer(modifier = Modifier.height(8.dp))
+                if (!verifiedMails.value.isNullOrEmpty())
+                    ButtonView(
+                        onClick = {
+                            navController.navigate(multipleMailsUpdateScreenContent)
+                        },
+                        title = stringResource(id = R.string.skip),
+                        color = MaterialTheme.appColors.backGround,
+                        borderColor = MaterialTheme.appColors.primary,
+                        textColor = MaterialTheme.appColors.primary,
+                    )
+                else ButtonView(
                     onClick = {
                         navController.navigate(updateListScreenContent)
                     },

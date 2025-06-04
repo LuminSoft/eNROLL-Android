@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -29,7 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -64,9 +65,14 @@ fun OnboardingScreenContent(
             EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
             viewModel.changeRequestIdSentValue()
         }
+        val pageList = pages.value
+        var pageSize = 0
+        if (!pageList.isNullOrEmpty()) {
+            pageSize = pageList.size
+        }
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             HorizontalPager(
-                count = pages.value?.size ?: 0,
+                count = pageSize,
                 state = pagerState,
                 verticalAlignment = Alignment.Top
             ) { position ->
@@ -97,7 +103,8 @@ fun OnboardingScreenContent(
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.appColors.primary
+                            color = MaterialTheme.appColors.primary,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         ),
                         modifier = Modifier
                             .align(Alignment.CenterStart),
@@ -116,6 +123,7 @@ fun OnboardingScreenContent(
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 color = MaterialTheme.appColors.primary
                             ),
                             modifier = Modifier
@@ -146,6 +154,8 @@ fun OnboardingScreenContent(
                             .align(Alignment.CenterEnd),
                         painter = painterResource(id = R.drawable.arrow_icon),
                         contentDescription = "",
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
                         alignment = Alignment.Center
                     )
 
@@ -157,5 +167,5 @@ fun OnboardingScreenContent(
 
 @Composable
 fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    EnrollItemView(onBoardingPage.image, onBoardingPage.text)
+    EnrollItemView(onBoardingPage.images, onBoardingPage.text)
 }
