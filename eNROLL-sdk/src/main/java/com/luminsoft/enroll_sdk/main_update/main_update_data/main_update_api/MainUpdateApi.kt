@@ -13,16 +13,16 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MainUpdateApi {
-    @POST("/api/v1/Auth/GenerateUpdateRequestSessionToken")
+    @POST("api/v1/Auth/GenerateUpdateRequestSessionToken")
     suspend fun generateUpdateRequestSessionToken(@Body request: GenerateOnboardingSessionTokenRequest): Response<GenerateOnboardingSessionTokenResponse>
 
-    @GET("/api/v1/update/UpdateRequest/GetCurrentRequestSteps")
+    @GET("api/v1/update/UpdateRequest/GetCurrentRequestSteps")
     suspend fun getUpdateStepsConfigurations(): Response<List<StepUpdateModel>>
 
-    @POST("/api/v1/update/UpdateRequest/Initialize/{updateStepId}")
+    @POST("api/v1/update/UpdateRequest/Initialize/{updateStepId}")
     suspend fun updateStepsInitRequest(@Path("updateStepId") updateStepId: Int): Response<BasicResponseModel>
 
-    @GET("/api/v1/update/UpdateRequest/GetUpdateVerificationMethod")
+    @GET("api/v1/update/UpdateRequest/GetUpdateVerificationMethod")
     suspend fun getUpdateAuthenticationMethod(@Query("updateStep") stepId: Int): Response<UpdateVerificationMethodResponse>
 
 }
