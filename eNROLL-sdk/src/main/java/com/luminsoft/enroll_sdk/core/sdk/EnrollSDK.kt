@@ -30,6 +30,7 @@ object EnrollSDK {
     var enrollForcedDocumentType: EnrollForcedDocumentType? =
         EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT
 
+    var isLuminDomain = false
     private fun getBaseUrl(): String {
         return when (environment) {
             EnrollEnvironment.STAGING -> "https://enrollstg.nasps.org.eg"
@@ -37,11 +38,24 @@ object EnrollSDK {
         }
     }
 
+    private fun getLuminBaseUrl(): String {
+        return when (environment) {
+            EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
+            EnrollEnvironment.PRODUCTION -> "https://enroll.luminsoft.net"
+        }
+    }
+
     fun getApisUrl(): String {
-        return getBaseUrl() + ":7400/OnBoarding/"
+        return if (isLuminDomain)
+            getLuminBaseUrl() + ":7400/OnBoarding/"
+        else
+            getBaseUrl() + ":7400/OnBoarding/"
     }
 
     fun getImageUrl(): String {
-        return getBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+        return if (isLuminDomain)
+            getLuminBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+        else
+            getBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
     }
 }
