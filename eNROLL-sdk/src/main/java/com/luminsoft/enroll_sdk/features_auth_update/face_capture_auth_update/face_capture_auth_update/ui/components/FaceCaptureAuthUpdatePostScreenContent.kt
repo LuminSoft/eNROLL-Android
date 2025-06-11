@@ -1,9 +1,11 @@
 package com.luminsoft.enroll_sdk.features_auth_update.face_capture_auth_update.face_capture_auth_update.ui.components
+
 import FaceCaptureAuthUpdateUseCase
 import FaceCaptureAuthUpdateViewModel
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -74,9 +76,12 @@ private fun MainContent(
 
     BackGroundView(navController = navController, showAppBar = false) {
 
-        if (selfieImageApproved.value) {
-            updateViewModel.navigateToUpdateAfterAuthStep()
-        } else if (loading.value)
+        LaunchedEffect(selfieImageApproved.value) {
+            if (selfieImageApproved.value) {
+                updateViewModel.navigateToUpdateAfterAuthStep()
+            }
+        }
+        if (loading.value)
             LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
