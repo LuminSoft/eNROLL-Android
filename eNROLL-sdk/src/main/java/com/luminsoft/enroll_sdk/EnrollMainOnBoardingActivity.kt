@@ -266,8 +266,8 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                 val url = URL("${EnrollSDK.getApisUrl()}api/v1/Auth/GenerateOnboardingSessionToken")
                 connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "POST"
-                connection.connectTimeout = 10000
-                connection.readTimeout = 10000
+                connection.connectTimeout = 5000
+                connection.readTimeout = 5000
 //                connection.setRequestProperty("Authorization", apiKey)
                 connection.setRequestProperty("Content-Type", "application/json")
                 connection.setRequestProperty("Accept", "*/*")
