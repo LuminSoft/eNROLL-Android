@@ -77,8 +77,8 @@ var dotenv = dotenv {
 //    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
-//    filename = "env_azimut_production"
-    filename = "env_lumin_production"
+    filename = "env_azimut_production"
+//    filename = "env_lumin_production"
 //    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
@@ -106,7 +106,6 @@ class MainActivity : ComponentActivity() {
     private var levelOfTrustTokenText = mutableStateOf(TextFieldValue())
 
 
-
     private fun getOnboardingSessionToken() {
         val request = GenerateTokenRequest(
             tenantId = tenantId.value.text,
@@ -122,7 +121,7 @@ class MainActivity : ComponentActivity() {
                     response: Response<GenerateTokenResponse>
                 ) {
                     if (response.isSuccessful) {
-                         token.value = response.body()?.token.toString()
+                        token.value = response.body()?.token.toString()
                         println("Token: ${token.value}")
                     } else {
                         println("Error: ${response.message()}")
@@ -296,33 +295,6 @@ class MainActivity : ComponentActivity() {
 
                         }
 
-      /*                  Spacer(modifier = Modifier.height(20.dp))
-                        NormalTextField(
-                            label = "Tenant Id",
-                            value = tenantIdText.value,
-                            onValueChange = {
-                                tenantIdText.value = it
-                            })
-                        NormalTextField(
-                            label = "Tenant Secret",
-                            value = tenantSecretText.value,
-                            onValueChange = {
-                                tenantSecretText.value = it
-                            })
-                        NormalTextField(
-                            label = "Application Id",
-                            value = applicationIdText.value,
-                            onValueChange = {
-                                applicationIdText.value = it
-                            })
-                        NormalTextField(
-                            label = "Level Of Trust Token",
-                            value = levelOfTrustTokenText.value,
-                            onValueChange = {
-                                levelOfTrustTokenText.value = it
-                            })
-                        Spacer(modifier = Modifier.height(15.dp))*/
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -338,8 +310,6 @@ class MainActivity : ComponentActivity() {
                             RememberMeCheckbox()
                             SkipTutorialCheckbox()
                         }
-
-
 
                         Spacer(modifier = Modifier.height(10.dp))
 
@@ -412,8 +382,7 @@ class MainActivity : ComponentActivity() {
         val cacheDir = File(this.cacheDir, "/scanned/") // Use 'this' for Activity context
         if (cacheDir.exists()) {
             println("cache exists")
-        }
-        else{
+        } else {
             println("cache does not exist")
         }
     }
@@ -448,8 +417,7 @@ class MainActivity : ComponentActivity() {
             eNROLL.init(
 //                tenantId = tenantIdText.value.text,
 //                tenantSecret = tenantSecretText.value.text,
-                token = token.value
-                ,
+                token = token.value,
                 enrollMode = when (selectedIndex) {
                     0 -> EnrollMode.ONBOARDING
                     1 -> EnrollMode.AUTH

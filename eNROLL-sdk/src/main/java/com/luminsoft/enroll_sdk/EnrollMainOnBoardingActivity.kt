@@ -184,22 +184,16 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             var connection: HttpURLConnection? = null
             try {
                 // Set up the URL and connection
-                val url = URL("${EnrollSDK.getApisUrl()}api/v1/Auth/GenerateOnboardingSessionToken")
+                val url = URL("${EnrollSDK.getApisUrl()}api/v1/Configuration/GetStepsConfiguration")
                 connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "POST"
-                connection.connectTimeout = 10000
-                connection.readTimeout = 10000
+                connection.requestMethod = "GET"
+                connection.connectTimeout = 5000
+                connection.readTimeout = 5000
 //                connection.setRequestProperty("Authorization", apiKey)
                 connection.setRequestProperty("Content-Type", "application/json")
                 connection.setRequestProperty("Accept", "*/*")
-                connection.doOutput = true
-                // Write JSON body
-                val jsonBody =
-                    """{"tenantId":"${EnrollSDK.tenantId}","tenantSecret":"${EnrollSDK.tenantSecret}","deviceId":""}"""
-                connection.outputStream.use { os ->
-                    val input = jsonBody.toByteArray(Charsets.UTF_8)
-                    os.write(input, 0, input.size)
-                }
+                connection.setRequestProperty("Authorization", "Bearer ${EnrollSDK.token}")
+
                 // Get response code
                 connection.responseCode
             } catch (e: Exception) {
