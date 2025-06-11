@@ -16,7 +16,7 @@ object EnrollSDK {
     var applicantId = ""
     var correlationId = ""
     var levelOfTrustToken = ""
-    var updateSteps = arrayListOf<String>()
+//    var updateSteps = arrayListOf<String>()
 
     // this info related to sdk initiation
     var environment = EnrollEnvironment.STAGING
@@ -28,6 +28,8 @@ object EnrollSDK {
     var enrollCallback: EnrollCallback? = null
     var enrollMode: EnrollMode? = EnrollMode.ONBOARDING
 
+    var isLuminDomain = false
+
     private fun getBaseUrl(): String {
         return when (environment) {
             EnrollEnvironment.STAGING -> "https://enrollstg.nasps.org.eg"
@@ -35,11 +37,19 @@ object EnrollSDK {
         }
     }
 
-    fun getApisUrl(): String {
-        return getBaseUrl() + ":7400/OnBoarding/"
+    private fun getLuminBaseUrl(): String {
+        return when (environment) {
+            EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
+            EnrollEnvironment.PRODUCTION -> "https://enroll.luminsoft.net"
+        }
     }
 
-    fun getImageUrl(): String {
-        return getBaseUrl() + ":7400/AdminPanel/"
+    fun getApisUrl(): String {
+        return if (isLuminDomain)
+            getLuminBaseUrl() + ":7400/OnBoarding/"
+        else
+            getBaseUrl() + ":7400/OnBoarding/"
     }
+
+
 }

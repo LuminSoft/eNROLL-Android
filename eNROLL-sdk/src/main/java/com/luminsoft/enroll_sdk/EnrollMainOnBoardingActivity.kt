@@ -1,20 +1,15 @@
 package com.luminsoft.enroll_sdk
 
-import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.luminsoft.ekyc_android_sdk.R
-//import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
-//import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlRouter
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
@@ -23,27 +18,16 @@ import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataRouter
-//import com.luminsoft.enroll_sdk.features.email.email_di.emailModule
-//import com.luminsoft.enroll_sdk.features.email.email_navigation.emailRouter
-//import com.luminsoft.enroll_sdk.features.face_capture.face_capture_di.faceCaptureModule
-//import com.luminsoft.enroll_sdk.features.face_capture.face_capture_navigation.faceCaptureRouter
-//import com.luminsoft.enroll_sdk.features.location.location_di.locationModule
-//import com.luminsoft.enroll_sdk.features.location.location_navigation.locationRouter
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdRouter
-//import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_di.phoneNumbersModule
-//import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumberRouter
-//import com.luminsoft.enroll_sdk.features.security_questions.security_questions_di.securityQuestionsModule
-//import com.luminsoft.enroll_sdk.features.security_questions.security_questions_navigation.securityQuestionsRouter
-//import com.luminsoft.enroll_sdk.features.setting_password.password_di.passwordModule
-//import com.luminsoft.enroll_sdk.features.setting_password.password_navigation.settingPasswordRouter
 import com.luminsoft.enroll_sdk.main.main_di.mainModule
 import com.luminsoft.enroll_sdk.main.main_navigation.mainRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
-//import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthContent
-//import electronicSignatureModule
-//import electronicSignatureRouter
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,8 +35,8 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
-//import termsConditionsModule
-//import termsConditionsRouter
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.Locale
 
 
@@ -73,9 +57,18 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        getKoin(this)
-        setupServices()
+
         super.onCreate(savedInstanceState)
+        val activity = this
+        runBlocking {
+            val statusCode = checkApiStatusCode()
+            if (statusCode != 200) {
+                EnrollSDK.isLuminDomain = true
+            }
+            //ُُُُُTODO
+            getKoin(activity)
+            setupServices()
+        }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         val extras = intent.extras
@@ -166,11 +159,6 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             EnrollMode.ONBOARDING ->
                 splashScreenOnBoardingContent
 
-/*
-            EnrollMode.AUTH ->
-                splashScreenAuthContent*/
-
-
             else ->
                 return splashScreenOnBoardingContent
 
@@ -190,4 +178,37 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             baseContext.resources.displayMetrics
         )
     }
+
+    private suspend fun checkApiStatusCode(): Int? {
+        return withContext(Dispatchers.IO) {
+            var connection: HttpURLConnection? = null
+            try {
+                // Set up the URL and connection
+                val url = URL("${EnrollSDK.getApisUrl()}api/v1/Auth/GenerateOnboardingSessionToken")
+                connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "POST"
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
+//                connection.setRequestProperty("Authorization", apiKey)
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("Accept", "*/*")
+                connection.doOutput = true
+                // Write JSON body
+                val jsonBody =
+                    """{"tenantId":"${EnrollSDK.tenantId}","tenantSecret":"${EnrollSDK.tenantSecret}","deviceId":""}"""
+                connection.outputStream.use { os ->
+                    val input = jsonBody.toByteArray(Charsets.UTF_8)
+                    os.write(input, 0, input.size)
+                }
+                // Get response code
+                connection.responseCode
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            } finally {
+                connection?.disconnect()
+            }
+        }
+    }
+
 }
