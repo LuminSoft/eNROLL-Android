@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features_update.email_update.email_update.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -30,10 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -42,18 +39,18 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
-import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.UpdateMailAddUpdateUseCase
+import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.SendOtpUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_domain_update.usecases.ValidateOtpMailUpdateUseCase
 import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.mailsUpdateScreenContent
-import com.luminsoft.enroll_sdk.features_update.email_update.email_navigation_update.multipleMailsUpdateScreenContent
 import com.luminsoft.enroll_sdk.features_update.email_update.email_update.view_model.ValidateOtpMailsUpdateViewModel
 import com.luminsoft.enroll_sdk.main_update.main_update_navigation.updateListScreenContent
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
@@ -76,7 +73,7 @@ fun ValidateOtpMailsUpdateScreenContent(
     val validateOtpMailUseCase =
         ValidateOtpMailUpdateUseCase(koinInject())
     val mailSendOtpUseCase =
-        UpdateMailAddUpdateUseCase(koinInject())
+        SendOtpUpdateUseCase(koinInject())
 
     val validateOtpMailsViewModel =
         remember {
@@ -169,28 +166,29 @@ fun ValidateOtpMailsUpdateScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 2.dp)
+                    .padding(horizontal = 24.dp)
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                Image(
-                    painterResource(R.drawable.validate_mail_otp),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.fillMaxHeight(0.25f)
+                val images = listOf(
+                    R.drawable.validate_mail_otp_1,
+                    R.drawable.validate_mail_otp_2,
+                    R.drawable.validate_mail_otp_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
-
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 8.sp,
-                        color = MaterialTheme.appColors.primary
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         mailValue.value!!.text,
                         fontSize = 10.sp,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.secondary
                     )
                     Spacer(modifier = Modifier.width(7.dp))
@@ -208,6 +206,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                             ResourceProvider.instance.getStringResource(R.string.edit),
                             fontSize = 8.sp,
                             color = Color.White,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
                                 .clickable(enabled = true) {
@@ -221,7 +220,8 @@ fun ValidateOtpMailsUpdateScreenContent(
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,
+                        otp = otpValue,                        textColor =           MaterialTheme.appColors.textColor,
+
                         count = 6,
                     )
                 }
@@ -229,13 +229,15 @@ fun ValidateOtpMailsUpdateScreenContent(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
-                        color = MaterialTheme.appColors.primary,
+                        color = MaterialTheme.appColors.textColor,
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp
                     )
                 }
@@ -244,12 +246,13 @@ fun ValidateOtpMailsUpdateScreenContent(
                 if (isNotFirstMail.value && ticks == 0)
                     Text(
                         text = stringResource(id = R.string.resend),
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.primary,
                         fontSize = 14.sp,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
-                                mailsUpdateVM.callSendOtp(updateViewModel.mailValue.value!!.text)
+                                updateViewModel.mailId.value?.let { mailsUpdateVM.callSendOtp(it) }
                                 ticks = 60
                                 ticksF = 1.0f
                                 counter++
@@ -271,11 +274,11 @@ fun ValidateOtpMailsUpdateScreenContent(
                     title = stringResource(id = R.string.confirmAndContinue),
                     isEnabled = otpValue.value.length == 6
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 if (!isNotFirstMail.value)
                     ButtonView(
                         onClick = {
-                            mailsUpdateVM.callSendOtp(updateViewModel.mailValue.value!!.text)
+                            updateViewModel.mailId.value?.let { mailsUpdateVM.callSendOtp(it) }
                             ticks = 60
                             ticksF = 1.0f
                             counter++
@@ -289,7 +292,7 @@ fun ValidateOtpMailsUpdateScreenContent(
                     ButtonView(
                         onClick = {
                             updateViewModel.mailValue.value = TextFieldValue()
-                            navController.navigate(multipleMailsUpdateScreenContent)
+                            navController.navigate(updateListScreenContent)
                         },
                         title = stringResource(id = R.string.skip),
                         color = MaterialTheme.appColors.backGround,
@@ -307,20 +310,21 @@ fun ValidateOtpMailsUpdateScreenContent(
 private fun Timer(ticksF: Float, ticks: Int) {
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            progress = 1f,
+            progress = { 1f },
             modifier = Modifier.size(30.dp),
             color = MaterialTheme.appColors.secondary.copy(alpha = 0.5f),
-            strokeWidth = 3.dp
+            strokeWidth = 3.dp,
         )
         CircularProgressIndicator(
-            progress = ticksF,
+            progress = { ticksF },
             modifier = Modifier.size(30.dp),
+            color = MaterialTheme.appColors.secondary,
             strokeWidth = 3.dp,
-            color = MaterialTheme.appColors.secondary
         )
         Text(
             text = ticks.toString(),
-            color = MaterialTheme.appColors.secondary,
+            color = MaterialTheme.appColors.textColor,
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )
