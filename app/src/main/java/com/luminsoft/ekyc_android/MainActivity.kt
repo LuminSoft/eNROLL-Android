@@ -70,12 +70,12 @@ var dotenv = dotenv {
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
 //    filename = "env_lumin_production"
-//    filename = "env_naspas_production"
+    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
 //    filename = "env_fra_staging"
 //    filename = "env_test_2"
 //    filename = "env_humat_staging"
-    filename = "env_org_1_staging"
+//    filename = "env_org_1_staging"
 //    filename = "env_admin_2"
 }
 
