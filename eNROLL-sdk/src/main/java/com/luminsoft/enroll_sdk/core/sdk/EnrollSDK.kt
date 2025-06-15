@@ -28,27 +28,19 @@ object EnrollSDK {
     var enrollCallback: EnrollCallback? = null
     var enrollMode: EnrollMode? = EnrollMode.ONBOARDING
 
-    var isLuminDomain = false
-
-    private fun getBaseUrl(): String {
-        return when (environment) {
-            EnrollEnvironment.STAGING -> "https://enrollstg.nasps.org.eg"
-            EnrollEnvironment.PRODUCTION -> "https://enroll.nasps.org.eg"
-        }
-    }
 
     private fun getLuminBaseUrl(): String {
         return when (environment) {
             EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
-            EnrollEnvironment.PRODUCTION -> "https://enroll.luminsoft.net"
+            EnrollEnvironment.PRODUCTION -> "https://enrollgateway.luminsoft.net"
         }
     }
 
     fun getApisUrl(): String {
-        return if (isLuminDomain)
-            getLuminBaseUrl() + ":7400/OnBoarding/"
-        else
-            getBaseUrl() + ":7400/OnBoarding/"
+        return when (environment) {
+            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/OnBoarding/"
+            EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + "/OnBoarding/"
+        }
     }
 
 

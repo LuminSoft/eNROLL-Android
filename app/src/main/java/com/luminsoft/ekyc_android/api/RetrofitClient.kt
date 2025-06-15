@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "http://197.168.1.39:4800/"
+    private const val BASE_URL = "https://enrollgateway.luminsoft.net/OnBoarding/"
 
     val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)

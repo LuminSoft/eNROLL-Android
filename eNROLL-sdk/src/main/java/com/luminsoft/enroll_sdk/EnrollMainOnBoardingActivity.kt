@@ -25,9 +25,6 @@ import com.luminsoft.enroll_sdk.main.main_navigation.mainRouter
 import com.luminsoft.enroll_sdk.main.main_navigation.splashScreenOnBoardingContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,8 +32,6 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.Locale
 
 
@@ -59,16 +54,8 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        val activity = this
-        runBlocking {
-            val statusCode = checkApiStatusCode()
-            if (statusCode != 200) {
-                EnrollSDK.isLuminDomain = true
-            }
-            //ُُُُُTODO
-            getKoin(activity)
-            setupServices()
-        }
+        getKoin(this)
+        setupServices()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         val extras = intent.extras
@@ -177,32 +164,6 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             config,
             baseContext.resources.displayMetrics
         )
-    }
-
-    private suspend fun checkApiStatusCode(): Int? {
-        return withContext(Dispatchers.IO) {
-            var connection: HttpURLConnection? = null
-            try {
-                // Set up the URL and connection
-                val url = URL("${EnrollSDK.getApisUrl()}api/v1/Configuration/GetStepsConfiguration")
-                connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-                connection.connectTimeout = 5000
-                connection.readTimeout = 5000
-//                connection.setRequestProperty("Authorization", apiKey)
-                connection.setRequestProperty("Content-Type", "application/json")
-                connection.setRequestProperty("Accept", "*/*")
-                connection.setRequestProperty("Authorization", "Bearer ${EnrollSDK.token}")
-
-                // Get response code
-                connection.responseCode
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            } finally {
-                connection?.disconnect()
-            }
-        }
     }
 
 }
