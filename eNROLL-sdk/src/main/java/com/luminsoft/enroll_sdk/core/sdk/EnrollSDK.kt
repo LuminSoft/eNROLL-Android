@@ -30,7 +30,7 @@ object EnrollSDK {
     var enrollForcedDocumentType: EnrollForcedDocumentType? =
         EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT
 
-    var isLuminDomain = false
+    var isLuminDomain = true
     private fun getBaseUrl(): String {
         return when (environment) {
             EnrollEnvironment.STAGING -> "https://enrollstg.nasps.org.eg"

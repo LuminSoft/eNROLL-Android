@@ -55,9 +55,6 @@ import faceCaptureAuthUpdateModule
 import faceCaptureAuthUpdateRouter
 import forgetLocationModule
 import forgetPasswordModule
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import lostDeviceIdModule
 import mailAuthUpdateModule
 import mailAuthUpdateRouter
@@ -85,8 +82,6 @@ import updatePasswordModule
 import updatePasswordRouter
 import updateSecurityQuestionsModule
 import updateSecurityQuestionsRouter
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.Locale
 
 
@@ -107,16 +102,8 @@ class EnrollMainUpdateActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val activity = this
-        runBlocking {
-            val statusCode = checkApiStatusCode()
-            if (statusCode != 200) {
-                EnrollSDK.isLuminDomain = true
-            }
-            //ُُُُُTODO
-            getKoin(activity)
-            setupServices()
-        }
+        getKoin(this)
+        setupServices()
         setLocale()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -244,37 +231,4 @@ class EnrollMainUpdateActivity : ComponentActivity() {
         )
     }
 
-    private suspend fun checkApiStatusCode(): Int? {
-        return withContext(Dispatchers.IO) {
-            var connection: HttpURLConnection? = null
-            try {
-                // Set up the URL and connection
-                val url = URL("${EnrollSDK.getApisUrl()}api/v1/Auth/GenerateOnboardingSessionToken")
-                connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "POST"
-                connection.connectTimeout = 10000
-                connection.readTimeout = 10000
-//                connection.setRequestProperty("Authorization", apiKey)
-                connection.setRequestProperty("Content-Type", "application/json")
-                connection.setRequestProperty("Accept", "*/*")
-                connection.doOutput = true
-
-                // Write JSON body
-                val jsonBody =
-                    """{"tenantId":"${EnrollSDK.tenantId}","tenantSecret":"${EnrollSDK.tenantSecret}","deviceId":""}"""
-                connection.outputStream.use { os ->
-                    val input = jsonBody.toByteArray(Charsets.UTF_8)
-                    os.write(input, 0, input.size)
-                }
-
-                // Get response code
-                connection.responseCode
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            } finally {
-                connection?.disconnect()
-            }
-        }
-    }
 }
