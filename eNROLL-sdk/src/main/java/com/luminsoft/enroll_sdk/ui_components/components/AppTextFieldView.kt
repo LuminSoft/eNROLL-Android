@@ -25,7 +25,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +56,7 @@ fun NormalTextField(
         focusedTextColor = MaterialTheme.appColors.primary,
         cursorColor = MaterialTheme.appColors.primary,
         errorCursorColor = MaterialTheme.appColors.errorColor,
-        errorTextColor = MaterialTheme.appColors.primary,
+        errorTextColor = MaterialTheme.appColors.errorColor,
     ),
 ) {
 //    var focusedBorderThickness = 1.2.dp
@@ -101,7 +101,8 @@ fun NormalTextField(
                     label = {
                         Text(
                             text = label,
-                            color = MaterialTheme.appColors.primary.copy(alpha = 0.6f),
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                            color = MaterialTheme.appColors.textColor.copy(alpha = 0.6f),
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
@@ -146,6 +147,7 @@ fun NormalTextField(
         if (error != null) {
             Text(
                 text = error,
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
                 style = MaterialTheme.typography.labelSmall
             )

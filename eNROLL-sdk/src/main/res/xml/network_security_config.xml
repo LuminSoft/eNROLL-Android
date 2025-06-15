@@ -1,0 +1,8 @@
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">enrollgateway.luminsoft.net</domain>
+        <trust-anchors>
+            <certificates src="@raw/luminsoft_cert" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

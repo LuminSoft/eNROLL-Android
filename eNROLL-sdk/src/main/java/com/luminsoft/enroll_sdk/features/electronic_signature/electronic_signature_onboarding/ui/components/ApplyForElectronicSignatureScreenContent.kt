@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_onboarding.ui.components
 
-import CheckUserHasNationalIdUseCase
 import ElectronicSignatureOnBoardingViewModel
 import InsertSignatureInfoUseCase
 import android.annotation.SuppressLint
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,12 +31,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
+import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_domain.usecases.CheckUserHasNationalIdUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -45,6 +49,8 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 
@@ -102,19 +108,53 @@ fun ApplyForElectronicSignatureScreenContent(
         return false
     }
 
-    fun showSuccessDialog(isEmpty: Boolean) {
+
+    fun showSuccessDialosg(isEmpty: Boolean) {
         dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
         dialogButtonText = context.getString(R.string.continue_to_next)
         dialogStatus = BottomSheetStatus.SUCCESS
         dialogOnPressButton = {
             if (isEmpty) {
                 activity.finish()
-                EnrollSDK.enrollCallback?.error(
-                    EnrollFailedModel(
-                        context.getString(R.string.successfulRegistration),
-                        context.getString(R.string.successfulRegistration)
+                EnrollSDK.enrollCallback?.success(
+                    EnrollSuccessModel(
+                        activity.getString(R.string.successfulAuthentication),
+                        onBoardingViewModel.documentId.value
                     )
                 )
+            } else {
+                navigateToNextStep()
+                showDialog = false
+            }
+        }
+        showDialog = true
+    }
+
+
+
+    fun showSuccessDialog(isEmpty: Boolean) {
+        dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+        dialogButtonText = context.getString(R.string.continue_to_next)
+        dialogStatus = BottomSheetStatus.SUCCESS
+
+        dialogOnPressButton = {
+            if (isEmpty) {
+                onBoardingViewModel.viewModelScope.launch {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ ->
+                                activity.finish()
+                                EnrollSDK.enrollCallback?.success(
+                                    EnrollSuccessModel(
+                                        activity.getString(R.string.successfulAuthentication),
+                                        onBoardingViewModel.documentId.value,
+                                        onBoardingViewModel.applicantId.value
+                                    )
+                                )
+                        }
+                    )
+                }
             } else {
                 navigateToNextStep()
                 showDialog = false
@@ -174,12 +214,6 @@ fun ApplyForElectronicSignatureScreenContent(
                         buttonText = stringResource(id = R.string.retry),
                         onPressedButton = {
                             showDialog = false
-     /*                       electronicSignatureOnBoardingViewModel.insertSignatureInfo(
-                                2,
-                                if (electronicSignatureOnBoardingViewModel.userHasNationalId.value == true) "" else electronicSignatureOnBoardingViewModel.nationalIdValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(3)) "" else electronicSignatureOnBoardingViewModel.phoneNumberValue.value.text,
-                                if (onBoardingViewModel.existingSteps.value!!.contains(4)) "" else electronicSignatureOnBoardingViewModel.emailValue.value.text
-                            )*/
                         },
                         secondButtonText = stringResource(id = R.string.exit),
                         onPressedSecondButton = {
@@ -312,6 +346,8 @@ fun NationalIdTextField(
             Image(
                 painter = painterResource(R.drawable.id_card_icon),
                 contentDescription = "",
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+
                 modifier = Modifier.height(50.dp)
             )
         },
@@ -353,6 +389,7 @@ fun PhoneNumberTextField(
             Image(
                 painter = painterResource(R.drawable.factory_num_icon),
                 contentDescription = "",
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                 modifier = Modifier.height(50.dp)
             )
         },
@@ -393,6 +430,7 @@ fun EmailTextField(
             Image(
                 painterResource(R.drawable.mail_icon),
                 contentDescription = "",
+                colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
                 modifier = Modifier
                     .height(50.dp)
             )

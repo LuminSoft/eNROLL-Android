@@ -1,11 +1,11 @@
 {
     "version": "2.1",
     "contract": {
-        "customer": "Excel_Evaluation",
+        "customer": "Excel_Replacement",
         "expiration": {
-            "day": 21,
-            "month": 9,
-            "year": 2024
+            "day": 11,
+            "month": 8,
+            "year": 2025
         },
         "hwids": [
             "A+PYBMZZuSjgIKID"
@@ -33,10 +33,13 @@
                 },
                 "features": {
                     "realTimeTransactionReportingEnabled": true
+                },
+                "palm": {
+                    "enabled": true
                 }
             },
             "evaluation": true
         }
     },
-    "contract_signature": "LLgjZ164ZhzkTT4VPkV7sTjSEY++0nWkH+QoBSOy95BzCgXFrbeDTJGxzgZKWzFCV9gvXRfYfPxAUemU2rNY0NT0CEbp9oQt1QNWpomN5UvLVKd7gZOa3d0+cZWqrD+k7Wg1lXeNhLKQ+GCbyz/Txzi9kJLFUqHsreAXP+B5XlM="
+    "contract_signature": "GgGaTNR7Cw2Tj8ncb4FYuUL+6GOqM7zWYi8M8Qm6o0qRf6w53rvW8tmXbg2znq19ZbvKkPr575fYB7797+6wkc1efjG++YSb2EhYmdszBlun99wdtkWHfO5QF5hlKuc2qXoNl3yxi2p/pcpXiCRWIifli4/1gc9SijvA/x0hu0E="
 }

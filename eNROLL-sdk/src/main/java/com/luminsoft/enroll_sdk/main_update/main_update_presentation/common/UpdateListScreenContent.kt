@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -55,15 +57,13 @@ fun UpdateListScreenContent(
     val steps = updateViewModel.steps.collectAsState()
     val activity = context.findActivity()
     val loading = updateViewModel.loading.collectAsState()
-    val failure = updateViewModel.failure.collectAsState()
+//    val failure = updateViewModel.failure.collectAsState()
 
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (updateStepModel.value != null) {
             Log.d("updateStepModel", "updateStepModel")
-//            navController.navigate(multipleMailsUpdateScreenContent)
 
-//TODO Navigate to update step screen
         } else
             if (loading.value) LoadingView()
         Column(
@@ -77,12 +77,15 @@ fun UpdateListScreenContent(
             Image(
                 painterResource(R.drawable.update_icon),
                 contentDescription = "",
+                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxHeight(0.1f)
             )
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = stringResource(id = R.string.youCanSelectOneItem),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp
@@ -144,6 +147,8 @@ private fun UpdateStepItem(
                 Image(
                     painterResource(step.parseUpdateStepType().getStepIconIntSource()),
                     contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+
                     modifier = Modifier
                         .height(50.dp),
 
@@ -151,6 +156,7 @@ private fun UpdateStepItem(
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
                     text = stringResource(id = step.parseUpdateStepType().getStepNameIntSource()),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.colorScheme.inverseSurface,
                     fontSize = 12.sp
                 )
