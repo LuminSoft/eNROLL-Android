@@ -7,7 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <application>
+    <application
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:usesCleartextTraffic">
 
         <activity
             android:name="com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity"
