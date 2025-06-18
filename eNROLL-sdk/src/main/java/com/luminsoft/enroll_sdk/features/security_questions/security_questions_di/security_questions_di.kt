@@ -10,6 +10,7 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.GetSecurityQuestionsUseCase
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_domain.usecases.PostSecurityQuestionsUseCase
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_onboarding.view_model.SecurityQuestionsOnBoardingViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -26,12 +27,11 @@ val securityQuestionsModule = module {
     single<SecurityQuestionsRepository> {
         SecurityQuestionsRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(SecurityQuestionsApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(SecurityQuestionsApi::class.java)
     }
     viewModel {
         SecurityQuestionsOnBoardingViewModel(get(), get(), get())

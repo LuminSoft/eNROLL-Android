@@ -53,13 +53,13 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthC
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_di.mainForgetModule
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
-import electronicSignatureModule
+import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_di.electronicSignatureModule
 import electronicSignatureRouter
-import faceCaptureAuthUpdateModule
+import com.luminsoft.enroll_sdk.features_auth_update.face_capture_auth_update.face_capture_auth_update_di.faceCaptureAuthUpdateModule
 import forgetLocationModule
-import forgetPasswordModule
+import com.luminsoft.enroll_sdk.features_forget.forget_password.forget_password_di.forgetPasswordModule
 import lostDeviceIdModule
-import mailAuthUpdateModule
+import com.luminsoft.enroll_sdk.features_auth_update.mail_auth_update.mail_auth_update_di.mailAuthUpdateModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -67,18 +67,18 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
-import passwordAuthUpdateModule
-import phoneAuthUpdateModule
-import securityQuestionAuthModule
+import com.luminsoft.enroll_sdk.features_auth_update.password_auth_update.password_auth_update_di.passwordAuthUpdateModule
+import com.luminsoft.enroll_sdk.features_auth_update.phone_auth_update.phone_auth_update_di.phoneAuthUpdateModule
+import com.luminsoft.enroll_sdk.features_auth.security_question_auth.security_question_auth_di.securityQuestionAuthModule
 import securityQuestionAuthUpdateModule
-import termsConditionsModule
+import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_di.termsConditionsModule
 import termsConditionsRouter
-import updateDeviceIdModule
-import updateLocationModule
-import updateNationalIdConfirmationModule
-import updatePassportModule
-import updatePasswordModule
-import updateSecurityQuestionsModule
+import com.luminsoft.enroll_sdk.features_update.update_device_id.update_device_id_di.updateDeviceIdModule
+import com.luminsoft.enroll_sdk.features_update.update_location.update_location_di.updateLocationModule
+import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.update_national_id_confirmation_di.updateNationalIdConfirmationModule
+import com.luminsoft.enroll_sdk.features_update.update_passport.update_passport_di.updatePassportModule
+import com.luminsoft.enroll_sdk.features_update.update_password.update_password_di.updatePasswordModule
+import com.luminsoft.enroll_sdk.features_update.security_questions_update.update_security_questions_di.updateSecurityQuestionsModule
 import java.util.Locale
 
 

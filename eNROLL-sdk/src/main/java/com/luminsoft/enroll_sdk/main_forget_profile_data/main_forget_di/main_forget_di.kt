@@ -13,6 +13,7 @@ import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usec
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.InitializeForgetRequestUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_domain.usecases.VerifyPasswordUsecase
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_presentation.main_forget.view_model.ForgetViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -41,16 +42,15 @@ val mainForgetModule = module {
     single<MainForgetRepository> {
         MainForgetRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(MainForgetApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(MainForgetApi::class.java)
     }
     viewModel {
         ForgetViewModel(
-            get(), get(), get(),get(),get()
+            get(), get(), get(), get(), get()
         )
     }
 

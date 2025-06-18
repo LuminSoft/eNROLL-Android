@@ -1,4 +1,3 @@
-
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import org.koin.android.ext.koin.androidContext
@@ -13,14 +12,13 @@ val lostDeviceIdModule = module {
         LostDeviceIdRemoteDataSourceImpl(get(), get())
     }
     single<LostDeviceIdRepository> {
-       LostDeviceIdRepositoryImplementation(get())
+        LostDeviceIdRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(LostDeviceIdApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(LostDeviceIdApi::class.java)
     }
     viewModel {
         LostDeviceIdViewModel(get(), context = androidContext())

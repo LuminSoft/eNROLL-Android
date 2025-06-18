@@ -1,5 +1,7 @@
 package com.luminsoft.enroll_sdk.core.network
 
+import android.content.Context
+import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import okhttp3.Interceptor
@@ -9,7 +11,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.security.KeyStore
+import java.security.cert.CertificateFactory
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 
 private const val READ_TIME_OUT_CONNECTION = 1
@@ -36,7 +43,7 @@ object RetroClient {
     }
 
 
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+/*    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         return OkHttpClient().newBuilder()
             .readTimeout(
                 READ_TIME_OUT_CONNECTION.toLong(),
@@ -56,7 +63,38 @@ object RetroClient {
                 level =
                     HttpLoggingInterceptor.Level.BODY
             }).build()
+    }*/
+
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor, context: Context): OkHttpClient {
+        val certificateFactory = CertificateFactory.getInstance("X.509")
+        val inputStream = context.resources.openRawResource(R.raw.luminsoft_cert) // your .pem file
+        val certificate = certificateFactory.generateCertificate(inputStream)
+
+        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        keyStore.load(null, null)
+        keyStore.setCertificateEntry("custom_ca", certificate)
+
+        val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        trustManagerFactory.init(keyStore)
+
+        val trustManagers = trustManagerFactory.trustManagers
+        val x509TrustManager = trustManagers.first { it is X509TrustManager } as X509TrustManager
+
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, arrayOf(x509TrustManager), null)
+
+        return OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.socketFactory, x509TrustManager)
+            .readTimeout(READ_TIME_OUT_CONNECTION.toLong(), TINE_UNIT_FOR_CONNECTION)
+            .writeTimeout(WRITE_TIME_OUT_CONNECTION.toLong(), TINE_UNIT_FOR_CONNECTION)
+            .connectTimeout(TIME_OUT_CONNECTION.toLong(), TINE_UNIT_FOR_CONNECTION)
+            .addInterceptor(ConnectivityInterceptor())
+            .addInterceptor(authInterceptor)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }).build()
     }
+
 }
 
 class AuthInterceptor : Interceptor {

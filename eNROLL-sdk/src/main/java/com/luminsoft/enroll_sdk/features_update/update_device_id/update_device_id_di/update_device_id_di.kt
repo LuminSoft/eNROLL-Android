@@ -1,4 +1,12 @@
+package com.luminsoft.enroll_sdk.features_update.update_device_id.update_device_id_di
 
+import UpdateDeviceIdApi
+import UpdateDeviceIdRemoteDataSource
+import UpdateDeviceIdRemoteDataSourceImpl
+import UpdateDeviceIdRepository
+import UpdateDeviceIdRepositoryImplementation
+import UpdateDeviceIdUseCase
+import UpdateDeviceIdViewModel
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import org.koin.android.ext.koin.androidContext
@@ -13,14 +21,13 @@ val updateDeviceIdModule = module {
         UpdateDeviceIdRemoteDataSourceImpl(get(), get())
     }
     single<UpdateDeviceIdRepository> {
-       UpdateDeviceIdRepositoryImplementation(get())
+        UpdateDeviceIdRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(UpdateDeviceIdApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(UpdateDeviceIdApi::class.java)
     }
     viewModel {
         UpdateDeviceIdViewModel(get(), context = androidContext())

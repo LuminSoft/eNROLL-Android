@@ -12,6 +12,7 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.GetAuthStepC
 import com.luminsoft.enroll_sdk.main_auth.main_auth_domain.usecases.InitializeRequestAuthUsecase
 import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_model.AuthViewModel
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -31,15 +32,15 @@ val mainAuthModule = module {
     single<MainAuthRepository> {
         MainAuthRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(MainAuthApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(MainAuthApi::class.java)
     }
     viewModel {
-        AuthViewModel(get(), get(), get(), context = androidApplication()
+        AuthViewModel(
+            get(), get(), get(), context = androidApplication()
         )
     }
 //    viewModel {

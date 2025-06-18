@@ -7,6 +7,7 @@ import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_data_
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_data_update.phone_remote_data_source_update.PhoneRemoteDataSourceUpdateImpl
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_data_update.phone_repository_update.PhoneRepositoryUpdateImplementation
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_domain_update.repository.PhoneRepositoryUpdate
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val phoneUpdateModule = module {
@@ -17,11 +18,10 @@ val phoneUpdateModule = module {
     single<PhoneRepositoryUpdate> {
         PhoneRepositoryUpdateImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(PhoneApiUpdate::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(PhoneApiUpdate::class.java)
     }
 }
