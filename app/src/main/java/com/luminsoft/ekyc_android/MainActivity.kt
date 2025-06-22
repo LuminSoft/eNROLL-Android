@@ -75,8 +75,8 @@ var dotenv = dotenv {
 //    filename = "env_fra_staging"
 //    filename = "env_test_2"
 //    filename = "env_humat_staging"
-    filename = "env_org_1_staging"
-//    filename = "env_admin_2"
+//    filename = "env_org_1_staging"
+    filename = "env_admin_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
