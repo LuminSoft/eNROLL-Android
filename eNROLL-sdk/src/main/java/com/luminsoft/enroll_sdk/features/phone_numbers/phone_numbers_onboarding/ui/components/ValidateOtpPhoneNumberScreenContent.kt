@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -58,6 +57,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 import kotlin.time.Duration.Companion.seconds
@@ -106,8 +106,10 @@ fun ValidateOtpPhoneNumberScreenContent(
         }
     }
     BackGroundView(navController = navController, showAppBar = true) {
-        if (otpApproved.value) {
-            navController.navigate(multiplePhoneNumbersScreenContent)
+        LaunchedEffect(otpApproved.value) {
+            if (otpApproved.value) {
+                navController.navigate(multiplePhoneNumbersScreenContent)
+            }
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -163,9 +165,11 @@ fun ValidateOtpPhoneNumberScreenContent(
 
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                val images= listOf(R.drawable.validate_sms_otp_1,R.drawable.validate_sms_otp_2,
-                  R.drawable.validate_sms_otp_3)
-                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.25f))
+                val images = listOf(
+                    R.drawable.validate_sms_otp_1, R.drawable.validate_sms_otp_2,
+                    R.drawable.validate_sms_otp_3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -213,7 +217,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
                         otp = otpValue,
-                        count = 6,                        textColor =           MaterialTheme.appColors.textColor,
+                        count = 6, textColor = MaterialTheme.appColors.textColor,
 
                         )
                 }
