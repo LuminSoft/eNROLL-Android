@@ -101,9 +101,12 @@ fun PhoneAuthUpdateScreenContent(
         }
     }
     BackGroundView(navController = navController, showAppBar = true) {
-        if (otpApproved.value) {
-            updateViewModel.navigateToUpdateAfterAuthStep()
-        } else if (loading.value) LoadingView()
+        LaunchedEffect(otpApproved.value) {
+            if (otpApproved.value) {
+                updateViewModel.navigateToUpdateAfterAuthStep()
+            }
+        }
+        if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {

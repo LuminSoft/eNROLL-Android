@@ -313,7 +313,7 @@
     <string name="successfulAuthentication">Account successfully authenticated</string>
     <string name="readTermsAndConditions">Read Terms And Conditions</string>
     <string name="acceptTermsAndConditions">Accept Terms And Conditions</string>
-    <string name="youMustApproveOurTermsToProceed">You must approve our terms and conditions in order to proceed</string>
+    <string name="youMustApproveOurTermsToProceed">You must agree to the terms and conditions to continue.</string>
     <string name="kindly_check_aml_to_clear_your_name">kindly check AML to clear your name</string>
 
 

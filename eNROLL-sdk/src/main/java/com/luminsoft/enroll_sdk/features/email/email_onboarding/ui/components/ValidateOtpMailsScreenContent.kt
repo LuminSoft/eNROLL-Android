@@ -53,6 +53,7 @@ import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingS
 import com.luminsoft.enroll_sdk.features.email.email_navigation.multipleMailsScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.view_model.ValidateOtpMailsViewModel
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
+import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.multiplePhoneNumbersScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -107,8 +108,10 @@ fun ValidateOtpMailsScreenContent(
         }
     }
     BackGroundView(navController = navController, showAppBar = true) {
-        if (otpApproved.value) {
-            navController.navigate(multipleMailsScreenContent)
+        LaunchedEffect(otpApproved.value) {
+            if (otpApproved.value) {
+                navController.navigate(multipleMailsScreenContent)
+            }
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
@@ -165,8 +168,11 @@ fun ValidateOtpMailsScreenContent(
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 val images = listOf(
-                    R.drawable.validate_mail_otp_1,R.drawable.validate_mail_otp_2,R.drawable.validate_mail_otp_3)
-                ImagesBox(images = images,  modifier = Modifier.fillMaxHeight(0.25f))
+                    R.drawable.validate_mail_otp_1,
+                    R.drawable.validate_mail_otp_2,
+                    R.drawable.validate_mail_otp_3
+                )
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -212,7 +218,7 @@ fun ValidateOtpMailsScreenContent(
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
                         otp = otpValue,
-                        textColor =     MaterialTheme.appColors.textColor,
+                        textColor = MaterialTheme.appColors.textColor,
                         count = 6,
                     )
                 }
