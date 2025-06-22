@@ -1,4 +1,5 @@
 package com.luminsoft.enroll_sdk.features_auth_update.mail_auth_update.mail_auth_update.ui.components
+
 import MailAuthUpdateSendOTPUseCase
 import MailAuthUpdateViewModel
 import ValidateOtpMailAuthUpdateUseCase
@@ -105,9 +106,12 @@ fun MailAuthUpdateScreenContent(
     }
 
     BackGroundView(navController = navController, showAppBar = true) {
-        if (otpApproved.value) {
-            updateViewModel.navigateToUpdateAfterAuthStep()
-        } else if (loading.value) LoadingView()
+        LaunchedEffect(otpApproved.value) {
+            if (otpApproved.value) {
+                updateViewModel.navigateToUpdateAfterAuthStep()
+            }
+        }
+        if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {
@@ -168,7 +172,7 @@ fun MailAuthUpdateScreenContent(
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
                         otp = otpValue,
-                        textColor =           MaterialTheme.appColors.textColor,
+                        textColor = MaterialTheme.appColors.textColor,
                         count = 6,
                     )
                 }
