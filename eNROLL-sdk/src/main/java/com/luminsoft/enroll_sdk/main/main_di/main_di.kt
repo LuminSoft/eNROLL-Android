@@ -14,6 +14,7 @@ import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfi
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,14 +38,12 @@ val mainModule = module {
         MainRepositoryImplementation(get())
     }
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(MainApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(MainApi::class.java)
     }
     viewModel {
-        OnBoardingViewModel(get(), get(), get(),get(), context = androidApplication())
+        OnBoardingViewModel(get(), get(), get(), get(), context = androidApplication())
     }
 //    viewModel {
 //        LocationOnBoardingViewModel(get())
