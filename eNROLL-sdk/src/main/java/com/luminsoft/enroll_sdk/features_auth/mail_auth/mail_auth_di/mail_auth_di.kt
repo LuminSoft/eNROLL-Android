@@ -9,6 +9,7 @@ import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_data.mail_auth
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_data.mail_auth_repository.MailAuthRepositoryImplementation
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.repository.MailAuthRepository
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth_domain.usecases.MailAuthSendOTPUseCase
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -22,12 +23,11 @@ val mailAuthModule = module {
     single<MailAuthRepository> {
         MailAuthRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(MailAuthApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(MailAuthApi::class.java)
     }
     viewModel {
         MailAuthViewModel(get(), get())

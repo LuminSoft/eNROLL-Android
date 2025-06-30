@@ -7,22 +7,21 @@ import com.luminsoft.enroll_sdk.features.email.email_data.email_remote_data_sour
 import com.luminsoft.enroll_sdk.features.email.email_data.email_remote_data_source.EmailRemoteDataSourceImpl
 import com.luminsoft.enroll_sdk.features.email.email_data.email_repository.EmailRepositoryImplementation
 import com.luminsoft.enroll_sdk.features.email.email_domain.repository.EmailRepository
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val emailModule = module{
+val emailModule = module {
 
     single<EmailRemoteDataSource> {
-        EmailRemoteDataSourceImpl(get(),get())
+        EmailRemoteDataSourceImpl(get(), get())
     }
     single<EmailRepository> {
         EmailRepositoryImplementation(get())
     }
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(EmailApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(EmailApi::class.java)
     }
 
 }

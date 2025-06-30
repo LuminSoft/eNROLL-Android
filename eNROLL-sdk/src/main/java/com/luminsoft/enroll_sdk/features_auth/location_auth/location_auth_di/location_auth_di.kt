@@ -8,6 +8,7 @@ import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_data.l
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_data.location_auth_repository.LocationAuthRepositoryImplementation
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_domain.repository.LocationAuthRepository
 import com.luminsoft.enroll_sdk.features_auth.location_auth.location_auth_domain.usecases.PostLocationAuthUseCase
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val locationAuthModule = module {
@@ -21,11 +22,9 @@ val locationAuthModule = module {
         LocationAuthRepositoryImplementation(get())
     }
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(LocationAuthApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(LocationAuthApi::class.java)
     }
 
 }
