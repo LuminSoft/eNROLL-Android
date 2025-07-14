@@ -9,6 +9,7 @@ import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_data.p
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_data.password_auth_repository.PasswordAuthRepositoryImplementation
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_domain.repository.PasswordAuthRepository
 import com.luminsoft.enroll_sdk.features_auth.password_auth.password_auth_domain.usecases.PasswordAuthUseCase
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -22,12 +23,11 @@ val passwordAuthModule = module {
     single<PasswordAuthRepository> {
         PasswordAuthRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(PasswordAuthApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(PasswordAuthApi::class.java)
     }
     viewModel {
         PasswordAuthViewModel(get())

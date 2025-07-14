@@ -8,6 +8,7 @@ import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expir
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_data.check_expiry_date_auth_repository.CheckExpiryDateAuthRepositoryImplementation
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_domain.repository.CheckExpiryDateAuthRepository
 import com.luminsoft.enroll_sdk.features_auth.check_expiry_date_auth.check_expiry_date_auth_domain.usecases.AuthCheckExpiryDateUseCase
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val checkExpiryDateAuthModule = module {
@@ -20,11 +21,10 @@ val checkExpiryDateAuthModule = module {
     single<CheckExpiryDateAuthRepository> {
         CheckExpiryDateAuthRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(CheckExpiryDateAuthApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(CheckExpiryDateAuthApi::class.java)
     }
 }

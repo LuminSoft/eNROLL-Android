@@ -12,7 +12,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.GetUpdat
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_domain.usecases.UpdateStepsInitRequestUsecase
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
-import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,16 +37,15 @@ val mainUpdateModule = module {
     single<MainUpdateRepository> {
         MainUpdateRepositoryImplementation(get())
     }
+
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(MainUpdateApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(MainUpdateApi::class.java)
     }
     viewModel {
         UpdateViewModel(
-            get(), get(),get(),get(), context = androidApplication()
+            get(), get(), get(), get()
         )
     }
 
