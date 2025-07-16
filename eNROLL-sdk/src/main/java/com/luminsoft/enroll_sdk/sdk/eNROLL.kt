@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
+import com.luminsoft.enroll_sdk.EnrollMainSignContractActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
@@ -95,6 +96,11 @@ object eNROLL {
             EnrollMode.FORGET_PROFILE_DATA -> {
 
                 activity.startActivity(Intent(activity, EnrollMainForgetActivity::class.java))
+            }
+
+            EnrollMode.SIGN_CONTRACT -> {
+
+                activity.startActivity(Intent(activity, EnrollMainSignContractActivity::class.java))
             }
         }
     }
