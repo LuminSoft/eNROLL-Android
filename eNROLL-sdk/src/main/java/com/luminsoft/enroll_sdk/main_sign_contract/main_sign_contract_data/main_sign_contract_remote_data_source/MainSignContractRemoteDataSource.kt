@@ -6,7 +6,5 @@ import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.In
 
 interface MainSignContractRemoteDataSource {
     suspend fun generateSignContractSessionToken(request: GenerateOnboardingSessionTokenRequest): BaseResponse<Any>
-    suspend fun getSignContractStepsConfigurations(): BaseResponse<Any>
     suspend fun initializeSignContractRequest(request: InitializeRequestRequest): BaseResponse<Any>
-
 }

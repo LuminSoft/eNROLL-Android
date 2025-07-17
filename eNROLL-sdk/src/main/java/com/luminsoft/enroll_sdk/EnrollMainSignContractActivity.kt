@@ -28,6 +28,8 @@ import com.luminsoft.enroll_sdk.features.security_questions.security_questions_d
 import com.luminsoft.enroll_sdk.features.setting_password.password_di.passwordModule
 import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_di.termsConditionsModule
 import com.luminsoft.enroll_sdk.features_forget.forget_password.forget_password_di.forgetPasswordModule
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_di.lowRiskFRAModule
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.lowRiskFRARouter
 import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_di_update.phoneUpdateModule
 import com.luminsoft.enroll_sdk.features_update.security_questions_update.update_security_questions_di.updateSecurityQuestionsModule
@@ -92,6 +94,7 @@ class EnrollMainSignContractActivity : ComponentActivity() {
                     startDestination = getStartingRoute()
                 ) {
                     mainSignContractRouter(navController = navController, signContractViewModel)
+                    lowRiskFRARouter(navController = navController, signContractViewModel)
                 }
             }
         }
@@ -105,6 +108,7 @@ class EnrollMainSignContractActivity : ComponentActivity() {
                 androidContext(activity.applicationContext)
                 //TODO: refactor later
                 modules(forgetLocationModule)
+                modules(lowRiskFRAModule)
                 modules(forgetPasswordModule)
                 modules(lostDeviceIdModule)
                 modules(termsConditionsModule)

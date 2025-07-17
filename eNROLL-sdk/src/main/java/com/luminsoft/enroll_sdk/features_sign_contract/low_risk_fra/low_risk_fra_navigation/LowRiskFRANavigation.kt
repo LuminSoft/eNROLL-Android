@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra.ui.components.PhoneLowRiskFRAScreenContent
 
 const val phoneScreenContent =
-    "com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.phoneScreenContent"
+    "phoneScreenContent"
 
 fun NavGraphBuilder.lowRiskFRARouter(
     navController: NavController, signContractViewModel: SignContractViewModel
