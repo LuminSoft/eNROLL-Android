@@ -66,7 +66,7 @@ object eNROLL {
         EnrollSDK.correlationId = correlationId
         EnrollSDK.fontResource = fontResource!!
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
-        EnrollSDK.templateId = templateId
+        EnrollSDK.contractTemplateId = templateId
         EnrollSDK.contractParameters = contractParameters
     }
 
@@ -105,7 +105,7 @@ object eNROLL {
             }
 
             EnrollMode.SIGN_CONTRACT -> {
-                if (EnrollSDK.templateId.isEmpty())
+                if (EnrollSDK.contractTemplateId.isEmpty())
                     throw Exception("Invalid template id")
                 activity.startActivity(Intent(activity, EnrollMainSignContractActivity::class.java))
             }

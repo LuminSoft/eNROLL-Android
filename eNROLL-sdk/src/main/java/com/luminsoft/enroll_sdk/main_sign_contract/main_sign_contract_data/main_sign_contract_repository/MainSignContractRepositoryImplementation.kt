@@ -15,7 +15,8 @@ class MainSignContractRepositoryImplementation(private val mainRemoteDataSource:
     MainSignContractRepository {
 
     override suspend fun generateSignContractSessionToken(request: GenerateOnboardingSessionTokenRequest): Either<SdkFailure, String> {
-        return when (val response = mainRemoteDataSource.generateSignContractSessionToken(request)) {
+        return when (val response =
+            mainRemoteDataSource.generateSignContractSessionToken(request)) {
             is BaseResponse.Success -> {
                 Either.Right((response.data as GenerateOnboardingSessionTokenResponse).token ?: "")
 

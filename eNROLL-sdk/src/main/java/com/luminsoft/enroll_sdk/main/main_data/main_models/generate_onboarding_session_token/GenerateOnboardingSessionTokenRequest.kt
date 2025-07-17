@@ -25,4 +25,16 @@ open class GenerateOnboardingSessionTokenRequest {
     @SerializedName("correlationId")
     internal var correlationId: String? = null
 
+    @SerializedName("SignContractMode")
+    internal var signContractMode: String? = null
+
+    @SerializedName("SignContractApproach")
+    internal var signContractApproach: String? = null
+
+    @SerializedName("ContractTemplateId")
+    internal var contractTemplateId: String? = null
+
+    @SerializedName("ContractParams")
+    internal var contractParams: String? = null
+
 }

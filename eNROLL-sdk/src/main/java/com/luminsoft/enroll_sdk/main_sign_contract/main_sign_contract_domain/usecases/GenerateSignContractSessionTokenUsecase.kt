@@ -16,7 +16,10 @@ class GenerateSignContractSessionTokenUsecase(private val mainRepository: MainSi
         generateOnboardingSessionTokenRequest.tenantId = params.tenantId
         generateOnboardingSessionTokenRequest.tenantSecret = params.tenantSecret
         generateOnboardingSessionTokenRequest.applicantId = params.applicantId
-        generateOnboardingSessionTokenRequest.levelOfTrustToken = params.levelOfTrustToken
+        generateOnboardingSessionTokenRequest.contractTemplateId = params.contractTemplateId
+        generateOnboardingSessionTokenRequest.contractParams = params.contractParams
+        generateOnboardingSessionTokenRequest.signContractMode = "5"
+        generateOnboardingSessionTokenRequest.signContractApproach = "1"
         return mainRepository.generateSignContractSessionToken(generateOnboardingSessionTokenRequest)
     }
 }
@@ -25,5 +28,6 @@ data class GenerateSignContractSessionTokenUsecaseParams(
     val tenantId: String,
     val tenantSecret: String,
     val applicantId: String,
-    val levelOfTrustToken: String,
+    val contractTemplateId: String,
+    val contractParams: String
 )
