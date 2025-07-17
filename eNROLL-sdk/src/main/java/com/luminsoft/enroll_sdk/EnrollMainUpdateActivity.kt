@@ -81,6 +81,7 @@ import updatePassportRouter
 import com.luminsoft.enroll_sdk.features_update.update_password.update_password_di.updatePasswordModule
 import updatePasswordRouter
 import com.luminsoft.enroll_sdk.features_update.security_questions_update.update_security_questions_di.updateSecurityQuestionsModule
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_di.mainSignContractModule
 import updateSecurityQuestionsRouter
 import java.util.Locale
 
@@ -194,6 +195,7 @@ class EnrollMainUpdateActivity : ComponentActivity() {
                 modules(updateSecurityQuestionsModule)
                 modules(updatePasswordModule)
                 modules(updatePassportModule)
+                modules(mainSignContractModule)
             }.koin
         }
     }

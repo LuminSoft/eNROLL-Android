@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_di
 
-import MainSignContractApi
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_api.MainSignContractApi
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_repository.MainSignContractRepositoryImplementation
 import SignContractViewModel
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor

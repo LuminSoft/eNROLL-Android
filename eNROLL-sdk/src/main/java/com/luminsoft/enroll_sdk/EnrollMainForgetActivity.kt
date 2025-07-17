@@ -73,6 +73,7 @@ import com.luminsoft.enroll_sdk.features_update.update_national_id_confirmation.
 import com.luminsoft.enroll_sdk.features_update.update_passport.update_passport_di.updatePassportModule
 import com.luminsoft.enroll_sdk.features_update.update_password.update_password_di.updatePasswordModule
 import com.luminsoft.enroll_sdk.features_update.security_questions_update.update_security_questions_di.updateSecurityQuestionsModule
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_di.mainSignContractModule
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_navigation.splashScreenSignContractContent
 import java.util.Locale
 
@@ -174,6 +175,8 @@ class EnrollMainForgetActivity : ComponentActivity() {
                 modules(updateSecurityQuestionsModule)
                 modules(updatePasswordModule)
                 modules(updatePassportModule)
+                modules(mainSignContractModule)
+
             }.koin
         }
     }

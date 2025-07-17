@@ -34,6 +34,8 @@ object eNROLL {
         skipTutorial: Boolean = false,
         appColors: AppColors = AppColors(),
         correlationId: String = "",
+        templateId: String = "",
+        contractParameters: String = "",
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
 
@@ -45,6 +47,10 @@ object eNROLL {
         if (enrollMode == EnrollMode.AUTH) {
             if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
                 throw Exception("Invalid Applicant Id or Level Of Trust Token")
+        }
+        if (enrollMode == EnrollMode.SIGN_CONTRACT) {
+            if (templateId.isEmpty())
+                throw Exception("Invalid template Id")
         }
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
@@ -60,8 +66,8 @@ object eNROLL {
         EnrollSDK.correlationId = correlationId
         EnrollSDK.fontResource = fontResource!!
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
-
-
+        EnrollSDK.templateId = templateId
+        EnrollSDK.contractParameters = contractParameters
     }
 
     fun launch(
@@ -99,7 +105,8 @@ object eNROLL {
             }
 
             EnrollMode.SIGN_CONTRACT -> {
-
+                if (EnrollSDK.templateId.isEmpty())
+                    throw Exception("Invalid template id")
                 activity.startActivity(Intent(activity, EnrollMainSignContractActivity::class.java))
             }
         }

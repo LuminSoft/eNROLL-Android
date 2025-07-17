@@ -7,7 +7,7 @@ import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
-import com.luminsoft.enroll_sdk.main_auth.main_auth_data.main_auth_models.get_auth_configurations.StepAuthModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_auth_configurations.StepSignContractModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_remote_data_source.MainSignContractRemoteDataSource
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.repository.MainSignContractRepository
 
@@ -27,10 +27,10 @@ class MainSignContractRepositoryImplementation(private val mainRemoteDataSource:
         }
     }
 
-    override suspend fun getSignContractStepsConfigurations(): Either<SdkFailure, List<StepAuthModel>> {
+    override suspend fun getSignContractStepsConfigurations(): Either<SdkFailure, List<StepSignContractModel>> {
         return when (val response = mainRemoteDataSource.getSignContractStepsConfigurations()) {
             is BaseResponse.Success -> {
-                Either.Right(response.data as List<StepAuthModel>)
+                Either.Right(response.data as List<StepSignContractModel>)
 
             }
 

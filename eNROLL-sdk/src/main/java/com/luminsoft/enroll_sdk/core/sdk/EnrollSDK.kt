@@ -16,6 +16,8 @@ object EnrollSDK {
     var applicantId = ""
     var correlationId = ""
     var levelOfTrustToken = ""
+    var templateId = ""
+    var contractParameters = ""
     var updateSteps = arrayListOf<String>()
 
     // this info related to sdk initiation
