@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.phone_low_risk_fra_repository
 
-import ValidateOTPRequestModel
+import GetCurrentContractRequestModel
 import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
@@ -23,7 +23,7 @@ class LowRiskFRARepositoryImplementation(private val mailRemoteDataSource: LowRi
         }
     }
 
-    override suspend fun validateOTPLowRiskFRA(request: ValidateOTPRequestModel): Either<SdkFailure, Null> {
+    override suspend fun validateOTPLowRiskFRA(request: GetCurrentContractRequestModel): Either<SdkFailure, Null> {
         return when (val response = mailRemoteDataSource.validateOTPLowRiskFRA(request)) {
             is BaseResponse.Success -> {
                 Either.Right(null)
