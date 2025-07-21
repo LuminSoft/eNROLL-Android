@@ -1,3 +1,5 @@
+package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.main_sign_contract.view_model
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -15,9 +17,11 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.phoneScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
-import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_auth_configurations.StepSignContractModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.StepSignContractModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecaseParams
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractStepsUsecase
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractStepsUsecaseParams
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.InitializeRequestSignContractUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.InitializeRequestSignContractUsecaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class SignContractViewModel(
     private val generateSignContractSessionToken: GenerateSignContractSessionTokenUsecase,
     private val initializeRequestUsecase: InitializeRequestSignContractUsecase,
+    private val getSignContractStepsUsecase: GetSignContractStepsUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -53,7 +58,7 @@ class SignContractViewModel(
     }
 
 
-    fun initRequest() {
+    private fun initRequest() {
         loading.value = true
         ui {
 
@@ -75,7 +80,26 @@ class SignContractViewModel(
                     loading.value = false
                 },
                 {
+                    getSignContractSteps()
+                })
 
+        }
+    }
+
+    private fun getSignContractSteps() {
+        loading.value = true
+        ui {
+
+            params.value = GetSignContractStepsUsecaseParams()
+            val response: Either<SdkFailure, StepSignContractModel> =
+                getSignContractStepsUsecase.call(params.value as GetSignContractStepsUsecaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
                     loading.value = false
                     navigateToNextStep()
                 })
@@ -124,33 +148,6 @@ class SignContractViewModel(
         }
     }
 
-    fun removeCurrentStep(id: Int): Boolean {
-        // Check if 'steps' is not null
-        if (steps.value != null) {
-            // Store the initial size of the 'steps' list
-            val stepsSize = steps.value!!.size
-
-            // Create a mutable list from 'steps', remove the item with the given ID, and convert back to an immutable list
-            steps.value = steps.value!!.toMutableList().apply {
-                removeIf { x -> x.authenticationStepId == id }
-            }.toList()
-
-            // Store the new size of the 'steps' list after removal
-            val newStepsSize = steps.value!!.size
-
-            // Check if the size of the list has changed (i.e., an item was removed)
-            if (stepsSize != newStepsSize) {
-                // If the list is not empty, navigate to the next step and return 'false'
-                return if (steps.value!!.isNotEmpty()) {
-                    navigateToNextStep()
-                    false
-                } else
-                    true
-            } else if (newStepsSize == 0)
-                return true
-        }
-        return false
-    }
 
     private fun navigateToNextStep() {
         mailValue.value = TextFieldValue()

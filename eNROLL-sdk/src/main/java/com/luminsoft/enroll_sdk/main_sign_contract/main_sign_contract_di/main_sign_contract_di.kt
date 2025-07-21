@@ -2,13 +2,14 @@ package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_di
 
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_api.MainSignContractApi
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_repository.MainSignContractRepositoryImplementation
-import SignContractViewModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.main_sign_contract.view_model.SignContractViewModel
 import com.luminsoft.enroll_sdk.core.network.AuthInterceptor
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_remote_data_source.MainSignContractRemoteDataSource
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_remote_data_source.MainSignContractRemoteDataSourceImpl
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.repository.MainSignContractRepository
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecase
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractStepsUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.InitializeRequestSignContractUsecase
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -21,6 +22,9 @@ val mainSignContractModule = module {
     }
     single {
         InitializeRequestSignContractUsecase(get())
+    }
+    single {
+        GetSignContractStepsUsecase(get())
     }
     single<MainSignContractRemoteDataSource> {
         MainSignContractRemoteDataSourceImpl(get(), get())
@@ -36,7 +40,7 @@ val mainSignContractModule = module {
     }
     viewModel {
         SignContractViewModel(
-            get(), get(), context = androidApplication()
+            get(), get(), get(), context = androidApplication()
         )
     }
 

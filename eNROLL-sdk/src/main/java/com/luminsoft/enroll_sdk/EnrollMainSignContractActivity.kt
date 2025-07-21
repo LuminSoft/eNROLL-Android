@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk
 
-import SignContractViewModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.main_sign_contract.view_model.SignContractViewModel
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle

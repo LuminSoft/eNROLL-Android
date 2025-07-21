@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra.ui.components
 
-import SignContractViewModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.main_sign_contract.view_model.SignContractViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -97,8 +97,8 @@ fun PhoneLowRiskFRAScreenContent(
     }
     BackGroundView(navController = navController, showAppBar = true) {
         if (otpApproved.value) {
-            val isEmpty = signContractViewModel.removeCurrentStep(EkycStepAuthType.Phone.getStepId())
-            if (isEmpty)
+//            val isEmpty = signContractViewModel.removeCurrentStep(EkycStepAuthType.Phone.getStepId())
+            if (false)
                 DialogView(
                     bottomSheetStatus = BottomSheetStatus.SUCCESS,
                     text = stringResource(id = R.string.successfulAuthentication),

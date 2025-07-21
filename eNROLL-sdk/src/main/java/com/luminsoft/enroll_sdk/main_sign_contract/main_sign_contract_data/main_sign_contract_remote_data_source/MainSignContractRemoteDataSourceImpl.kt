@@ -35,6 +35,10 @@ class MainSignContractRemoteDataSourceImpl(
         return network.apiRequest { mainApi.initializeSignContractRequest(request) }
 
     }
+
+    override suspend fun getSignContractSteps(): BaseResponse<Any> {
+        return network.apiRequest { mainApi.getSignContractSteps() }
+    }
 }
 
 
