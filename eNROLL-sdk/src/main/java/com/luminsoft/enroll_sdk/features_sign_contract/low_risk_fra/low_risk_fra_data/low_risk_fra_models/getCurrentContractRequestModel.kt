@@ -1,13 +1,22 @@
-package com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_data.terms_and_conditions_models
+package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_models
 
 import com.google.gson.annotations.SerializedName
 
-open class AcceptTermsRequestModel {
+open class GetCurrentContractRequestModel {
 
-    @SerializedName("isAccept")
-    internal var isAccept: Boolean? = null
+    @SerializedName("contractId")
+    internal var contractId: Int? = null
 
-    @SerializedName("currentTermsAndConditionId")
-    internal var currentTermsId: Int? = null
+    @SerializedName("contractVersionNumber")
+    internal var contractVersionNumber: Int? = null
+
+    @SerializedName("currentApproach")
+    internal var currentApproach: Int? = null
+
+    @SerializedName("currentText")
+    internal var currentText: Int? = null
+
+    @SerializedName("type")
+    internal var type: Int? = null
 
 }

@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_api
-import GetCurrentContractRequestModel
+
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_models.GetCurrentContractRequestModel
 import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
 import okhttp3.ResponseBody
 import retrofit2.Response
