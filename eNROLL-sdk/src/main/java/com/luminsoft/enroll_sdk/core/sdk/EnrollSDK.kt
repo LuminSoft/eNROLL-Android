@@ -35,16 +35,16 @@ object EnrollSDK {
 
     private fun getLuminBaseUrl(): String {
         return when (environment) {
-//            EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
-            EnrollEnvironment.STAGING -> "http://197.168.1.39"
+            EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
+//            EnrollEnvironment.STAGING -> "http://197.168.1.39"
             EnrollEnvironment.PRODUCTION -> "https://enrollgateway.luminsoft.net"
         }
     }
 
     fun getApisUrl(): String {
         return when (environment) {
-//            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/OnBoarding/"
-            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":4800/"
+            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/SecureOnBoarding/"
+//            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":4800/"
             EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/OnBoarding/"
         }
     }
