@@ -31,7 +31,7 @@ object EncryptionHelper {
             cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec)
 
             val encryptedBytes = cipher.doFinal(text.toByteArray(Charsets.UTF_8))
-            val encryptedBase64 = Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
+            val encryptedBase64 = Base64.encodeToString(encryptedBytes, Base64.NO_WRAP)
 
             // Log the encrypted Base64 string after encryption
 //            Log.d("EncryptDecrypt", "Encrypted Base64: $encryptedBase64")
