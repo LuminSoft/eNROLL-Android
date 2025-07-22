@@ -7,13 +7,23 @@ import javax.crypto.spec.SecretKeySpec
 
 object EncryptionHelper {
 
-    private const val ENCRYPTION_KEY = "4D9f6H8k2L3p0Z1a"
+
+    init {
+        System.loadLibrary("encryption_key")
+    }
+
+    @JvmStatic
+    external fun getNativeKey(): String
+
+    private fun getKey(): ByteArray {
+        return getNativeKey().toByteArray(Charsets.UTF_16LE)
+    }
 
 
     fun encrypt(text: String): String {
         try {
 
-            val key = SecretKeySpec(ENCRYPTION_KEY.toByteArray(Charsets.UTF_16LE), "AES")
+            val key = SecretKeySpec(getKey(), "AES")
             val iv = ByteArray(16) // 16 byte IV filled with zeros
             val ivSpec = IvParameterSpec(iv)
 
@@ -35,7 +45,7 @@ object EncryptionHelper {
 
     fun decrypt(encryptedText: String): String {
         try {
-            val key = SecretKeySpec(ENCRYPTION_KEY.toByteArray(Charsets.UTF_16LE), "AES")
+            val key = SecretKeySpec(getKey(), "AES")
             val iv = ByteArray(16) // 16 byte IV filled with zeros
             val ivSpec = IvParameterSpec(iv)
 
