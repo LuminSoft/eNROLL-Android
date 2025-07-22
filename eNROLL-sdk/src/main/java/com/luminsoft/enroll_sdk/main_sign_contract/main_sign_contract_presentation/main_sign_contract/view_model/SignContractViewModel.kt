@@ -17,6 +17,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.currentContractLowRiskFRAScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.ContractFileModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.StepSignContractModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecaseParams
@@ -41,6 +42,9 @@ class SignContractViewModel(
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var contractId: MutableStateFlow<String?> = MutableStateFlow(null)
     var contractVersionNumber: MutableStateFlow<String?> = MutableStateFlow(null)
+    var currentStepIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+    var contractFileModelList: MutableStateFlow<ArrayList<ContractFileModel>?> =
+        MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
@@ -53,6 +57,8 @@ class SignContractViewModel(
     var scanType: MutableStateFlow<ScanType?> = MutableStateFlow(null)
     var securityQuestions: MutableStateFlow<List<GetSecurityQuestionsResponseModel>?> =
         MutableStateFlow(null)
+    var getCurrentContract: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var showAllContracts: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     override fun retry(navController: NavController) {
         TODO("Not yet implemented")
@@ -104,6 +110,8 @@ class SignContractViewModel(
                     response.let {
                         contractId.value = res.contractId.toString()
                         contractVersionNumber.value = res.contractVersionNumber.toString()
+                        contractFileModelList.value = res.contractVersionDetailModel
+                        currentStepIndex.value = 0
                         loading.value = false
                         navigateToNextStep()
                     }
@@ -158,5 +166,19 @@ class SignContractViewModel(
         mailValue.value = TextFieldValue()
         currentPhoneNumber.value = null
         navController!!.navigate(currentContractLowRiskFRAScreenContent)
+    }
+
+    fun getNextContract() {
+        if ((currentStepIndex.value + 1) == contractFileModelList.value!!.size) {
+            getCurrentContract.value = false
+            showAllContracts.value = true
+        } else {
+            currentStepIndex.value++
+            getCurrentContract.value = true
+        }
+    }
+
+    fun getContractText(): String {
+        return contractFileModelList.value!![currentStepIndex.value].signContractTextEnum!!
     }
 }

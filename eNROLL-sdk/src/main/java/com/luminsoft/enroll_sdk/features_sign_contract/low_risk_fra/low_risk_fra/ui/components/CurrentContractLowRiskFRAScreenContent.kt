@@ -7,20 +7,29 @@ import android.app.Activity
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,10 +41,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -54,6 +65,7 @@ import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCase
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.ContractFileModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.main_sign_contract.view_model.SignContractViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
@@ -89,14 +101,18 @@ fun CurrentContractLowRiskFRAScreenContent(
     val loading = currentContractLowRiskFRAVM.loading.collectAsState()
     val failure = currentContractLowRiskFRAVM.failure.collectAsState()
     val bitmap = currentContractLowRiskFRAVM.bitmap.collectAsState()
-//    val termsIdReceived = currentContractLowRiskFRAVM.termsIdReceived.collectAsState()
-//    val pdfFileReceived = currentContractLowRiskFRAVM.termsPdfReceived.collectAsState()
-//    val termsAccepted = currentContractLowRiskFRAVM.termsAccepted.collectAsState()
+    val contractFileModelList = signContractViewModel.contractFileModelList.collectAsState()
+    val currentStepIndex = signContractViewModel.currentStepIndex.collectAsState()
+    val getCurrentContract = signContractViewModel.getCurrentContract.collectAsState()
+    val showAllContracts = signContractViewModel.showAllContracts.collectAsState()
     val showDialog = remember { mutableStateOf(false) }
 
 
-
-    BackGroundView(navController = navController, showAppBar = false) {
+    LaunchedEffect(currentStepIndex.value) {
+        if (getCurrentContract.value)
+            currentContractLowRiskFRAVM.callGetCurrentContract(xCurrentText = signContractViewModel.getContractText())
+    }
+    BackGroundView(navController = navController, showAppBar = true) {
         /*   if (termsAccepted.value) {
 
                val isEmpty =
@@ -177,9 +193,18 @@ fun CurrentContractLowRiskFRAScreenContent(
                 }
             }
         } else {
-            PdfViewerWidget(bitmap.value!!, onAcceptClick = {
-//                currentContractLowRiskFRAVM.acceptTerms()
-            }, activity = activity)
+            PdfViewerWidget(
+                bitmap.value!!,
+                activity = activity,
+                contractFileModelList = contractFileModelList.value!!,
+                currentStepIndex = currentStepIndex.value,
+                showAllContracts = showAllContracts.value,
+                onAcceptClick = {
+                    signContractViewModel.getNextContract()
+                }, onSignClick = {
+
+                }
+            )
         }
     }
 }
@@ -187,9 +212,13 @@ fun CurrentContractLowRiskFRAScreenContent(
 
 @Composable
 fun PdfViewerWidget(
-    bitmaps: List<Bitmap>, onAcceptClick: () -> Unit,
-    activity: Activity
-
+    bitmaps: List<Bitmap>,
+    onAcceptClick: () -> Unit,
+    onSignClick: () -> Unit,
+    activity: Activity,
+    contractFileModelList: ArrayList<ContractFileModel>,
+    currentStepIndex: Int,
+    showAllContracts: Boolean
 ) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
@@ -205,27 +234,47 @@ fun PdfViewerWidget(
                 .wrapContentSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = stringResource(id = R.string.readTermsAndConditions),
-                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.appColors.textColor,
-                textAlign = TextAlign.Center,
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp)
-            )
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .width(50.dp)
-                    .align(Alignment.CenterHorizontally),
-                thickness = 4.dp,
-                color = MaterialTheme.appColors.primary
-            )
-
-
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.appColors.primary,
+                        shape = RoundedCornerShape(8.dp) // Optional
+                    )
+                    .padding(horizontal = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painterResource(R.drawable.download_icon),
+                    contentDescription = "download icon",
+                    modifier = Modifier
+                        .height(50.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                LazyRow {
+                    items(contractFileModelList.size) { index ->
+                        if (index == currentStepIndex)
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .background(MaterialTheme.appColors.primary)
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = contractFileModelList[index].sectionOrder!!.toString(),
+                                    modifier = Modifier.padding(4.dp)
+                                )
+                            }
+                        else
+                            Text(
+                                text = contractFileModelList[index].sectionOrder!!.toString(),
+                                color = MaterialTheme.appColors.appBlack,
+                                modifier = Modifier.padding(4.dp)
+                            )
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
@@ -257,10 +306,16 @@ fun PdfViewerWidget(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
             ) {
-                ButtonView(
-                    onClick = onAcceptClick,
-                    title = stringResource(id = R.string.acceptTermsAndConditions)
-                )
+                if (!showAllContracts)
+                    ButtonView(
+                        onClick = onAcceptClick,
+                        title = stringResource(id = R.string.approve)
+                    )
+                else
+                    ButtonView(
+                        onClick = onSignClick,
+                        title = stringResource(id = R.string.sign)
+                    )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 ButtonView(

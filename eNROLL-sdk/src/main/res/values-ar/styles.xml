@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="FontLocalizedBold">
         <item name="android:fontFamily">@font/ge_flow_bold</item>
     </style>
+
     <style name="FontLocalizedRegular">
         <item name="android:fontFamily">@font/ge_flow_regular</item>
     </style>
+
     <style name="FontLocalizedSimiBold">
         <item name="android:fontFamily">@font/ge_flow_bold</item>
     </style>
+
     <style name="FontLocalizedMedium">
         <item name="android:fontFamily">@font/ge_flow_regular</item>
     </style>

@@ -401,6 +401,8 @@
     <string name="dot_document_auto_capture_instruction_sharpness_too_low_escalated">انقل المستند إلى منطقة أكثر إضاءة</string>
     <string name="dot_document_auto_capture_instruction_size_too_small_escalated">قرّب المستند أكثر</string>
 
+    <string name="approve">موافقة</string>
+    <string name="sign">توقيع</string>
 
 
 </resources>

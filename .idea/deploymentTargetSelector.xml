@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-07-22T07:52:04.641472Z">
+        <DropdownSelection timestamp="2025-07-22T12:09:16.198659Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RZ8R81XHH5X" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/luminsoft/.android/avd/Galaxy_A50_API_30.avd" />
             </handle>
           </Target>
         </DropdownSelection>
