@@ -4,6 +4,7 @@ import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra
 import com.luminsoft.enroll_sdk.core.network.BaseRemoteDataSource
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_api.LowRiskFRAApi
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_models.ValidateOTPLowRiskFRARequestModel
 
 
 class LowRiskFRARemoteDataSourceImpl(
@@ -15,7 +16,7 @@ class LowRiskFRARemoteDataSourceImpl(
         return network.apiRequest { lowRiskFRAApi.sendLowRiskFRAOtp() }
     }
 
-    override suspend fun validateOTPLowRiskFRA(request: GetCurrentContractRequestModel): BaseResponse<Any> {
+    override suspend fun validateOTPLowRiskFRA(request: ValidateOTPLowRiskFRARequestModel): BaseResponse<Any> {
         return network.apiRequest { lowRiskFRAApi.validateOTPLowRiskFRA(request) }
     }
 

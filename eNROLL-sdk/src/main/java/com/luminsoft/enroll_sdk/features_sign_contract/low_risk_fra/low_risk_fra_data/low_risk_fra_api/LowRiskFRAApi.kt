@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fr
 
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_models.GetCurrentContractRequestModel
 import com.luminsoft.enroll_sdk.core.network.BasicResponseModel
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_models.ValidateOTPLowRiskFRARequestModel
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -14,10 +15,10 @@ interface LowRiskFRAApi {
     suspend fun sendLowRiskFRAOtp(): Response<BasicResponseModel>
 
     @POST("api/v1/authentication/PhoneOtpAuthentication/VerifyPhoneOtp")
-    suspend fun validateOTPLowRiskFRA(@Body request: GetCurrentContractRequestModel): Response<BasicResponseModel>
+    suspend fun validateOTPLowRiskFRA(@Body request: ValidateOTPLowRiskFRARequestModel): Response<BasicResponseModel>
 
     @Streaming
-    @GET("api/v1/SignContractRequest/GetCurrentTextTemplate")
+    @POST("api/v1/SignContractRequest/GetCurrentTextTemplate")
     suspend fun getCurrentContract(@Body request: GetCurrentContractRequestModel): Response<ResponseBody>
 
 

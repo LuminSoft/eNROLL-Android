@@ -5,18 +5,18 @@ import com.google.gson.annotations.SerializedName
 open class GetCurrentContractRequestModel {
 
     @SerializedName("contractId")
-    internal var contractId: Int? = null
+    internal var contractId: String? = null
 
     @SerializedName("contractVersionNumber")
-    internal var contractVersionNumber: Int? = null
+    internal var contractVersionNumber: String? = null
 
     @SerializedName("currentApproach")
-    internal var currentApproach: Int? = null
+    internal var currentApproach: String? = null
 
     @SerializedName("currentText")
-    internal var currentText: Int? = null
+    internal var currentText: String? = null
 
     @SerializedName("type")
-    internal var type: Int? = null
+    internal var type: String? = null
 
 }

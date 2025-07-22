@@ -5,6 +5,7 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.low_risk_fra_models.ValidateOTPLowRiskFRARequestModel
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.phone_low_risk_fra_remote_data_source.LowRiskFRARemoteDataSource
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.repository.LowRiskFRARepository
 import okhttp3.ResponseBody
@@ -23,7 +24,7 @@ class LowRiskFRARepositoryImplementation(private val mailRemoteDataSource: LowRi
         }
     }
 
-    override suspend fun validateOTPLowRiskFRA(request: GetCurrentContractRequestModel): Either<SdkFailure, Null> {
+    override suspend fun validateOTPLowRiskFRA(request: ValidateOTPLowRiskFRARequestModel): Either<SdkFailure, Null> {
         return when (val response = mailRemoteDataSource.validateOTPLowRiskFRA(request)) {
             is BaseResponse.Success -> {
                 Either.Right(null)

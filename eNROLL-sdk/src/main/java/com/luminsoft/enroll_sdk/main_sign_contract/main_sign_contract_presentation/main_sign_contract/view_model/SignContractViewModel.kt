@@ -15,7 +15,7 @@ import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
-import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.phoneScreenContent
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.currentContractLowRiskFRAScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.StepSignContractModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecase
@@ -39,7 +39,8 @@ class SignContractViewModel(
     override var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
-    var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var contractId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var contractVersionNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
     var currentPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
     var mailValue: MutableStateFlow<TextFieldValue?> = MutableStateFlow(TextFieldValue())
@@ -99,9 +100,14 @@ class SignContractViewModel(
                     failure.value = it
                     loading.value = false
                 },
-                {
-                    loading.value = false
-                    navigateToNextStep()
+                { res ->
+                    response.let {
+                        contractId.value = res.contractId.toString()
+                        contractVersionNumber.value = res.contractVersionNumber.toString()
+                        loading.value = false
+                        navigateToNextStep()
+                    }
+
                 })
 
         }
@@ -148,10 +154,9 @@ class SignContractViewModel(
         }
     }
 
-
     private fun navigateToNextStep() {
         mailValue.value = TextFieldValue()
         currentPhoneNumber.value = null
-        navController!!.navigate(phoneScreenContent)
+        navController!!.navigate(currentContractLowRiskFRAScreenContent)
     }
 }
