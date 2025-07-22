@@ -22,7 +22,12 @@ class EncryptedResponseBodyConverter<T>(
         // Decrypt the "Data" field
         val decryptedJson = EncryptionHelper.decrypt(encryptedData)
 
+        val decryptedString = decryptedJson.trim()
+
+        val innerJsonString = gson.fromJson(decryptedString, String::class.java)
+
+
         // Deserialize the decrypted JSON
-        return gson.fromJson(decryptedJson, type)
+        return gson.fromJson(innerJsonString, type)
     }
 }
