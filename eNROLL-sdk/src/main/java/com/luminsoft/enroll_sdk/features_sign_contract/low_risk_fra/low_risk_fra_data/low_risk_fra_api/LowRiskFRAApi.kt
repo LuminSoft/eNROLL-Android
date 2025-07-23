@@ -21,5 +21,9 @@ interface LowRiskFRAApi {
     @POST("api/v1/SignContractRequest/GetCurrentTextTemplate")
     suspend fun getCurrentContract(@Body request: GetCurrentContractRequestModel): Response<ResponseBody>
 
+    @Streaming
+    @GET("api/v1/SignContractRequest/GetSignContractFile")
+    suspend fun getSignContractFile(): Response<ResponseBody>
+
 
 }

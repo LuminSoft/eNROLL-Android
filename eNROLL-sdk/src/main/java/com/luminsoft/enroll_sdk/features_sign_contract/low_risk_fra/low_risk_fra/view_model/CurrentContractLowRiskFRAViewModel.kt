@@ -11,6 +11,8 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCaseParams
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileLowRiskFRAUseCase
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileLowRiskFRAUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 import okhttp3.ResponseBody
 import java.io.File
@@ -19,6 +21,7 @@ import java.io.InputStream
 
 class CurrentContractLowRiskFRAViewModel(
     private val getCurrentContractLowRiskFRAUseCase: GetCurrentContractLowRiskFRAUseCase,
+    private val getSignContractFileLowRiskFRAUseCase: GetSignContractFileLowRiskFRAUseCase,
     private val contractId: String,
     private val contractVersionNumber: String,
     private val currentText: String,
@@ -56,6 +59,34 @@ class CurrentContractLowRiskFRAViewModel(
                 )
             val response: Either<SdkFailure, ResponseBody> =
                 getCurrentContractLowRiskFRAUseCase.call(params.value as GetCurrentContractLowRiskFRAUseCaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                { res ->
+                    response.let {
+
+                        pdfFile.value = inputStreamToFile(res.byteStream(), context)
+                        bitmap.value = renderPdf(pdfFile.value!!)
+                    }
+                    loading.value = false
+                })
+        }
+    }
+
+    fun callGetSignContractFile() {
+        getSignContractFile()
+    }
+
+    private fun getSignContractFile() {
+        loading.value = true
+        ui {
+
+            params.value = GetSignContractFileLowRiskFRAUseCaseParams()
+            val response: Either<SdkFailure, ResponseBody> =
+                getSignContractFileLowRiskFRAUseCase.call(params.value as GetSignContractFileLowRiskFRAUseCaseParams)
 
             response.fold(
                 {

@@ -8,5 +8,6 @@ interface LowRiskFRARemoteDataSource {
     suspend fun sendLowRiskFRAOtp(): BaseResponse<Any>
     suspend fun validateOTPLowRiskFRA(request: ValidateOTPLowRiskFRARequestModel): BaseResponse<Any>
     suspend fun getCurrentContract(request: GetCurrentContractRequestModel): BaseResponse<Any>
+    suspend fun getSignContractFile(): BaseResponse<Any>
 
 }

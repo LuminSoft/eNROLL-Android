@@ -23,6 +23,10 @@ class LowRiskFRARemoteDataSourceImpl(
     override suspend fun getCurrentContract(request: GetCurrentContractRequestModel): BaseResponse<Any> {
         return network.apiRequest { lowRiskFRAApi.getCurrentContract(request) }
     }
+
+    override suspend fun getSignContractFile(): BaseResponse<Any> {
+        return network.apiRequest { lowRiskFRAApi.getSignContractFile() }
+    }
 }
 
 

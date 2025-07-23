@@ -11,4 +11,5 @@ interface LowRiskFRARepository {
     suspend fun sendLowRiskFRAOtp(): Either<SdkFailure, Null>
     suspend fun validateOTPLowRiskFRA(request: ValidateOTPLowRiskFRARequestModel): Either<SdkFailure, Null>
     suspend fun getCurrentContract(request: GetCurrentContractRequestModel): Either<SdkFailure, ResponseBody>
+    suspend fun getSignContractFile(): Either<SdkFailure, ResponseBody>
 }

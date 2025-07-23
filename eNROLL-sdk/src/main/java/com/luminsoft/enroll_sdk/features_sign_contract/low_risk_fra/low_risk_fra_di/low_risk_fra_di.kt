@@ -32,7 +32,7 @@ val lowRiskFRAModule = module {
     }
     viewModel {
         PhoneAuthViewModel(get(), get())
-        CurrentContractLowRiskFRAViewModel(get(), get(), get(), get(), get())
+        CurrentContractLowRiskFRAViewModel(get(), get(), get(), get(), get(), get())
     }
 
 
