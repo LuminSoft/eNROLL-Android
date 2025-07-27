@@ -3,6 +3,7 @@ package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentat
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -169,7 +170,9 @@ class SignContractViewModel(
     }
 
     fun getNextContract() {
-        if ((currentStepIndex.value + 1) == contractFileModelList.value!!.size) {
+        Log.d("currentStepIndex", currentStepIndex.value.toString())
+        Log.d("contractFileModelList", contractFileModelList.value!!.size.toString())
+        if (getContractText() == contractFileModelList.value!![contractFileModelList.value!!.size - 1].signContractTextEnum) {
             getCurrentContract.value = false
             showAllContracts.value = true
         } else {

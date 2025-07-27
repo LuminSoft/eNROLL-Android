@@ -2,7 +2,6 @@ package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fr
 
 import android.app.Activity
 import android.graphics.Bitmap
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -105,23 +104,13 @@ fun CurrentContractLowRiskFRAScreenContent(
         if (getCurrentContract.value)
             currentContractLowRiskFRAVM.callGetCurrentContract(xCurrentText = signContractViewModel.getContractText())
     }
+
+    LaunchedEffect(showAllContracts.value) {
+        if (showAllContracts.value)
+            currentContractLowRiskFRAVM.callGetSignContractFile()
+    }
     BackGroundView(navController = navController, showAppBar = true) {
-        /*   if (termsAccepted.value) {
 
-               val isEmpty =
-                   onBoardingViewModel.removeCurrentStep(EkycStepType.TermsConditions.getStepId())
-
-               if (isEmpty) {
-                   LaunchedEffect(Unit) {
-                       val apiResponse = onBoardingViewModel.getApplicantId()
-                       apiResponse.fold(
-                           {},
-                           { _ -> showDialog.value = true }
-                       )
-                   }
-               }
-
-           }*/
         if (showDialog.value) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.SUCCESS,
@@ -220,24 +209,35 @@ fun PdfViewerWidget(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.TopCenter,
     ) {
         Column(
             modifier = Modifier
                 .wrapContentSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            PDFHeader(contractFileModelList, currentStepIndex)
+            if (!showAllContracts)
+                PDFHeader(contractFileModelList, currentStepIndex)
+            else
+                Image(
+                    painterResource(R.drawable.download_icon),
+                    contentDescription = "download icon",
+                    modifier = Modifier
+                        .height(50.dp)
+                        .padding(start = 10.dp)
+                )
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(screenHeight * 0.6f)
-                    .border(BorderStroke(1.dp, MaterialTheme.appColors.primary))
-                    .padding(8.dp)
+                    .height(screenHeight * 0.55f)
+                    .shadow(8.dp, shape = RoundedCornerShape(8.dp))
+                    .background(Color.White, RoundedCornerShape(8.dp))
+                    .padding(12.dp)
             ) {
+
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
                 ) {
                     items(bitmaps.size) { index ->
                         Image(
@@ -246,14 +246,14 @@ fun PdfViewerWidget(
                             contentScale = ContentScale.FillWidth,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(4.dp)
+                                .padding(vertical = 4.dp)
                         )
                     }
                 }
+
             }
 
             Spacer(modifier = Modifier.height(30.dp))
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -285,7 +285,7 @@ fun PdfViewerWidget(
         if (showConfirmationDialog) {
             DialogView(
                 bottomSheetStatus = BottomSheetStatus.WARNING,
-                text = stringResource(id = R.string.youMustApproveOurTermsToProceed),
+                text = stringResource(id = R.string.exitConfirmation),
                 buttonText = stringResource(id = R.string.exit),
                 onPressedButton = {
 
@@ -294,7 +294,7 @@ fun PdfViewerWidget(
                     activity.finish()
                     EnrollSDK.enrollCallback?.error(
                         EnrollFailedModel(
-                            "Didn't accept our terms",
+                            "Press Exit Button",
                             Throwable()
                         )
                     )
