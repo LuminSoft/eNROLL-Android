@@ -3,7 +3,10 @@ package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fr
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
+import android.media.MediaScannerConnection
+import android.os.Environment
 import android.os.ParcelFileDescriptor
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
@@ -35,6 +38,7 @@ class CurrentContractLowRiskFRAViewModel(
     var navController: NavController? = null
     var otpApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var pdfFile: MutableStateFlow<File?> = MutableStateFlow(null)
+    private var responseBody: MutableStateFlow<ResponseBody?> = MutableStateFlow(null)
     var bitmap: MutableStateFlow<List<Bitmap>?> = MutableStateFlow(null)
 
 
@@ -67,7 +71,7 @@ class CurrentContractLowRiskFRAViewModel(
                 },
                 { res ->
                     response.let {
-
+                        responseBody.value = res
                         pdfFile.value = inputStreamToFile(res.byteStream(), context)
                         bitmap.value = renderPdf(pdfFile.value!!)
                     }
@@ -135,6 +139,49 @@ class CurrentContractLowRiskFRAViewModel(
         parcelFileDescriptor.close()
 
         return bitmaps
+    }
+
+    fun downloadPDF(context: Context, fileName: String) {
+        savePdfToDownloads(context, fileName)
+    }
+
+    private fun savePdfToDownloads(context: Context, fileName: String) {
+        try {
+            val sourceFile = pdfFile.value
+            if (sourceFile == null || !sourceFile.exists()) {
+                Toast.makeText(context, "PDF not ready or missing", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            val downloadsFolder =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            if (!downloadsFolder.exists()) downloadsFolder.mkdirs()
+
+            val targetFile = File(downloadsFolder, "contract_$fileName.pdf")
+
+            sourceFile.inputStream().use { input ->
+                FileOutputStream(targetFile).use { output ->
+                    input.copyTo(output)
+                    output.flush()
+                }
+            }
+
+            MediaScannerConnection.scanFile(
+                context,
+                arrayOf(targetFile.absolutePath),
+                arrayOf("application/pdf"),
+                null
+            )
+
+            Toast.makeText(
+                context,
+                "contract_$fileName.pdf downloaded to Downloads folder",
+                Toast.LENGTH_LONG
+            ).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Failed to save PDF: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
 

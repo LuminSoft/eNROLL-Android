@@ -1,10 +1,12 @@
 package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra.ui.components
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -181,6 +183,8 @@ fun CurrentContractLowRiskFRAScreenContent(
                 contractFileModelList = contractFileModelList.value!!,
                 currentStepIndex = currentStepIndex.value,
                 showAllContracts = showAllContracts.value,
+                currentContractLowRiskFRAVM = currentContractLowRiskFRAVM,
+                context = context,
                 onAcceptClick = {
                     signContractViewModel.getNextContract()
                 }, onSignClick = {
@@ -200,7 +204,9 @@ fun PdfViewerWidget(
     activity: Activity,
     contractFileModelList: ArrayList<ContractFileModel>,
     currentStepIndex: Int,
-    showAllContracts: Boolean
+    showAllContracts: Boolean,
+    currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
+    context: Context
 ) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
@@ -217,15 +223,14 @@ fun PdfViewerWidget(
                 .verticalScroll(rememberScrollState())
         ) {
             if (!showAllContracts)
-                PDFHeader(contractFileModelList, currentStepIndex)
-            else
-                Image(
-                    painterResource(R.drawable.download_icon),
-                    contentDescription = "download icon",
-                    modifier = Modifier
-                        .height(50.dp)
-                        .padding(start = 10.dp)
+                PDFHeader(
+                    contractFileModelList,
+                    currentStepIndex,
+                    currentContractLowRiskFRAVM,
+                    context
                 )
+            else
+                DownloadIcon(currentContractLowRiskFRAVM, context, "final")
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
@@ -234,6 +239,7 @@ fun PdfViewerWidget(
                     .shadow(8.dp, shape = RoundedCornerShape(8.dp))
                     .background(Color.White, RoundedCornerShape(8.dp))
                     .padding(12.dp)
+
             ) {
 
                 LazyColumn(
@@ -310,9 +316,28 @@ fun PdfViewerWidget(
 }
 
 @Composable
+private fun DownloadIcon(
+    currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
+    context: Context, fileName: String
+) {
+    Image(
+        painterResource(R.drawable.download_icon),
+        contentDescription = "download icon",
+        modifier = Modifier
+            .height(50.dp)
+            .padding(start = 10.dp)
+            .clickable {
+                currentContractLowRiskFRAVM.downloadPDF(context = context, fileName = fileName)
+            }
+    )
+}
+
+@Composable
 private fun PDFHeader(
     contractFileModelList: ArrayList<ContractFileModel>,
-    currentStepIndex: Int
+    currentStepIndex: Int,
+    currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
+    context: Context
 ) {
     val shape = RoundedCornerShape(8.dp)
     val squareShape = RoundedCornerShape(4.dp) // Optional: small rounding
@@ -337,13 +362,7 @@ private fun PDFHeader(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painterResource(R.drawable.download_icon),
-            contentDescription = "download icon",
-            modifier = Modifier
-                .height(50.dp)
-                .padding(start = 10.dp)
-        )
+        DownloadIcon(currentContractLowRiskFRAVM, context, currentStepIndex.toString())
         Spacer(modifier = Modifier.weight(1f))
         LazyRow(
             modifier = Modifier
