@@ -404,6 +404,7 @@
     <string name="approve">موافقة</string>
     <string name="sign">توقيع</string>
     <string name="exitConfirmation">هل انت متأكد تريد الخروج؟</string>
+    <string name="contractSignedSuccessfully">تم التوقيع بنجاح</string>
 
 
 </resources>

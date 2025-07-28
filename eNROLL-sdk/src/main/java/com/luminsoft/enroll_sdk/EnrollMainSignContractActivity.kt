@@ -30,6 +30,7 @@ import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditio
 import com.luminsoft.enroll_sdk.features_forget.forget_password.forget_password_di.forgetPasswordModule
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_di.lowRiskFRAModule
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.lowRiskFRARouter
+import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_di.signContractModule
 import com.luminsoft.enroll_sdk.features_update.email_update.email_di_update.emailUpdateModule
 import com.luminsoft.enroll_sdk.features_update.phone_numbers_update.phone_di_update.phoneUpdateModule
 import com.luminsoft.enroll_sdk.features_update.security_questions_update.update_security_questions_di.updateSecurityQuestionsModule
@@ -54,6 +55,7 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_navigation.signContractRouter
 import java.util.Locale
 
 
@@ -95,6 +97,7 @@ class EnrollMainSignContractActivity : ComponentActivity() {
                 ) {
                     mainSignContractRouter(navController = navController, signContractViewModel)
                     lowRiskFRARouter(navController = navController, signContractViewModel)
+                    signContractRouter(navController = navController, signContractViewModel)
                 }
             }
         }
@@ -135,6 +138,7 @@ class EnrollMainSignContractActivity : ComponentActivity() {
                 modules(updateSecurityQuestionsModule)
                 modules(updatePasswordModule)
                 modules(updatePassportModule)
+                modules(signContractModule)
             }.koin
         }
     }

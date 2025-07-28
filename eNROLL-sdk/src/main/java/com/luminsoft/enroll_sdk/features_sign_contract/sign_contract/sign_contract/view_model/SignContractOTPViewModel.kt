@@ -1,4 +1,4 @@
-package com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra.view_model
+package com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -6,14 +6,15 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
-import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.LowRiskFRASendOTPUseCase
-import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.ValidateOtpLowRiskFRAUseCase
-import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.ValidateOtpLowRiskFRAUseCaseParams
+import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_data.sign_contract_models.SignContractSendOTPResponseModel
+import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_domain.usecases.SignContractSendOTPUseCase
+import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_domain.usecases.ValidateOtpSignContractUseCase
+import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_domain.usecases.ValidateOtpSignContractUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class LowRiskFRAViewModel(
-    private val lowRiskFRASendOTPUseCase: LowRiskFRASendOTPUseCase,
-    private val validateOtpLowRiskFRAUseCase: ValidateOtpLowRiskFRAUseCase
+class SignContractOTPViewModel(
+    private val signContractSendOTPUseCase: SignContractSendOTPUseCase,
+    private val validateOtpSignContractUseCase: ValidateOtpSignContractUseCase
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -22,6 +23,7 @@ class LowRiskFRAViewModel(
     var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     var navController: NavController? = null
     var otpApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var phoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
 
 
     init {
@@ -39,32 +41,32 @@ class LowRiskFRAViewModel(
     private fun sendOtpCall() {
         loading.value = true
         ui {
-            val response: Either<SdkFailure, Null> =
-                lowRiskFRASendOTPUseCase.call(null)
+            val response: Either<SdkFailure, SignContractSendOTPResponseModel> =
+                signContractSendOTPUseCase.call(params.value as Null)
 
             response.fold(
                 {
                     failure.value = it
                     loading.value = false
                 },
-                {
+                { s ->
+                    s.let {
+                        phoneNumber.value = s.phoneNumber
+                    }
                     loading.value = false
-//                    phoneSentSuccessfully.value = true
                 })
         }
-
-
     }
 
     private fun validateOtp(otp: String) {
         loading.value = true
         ui {
             params.value =
-                ValidateOtpLowRiskFRAUseCaseParams(
+                ValidateOtpSignContractUseCaseParams(
                     otp = otp
                 )
             val response: Either<SdkFailure, Null> =
-                validateOtpLowRiskFRAUseCase.call(params.value as ValidateOtpLowRiskFRAUseCaseParams)
+                validateOtpSignContractUseCase.call(params.value as ValidateOtpSignContractUseCaseParams)
 
             response.fold(
                 {
@@ -78,6 +80,10 @@ class LowRiskFRAViewModel(
         }
 
 
+    }
+
+    fun resetFailure() {
+        failure.value = null
     }
 
 

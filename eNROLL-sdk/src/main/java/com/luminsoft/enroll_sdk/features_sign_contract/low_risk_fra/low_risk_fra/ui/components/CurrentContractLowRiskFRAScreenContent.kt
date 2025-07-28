@@ -55,6 +55,7 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_on
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra.view_model.CurrentContractLowRiskFRAViewModel
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileLowRiskFRAUseCase
+import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_navigation.signContractScreenContent
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.ContractFileModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.main_sign_contract.view_model.SignContractViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -188,7 +189,7 @@ fun CurrentContractLowRiskFRAScreenContent(
                 onAcceptClick = {
                     signContractViewModel.getNextContract()
                 }, onSignClick = {
-                    currentContractLowRiskFRAVM.callGetSignContractFile()
+                    navController.navigate(signContractScreenContent)
                 }
             )
         }
@@ -325,7 +326,7 @@ private fun DownloadIcon(
         contentDescription = "download icon",
         modifier = Modifier
             .height(50.dp)
-            .padding(start = 10.dp)
+            .padding(end = 10.dp)
             .clickable {
                 currentContractLowRiskFRAVM.downloadPDF(context = context, fileName = fileName)
             }
@@ -362,11 +363,9 @@ private fun PDFHeader(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        DownloadIcon(currentContractLowRiskFRAVM, context, currentStepIndex.toString())
-        Spacer(modifier = Modifier.weight(1f))
         LazyRow(
             modifier = Modifier
-                .padding(end = 10.dp)
+                .padding(start = 10.dp)
         ) {
             items(contractFileModelList.size) { index ->
                 if (index == currentStepIndex)
@@ -393,6 +392,8 @@ private fun PDFHeader(
                     )
             }
         }
+        Spacer(modifier = Modifier.weight(1f))
+        DownloadIcon(currentContractLowRiskFRAVM, context, currentStepIndex.toString())
     }
 }
 
