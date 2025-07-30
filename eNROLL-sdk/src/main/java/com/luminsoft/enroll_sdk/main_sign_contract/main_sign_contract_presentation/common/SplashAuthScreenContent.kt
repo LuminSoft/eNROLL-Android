@@ -1,5 +1,6 @@
-
-import android.app.Activity
+package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.common
+import SignContractViewModel
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,14 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -37,6 +36,7 @@ import com.luminsoft.enroll_sdk.main.main_presentation.common.ComposeLottieAnima
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -45,7 +45,7 @@ fun SplashScreenSignContractContent(
     navController: NavController,
 ) {
     val failure = viewModel.failure.collectAsState()
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current
     viewModel.navController = navController
 
     Surface(modifier = Modifier
@@ -129,13 +129,13 @@ fun SplashScreenSignContractContent(
                     buttonText = stringResource(id = R.string.exit),
                     onPressedButton = {
 
-                        activity.finish()
+                        activity?.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                     },
                 )
                 {
-                    activity.finish()
+                    activity?.finish()
                     EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                 }
@@ -151,13 +151,13 @@ fun SplashScreenSignContractContent(
                     },
                     secondButtonText = stringResource(id = R.string.exit),
                     onPressedSecondButton = {
-                        activity.finish()
+                        activity?.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                     }
                 )
                 {
-                    activity.finish()
+                    activity?.finish()
                     EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
                 }
             }

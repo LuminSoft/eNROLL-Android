@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -39,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -139,7 +139,7 @@ class MainActivity : ComponentActivity() {
             )
 
         setContent {
-            val activity = LocalContext.current as Activity
+            val activity = LocalActivity.current
 
             val itemList =
                 listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract")
@@ -229,7 +229,9 @@ class MainActivity : ComponentActivity() {
                             border = border,
                             modifier = modifier,
                             onClick = {
-                                initEnroll(activity, selectedIndex)
+                                if (activity != null) {
+                                    initEnroll(activity, selectedIndex)
+                                }
                             },
                             contentPadding = PaddingValues(0.dp),
                             shape = RoundedCornerShape(12.dp),
