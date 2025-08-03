@@ -14,6 +14,7 @@ import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditio
 import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_domain.usecases.AcceptTermsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -109,30 +110,38 @@ class TermsConditionsOnBoardingViewModel(
                 },
                 { res ->
                     try {
-                        val encryptedJson = res.string()
+                        val jsonBody = res.string()
 
-                        val pdfBytes =
-                            EncryptionHelper.decryptBinaryDataFromEncryptedJson(encryptedJson)
-                        if (pdfBytes == null) {
+                        // Extract the "Data" field from the JSON
+                        val base64Encrypted = JSONObject(jsonBody).getString("Data")
+
+                        // Decrypt to get PDF byte array
+                        val pdfBytes: ByteArray? =
+                            EncryptionHelper.decryptBinaryDataFromEncryptedJson(base64Encrypted)
+
+                        if (pdfBytes == null || pdfBytes.isEmpty()) {
                             failure.value = NetworkFailure("Invalid or missing PDF content")
                             loading.value = false
                             return@fold
                         }
 
+                        // Save decrypted PDF bytes to file
                         val file = File(context.cacheDir, "terms_and_conditions.pdf")
                         FileOutputStream(file).use { it.write(pdfBytes) }
 
+                        // Update state
                         pdfFile.value = file
                         bitmap.value = renderPdf(file)
-
-                        loading.value = false
                         termsPdfReceived.value = true
+                        loading.value = false
+
                     } catch (e: Exception) {
                         e.printStackTrace()
                         failure.value = NetworkFailure("PDF decryption failed: ${e.message}")
                         loading.value = false
                     }
-                })
+                }
+            )
         }
     }
 
@@ -140,7 +149,6 @@ class TermsConditionsOnBoardingViewModel(
     fun acceptTerms() {
         loading.value = true
         ui {
-
             val acceptTermsRequestModel = AcceptTermsRequestModel()
             acceptTermsRequestModel.currentTermsId = termsId.value
             acceptTermsRequestModel.isAccept = true
@@ -160,8 +168,5 @@ class TermsConditionsOnBoardingViewModel(
                     }
                 })
         }
-
     }
-
-
 }
