@@ -1,4 +1,3 @@
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
@@ -6,7 +5,9 @@ import android.os.ParcelFileDescriptor
 import androidx.lifecycle.ViewModel
 import arrow.core.Either
 import arrow.core.raise.Null
+import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_data.terms_and_conditions_models.AcceptTermsRequestModel
 import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_data.terms_and_conditions_models.TermsIdResponseModel
@@ -37,9 +38,9 @@ class TermsConditionsOnBoardingViewModel(
     private var pdfFile: MutableStateFlow<File?> = MutableStateFlow(null)
 
 
-init {
-    getTermsId()
-}
+    init {
+        getTermsId()
+    }
 
     private fun inputStreamToFile(inputStream: InputStream, context: Context): File {
         val file = File(context.cacheDir, "terms_and_conditions.pdf")
@@ -56,7 +57,8 @@ init {
 
     private fun renderPdf(file: File): List<Bitmap> {
         val bitmaps = mutableListOf<Bitmap>()
-        val parcelFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+        val parcelFileDescriptor =
+            ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
         val pdfRenderer = PdfRenderer(parcelFileDescriptor)
 
         for (i in 0 until pdfRenderer.pageCount) {
@@ -73,7 +75,7 @@ init {
         return bitmaps
     }
 
-     fun getTermsId() {
+    fun getTermsId() {
         loading.value = true
         ui {
             val response: Either<SdkFailure, TermsIdResponseModel> =
@@ -95,7 +97,7 @@ init {
     }
 
 
-     fun getTermsPdfFileById() {
+    fun getTermsPdfFileById() {
         ui {
             val response: Either<SdkFailure, ResponseBody> =
                 getTermsPdfFileByIdUseCase.call(TermsFileIdParams(termsId.value))
@@ -106,19 +108,36 @@ init {
                     loading.value = false
                 },
                 { res ->
-                    response.let {
+                    try {
+                        val encryptedJson = res.string()
 
-                        pdfFile.value = inputStreamToFile(res.byteStream(), context)
-                        bitmap.value = renderPdf(pdfFile.value!!)
+                        val pdfBytes =
+                            EncryptionHelper.decryptBinaryDataFromEncryptedJson(encryptedJson)
+                        if (pdfBytes == null) {
+                            failure.value = NetworkFailure("Invalid or missing PDF content")
+                            loading.value = false
+                            return@fold
+                        }
+
+                        val file = File(context.cacheDir, "terms_and_conditions.pdf")
+                        FileOutputStream(file).use { it.write(pdfBytes) }
+
+                        pdfFile.value = file
+                        bitmap.value = renderPdf(file)
+
+                        loading.value = false
+                        termsPdfReceived.value = true
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        failure.value = NetworkFailure("PDF decryption failed: ${e.message}")
+                        loading.value = false
                     }
-                    loading.value = false
-                    termsPdfReceived.value = true
                 })
         }
     }
 
 
-     fun acceptTerms() {
+    fun acceptTerms() {
         loading.value = true
         ui {
 

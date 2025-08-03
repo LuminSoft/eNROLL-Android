@@ -63,5 +63,22 @@ object EncryptionHelper {
         }
         return ""
     }
+
+    fun decryptBinaryDataFromEncryptedJson(json: String): ByteArray? {
+        return try {
+            val jsonObject = com.google.gson.JsonParser.parseString(json).asJsonObject
+            val encryptedData = jsonObject.get("Data")?.asString ?: return null
+
+            // Decrypt the AES-encrypted base64 string
+            val decryptedBase64 = decrypt(encryptedData)
+
+            // Decode base64 to binary (e.g., PDF bytes)
+            Base64.decode(decryptedBase64, Base64.DEFAULT)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 }
 
