@@ -18,12 +18,14 @@ import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_applicatnt_id.GetApplicantIdResponse
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_current_step.GetCurrentStepResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetApplicantIdUsecase
+import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetCurrentStepUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecaseParams
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
@@ -38,6 +40,7 @@ class OnBoardingViewModel(
     private val getOnboardingStepConfigurationsUsecase: GetOnboardingStepConfigurationsUsecase,
     private val initializeRequestUsecase: InitializeRequestUsecase,
     private val getApplicantIdUsecase: GetApplicantIdUsecase,
+    private val getCurrentStepUsecase: GetCurrentStepUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -50,12 +53,10 @@ class OnBoardingViewModel(
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
     var documentId: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    //    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
-//    var userPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
-//    var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
     val existingSteps: MutableState<List<Int>?> = mutableStateOf(null)
     var requestId: MutableStateFlow<String?> = MutableStateFlow(null)
     var applicantId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var currentStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
     var requestCallBackSent: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -100,7 +101,8 @@ class OnBoardingViewModel(
         loading.value = true
         failure.value = null
         ui {
-
+            if (EnrollSDK.requestId.isNotEmpty())
+                getCurrentStep()
             val deviceId = DeviceIdentifier.getDeviceId(context)
             val manufacturer: String = Build.MANUFACTURER
             val deviceModel: String = Build.MODEL
@@ -150,7 +152,8 @@ class OnBoardingViewModel(
                 EnrollSDK.tenantId,
                 EnrollSDK.tenantSecret,
                 uuid,
-                EnrollSDK.correlationId
+                EnrollSDK.correlationId,
+                EnrollSDK.requestId
             )
 
             val response: Either<SdkFailure, String> =
@@ -210,6 +213,27 @@ class OnBoardingViewModel(
         return response  // Return the response
     }
 
+    private suspend fun getCurrentStep(): Either<SdkFailure, GetCurrentStepResponse> {
+        loading.value = true
+
+        val response: Either<SdkFailure, GetCurrentStepResponse> =
+            getCurrentStepUsecase.call(null)
+
+
+        response.fold(
+            { failure ->
+                this.failure.value = failure
+                loading.value = false
+            },
+            { success ->
+                currentStepId.value = success.currentStepId
+                removeStepsUntilCurrentStep()
+            }
+        )
+
+        return response  // Return the response
+    }
+
 
     fun removeCurrentStep(id: Int): Boolean {
         try {
@@ -246,5 +270,21 @@ class OnBoardingViewModel(
 
     fun changeRequestIdSentValue() {
         requestCallBackSent.value = true
+    }
+
+
+    private fun removeStepsUntilCurrentStep() {
+        // Check if the steps list is not null and contains at least one step
+        steps.value?.let { stepList ->
+            // Find the index of the step with matching currentStepId
+            val currentStepIndex =
+                stepList.indexOfFirst { it.registrationStepId == currentStepId.value }
+
+            // If a matching step is found
+            if (currentStepIndex != -1) {
+                // Remove all steps up to and including the found step
+                steps.value = stepList.subList(currentStepIndex, stepList.size)
+            }
+        }
     }
 }

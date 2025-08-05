@@ -33,6 +33,7 @@ object eNROLL {
         skipTutorial: Boolean = false,
         appColors: AppColors = AppColors(),
         correlationId: String = "",
+        requestId: String = "",
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
 
@@ -41,10 +42,9 @@ object eNROLL {
             throw Exception("Invalid tenant id")
         if (tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
-        if (enrollMode == EnrollMode.AUTH) {
-            if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
-                throw Exception("Invalid Applicant Id or Level Of Trust Token")
-        }
+        if (enrollMode == EnrollMode.AUTH && (applicantId.isEmpty() || levelOfTrustToken.isEmpty())) throw Exception(
+            "Invalid Applicant Id or Level Of Trust Token"
+        )
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
         EnrollSDK.tenantId = tenantId
@@ -57,6 +57,7 @@ object eNROLL {
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
         EnrollSDK.correlationId = correlationId
+        EnrollSDK.requestId = requestId
         EnrollSDK.fontResource = fontResource!!
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
 

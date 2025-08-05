@@ -25,4 +25,7 @@ open class GenerateOnboardingSessionTokenRequest {
     @SerializedName("correlationId")
     internal var correlationId: String? = null
 
+    @SerializedName("requestId")
+    internal var requestId: String? = null
+
 }

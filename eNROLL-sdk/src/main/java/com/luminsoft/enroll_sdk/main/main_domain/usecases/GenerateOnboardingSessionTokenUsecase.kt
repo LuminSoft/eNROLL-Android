@@ -17,6 +17,7 @@ class GenerateOnboardingSessionTokenUsecase(private val mainRepository: MainRepo
         generateOnboardingSessionTokenRequest.tenantSecret = params.tenantSecret
         generateOnboardingSessionTokenRequest.deviceId = params.deviceId
         generateOnboardingSessionTokenRequest.correlationId = params.correlationId
+        generateOnboardingSessionTokenRequest.requestId = params.requestId
         return mainRepository.generateOnboardingSessionToken(generateOnboardingSessionTokenRequest)
     }
 }
@@ -26,4 +27,5 @@ data class GenerateOnboardingSessionTokenUsecaseParams(
     val tenantSecret: String,
     val deviceId: String,
     val correlationId: String?,
+    val requestId: String?,
 )

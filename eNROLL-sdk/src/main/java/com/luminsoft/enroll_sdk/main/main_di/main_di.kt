@@ -10,6 +10,7 @@ import com.luminsoft.enroll_sdk.main.main_data.main_repository.MainRepositoryImp
 import com.luminsoft.enroll_sdk.main.main_domain.repository.MainRepository
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetApplicantIdUsecase
+import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetCurrentStepUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
@@ -31,6 +32,9 @@ val mainModule = module {
     single {
         GetApplicantIdUsecase(get())
     }
+    single {
+        GetCurrentStepUsecase(get())
+    }
     single<MainRemoteDataSource> {
         MainRemoteDataSourceImpl(get(), get())
     }
@@ -44,7 +48,7 @@ val mainModule = module {
         RetroClient.provideRetrofit(okHttpClient).create(MainApi::class.java)
     }
     viewModel {
-        OnBoardingViewModel(get(), get(), get(), get(), context = androidApplication())
+        OnBoardingViewModel(get(), get(), get(), get(), get(), context = androidApplication())
     }
     viewModel {
         LocationOnBoardingViewModel(get())

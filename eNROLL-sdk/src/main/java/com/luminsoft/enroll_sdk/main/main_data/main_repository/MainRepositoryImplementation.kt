@@ -7,6 +7,7 @@ import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_applicatnt_id.GetApplicantIdResponse
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_current_step.GetCurrentStepResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
@@ -58,6 +59,18 @@ class MainRepositoryImplementation(private val mainRemoteDataSource: MainRemoteD
         return when (val response = mainRemoteDataSource.getApplicantId()) {
             is BaseResponse.Success -> {
                 Either.Right(response.data as GetApplicantIdResponse)
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+        }
+    }
+
+    override suspend fun getCurrentStep(): Either<SdkFailure, GetCurrentStepResponse> {
+        return when (val response = mainRemoteDataSource.getCurrentStep()) {
+            is BaseResponse.Success -> {
+                Either.Right(response.data as GetCurrentStepResponse)
             }
 
             is BaseResponse.Error -> {
