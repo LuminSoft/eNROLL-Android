@@ -75,12 +75,13 @@ var dotenv = dotenv {
 //    filename = "env_fra_staging"
 //    filename = "env_test_2"
 //    filename = "env_humat_staging"
-//    filename = "env_org_1_staging"
-    filename = "env_admin_2"
+    filename = "env_org_1_staging"
+//    filename = "env_admin_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
 var tenantSecret = mutableStateOf(TextFieldValue(text = dotenv["TENANT_SECRET"]))
+var requestId = mutableStateOf(TextFieldValue(text = "1754396677449"))
 var applicationId = mutableStateOf(TextFieldValue(text = dotenv["APPLICATION_ID"]))
 var levelOfTrustToken = mutableStateOf(TextFieldValue(text = dotenv["LEVEL_OF_TRUST_TOKEN"]))
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
@@ -97,6 +98,7 @@ class MainActivity : ComponentActivity() {
     private var tenantSecretText = mutableStateOf(TextFieldValue())
     private var applicationIdText = mutableStateOf(TextFieldValue())
     private var levelOfTrustTokenText = mutableStateOf(TextFieldValue())
+    private var requestIdText = mutableStateOf(TextFieldValue())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,6 +127,13 @@ class MainActivity : ComponentActivity() {
                 text = sharedPref.getString(
                     "levelOfTrustToken",
                     levelOfTrustToken.value.text
+                )!!
+            )
+        requestIdText.value =
+            TextFieldValue(
+                text = sharedPref.getString(
+                    "requestIdText",
+                    requestId.value.text
                 )!!
             )
 
@@ -168,6 +177,12 @@ class MainActivity : ComponentActivity() {
                             value = levelOfTrustTokenText.value,
                             onValueChange = {
                                 levelOfTrustTokenText.value = it
+                            })
+                        NormalTextField(
+                            label = "Request Id",
+                            value = requestIdText.value,
+                            onValueChange = {
+                                requestIdText.value = it
                             })
                         Spacer(modifier = Modifier.height(15.dp))
 
@@ -285,7 +300,8 @@ class MainActivity : ComponentActivity() {
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
                 correlationId = "correlationId",
                 fontResource = R.font.itim_regular,
-                enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT
+                enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
+                requestId = requestIdText.value.text
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())

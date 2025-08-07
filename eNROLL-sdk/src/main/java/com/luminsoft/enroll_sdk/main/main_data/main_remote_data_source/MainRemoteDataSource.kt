@@ -9,5 +9,6 @@ interface MainRemoteDataSource {
     suspend fun getOnBoardingStepsConfigurations(): BaseResponse<Any>
     suspend fun initializeRequest(request: InitializeRequestRequest): BaseResponse<Any>
     suspend fun getApplicantId(): BaseResponse<Any>
+    suspend fun getCurrentStep(): BaseResponse<Any>
 
 }

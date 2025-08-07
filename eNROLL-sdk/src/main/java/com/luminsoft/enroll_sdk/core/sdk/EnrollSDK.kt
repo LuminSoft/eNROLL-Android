@@ -15,6 +15,7 @@ object EnrollSDK {
     var tenantSecret = ""
     var applicantId = ""
     var correlationId = ""
+    var requestId = ""
     var levelOfTrustToken = ""
     var updateSteps = arrayListOf<String>()
 
