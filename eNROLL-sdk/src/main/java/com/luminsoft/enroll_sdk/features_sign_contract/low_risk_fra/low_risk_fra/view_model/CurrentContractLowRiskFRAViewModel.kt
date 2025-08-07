@@ -40,9 +40,13 @@ class CurrentContractLowRiskFRAViewModel(
     private var pdfFile: MutableStateFlow<File?> = MutableStateFlow(null)
     private var responseBody: MutableStateFlow<ResponseBody?> = MutableStateFlow(null)
     var bitmap: MutableStateFlow<List<Bitmap>?> = MutableStateFlow(null)
+    var contractIdValue: MutableStateFlow<String> = MutableStateFlow("")
+    var contractVersionNumberValue: MutableStateFlow<String> = MutableStateFlow("")
 
 
     init {
+        contractIdValue.value = contractId
+        contractVersionNumberValue.value = contractVersionNumber
         getCurrentContract(currentText)
     }
 

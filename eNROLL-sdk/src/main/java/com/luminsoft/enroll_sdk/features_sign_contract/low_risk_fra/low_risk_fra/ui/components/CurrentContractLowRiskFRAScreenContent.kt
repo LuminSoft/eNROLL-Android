@@ -209,6 +209,11 @@ fun PdfViewerWidget(
     currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
     context: Context
 ) {
+    val contractId by currentContractLowRiskFRAVM.contractIdValue.collectAsState()
+    val contractVersion by currentContractLowRiskFRAVM.contractVersionNumberValue.collectAsState()
+    val fileName = "$contractId${contractVersion}_final"
+
+
     var showConfirmationDialog by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -231,7 +236,7 @@ fun PdfViewerWidget(
                     context
                 )
             else
-                DownloadIcon(currentContractLowRiskFRAVM, context, "final")
+                DownloadIcon(currentContractLowRiskFRAVM, context, fileName)
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
@@ -340,6 +345,11 @@ private fun PDFHeader(
     currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
     context: Context
 ) {
+    val contractId by currentContractLowRiskFRAVM.contractIdValue.collectAsState()
+    val contractVersion by currentContractLowRiskFRAVM.contractVersionNumberValue.collectAsState()
+    val fileName = "$contractId$contractVersion$currentStepIndex"
+
+
     val shape = RoundedCornerShape(8.dp)
     val squareShape = RoundedCornerShape(4.dp) // Optional: small rounding
 
@@ -393,7 +403,11 @@ private fun PDFHeader(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        DownloadIcon(currentContractLowRiskFRAVM, context, currentStepIndex.toString())
+        DownloadIcon(
+            currentContractLowRiskFRAVM,
+            context,
+            fileName
+        )
     }
 }
 
