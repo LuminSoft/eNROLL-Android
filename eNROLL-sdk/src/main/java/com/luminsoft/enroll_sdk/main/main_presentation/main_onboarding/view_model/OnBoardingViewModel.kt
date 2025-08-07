@@ -10,17 +10,22 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.models.BuildInfo
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_applicatnt_id.GetApplicantIdResponse
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_current_step.GetCurrentStepResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GenerateOnboardingSessionTokenUsecaseParams
+import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetApplicantIdUsecase
+import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetCurrentStepUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecase
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.GetOnboardingStepConfigurationsUsecaseParams
 import com.luminsoft.enroll_sdk.main.main_domain.usecases.InitializeRequestUsecase
@@ -34,6 +39,8 @@ class OnBoardingViewModel(
     private val generateOnboardingSessionToken: GenerateOnboardingSessionTokenUsecase,
     private val getOnboardingStepConfigurationsUsecase: GetOnboardingStepConfigurationsUsecase,
     private val initializeRequestUsecase: InitializeRequestUsecase,
+    private val getApplicantIdUsecase: GetApplicantIdUsecase,
+    private val getCurrentStepUsecase: GetCurrentStepUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -44,11 +51,12 @@ class OnBoardingViewModel(
     override var params: MutableStateFlow<Any?> = MutableStateFlow(null)
     override var token: MutableStateFlow<String?> = MutableStateFlow(null)
     var customerId: MutableStateFlow<String?> = MutableStateFlow(null)
-//    var userNationalId: MutableStateFlow<String?> = MutableStateFlow(null)
-//    var userPhoneNumber: MutableStateFlow<String?> = MutableStateFlow(null)
-//    var userMail: MutableStateFlow<String?> = MutableStateFlow(null)
+    var documentId: MutableStateFlow<String?> = MutableStateFlow(null)
+
     val existingSteps: MutableState<List<Int>?> = mutableStateOf(null)
     var requestId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var applicantId: MutableStateFlow<String?> = MutableStateFlow(null)
+    var currentStepId: MutableStateFlow<Int?> = MutableStateFlow(null)
     var requestCallBackSent: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var facePhotoPath: MutableStateFlow<String?> = MutableStateFlow(null)
     var errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -75,8 +83,13 @@ class OnBoardingViewModel(
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
 
+
+    init {
+        generateToken()
+    }
+
     override fun retry(navController: NavController) {
-        TODO("Not yet implemented")
+        generateToken()
     }
 
 
@@ -86,8 +99,10 @@ class OnBoardingViewModel(
 
     fun initRequest() {
         loading.value = true
+        failure.value = null
         ui {
-
+            if (EnrollSDK.requestId.isNotEmpty())
+                getCurrentStep()
             val deviceId = DeviceIdentifier.getDeviceId(context)
             val manufacturer: String = Build.MANUFACTURER
             val deviceModel: String = Build.MODEL
@@ -95,7 +110,9 @@ class OnBoardingViewModel(
             params.value = InitializeRequestUsecaseParams(
                 deviceId,
                 manufacturer,
-                deviceModel
+                deviceModel,
+                "Android",
+                BuildInfo.SDK_VERSION
             )
             val response: Either<SdkFailure, InitializeRequestResponse> =
                 initializeRequestUsecase.call(params.value as InitializeRequestUsecaseParams)
@@ -108,6 +125,10 @@ class OnBoardingViewModel(
                 {
                     loading.value = false
                     requestId.value = it.requestId
+                    if (EnrollSDK.skipTutorial) {
+                        EnrollSDK.enrollCallback?.getRequestId(requestId.value!!)
+                        changeRequestIdSentValue()
+                    }
                     navigateToNextStep()
                 })
 
@@ -122,9 +143,6 @@ class OnBoardingViewModel(
         loading.value = false
     }
 
-    init {
-        generateToken()
-    }
 
     private fun generateToken() {
         loading.value = true
@@ -133,7 +151,9 @@ class OnBoardingViewModel(
             params.value = GenerateOnboardingSessionTokenUsecaseParams(
                 EnrollSDK.tenantId,
                 EnrollSDK.tenantSecret,
-                uuid
+                uuid,
+                EnrollSDK.correlationId,
+                EnrollSDK.requestId
             )
 
             val response: Either<SdkFailure, String> =
@@ -159,9 +179,9 @@ class OnBoardingViewModel(
                             loading.value = false
                             extractRegistrationStepIds(list)
 
-                            if(EnrollSDK.skipTutorial){
+                            if (EnrollSDK.skipTutorial) {
                                 initRequest()
-                            }else{
+                            } else {
                                 navController!!.navigate(onBoardingScreenContent)
                             }
 
@@ -172,25 +192,73 @@ class OnBoardingViewModel(
         }
     }
 
-    fun removeCurrentStep(id: Int): Boolean {
-        if (steps.value != null) {
-            val stepsSize = steps.value!!.size
-            steps.value = steps.value!!.toMutableList().apply {
-                removeIf { x -> x.registrationStepId == id }
-            }.toList()
-            val newStepsSize = steps.value!!.size
-            if (stepsSize != newStepsSize) {
-                return if (steps.value!!.isNotEmpty()) {
-                    navigateToNextStep()
-                    false
-                } else
-                    true
+    suspend fun getApplicantId(): Either<SdkFailure, GetApplicantIdResponse> {
+        loading.value = true
+
+        val response: Either<SdkFailure, GetApplicantIdResponse> =
+            getApplicantIdUsecase.call(null)
+
+
+        response.fold(
+            { failure ->
+                this.failure.value = failure
+                loading.value = false
+            },
+            { success ->
+                applicantId.value = success.applicantId
+                loading.value = false
             }
+        )
+
+        return response  // Return the response
+    }
+
+    private suspend fun getCurrentStep(): Either<SdkFailure, GetCurrentStepResponse> {
+        loading.value = true
+
+        val response: Either<SdkFailure, GetCurrentStepResponse> =
+            getCurrentStepUsecase.call(null)
+
+
+        response.fold(
+            { failure ->
+                this.failure.value = failure
+                loading.value = false
+            },
+            { success ->
+                currentStepId.value = success.currentStepId
+                removeStepsUntilCurrentStep()
+            }
+        )
+
+        return response  // Return the response
+    }
+
+
+    fun removeCurrentStep(id: Int): Boolean {
+        try {
+            if (steps.value != null) {
+                val stepsSize = steps.value!!.size
+                steps.value = steps.value!!.toMutableList().apply {
+                    removeIf { x -> x.registrationStepId == id }
+                }.toList()
+                val newStepsSize = steps.value!!.size
+                if (stepsSize != newStepsSize) {
+                    return if (steps.value!!.isNotEmpty()) {
+                        navigateToNextStep()
+                        false
+                    } else
+                        true
+                }
+            }
+            return false
+        } catch (e: Exception) {
+            return false
         }
-        return false
     }
 
     private fun navigateToNextStep() {
+        if (navController == null || steps.value.isNullOrEmpty()) return
         mailValue.value = TextFieldValue()
         currentPhoneNumber.value = null
         navController!!.navigate(steps.value!!.first().stepNameNavigator())
@@ -202,5 +270,21 @@ class OnBoardingViewModel(
 
     fun changeRequestIdSentValue() {
         requestCallBackSent.value = true
+    }
+
+
+    private fun removeStepsUntilCurrentStep() {
+        // Check if the steps list is not null and contains at least one step
+        steps.value?.let { stepList ->
+            // Find the index of the step with matching currentStepId
+            val currentStepIndex =
+                stepList.indexOfFirst { it.registrationStepId == currentStepId.value }
+
+            // If a matching step is found
+            if (currentStepIndex != -1) {
+                // Remove all steps up to and including the found step
+                steps.value = stepList.subList(currentStepIndex, stepList.size)
+            }
+        }
     }
 }

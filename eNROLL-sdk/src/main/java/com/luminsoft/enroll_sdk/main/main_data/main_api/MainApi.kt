@@ -3,6 +3,8 @@ package com.luminsoft.enroll_sdk.main.main_data.main_api
 
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_applicatnt_id.GetApplicantIdResponse
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_current_step.GetCurrentStepResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.StepModel
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
@@ -20,4 +22,10 @@ interface MainApi {
 
     @POST("api/v1/onboarding/Request/InitializeRequest")
     suspend fun initializeRequest(@Body request: InitializeRequestRequest): Response<InitializeRequestResponse>
+
+    @GET("api/v1/Applicant/GetApplicantId")
+    suspend fun getApplicantId(): Response<GetApplicantIdResponse>
+
+    @GET("api/v1/onboarding/Request/GetCurrentStep")
+    suspend fun getCurrentStep(): Response<GetCurrentStepResponse>
 }

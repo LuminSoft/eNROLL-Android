@@ -8,6 +8,7 @@ import com.luminsoft.enroll_sdk.features.face_capture.face_capture_data.face_cap
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_data.face_capture_repository.FaceCaptureRepositoryImplementation
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_domain.repository.FaceCaptureRepository
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_domain.usecases.FaceCaptureUseCase
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val faceCaptureModule = module {
@@ -21,11 +22,9 @@ val faceCaptureModule = module {
         FaceCaptureRepositoryImplementation(get())
     }
     single {
-        RetroClient.provideRetrofit(
-            RetroClient.provideOkHttpClient(
-                AuthInterceptor()
-            )
-        ).create(FaceCaptureApi::class.java)
+        val context = androidContext()
+        val okHttpClient = RetroClient.provideOkHttpClient(AuthInterceptor(), context)
+        RetroClient.provideRetrofit(okHttpClient).create(FaceCaptureApi::class.java)
     }
 
 }

@@ -1,3 +1,4 @@
+package com.luminsoft.enroll_sdk.features_auth.check_imei_auth.check_imei_auth.view_model
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -26,7 +27,6 @@ class CheckIMEIAuthViewModel(
     private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
 
 
-
     init {
         checkIMEI()
     }
@@ -42,7 +42,8 @@ class CheckIMEIAuthViewModel(
                 false
             )
 
-            val response: Either<SdkFailure, Null> = authCheckIMEIUseCase.call(params.value as CheckIMEIAuthUseCaseParams)
+            val response: Either<SdkFailure, Null> =
+                authCheckIMEIUseCase.call(params.value as CheckIMEIAuthUseCaseParams)
 
             response.fold(
                 {

@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.face_capture.face_capture_onboarding.ui.components
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -33,7 +34,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,12 +51,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import appColors
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_domain.usecases.FaceCaptureUseCase
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_domain.usecases.SelfieImageApproveUseCase
@@ -71,6 +77,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
 
@@ -129,15 +136,28 @@ fun FaceCaptureBoardingPostScanScreenContent(
             }
         }
 
+    // State to control whether to show MainContent
+    var showMainContent by remember { mutableStateOf(faceCaptureOnBoardingPostScanViewModel != null) }
 
+    // Handle navigation to error screen if view model is null
+    LaunchedEffect(faceCaptureOnBoardingPostScanViewModel) {
+        if (faceCaptureOnBoardingPostScanViewModel == null) {
+            onBoardingViewModel.errorMessage.value = "Required data is missing"
+            navController.navigate(faceCaptureOnBoardingErrorScreen)
+            showMainContent = false
+        }
+    }
 
-    MainContent(
-        navController,
-        onBoardingViewModel,
-        activity,
-        startForResult,
-        faceCaptureOnBoardingPostScanViewModel!!
-    )
+    // Render MainContent only if view model is not null
+    if (showMainContent && faceCaptureOnBoardingPostScanViewModel != null) {
+        MainContent(
+            navController,
+            onBoardingViewModel,
+            activity,
+            startForResult,
+            faceCaptureOnBoardingPostScanViewModel
+        )
+    }
 }
 
 
@@ -166,14 +186,15 @@ private fun MainContent(
     val scale = remember { Animatable(initialValue = 0f) }
     val startPosition1 = Offset(-250f, 100f)
     val position1 = remember { Animatable(startPosition1, Offset.VectorConverter) }
-    val faceImageBaseUrl = "${EnrollSDK.getImageUrl()}api/v1/ApplicantProfile/GetImage?path="
+    val faceImageBaseUrl = EnrollSDK.getImageUrl()
+    val showDialog = remember { mutableStateOf(false) }
 
     if (!loading.value) {
         LaunchedEffect(endPosition) {
             position.animateTo(
                 targetValue = endPosition,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -183,7 +204,7 @@ private fun MainContent(
             position1.animateTo(
                 targetValue = endPosition1,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -194,7 +215,7 @@ private fun MainContent(
             scale.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(
-                    durationMillis = 7000,
+                    durationMillis = 3000,
                     delayMillis = 10,
                     easing = LinearOutSlowInEasing
                 )
@@ -207,23 +228,34 @@ private fun MainContent(
         if (selfieImageApproved.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.SmileLiveness.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
-                        )
-                    },
-                )
-        }
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
 
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
+                        )
+                    )
+                }
+            )
+        }
         if (loading.value)
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -253,7 +285,8 @@ private fun MainContent(
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.ekycSuccessfullyDone),
-                        color = Color.Black
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
@@ -269,7 +302,7 @@ private fun MainContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 24.dp)
                 ) {
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
@@ -277,7 +310,8 @@ private fun MainContent(
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
                         text = stringResource(id = R.string.facesNotMatch),
-                        color = Color.Black
+                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                        color = MaterialTheme.appColors.textColor
                     )
                     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
@@ -292,7 +326,7 @@ private fun MainContent(
                         },
                         title = stringResource(id = R.string.rescan)
                     )
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     ButtonView(
                         onClick = {
@@ -315,6 +349,7 @@ private fun MainContent(
 
 }
 
+@SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 private fun AnimationExtracted(
     position: Animatable<Offset, AnimationVector2D>,
@@ -330,7 +365,13 @@ private fun AnimationExtracted(
         ) {
             Box {
                 AsyncImage(
-                    model = faceImageBaseUrl + facePhotoPath!!,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(faceImageBaseUrl)
+                        .addHeader(
+                            "Authorization",
+                            "Bearer ${RetroClient.token}"
+                        ) // Add Bearer token here
+                        .build(),
                     contentDescription = "face Photo Path",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

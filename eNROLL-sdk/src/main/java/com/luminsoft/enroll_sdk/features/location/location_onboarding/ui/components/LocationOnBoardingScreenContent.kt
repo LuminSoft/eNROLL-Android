@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.features.location.location_onboarding.ui.components
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,16 +44,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.android.gms.common.api.ResolvableApiException
@@ -64,8 +64,10 @@ import com.google.android.gms.tasks.Task
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
+import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.features.location.location_domain.usecases.PostLocationUseCase
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationDetails
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
@@ -108,6 +110,7 @@ fun LocationOnBoardingScreenContent(
     val currentLocation = locationOnBoardingViewModel.currentLocation.collectAsState()
     val locationSent = locationOnBoardingVM.locationSent.collectAsState()
     val permissionDenied = locationOnBoardingVM.permissionDenied.collectAsState()
+    val showDialog = remember { mutableStateOf(false) }
 
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
@@ -123,21 +126,17 @@ fun LocationOnBoardingScreenContent(
         if (locationSent.value) {
             val isEmpty =
                 onBoardingViewModel.removeCurrentStep(EkycStepType.DeviceLocation.getStepId())
-            if (isEmpty)
-                DialogView(
-                    bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                    text = stringResource(id = R.string.successfulRegistration),
-                    buttonText = stringResource(id = R.string.continue_to_next),
-                    onPressedButton = {
-                        activity.finish()
-                        EnrollSDK.enrollCallback?.error(
-                            EnrollFailedModel(
-                                activity.getString(R.string.successfulRegistration),
-                                activity.getString(R.string.successfulRegistration)
-                            )
-                        )
-                    },
-                )
+
+            if (isEmpty) {
+                LaunchedEffect(Unit) {
+                    val apiResponse = onBoardingViewModel.getApplicantId()
+                    apiResponse.fold(
+                        {},
+                        { _ -> showDialog.value = true }
+                    )
+                }
+            }
+
         }
         val launcherMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -155,6 +154,23 @@ fun LocationOnBoardingScreenContent(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulAuthentication),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.applicantId.value,
+                        )
+                    )
+                }
+            )
+        }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
@@ -233,7 +249,13 @@ private fun RequestLocation(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.step_00_location, R.string.getLocationText)
+        EnrollItemView(
+            listOf(
+                R.drawable.step_00_location_1,
+                R.drawable.step_00_location_2,
+                R.drawable.step_00_location_3
+            ), R.string.getLocationText
+        )
         ButtonView(
             onClick = {
                 if (permissions.all {
@@ -283,7 +305,14 @@ private fun PermissionDenied(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        EnrollItemView(R.drawable.invalid_location_permission, R.string.locationAccessErrorText)
+        EnrollItemView(
+            listOf(
+                R.drawable.step_00_location_1,
+                R.drawable.step_00_location_2,
+                R.drawable.step_00_location_3
+            ),
+            R.string.locationAccessErrorText
+        )
         ButtonView(
             onClick = {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -319,7 +348,6 @@ private fun PermissionDenied(
                 .safeContentPadding()
                 .height(10.dp)
         )
-
 
     }
 
@@ -374,13 +402,14 @@ private fun GotLocation(
                 )
             }
             if (apiKeyEmptyOrHasException) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f),
-                    painter = painterResource(id = R.drawable.step_00_location),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Victor Ekyc Item"
+
+
+                val images = listOf(
+                    R.drawable.location_saved_1,
+                    R.drawable.location_saved_2,
+                    R.drawable.location_saved_3
                 )
+                ImagesBox(images = images, modifier = Modifier.fillMaxWidth(0.8f))
             }
             if (isLoading) LoadingView()
         }
@@ -389,6 +418,7 @@ private fun GotLocation(
             modifier = Modifier
                 .fillMaxWidth(),
             text = stringResource(id = R.string.locationSuccessText),
+            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
             textAlign = TextAlign.Center,
         )
@@ -418,12 +448,14 @@ private fun GotLocation(
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.latitude, currentLocation.latitude),
                     fontSize = 12.sp,
-                    color = Color.Black
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                    color = MaterialTheme.appColors.textColor
                 )
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.longitude, currentLocation.longitude),
+                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = MaterialTheme.appColors.textColor
                 )
             }
         }

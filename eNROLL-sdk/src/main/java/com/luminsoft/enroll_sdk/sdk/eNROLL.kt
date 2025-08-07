@@ -1,18 +1,22 @@
 package com.luminsoft.enroll_sdk.sdk
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
+import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
+import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import java.util.Locale
+
 
 object eNROLL {
     @Throws(Exception::class)
@@ -27,16 +31,20 @@ object eNROLL {
         enrollCallback: EnrollCallback? = null,
         googleApiKey: String? = "",
         skipTutorial: Boolean = false,
-        appColors: AppColors = AppColors()
-    ) {
+        appColors: AppColors = AppColors(),
+        correlationId: String = "",
+        requestId: String = "",
+        fontResource: Int? = 0,
+        enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
+
+        ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
         if (tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
-        if (enrollMode == EnrollMode.AUTH) {
-            if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
-                throw Exception("Invalid Applicant Id or Level Of Trust Token")
-        }
+        if (enrollMode == EnrollMode.AUTH && (applicantId.isEmpty() || levelOfTrustToken.isEmpty())) throw Exception(
+            "Invalid Applicant Id or Level Of Trust Token"
+        )
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
         EnrollSDK.tenantId = tenantId
@@ -48,12 +56,18 @@ object eNROLL {
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
         EnrollSDK.appColors = appColors
+        EnrollSDK.correlationId = correlationId
+        EnrollSDK.requestId = requestId
+        EnrollSDK.fontResource = fontResource!!
+        EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
+
 
     }
 
     fun launch(
         activity: Activity,
     ) {
+
         if (EnrollSDK.tenantId.isEmpty())
             throw Exception("Invalid tenant id")
         if (EnrollSDK.tenantSecret.isEmpty())
@@ -79,13 +93,15 @@ object eNROLL {
                 activity.startActivity(Intent(activity, EnrollMainUpdateActivity::class.java))
             }
 
-            EnrollMode.CANT_LOGIN -> TODO()
+            EnrollMode.FORGET_PROFILE_DATA -> {
+
+                activity.startActivity(Intent(activity, EnrollMainForgetActivity::class.java))
+            }
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun setLocale(lang: LocalizationCode, activity: Activity) {
-        val locale = if (lang != LocalizationCode.AR) {
+        val locale = if (lang.name.lowercase() != LocalizationCode.AR.name.lowercase()) {
             Locale("en")
         } else {
             Locale("ar")
@@ -93,6 +109,7 @@ object eNROLL {
 
         val config: Configuration = activity.baseContext.resources.configuration
         config.setLocale(locale)
+
         activity.baseContext.resources.updateConfiguration(
             config,
             activity.baseContext.resources.displayMetrics

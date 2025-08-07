@@ -7,6 +7,7 @@ import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.email.email_data.email_models.verified_mails.GetVerifiedMailsResponseModel
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ApproveMailsUseCase
+import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.DeleteMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MakeDefaultMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MakeDefaultMailUseCaseParams
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MultipleMailUseCase
@@ -16,6 +17,7 @@ class MultipleMailsViewModel(
     private val multipleMailUseCase: MultipleMailUseCase,
     private val approveMailsUseCase: ApproveMailsUseCase,
     private val makeDefaultMailUseCase: MakeDefaultMailUseCase,
+    private val deleteMailUseCase: DeleteMailUseCase,
 ) :
     ViewModel() {
 
@@ -25,6 +27,8 @@ class MultipleMailsViewModel(
     var failure: MutableStateFlow<SdkFailure?> = MutableStateFlow(null)
     var verifiedMails: MutableStateFlow<List<GetVerifiedMailsResponseModel>?> =
         MutableStateFlow(null)
+    var mailToDelete: MutableStateFlow<String?> = MutableStateFlow(null)
+    var isDeleteMailClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var params: MutableStateFlow<Any?> = MutableStateFlow(null)
 
 
@@ -101,8 +105,32 @@ class MultipleMailsViewModel(
                     getVerifiedMails()
                 })
         }
+    }
 
 
+    fun callDeleteMail(mail: String) {
+        deleteMail(mail)
+    }
+
+    private fun deleteMail(mail: String) {
+        loading.value = true
+        ui {
+            params.value =
+                MakeDefaultMailUseCaseParams(
+                    email = mail
+                )
+            val response: Either<SdkFailure, Null> =
+                deleteMailUseCase.call(params.value as MakeDefaultMailUseCaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                {
+                    getVerifiedMails()
+                })
+        }
     }
 
 }

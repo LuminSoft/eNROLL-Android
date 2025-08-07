@@ -1,31 +1,27 @@
 package com.luminsoft.enroll_sdk.innovitices.documentautocapture
 
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureResult
-import com.innovatrics.dot.face.similarity.FaceMatcher
-import com.innovatrics.dot.image.BitmapFactory
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class DocumentAutoCaptureViewModel : ViewModel() {
+class DocumentAutoCaptureViewModel(
+    private val createUiResultUseCase: CreateUiResultUseCase,
+) : ViewModel() {
 
     private val mutableState: MutableLiveData<DocumentAutoCaptureState> = MutableLiveData()
     val state: LiveData<DocumentAutoCaptureState> = mutableState
-    val result: FaceMatcher.Result? = null
 
     fun initializeState() {
         mutableState.value = DocumentAutoCaptureState()
     }
 
-    fun process(documentAutoCaptureResult: DocumentAutoCaptureResult) {
-        val uiResult = createUiResult(documentAutoCaptureResult)
-        mutableState.value = state.value!!.copy(result = uiResult)
-    }
-
-    private fun createUiResult(documentAutoCaptureResult: DocumentAutoCaptureResult): com.luminsoft.enroll_sdk.innovitices.documentautocapture.DocumentAutoCaptureResult {
-        return DocumentAutoCaptureResult(
-            bitmap = BitmapFactory.create(documentAutoCaptureResult.bgraRawImage),
-            documentDetectorResult = documentAutoCaptureResult.documentDetectorResult
-        )
+    fun process(documentAutoCaptureResult: com.innovatrics.dot.document.autocapture.DocumentAutoCaptureResult) {
+        viewModelScope.launch {
+            val result = createUiResultUseCase(documentAutoCaptureResult)
+            mutableState.value = state.value!!.copy(result = result)
+        }
     }
 }

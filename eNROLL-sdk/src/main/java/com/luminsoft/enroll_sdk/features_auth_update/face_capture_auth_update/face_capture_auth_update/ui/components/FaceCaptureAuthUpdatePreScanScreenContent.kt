@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -69,15 +71,31 @@ fun FaceCaptureAuthUpdatePreScanScreenContent(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
         ) {
-            EnrollItemView(R.drawable.step_02_smile_liveness, R.string.facePreCapContent)
-            ButtonView(
-                onClick = {
-                    val intent =
-                        Intent(activity.applicationContext, SmileLivenessActivity::class.java)
-                    startForResult.launch(intent)
-                },
-                stringResource(id = R.string.start),
-            )
+            EnrollItemView(
+                listOf( R.drawable.step_02_smile_liveness_1, R.drawable.step_02_smile_liveness_2, R.drawable.step_02_smile_liveness_3)
+               , R.string.facePreCapContent)
+
+            Column {
+                ButtonView(
+                    onClick = {
+                        val intent =
+                            Intent(activity.applicationContext, SmileLivenessActivity::class.java)
+                        startForResult.launch(intent)
+                    },
+                    stringResource(id = R.string.start),
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ButtonView(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    stringResource(id = R.string.cancel),
+                    color = MaterialTheme.appColors.backGround,
+                    borderColor = MaterialTheme.appColors.primary,
+                    textColor = MaterialTheme.appColors.primary,
+                ) }
+
             Spacer(
                 modifier = Modifier
                     .safeContentPadding()

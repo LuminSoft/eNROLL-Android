@@ -99,7 +99,7 @@ private fun NationalIdOnly(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
         ) {
-            EnrollItemView(R.drawable.step_01_national_id, R.string.documentPreScanContent)
+            EnrollItemView(   listOf(R.drawable.step_01_national_id_1, R.drawable.step_01_national_id_2, R.drawable.step_01_national_id_3), R.string.documentPreScanContent)
             ButtonView(
                 onClick = {
                     rememberedViewModel.enableLoading()

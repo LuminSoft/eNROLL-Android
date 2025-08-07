@@ -13,4 +13,7 @@ open class InitializeRequestRequest {
     @SerializedName("imei")
     internal var imei: String? = null
 
+    @SerializedName("mobilePayload")
+    internal var mobilePayload: Map<String, String>? = null
+
 }
