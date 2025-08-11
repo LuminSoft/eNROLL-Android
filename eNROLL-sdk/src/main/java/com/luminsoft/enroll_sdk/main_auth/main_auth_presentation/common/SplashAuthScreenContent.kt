@@ -1,6 +1,6 @@
 package com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.common
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,14 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
@@ -39,6 +37,7 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
+import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
 @Composable
@@ -47,15 +46,20 @@ fun SplashScreenAuthContent(
     navController: NavController,
 ) {
     val failure = viewModel.failure.collectAsState()
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current
+
     viewModel.navController = navController
 
-    Surface(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.appColors.backGround),) {
-        Box(modifier = Modifier
+    Surface(
+        modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.appColors.backGround),) {
+            .background(MaterialTheme.appColors.backGround),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.appColors.backGround),
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -65,20 +69,21 @@ fun SplashScreenAuthContent(
                 Box(
                     modifier = Modifier
 
-                        .height(ScreenHelper.sh(0.12)).width(ScreenHelper.sw(0.46)) // Adjust height as per your need
+                        .height(ScreenHelper.sh(0.12))
+                        .width(ScreenHelper.sw(0.46)) // Adjust height as per your need
                 ) {
                     Image(
                         painterResource(R.drawable.enroll_logo_part1),
                         contentScale = ContentScale.FillBounds,
                         contentDescription = "",
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                         modifier = Modifier
                             .fillMaxSize(),
                     )
                     Image(
                         painterResource(R.drawable.enroll_logo_part2),
                         contentScale = ContentScale.FillBounds,
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.secondary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
 
                         contentDescription = "",
                         modifier = Modifier
@@ -131,13 +136,13 @@ fun SplashScreenAuthContent(
                     buttonText = stringResource(id = R.string.exit),
                     onPressedButton = {
 
-                        activity.finish()
+                        activity?.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                     },
                 )
                 {
-                    activity.finish()
+                    activity?.finish()
                     EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                 }
@@ -153,13 +158,13 @@ fun SplashScreenAuthContent(
                     },
                     secondButtonText = stringResource(id = R.string.exit),
                     onPressedSecondButton = {
-                        activity.finish()
+                        activity?.finish()
                         EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
 
                     }
                 )
                 {
-                    activity.finish()
+                    activity?.finish()
                     EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
                 }
             }

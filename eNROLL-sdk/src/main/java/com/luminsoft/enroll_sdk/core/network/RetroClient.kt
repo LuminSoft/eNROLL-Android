@@ -39,31 +39,10 @@ object RetroClient {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create()).build()
+            .addConverterFactory(EncryptedConverterFactory.create()) // Add this first
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
-
-
-/*    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
-        return OkHttpClient().newBuilder()
-            .readTimeout(
-                READ_TIME_OUT_CONNECTION.toLong(),
-                TINE_UNIT_FOR_CONNECTION
-            )
-            .writeTimeout(
-                WRITE_TIME_OUT_CONNECTION.toLong(),
-                TINE_UNIT_FOR_CONNECTION
-            )
-            .connectTimeout(
-                TIME_OUT_CONNECTION.toLong(),
-                TINE_UNIT_FOR_CONNECTION
-            ).addInterceptor(ConnectivityInterceptor())
-
-            .addInterceptor(authInterceptor)
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level =
-                    HttpLoggingInterceptor.Level.BODY
-            }).build()
-    }*/
 
     fun provideOkHttpClient(authInterceptor: AuthInterceptor, context: Context): OkHttpClient {
         val certificateFactory = CertificateFactory.getInstance("X.509")
@@ -74,7 +53,8 @@ object RetroClient {
         keyStore.load(null, null)
         keyStore.setCertificateEntry("custom_ca", certificate)
 
-        val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        val trustManagerFactory =
+            TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
         trustManagerFactory.init(keyStore)
 
         val trustManagers = trustManagerFactory.trustManagers

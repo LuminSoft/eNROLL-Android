@@ -65,7 +65,7 @@ var dotenv = dotenv {
     directory = "/assets"
 //    filename = "env_andrew"
 //    filename = "env_radwan"
-//    filename = "env_org_1"
+    filename = "env_org_1"
 //    filename = "env_support_team"
 //    filename = "env_org2"
 //    filename = "env_azimut_production"
@@ -76,7 +76,7 @@ var dotenv = dotenv {
 //    filename = "env_test_2"
 //    filename = "env_humat_staging"
 //    filename = "env_org_1_staging"
-    filename = "env_admin_2"
+//    filename = "env_admin_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
