@@ -1,5 +1,5 @@
 package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_presentation.common
-import SignContractViewModel
+
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,12 +49,16 @@ fun SplashScreenSignContractContent(
     val activity = LocalActivity.current
     viewModel.navController = navController
 
-    Surface(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.appColors.backGround),) {
-        Box(modifier = Modifier
+    Surface(
+        modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.appColors.backGround),) {
+            .background(MaterialTheme.appColors.backGround),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.appColors.backGround),
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -64,20 +68,21 @@ fun SplashScreenSignContractContent(
                 Box(
                     modifier = Modifier
 
-                        .height(ScreenHelper.sh(0.12)).width(ScreenHelper.sw(0.46)) // Adjust height as per your need
+                        .height(ScreenHelper.sh(0.12))
+                        .width(ScreenHelper.sw(0.46)) // Adjust height as per your need
                 ) {
                     Image(
                         painterResource(R.drawable.enroll_logo_part1),
                         contentScale = ContentScale.FillBounds,
                         contentDescription = "",
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                         modifier = Modifier
                             .fillMaxSize(),
                     )
                     Image(
                         painterResource(R.drawable.enroll_logo_part2),
                         contentScale = ContentScale.FillBounds,
-                        colorFilter =   ColorFilter.tint(MaterialTheme.appColors.secondary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
 
                         contentDescription = "",
                         modifier = Modifier
