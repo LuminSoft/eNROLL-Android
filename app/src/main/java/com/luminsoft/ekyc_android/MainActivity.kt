@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -39,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -82,10 +82,13 @@ var dotenv = dotenv {
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
 var tenantSecret = mutableStateOf(TextFieldValue(text = dotenv["TENANT_SECRET"]))
 var requestId = mutableStateOf(TextFieldValue(text = "1754396677449"))
-var applicationId = mutableStateOf(TextFieldValue(text = dotenv["APPLICATION_ID"]))
-var levelOfTrustToken = mutableStateOf(TextFieldValue(text = dotenv["LEVEL_OF_TRUST_TOKEN"]))
-var templateId = mutableStateOf(TextFieldValue(text = dotenv["TEMPLATE_ID"]))
-var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
+var applicationId =
+    mutableStateOf(TextFieldValue(dotenv["APPLICATION_ID"]?.takeIf { it.isNotEmpty() } ?: ""))
+var levelOfTrustToken =
+    mutableStateOf(TextFieldValue(dotenv["LEVEL_OF_TRUST_TOKEN"]?.takeIf { it.isNotEmpty() } ?: ""))
+var templateId =
+    mutableStateOf(TextFieldValue(dotenv["TEMPLATE_ID"]?.takeIf { it.isNotEmpty() } ?: ""))
+var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"]?.takeIf { it.isNotEmpty() } ?: "")
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
@@ -148,7 +151,7 @@ class MainActivity : ComponentActivity() {
             )
 
         setContent {
-            val activity = LocalContext.current as Activity
+            val activity = LocalActivity.current!!
 
             val itemList =
                 listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract")
