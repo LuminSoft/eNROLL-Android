@@ -81,7 +81,8 @@ var dotenv = dotenv {
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
 var tenantSecret = mutableStateOf(TextFieldValue(text = dotenv["TENANT_SECRET"]))
-var requestId = mutableStateOf(TextFieldValue(text = "1754396677449"))
+var requestId =
+    mutableStateOf(TextFieldValue(dotenv["REQUEST_ID"]?.takeIf { it.isNotEmpty() } ?: ""))
 var applicationId =
     mutableStateOf(TextFieldValue(dotenv["APPLICATION_ID"]?.takeIf { it.isNotEmpty() } ?: ""))
 var levelOfTrustToken =
