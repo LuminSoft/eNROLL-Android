@@ -401,4 +401,11 @@
     <string name="dot_document_auto_capture_instruction_sharpness_too_low_escalated">Move document to brighter area</string>
     <string name="dot_document_auto_capture_instruction_size_too_small_escalated">Move document closer</string>
 
+
+    <string name="approve">Approve</string>
+    <string name="sign">Sign</string>
+    <string name="exitConfirmation">Are you sure you want to exit?</string>
+    <string name="contractSignedSuccessfully">Contract Signed Successfully</string>
+
+
 </resources>

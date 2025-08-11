@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
+import com.luminsoft.enroll_sdk.EnrollMainSignContractActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
@@ -34,6 +35,8 @@ object eNROLL {
         appColors: AppColors = AppColors(),
         correlationId: String = "",
         requestId: String = "",
+        templateId: String = "",
+        contractParameters: String = "",
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
 
@@ -42,9 +45,14 @@ object eNROLL {
             throw Exception("Invalid tenant id")
         if (tenantSecret.isEmpty())
             throw Exception("Invalid tenant secret")
-        if (enrollMode == EnrollMode.AUTH && (applicantId.isEmpty() || levelOfTrustToken.isEmpty())) throw Exception(
-            "Invalid Applicant Id or Level Of Trust Token"
-        )
+        if (enrollMode == EnrollMode.AUTH) {
+            if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
+                throw Exception("Invalid Applicant Id or Level Of Trust Token")
+        }
+        if (enrollMode == EnrollMode.SIGN_CONTRACT) {
+            if (templateId.isEmpty())
+                throw Exception("Invalid template Id")
+        }
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
         EnrollSDK.tenantId = tenantId
@@ -60,8 +68,8 @@ object eNROLL {
         EnrollSDK.requestId = requestId
         EnrollSDK.fontResource = fontResource!!
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
-
-
+        EnrollSDK.contractTemplateId = templateId
+        EnrollSDK.contractParameters = contractParameters
     }
 
     fun launch(
@@ -96,6 +104,12 @@ object eNROLL {
             EnrollMode.FORGET_PROFILE_DATA -> {
 
                 activity.startActivity(Intent(activity, EnrollMainForgetActivity::class.java))
+            }
+
+            EnrollMode.SIGN_CONTRACT -> {
+                if (EnrollSDK.contractTemplateId.isEmpty())
+                    throw Exception("Invalid template id")
+                activity.startActivity(Intent(activity, EnrollMainSignContractActivity::class.java))
             }
         }
     }

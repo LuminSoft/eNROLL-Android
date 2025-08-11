@@ -38,6 +38,13 @@
             android:theme="@style/Theme.EkycSDK"
             tools:ignore="DiscouragedApi" />
         <activity
+            android:name="com.luminsoft.enroll_sdk.EnrollMainSignContractActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.EkycSDK"
+            tools:ignore="DiscouragedApi" />
+        <activity
             android:name="com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity"
             android:configChanges="locale|orientation|keyboardHidden|screenSize"
             android:label="@string/document_front_screen"

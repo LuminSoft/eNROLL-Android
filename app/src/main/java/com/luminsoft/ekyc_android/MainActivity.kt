@@ -75,8 +75,8 @@ var dotenv = dotenv {
 //    filename = "env_fra_staging"
 //    filename = "env_test_2"
 //    filename = "env_humat_staging"
-    filename = "env_org_1_staging"
-//    filename = "env_admin_2"
+//    filename = "env_org_1_staging"
+    filename = "env_admin_2"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -84,6 +84,7 @@ var tenantSecret = mutableStateOf(TextFieldValue(text = dotenv["TENANT_SECRET"])
 var requestId = mutableStateOf(TextFieldValue(text = "1754396677449"))
 var applicationId = mutableStateOf(TextFieldValue(text = dotenv["APPLICATION_ID"]))
 var levelOfTrustToken = mutableStateOf(TextFieldValue(text = dotenv["LEVEL_OF_TRUST_TOKEN"]))
+var templateId = mutableStateOf(TextFieldValue(text = dotenv["TEMPLATE_ID"]))
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"])
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
@@ -99,6 +100,8 @@ class MainActivity : ComponentActivity() {
     private var applicationIdText = mutableStateOf(TextFieldValue())
     private var levelOfTrustTokenText = mutableStateOf(TextFieldValue())
     private var requestIdText = mutableStateOf(TextFieldValue())
+    private var templateIdText = mutableStateOf(TextFieldValue())
+    private var contractParametersText = mutableStateOf(TextFieldValue())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,11 +139,19 @@ class MainActivity : ComponentActivity() {
                     requestId.value.text
                 )!!
             )
+        templateIdText.value =
+            TextFieldValue(
+                text = sharedPref.getString(
+                    "levelOfTrustToken",
+                    templateId.value.text
+                )!!
+            )
 
         setContent {
             val activity = LocalContext.current as Activity
 
-            val itemList = listOf("Onboarding", "Auth", "Update", "Forget Profile Data")
+            val itemList =
+                listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
 
@@ -185,11 +196,30 @@ class MainActivity : ComponentActivity() {
                                 requestIdText.value = it
                             })
                         Spacer(modifier = Modifier.height(15.dp))
+                        NormalTextField(
+                            label = "Template ID",
+                            value = templateIdText.value,
+                            onValueChange = {
+                                templateIdText.value = it
+                            })
+                        NormalTextField(
+                            label = "Contract Parameters",
+                            value = contractParametersText.value,
+                            onValueChange = {
+                                contractParametersText.value = it
+                            })
+                        Row {
+                            Spacer(modifier = Modifier.height(15.dp))
 
-                        ArabicCheckbox()
-                        ProductionCheckbox()
-                        RememberMeCheckbox()
-                        SkipTutorialCheckbox()
+                            ArabicCheckbox()
+                            ProductionCheckbox()
+                        }
+                        Row {
+                            Spacer(modifier = Modifier.height(15.dp))
+
+                            RememberMeCheckbox()
+                            SkipTutorialCheckbox()
+                        }
                         Spacer(modifier = Modifier.height(20.dp))
 
                         DropdownList(
@@ -254,6 +284,8 @@ class MainActivity : ComponentActivity() {
                 putString("tenantSecret", tenantSecretText.value.text)
                 putString("applicationId", applicationIdText.value.text)
                 putString("levelOfTrustToken", levelOfTrustTokenText.value.text)
+                putString("templateId", templateIdText.value.text)
+                putString("contractParameters", contractParametersText.value.text)
                 apply()
             }
         } else {
@@ -268,6 +300,7 @@ class MainActivity : ComponentActivity() {
                     1 -> EnrollMode.AUTH
                     2 -> EnrollMode.UPDATE
                     3 -> EnrollMode.FORGET_PROFILE_DATA
+                    4 -> EnrollMode.SIGN_CONTRACT
                     else -> EnrollMode.ONBOARDING
                 },
                 environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
@@ -301,7 +334,9 @@ class MainActivity : ComponentActivity() {
                 correlationId = "correlationId",
                 fontResource = R.font.itim_regular,
                 enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
-                requestId = requestIdText.value.text
+                requestId = requestIdText.value.text,
+                templateId = templateIdText.value.text,
+                contractParameters = contractParametersText.value.text
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
