@@ -43,7 +43,7 @@ object EnrollSDK {
 
     fun getApisUrl(): String {
         return when (environment) {
-            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/OnBoarding/"
+            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/SecureOnBoarding/"
             EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/OnBoarding/"
         }
     }
