@@ -1,11 +1,13 @@
 package com.luminsoft.enroll_sdk.core.network
 
 import com.google.gson.Gson
+import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.NoConnectionFailure
 import com.luminsoft.enroll_sdk.core.failures.ServerFailure
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
+import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import okhttp3.ResponseBody
 import retrofit2.Response
 import java.net.ConnectException
@@ -27,7 +29,13 @@ class BaseRemoteDataSource {
 
                 return if (response.code() == 401) {
                     BaseResponse.Error(
-                        AuthFailure(ApiErrorResponse())
+                        AuthFailure(
+                            ApiErrorResponse(
+                                message = ResourceProvider.instance.getStringResource(
+                                    R.string.unAuth
+                                )
+                            )
+                        )
                     )
 
                 } else {
@@ -45,7 +53,7 @@ class BaseRemoteDataSource {
                     )
                 }
 
-                is UnknownHostException  -> {
+                is UnknownHostException -> {
                     BaseResponse.Error(
                         NetworkFailure()
                     )
