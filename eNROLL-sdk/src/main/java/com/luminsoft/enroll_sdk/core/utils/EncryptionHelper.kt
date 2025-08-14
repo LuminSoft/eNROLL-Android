@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.core.utils
 
 import android.util.Base64
+import android.util.Log
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -23,6 +24,7 @@ object EncryptionHelper {
     fun encrypt(text: String): String {
         try {
 
+            Log.d("encryptMessage", text)
             val key = SecretKeySpec(getKey(), "AES")
             val iv = ByteArray(16) // 16 byte IV filled with zeros
             val ivSpec = IvParameterSpec(iv)
@@ -55,6 +57,8 @@ object EncryptionHelper {
 
             val encryptedBytes = Base64.decode(encryptedText, Base64.DEFAULT)
             val decryptedBytes = cipher.doFinal(encryptedBytes)
+
+            Log.d("decryptMessage", String(decryptedBytes, Charsets.UTF_8))
 
             return String(decryptedBytes, Charsets.UTF_8)
 

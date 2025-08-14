@@ -27,7 +27,7 @@ class BaseRemoteDataSource {
 
                 return if (response.code() == 401) {
                     BaseResponse.Error(
-                        AuthFailure(error)
+                        AuthFailure(ApiErrorResponse())
                     )
 
                 } else {
@@ -45,7 +45,7 @@ class BaseRemoteDataSource {
                     )
                 }
 
-                is UnknownHostException -> {
+                is UnknownHostException  -> {
                     BaseResponse.Error(
                         NetworkFailure()
                     )
