@@ -23,3 +23,11 @@ app/src/main/assets/env_org_1
 app/src/main/java/com/luminsoft/ekyc_android/MainActivity.kt.idea/runConfigurations.xml
 fastlane/
 /fastlane/.env
+
+# IDE & license
+.idea/
+app/src/main/res/raw/iengine.lic
+
+# IDE & secrets
+.idea/
+app/src/main/res/raw/iengine.lic
