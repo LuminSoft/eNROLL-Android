@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
+import com.luminsoft.enroll_sdk.EnrollMainActivity
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
@@ -95,36 +96,9 @@ object eNROLL {
 
         setLocale(EnrollSDK.localizationCode, activity)
 
-        when (EnrollSDK.enrollMode) {
-            EnrollMode.ONBOARDING -> {
-                activity.startActivity(Intent(activity, EnrollMainOnBoardingActivity::class.java))
-            }
+        activity.startActivity(Intent(activity, EnrollMainActivity::class.java))
 
-            EnrollMode.AUTH -> {
-                if (EnrollSDK.applicantId.isEmpty())
-                    throw Exception("Invalid application id")
-                else if (EnrollSDK.levelOfTrustToken.isEmpty())
-                    throw Exception("Invalid level of trust token")
 
-                activity.startActivity(Intent(activity, EnrollMainAuthActivity::class.java))
-            }
-
-            EnrollMode.UPDATE -> {
-                if (EnrollSDK.applicantId.isEmpty())
-                    throw Exception("Invalid application id")
-                activity.startActivity(Intent(activity, EnrollMainUpdateActivity::class.java))
-            }
-
-            EnrollMode.FORGET_PROFILE_DATA -> {
-                activity.startActivity(Intent(activity, EnrollMainForgetActivity::class.java))
-            }
-
-            EnrollMode.SIGN_CONTRACT -> {
-                if (EnrollSDK.contractTemplateId.isEmpty())
-                    throw Exception("Invalid template id")
-                activity.startActivity(Intent(activity, EnrollMainSignContractActivity::class.java))
-            }
-        }
     }
 
     private fun setLocale(lang: LocalizationCode, activity: Activity) {

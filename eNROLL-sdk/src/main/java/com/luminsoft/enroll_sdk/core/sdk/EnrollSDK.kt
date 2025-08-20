@@ -19,6 +19,7 @@ object EnrollSDK {
     var levelOfTrustToken = ""
     var contractTemplateId = ""
     var contractParameters = ""
+    var serverPublicKey = ""
     var updateSteps = arrayListOf<String>()
 
     // this info related to sdk initiation

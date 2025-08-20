@@ -28,15 +28,24 @@ class BaseRemoteDataSource {
                 val error = decryptErrorBody(response.errorBody())
 
                 return if (response.code() == 401) {
-                    BaseResponse.Error(
-                        AuthFailure(
-                            ApiErrorResponse(
-                                message = ResourceProvider.instance.getStringResource(
-                                    R.string.unAuth
+                    if (error.message == ResourceProvider.instance.getStringResource(
+                            R.string.someThingWentWrong
+                        )
+                    ) {
+                        BaseResponse.Error(
+                            AuthFailure(
+                                ApiErrorResponse(
+                                    message = ResourceProvider.instance.getStringResource(
+                                        R.string.unAuth
+                                    )
                                 )
                             )
                         )
-                    )
+                    } else {
+                        BaseResponse.Error(
+                            AuthFailure(error)
+                        )
+                    }
 
                 } else {
                     BaseResponse.Error(
@@ -83,7 +92,7 @@ class BaseRemoteDataSource {
                 errorBody?.string() ?: return ApiErrorResponse(message = "Unknown error")
             val jsonObject =
                 Gson().fromJson(encryptedResponse, com.google.gson.JsonObject::class.java)
-            val encryptedData = jsonObject.get("Data")?.asString
+            val encryptedData = jsonObject["Data"]?.asString
                 ?: return ApiErrorResponse(message = "Malformed error response")
 
             val decryptedJson = EncryptionHelper.decrypt(encryptedData)
@@ -98,7 +107,11 @@ class BaseRemoteDataSource {
 
             Gson().fromJson(finalJson, ApiErrorResponse::class.java)
         } catch (e: Exception) {
-            ApiErrorResponse(message = "Failed to parse error response: ${e.localizedMessage}")
+            ApiErrorResponse(
+                message = ResourceProvider.instance.getStringResource(
+                    R.string.someThingWentWrong
+                )
+            )
         }
     }
 
