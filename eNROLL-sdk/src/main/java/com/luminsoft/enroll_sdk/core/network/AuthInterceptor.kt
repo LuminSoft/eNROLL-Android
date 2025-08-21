@@ -16,7 +16,7 @@ class AuthInterceptor : Interceptor {
             if (RetroClient.token.isNotEmpty()) {
                 builder.addHeader("Authorization", "Bearer ${RetroClient.token}")
             }
-            builder.addHeader("Content-Type", "application/json")
+//            builder.addHeader("Content-Type", "application/json")
             builder.addHeader("Accept", "application/json")
             builder.addHeader("Accept-Language", EnrollSDK.localizationCode.name)
             req = builder.build()

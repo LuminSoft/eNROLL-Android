@@ -13,13 +13,14 @@ interface MainSignContractApi {
     @Multipart
     @POST("api/v1/Auth/GenerateSignContractRequestSessionToken")
     suspend fun generateSignContractRequestSessionToken(
-        @Part("TenantId") tenantId: RequestBody,
+        @Part("Data") data: RequestBody,
+      /*  @Part("TenantId") tenantId: RequestBody,
         @Part("TenantSecret") tenantSecret: RequestBody,
         @Part("ApplicantId") applicantId: RequestBody,
         @Part("ContractTemplateId") contractTemplateId: RequestBody,
         @Part("SignContractMode") signContractMode: RequestBody,
         @Part("SignContractApproach") signContractApproach: RequestBody,
-        @Part("ContractParams") contractParams: RequestBody,
+        @Part("ContractParams") contractParams: RequestBody,*/
     ): Response<GenerateOnboardingSessionTokenResponse>
 
 

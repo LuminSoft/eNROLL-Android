@@ -2,7 +2,6 @@ package com.luminsoft.enroll_sdk.core.network
 
 import android.annotation.SuppressLint
 import android.util.Base64
-import android.util.Log
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import java.security.MessageDigest
 import java.security.PublicKey
@@ -23,7 +22,6 @@ class CustomTrustManager : X509TrustManager {
         val serverPublicKey = serverCert.publicKey
         val hashedPublicKey = hashPublicKey(serverPublicKey)
 
-        Log.d("serverPublicKey", hashedPublicKey)
         // Perform the public key check during the SSL handshake
         if (!publicKeysMatch(hashedPublicKey)) {
             throw SSLPeerUnverifiedException("Public key mismatch!")
@@ -41,11 +39,6 @@ class CustomTrustManager : X509TrustManager {
     ): Boolean {
         val key = EnrollSDK.serverPublicKey
 
-        Log.d("hashedPublicKeyTT", hashedPublicKey + "-" + hashedPublicKey.length)
-        Log.d(
-            "serverPublicKeyTT",
-            key + "-" + key.length
-        )
         return hashedPublicKey == key
     }
 
