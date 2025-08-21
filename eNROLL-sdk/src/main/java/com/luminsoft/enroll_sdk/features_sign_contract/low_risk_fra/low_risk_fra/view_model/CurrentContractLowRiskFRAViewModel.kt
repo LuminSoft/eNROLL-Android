@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
+import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCaseParams
@@ -18,9 +20,9 @@ import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileLowRiskFRAUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 
 class CurrentContractLowRiskFRAViewModel(
     private val getCurrentContractLowRiskFRAUseCase: GetCurrentContractLowRiskFRAUseCase,
@@ -38,7 +40,6 @@ class CurrentContractLowRiskFRAViewModel(
     var navController: NavController? = null
     var otpApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var pdfFile: MutableStateFlow<File?> = MutableStateFlow(null)
-    private var responseBody: MutableStateFlow<ResponseBody?> = MutableStateFlow(null)
     var bitmap: MutableStateFlow<List<Bitmap>?> = MutableStateFlow(null)
     var contractIdValue: MutableStateFlow<String> = MutableStateFlow("")
     var contractVersionNumberValue: MutableStateFlow<String> = MutableStateFlow("")
@@ -74,13 +75,42 @@ class CurrentContractLowRiskFRAViewModel(
                     loading.value = false
                 },
                 { res ->
-                    response.let {
-                        responseBody.value = res
-                        pdfFile.value = inputStreamToFile(res.byteStream(), context)
-                        bitmap.value = renderPdf(pdfFile.value!!)
-                    }
-                    loading.value = false
+                    parsePDFFileResponse(res)
                 })
+        }
+    }
+
+    private fun parsePDFFileResponse(res: ResponseBody) {
+        try {
+            val jsonBody = res.string()
+
+            // Extract the "Data" field from the JSON
+            val base64Encrypted = JSONObject(jsonBody).getString("Data")
+
+            // Decrypt to get PDF byte array
+            val pdfBytes: ByteArray? =
+                EncryptionHelper.decryptBinaryDataFromEncryptedJson(base64Encrypted)
+
+            if (pdfBytes == null || pdfBytes.isEmpty()) {
+                failure.value = NetworkFailure("Invalid or missing PDF content")
+                loading.value = false
+                return
+            }
+
+            // Save decrypted PDF bytes to file
+            val file = File(context.cacheDir, "sign_contract.pdf")
+            FileOutputStream(file).use { it.write(pdfBytes) }
+
+            // Update state
+            pdfFile.value = file
+            bitmap.value = renderPdf(file)
+            //                        termsPdfReceived.value = true
+            loading.value = false
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            failure.value = NetworkFailure("PDF decryption failed: ${e.message}")
+            loading.value = false
         }
     }
 
@@ -102,27 +132,10 @@ class CurrentContractLowRiskFRAViewModel(
                     loading.value = false
                 },
                 { res ->
-                    response.let {
+                    parsePDFFileResponse(res)
 
-                        pdfFile.value = inputStreamToFile(res.byteStream(), context)
-                        bitmap.value = renderPdf(pdfFile.value!!)
-                    }
-                    loading.value = false
                 })
         }
-    }
-
-    private fun inputStreamToFile(inputStream: InputStream, context: Context): File {
-        val file = File(context.cacheDir, "terms_and_conditions.pdf")
-        FileOutputStream(file).use { output ->
-            val buffer = ByteArray(4 * 1024)
-            var read: Int
-            while (inputStream.read(buffer).also { read = it } != -1) {
-                output.write(buffer, 0, read)
-            }
-            output.flush()
-        }
-        return file
     }
 
     private fun renderPdf(file: File): List<Bitmap> {
