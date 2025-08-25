@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -36,12 +37,17 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.core.failures.AuthFailure
+import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ui
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main.main_data.main_models.OnBoardingPage
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.TutorialViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
+import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
+import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 
@@ -53,12 +59,16 @@ fun OnboardingScreenContent(
     navController: NavController,
 
     ) {
+    val context = LocalContext.current
+
+    val activity = context.findActivity()
     val pagerState = rememberPagerState()
     val tutorialViewModel = remember { TutorialViewModel(viewModel.steps) }
     val pages = tutorialViewModel.pages.collectAsState()
     val loading = viewModel.loading.collectAsState()
     val requestId = viewModel.requestId.collectAsState()
     val requestCallBackSent = viewModel.requestCallBackSent.collectAsState()
+    val failure = viewModel.failure.collectAsState()
 
     BackGroundView(navController = navController, showAppBar = false) {
         if (requestId.value != null && !requestCallBackSent.value) {
@@ -115,7 +125,37 @@ fun OnboardingScreenContent(
                                 }
                             }
                         })
-                if (!loading.value) {
+                if (loading.value) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                    ) {
+                        SpinKitLoadingIndicator()
+                    }
+                } else if (!failure.value?.message.isNullOrEmpty()) {
+
+                    failure.value?.let {
+                        DialogView(
+                            bottomSheetStatus = BottomSheetStatus.ERROR,
+                            text = it.message,
+                            buttonText = stringResource(id = R.string.exit),
+                            onPressedButton = {
+                                activity.finish()
+                                EnrollSDK.enrollCallback?.error(
+                                    EnrollFailedModel(
+                                        it.message,
+                                        it
+                                    )
+                                )
+                            },
+                        ) {
+                            activity.finish()
+                            EnrollSDK.enrollCallback?.error(EnrollFailedModel(it.message, it))
+
+                        }
+                    }
+
+                } else {
                     if (pagerState.currentPage == ((pages.value?.size ?: 0) - 1))
                         ClickableText(
                             text = AnnotatedString(stringResource(id = R.string.done)),
@@ -133,13 +173,6 @@ fun OnboardingScreenContent(
                                     viewModel.initRequest()
                                 }
                             })
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                    ) {
-                        SpinKitLoadingIndicator()
-                    }
                 }
 
                 if (pagerState.currentPage != ((pages.value?.size ?: 0) - 1))
