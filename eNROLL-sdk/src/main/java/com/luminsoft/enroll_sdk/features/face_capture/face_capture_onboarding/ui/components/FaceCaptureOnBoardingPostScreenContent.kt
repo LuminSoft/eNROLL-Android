@@ -309,7 +309,8 @@ private fun MainContent(
                     ErrorAnimationExtracted(smileImage, scale, facePhotoPath, faceImageBaseUrl)
                     Spacer(modifier = Modifier.fillMaxHeight(0.3f))
                     androidx.compose.material3.Text(
-                        text = stringResource(id = R.string.facesNotMatch),
+                        text = uploadSelfieData.value?.errorMessage
+                            ?: stringResource(id = R.string.facesNotMatch),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor
                     )
@@ -414,16 +415,23 @@ private fun ErrorAnimationExtracted(
                 .size(120.dp)
                 .scale(scale = scale.value)
         ) {
-            AsyncImage(
 
-                model = faceImageBaseUrl + facePhotoPath!!,
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(faceImageBaseUrl)
+                    .addHeader(
+                        "Authorization",
+                        "Bearer ${RetroClient.token}"
+                    ) // Add Bearer token here
+                    .build(),
                 contentDescription = "face Photo Path",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(120.dp)
-                    .border(2.dp, Color.Red, shape = CircleShape)
+                    .border(2.dp, Color.Blue, shape = CircleShape)
                     .clip(CircleShape)
             )
+
         }
         Image(
             painterResource(R.drawable.error_sign),

@@ -15,5 +15,6 @@ data class UploadSelfieData(
     @SerializedName("photoMatched") var photoMatched: Boolean? = null,
     @SerializedName("photoMatchPercentage") var photoMatchPercentage: Int? = null,
     @SerializedName("detectedAge") var detectedAge: String? = null,
-    @SerializedName("detectedGender") var detectedGender: String? = null
+    @SerializedName("detectedGender") var detectedGender: String? = null,
+    @SerializedName("errorMessage") var errorMessage: String? = null
 )
