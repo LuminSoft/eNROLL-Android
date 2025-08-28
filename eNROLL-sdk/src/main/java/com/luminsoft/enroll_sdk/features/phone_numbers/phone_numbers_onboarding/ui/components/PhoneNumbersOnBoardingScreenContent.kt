@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -90,6 +91,7 @@ fun PhoneNumbersOnBoardingScreenContent(
     var fullPhoneNumber: String by rememberSaveable { mutableStateOf("") }
     var isNumberValid: Boolean by rememberSaveable { mutableStateOf(false) }
     var isClicked by mutableStateOf(false)
+    val showDialog = remember { mutableStateOf(true) }
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (isClicked) {
@@ -110,7 +112,23 @@ fun PhoneNumbersOnBoardingScreenContent(
                 }
             )
         }
-
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulRegistration),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.documentId.value,
+                        )
+                    )
+                }
+            )
+        }
         LaunchedEffect(phoneNumberSentSuccessfully.value) {
             if (phoneNumberSentSuccessfully.value) {
                 navController.navigate(validateOtpPhoneNumberScreenContent)
@@ -156,7 +174,8 @@ fun PhoneNumbersOnBoardingScreenContent(
                 }
             }
         } else {
-            Column(
+            LoadingView()
+           /* Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
@@ -238,7 +257,7 @@ fun PhoneNumbersOnBoardingScreenContent(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
-            }
+            }*/
         }
     }
 

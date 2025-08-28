@@ -144,7 +144,7 @@ fun MultiplePhoneNumbersScreenContent(
                     activity.finish()
                     EnrollSDK.enrollCallback?.success(
                         EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
+                            activity.getString(R.string.successfulRegistration),
                             onBoardingViewModel.documentId.value,
                             onBoardingViewModel.applicantId.value,
                         )
