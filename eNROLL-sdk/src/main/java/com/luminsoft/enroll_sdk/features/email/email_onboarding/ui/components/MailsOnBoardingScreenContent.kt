@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -88,6 +89,7 @@ fun MailsOnBoardingScreenContent(
 
     val userHasModifiedText = remember { mutableStateOf(false) }
 
+    val showDialog = remember { mutableStateOf(true) }
 
     BackGroundView(navController = navController, showAppBar = true) {
         if (isClicked) {
@@ -104,6 +106,23 @@ fun MailsOnBoardingScreenContent(
                 },
                 onPressedSecondButton = {
                     isClicked = false
+                }
+            )
+        }
+        if (showDialog.value) {
+            DialogView(
+                bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                text = stringResource(id = R.string.successfulRegistration),
+                buttonText = stringResource(id = R.string.continue_to_next),
+                onPressedButton = {
+                    activity.finish()
+                    EnrollSDK.enrollCallback?.success(
+                        EnrollSuccessModel(
+                            activity.getString(R.string.successfulRegistration),
+                            onBoardingViewModel.documentId.value,
+                            onBoardingViewModel.documentId.value,
+                        )
+                    )
                 }
             )
         }
@@ -153,66 +172,67 @@ fun MailsOnBoardingScreenContent(
                 }
             }
         } else {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 30.dp)
+            LoadingView()
+            /*       Column(
+                       horizontalAlignment = Alignment.CenterHorizontally,
+                       modifier = Modifier
+                           .fillMaxSize()
+                           .padding(horizontal = 30.dp)
 
-            ) {
-                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-                val images = listOf(
-                    R.drawable.step_04_email_1,
-                    R.drawable.step_04_email_2,
-                    R.drawable.step_04_email_3
-                )
-                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
-                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
-                NormalTextField(
-                    label = ResourceProvider.instance.getStringResource(R.string.mailFormatError),
-                    value = mailValue.value!!,
-                    height = 60.0,
-                    icon = {
-                        Image(
-                            painterResource(R.drawable.mail_icon),
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                   ) {
+                       Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                       val images = listOf(
+                           R.drawable.step_04_email_1,
+                           R.drawable.step_04_email_2,
+                           R.drawable.step_04_email_3
+                       )
+                       ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f))
+                       Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+                       NormalTextField(
+                           label = ResourceProvider.instance.getStringResource(R.string.mailFormatError),
+                           value = mailValue.value!!,
+                           height = 60.0,
+                           icon = {
+                               Image(
+                                   painterResource(R.drawable.mail_icon),
+                                   contentDescription = "",
+                                   colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
 
-                            modifier = Modifier
-                                .height(50.dp)
-                        )
-                    },
-                    onValueChange = {
-                        onBoardingViewModel.mailValue.value = it
-                        userHasModifiedText.value = true
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Email
-                    ),
-                    error = englishNameValidation(onBoardingViewModel),
-                )
+                                   modifier = Modifier
+                                       .height(50.dp)
+                               )
+                           },
+                           onValueChange = {
+                               onBoardingViewModel.mailValue.value = it
+                               userHasModifiedText.value = true
+                           },
+                           keyboardOptions = KeyboardOptions(
+                               imeAction = ImeAction.Done,
+                               keyboardType = KeyboardType.Email
+                           ),
+                           error = englishNameValidation(onBoardingViewModel),
+                       )
 
-                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                       Spacer(modifier = Modifier.fillMaxHeight(0.05f))
 
-                Text(
-                    text = stringResource(id = R.string.sendEmailOtpContent),
-                    color = MaterialTheme.appColors.textColor,
-                    textAlign = TextAlign.Center,
-                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp
-                )
-                Spacer(modifier = Modifier.fillMaxHeight(0.35f))
+                       Text(
+                           text = stringResource(id = R.string.sendEmailOtpContent),
+                           color = MaterialTheme.appColors.textColor,
+                           textAlign = TextAlign.Center,
+                           fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                           fontSize = 12.sp
+                       )
+                       Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 
-                ButtonView(
-                    onClick = {
-                        if (englishNameValidation(onBoardingViewModel) == null)
-                            isClicked = true
-                    }, title = stringResource(id = R.string.confirmAndContinue)
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+                       ButtonView(
+                           onClick = {
+                               if (englishNameValidation(onBoardingViewModel) == null)
+                                   isClicked = true
+                           }, title = stringResource(id = R.string.confirmAndContinue)
+                       )
+                       Spacer(modifier = Modifier.height(20.dp))
 
-            }
+                   }*/
         }
     }
 
