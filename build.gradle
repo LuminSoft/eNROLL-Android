@@ -1,0 +1,28 @@
+plugins {
+    id 'maven-publish'
+}
+
+group = 'com.github.luminsoft'
+version = '1.0.4'
+
+publishing {
+    publications {
+        mavenAar(MavenPublication) {
+            groupId = 'com.github.luminsoft'
+            artifactId = 'enroll-sdk'
+            version = '1.0.4'
+            artifact file('libs/eNROLL-sdk-release.aar')
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/luminsoft/Secure-eNROLL-Android") // <-- update this if repo name is different
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME_GITHUB")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN_GITHUB")
+            }
+        }
+    }
+}
