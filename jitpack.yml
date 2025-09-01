@@ -1,0 +1,5 @@
+jitpack:
+  build:
+    commands:
+      - echo "📦 Using prebuilt AAR in libs/ folder"
+      - ./gradlew publishToMavenLocal
