@@ -3,14 +3,14 @@ plugins {
 }
 
 group = 'com.github.luminsoft'
-version = '1.3.95'
+version = '1.3.96'
 
 publishing {
     publications {
         mavenAar(MavenPublication) {
             groupId = 'com.github.luminsoft'
             artifactId = 'enroll-sdk'
-            version = '1.3.95'
+            version = '1.3.96'
             artifact file('libs/eNROLL-sdk-release.aar')
         }
     }
