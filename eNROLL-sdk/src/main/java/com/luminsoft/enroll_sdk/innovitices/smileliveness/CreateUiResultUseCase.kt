@@ -12,7 +12,7 @@ class CreateUiResultUseCase(
     suspend operator fun invoke(smileLivenessResult: com.innovatrics.dot.face.liveness.smile.SmileLivenessResult): SmileLivenessResult =
         withContext(ioDispatcher) {
             SmileLivenessResult(
-                bitmap = BitmapFactory.create(smileLivenessResult.bgrRawImage),
+                bitmap = BitmapFactory.create(smileLivenessResult.smileExpressionBgrRawImage),
             )
         }
 }

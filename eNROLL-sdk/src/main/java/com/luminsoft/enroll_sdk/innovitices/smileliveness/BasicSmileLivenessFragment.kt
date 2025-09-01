@@ -3,19 +3,18 @@ package com.luminsoft.enroll_sdk.innovitices.smileliveness
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.innovatrics.dot.face.autocapture.FaceAutoCaptureDetection
 import com.innovatrics.dot.face.liveness.smile.SmileLivenessFragment
 import com.innovatrics.dot.face.liveness.smile.SmileLivenessResult
-
-import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
 import com.luminsoft.enroll_sdk.innovitices.MainViewModel
@@ -43,7 +42,7 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
     }
 
     override fun provideConfiguration(): Configuration {
-        return Configuration()
+        return Configuration(isVideoCaptureEnabled = true)
     }
 
     private fun setupDotSdkViewModel() {
@@ -67,7 +66,6 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
         smileLivenessViewModel.initializeState()
         smileLivenessViewModel.state.observe(viewLifecycleOwner) { state ->
             state.result?.let {
-//                findNavController().navigate(R.id.action_BasicSmileLivenessFragment_to_SmileLivenessResultFragment)
 
                 val file = getDisc()
 
@@ -109,16 +107,11 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
 
 
                 val intent = Intent()
-//                val uri: Uri = Uri.fromFile(outfile)
                 val smileUri: Uri = Uri.fromFile(smileOutfile)
 
 
                 intent.data = smileUri
-//                intent.putExtra(FaceCaptureActivity().OUT_PASSIVE_LIVENESS_RESULT_SCORE, 1.0)
-//                intent.putExtra(
-//                    FaceCaptureActivity().OUT_PASSIVE_LIVENESS_RESULT_DEPENDENCIES_FULFILLED,
-//                    true
-//                )
+
                 intent.putExtra(SmileLivenessActivity().outSmileLivenessUri, smileUri.toString())
 
                 requireActivity().setResult(RESULT_SUCCESS, intent)
@@ -127,16 +120,18 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
         }
     }
 
+
     override fun onNoCameraPermission() {
         mainViewModel.notifyNoCameraPermission()
     }
 
-    override fun onCriticalFacePresenceLost() {
-    }
 
     override fun onProcessed(detection: FaceAutoCaptureDetection) {
     }
 
+    override fun onCriticalFacePresenceLost() {}
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinished(result: SmileLivenessResult) {
         smileLivenessViewModel.process(result)
     }
