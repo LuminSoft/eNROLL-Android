@@ -7,7 +7,7 @@
   <!-- JitPack uses com.github.<UserOrOrg> automatically -->
   <groupId>com.github.LuminSoft</groupId>
   <artifactId>eNROLL-sdk</artifactId>
-  <version>1.3.96.82</version>
+  <version>1.3.96.83</version>
   <packaging>pom</packaging>
 
   <name>eNROLL-sdk</name>
@@ -20,4 +20,12 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
+  <dependencies>
+      <dependency>
+        <groupId>androidx.constraintlayout</groupId>
+        <artifactId>constraintlayout</artifactId>
+        <version>2.2.1</version>
+      </dependency>
+    </dependencies>
 </project>
