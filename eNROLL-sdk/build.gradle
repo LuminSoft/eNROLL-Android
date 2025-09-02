@@ -136,7 +136,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '1.3.96.8'
+                version = '1.3.96.81'
                 //TODO change it inside core/models/BuildInfo file
             }
         }
