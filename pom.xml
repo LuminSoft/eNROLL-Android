@@ -7,7 +7,7 @@
   <!-- JitPack uses com.github.<UserOrOrg> automatically -->
   <groupId>com.github.LuminSoft</groupId>
   <artifactId>eNROLL-sdk</artifactId>
-  <version>1.3.92</version>
+  <version>1.2.94.02</version>
   <packaging>pom</packaging>
 
   <name>eNROLL-sdk</name>
