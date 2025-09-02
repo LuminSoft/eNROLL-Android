@@ -2,19 +2,10 @@ jdk:
   - openjdk17
 
 install:
-  # Compute version from tag: v1.3.91 -> 1.3.91
   - export TAG="${JITPACK_VCS_TAG}"
   - export VERSION="${TAG#v}"
   - export FILE="eNROLL-sdk-${VERSION}.aar"
-
-  # Download the AAR from this repo's GitHub Release assets
-  - curl -fL -o "$FILE" "https://github.com/LuminSoft/eNROLL-Android-AAR/releases/download/${TAG}/${FILE}"
-
-  # Install into local Maven so JitPack can publish it
-  - mvn -q install:install-file \
-      -Dfile="$FILE" \
-      -DgroupId=com.github.LuminSoft \
-      -DartifactId=eNROLL-sdk \
-      -Dversion="${VERSION}" \
-      -Dpackaging=aar \
-      -DgeneratePom=true
+  - echo "TAG=$TAG VERSION=$VERSION FILE=$FILE"
+  - curl -fL --retry 3 -o "$FILE" "https://github.com/LuminSoft/eNROLL-Android-AAR/releases/download/${TAG}/${FILE}"
+  - ls -lh "$FILE" || true
+  - mvn -q install:install-file -Dfile="$FILE" -DgroupId=com.github.LuminSoft -DartifactId=eNROLL-sdk -Dversion="${VERSION}" -Dpackaging=aar -DgeneratePom=true
