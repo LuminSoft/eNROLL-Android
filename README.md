@@ -5,7 +5,7 @@ This repo **does not contain source code**. It publishes a prebuilt AAR via JitP
 ## Coordinates
 
 
-implementation("com.github.LuminSoft:eNROLL-sdk:1.3.96.89
+implementation("com.github.LuminSoft:eNROLL-sdk:1.3.96.90
 
 ## Verify artifact
 SHA-256 (eNROLL-sdk-1.3.91.aar):
