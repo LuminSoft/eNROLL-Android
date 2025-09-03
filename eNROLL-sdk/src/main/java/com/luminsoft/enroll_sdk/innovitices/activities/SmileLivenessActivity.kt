@@ -4,13 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.innovatrics.dot.face.liveness.smile.SmileLivenessConfiguration
 import com.innovatrics.dot.face.liveness.smile.SmileLivenessFragment
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_INTERRUPTED
 import com.luminsoft.enroll_sdk.innovitices.smileliveness.BasicSmileLivenessFragment
 
-class SmileLivenessActivity : AppCompatActivity() {
+class SmileLivenessActivity : FragmentActivity() {
     var outSmileLivenessUri = "smile-liveness-uri"
 
     override fun onCreate(savedInstanceState: Bundle?) {

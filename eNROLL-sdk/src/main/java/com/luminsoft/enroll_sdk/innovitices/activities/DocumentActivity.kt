@@ -3,9 +3,11 @@ package com.luminsoft.enroll_sdk.innovitices.activities
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.luminsoft.enroll_sdk.innovitices.documentautocapture.BasicDocumentAutoCaptureFragment
 import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureConfiguration
 import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureFragment
@@ -14,7 +16,7 @@ import com.luminsoft.enroll_sdk.innovitices.core.RESULT_INTERRUPTED
 import java.util.*
 
 
-class DocumentActivity : AppCompatActivity() {
+class DocumentActivity : FragmentActivity() {
     val frontScan = 0
     val backScan = 11
     val passportScan = 2

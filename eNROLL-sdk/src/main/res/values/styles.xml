@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="FontLocalizedBold">
         <item name="android:fontFamily">@font/cairo_bold</item>
     </style>
+
     <style name="FontLocalizedRegular">
         <item name="android:fontFamily">@font/cairo_regular</item>
     </style>
+
     <style name="FontLocalizedSimiBold">
         <item name="android:fontFamily">@font/cairo_bold</item>
     </style>
+
     <style name="FontLocalizedMedium">
         <item name="android:fontFamily">@font/cairo_regular</item>
     </style>
+
+    <style name="Theme.Material3.DayNight.NoActionBar" parent="android:Theme.Material.Light.NoActionBar">
+
+    </style>
+
+    <style name="Theme.AppCompat.Light.innovatrics" parent="android:Theme.Material.Light">
+
+    </style>
+
+
 </resources>
+
