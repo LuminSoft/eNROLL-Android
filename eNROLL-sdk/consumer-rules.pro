@@ -10,3 +10,5 @@
 
 # Keep public classes and methods in your SDK
 -keep public class com.luminsoft.enroll_sdk.** { public *; }
+
+-keep class androidx.constraintlayout.widget.** { *; }
