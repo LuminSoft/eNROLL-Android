@@ -132,7 +132,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '1.3.96.91'
+                version = '1.3.96.92'
 
                 // Explicitly include dependencies in the POM
                 pom {
