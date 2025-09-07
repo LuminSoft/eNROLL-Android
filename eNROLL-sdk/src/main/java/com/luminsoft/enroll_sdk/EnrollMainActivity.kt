@@ -42,7 +42,6 @@ import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
-import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.FirebaseKeys
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
