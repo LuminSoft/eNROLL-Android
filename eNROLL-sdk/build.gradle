@@ -76,25 +76,25 @@ dependencies {
     api 'com.google.android.material:material:1.12.0'
 //    api "androidx.constraintlayout:constraintlayout:2.2.1"
     api 'com.google.android.material:material:1.12.0'
-    implementation 'com.google.android.gms:play-services-maps:19.2.0'
+    api 'com.google.android.gms:play-services-maps:19.2.0'
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
     implementation "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     implementation "com.airbnb.android:lottie-compose:6.0.1"
-    implementation "com.innovatrics.dot:dot-document:8.10.0"
-    implementation "com.innovatrics.dot:dot-face-detection-fast:8.10.0"
-    implementation "com.innovatrics.dot:dot-face-expression-neutral:8.10.0"
-    implementation "com.innovatrics.dot:dot-face-passive-liveness:8.10.0"
+    api "com.innovatrics.dot:dot-document:8.10.0"
+    api "com.innovatrics.dot:dot-face-detection-fast:8.10.0"
+    api "com.innovatrics.dot:dot-face-expression-neutral:8.10.0"
+    api "com.innovatrics.dot:dot-face-passive-liveness:8.10.0"
 //    implementation "com.innovatrics.dot:dot-nfc:8.4.0"
-    implementation "com.innovatrics.dot:dot-face-verification:8.4.0"
+    api "com.innovatrics.dot:dot-face-verification:8.4.0"
 
     api 'androidx.activity:activity-ktx:1.10.1'
     api 'androidx.fragment:fragment-ktx:1.8.8'
     api "androidx.appcompat:appcompat:1.7.1"
     api "androidx.compose.material:material-icons-core:1.7.8"
 
-    implementation "com.google.android.gms:play-services-location:21.3.0"
+    api "com.google.android.gms:play-services-location:21.3.0"
 
     //region retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -118,10 +118,10 @@ dependencies {
 
     implementation("io.arrow-kt:arrow-core:1.2.0")
 
-    implementation("com.github.jump-sdk:jetpack_compose_country_code_picker_emoji:2.2.7")
-    implementation platform('com.google.firebase:firebase-bom:34.1.0')
-    implementation 'com.google.firebase:firebase-config'
-    implementation 'com.google.firebase:firebase-analytics'
+    api("com.github.jump-sdk:jetpack_compose_country_code_picker_emoji:2.2.7")
+    api platform('com.google.firebase:firebase-bom:34.1.0')
+    api 'com.google.firebase:firebase-config'
+    api 'com.google.firebase:firebase-analytics'
 
 }
 
@@ -132,7 +132,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '1.3.96.92'
+                version = '1.3.96.93'
 
                 // Explicitly include dependencies in the POM
                 pom {
