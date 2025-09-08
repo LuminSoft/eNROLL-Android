@@ -1,5 +1,5 @@
 package com.luminsoft.enroll_sdk.core.models
 
 object BuildInfo {
-    const val SDK_VERSION = "1.3.98.01"
+    const val SDK_VERSION = "1.3.98.02"
 }
