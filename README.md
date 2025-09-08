@@ -8,7 +8,7 @@ you learn how to add and use (eNROLL SDK) in your Android Application.
 - Minimum Android SDK 24
 - Target API level 35
 - Kotlin Version 2.1.0
-- 
+
 ## 2. INSTALLATION
 
 1- Add eNROLL SDK dependency to the build.gradle (Module :app) file:
@@ -133,7 +133,8 @@ try {
 | `templateId` | **Optional**. The ID of the contract to be signed.|
 | `contractParameters` | **Optional**. Extra contract parameters |
 
+## 6. SECURITY NOTES
 
-
-
-
+- Never hardcode `tenantSecret`, `levelOfTrustToken`, or API keys inside the mobile application. Use a secure storage mechanism or fetch them from your backend securely.
+- Do not log sensitive user data (IDs, secrets, tokens) in production environments.
+- Regularly update the SDK to the latest stable version for security patches.  
