@@ -7,7 +7,8 @@ you learn how to add and use (eNROLL SDK) in your Android Application.
 
 - Minimum Android SDK 24
 - Target API level 35
-
+- Kotlin Version 2.1.0
+- 
 ## 2. INSTALLATION
 
 1- Add eNROLL SDK dependency to the build.gradle (Module :app) file:
@@ -88,7 +89,9 @@ import com.luminsoft.enroll_sdk.*
                 levelOfTrustToken = "levelOfTrustTokenText",
                 correlationId = "correlationId",
                 fontResource = R.font.itim_regular,
-                enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT
+                enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
+                templateId = "templateId",
+                contractParameters = "contractParameters"
                 )
         } catch (e: Exception) {
             Log.e("error", e.toString())
@@ -127,7 +130,8 @@ try {
 | `appColors` | **Optional**. Collection of the app colors that you could override like (primary - secondary - backGround - successColor - warningColor - errorColor - textColor). |
 | `correlationId` | **Optional**. Correlation ID to connect your User ID with our Request ID |
 | `fontResource` | **Optional**. Font Resource to set your font family |
-| `enrollForcedDocumentType` | **Optional**. If the document type is either a National ID or a Passport, you may choose to enforce the selection of only one of these options or allow both to remain as valid selections. |
+| `templateId` | **Optional**. The ID of the contract to be signed.|
+| `contractParameters` | **Optional**. Extra contract parameters |
 
 
 
