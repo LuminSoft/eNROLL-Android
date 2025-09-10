@@ -5,6 +5,18 @@
 
     <groupId>com.github.LuminSoft</groupId>
     <artifactId>eNROLL-sdk</artifactId>
-    <version>1.4.0.03</version>
-    <packaging>aar</packaging>
+    <version>1.4.0.04</version>
+    <packaging>aar</packaging> <!-- Make sure this is correctly specified -->
+
+    <repositories>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Add any dependencies here if necessary -->
+    </dependencies>
+
 </project>
