@@ -65,62 +65,41 @@ class EnrollMainActivity : ComponentActivity() {
 
     private fun firebaseRemoteConfig() {
 
-        val projectId = FirebaseKeys.getNativeProjectId()
-        val appName = "secondary"
-        val app = FirebaseApp.getApps(this).find { it.name == appName } ?: kotlin.run {
-            val options = FirebaseOptions.Builder()
-                .setApiKey(FirebaseKeys.getNativeApiKey())
-                .setApplicationId("1:$projectId:android:${FirebaseKeys.getNativeApplicationId()}")
-                .setProjectId(projectId) // required
-                .build()
-            FirebaseApp.initializeApp(this, options, appName)
 
-        }
+        EnrollSDK.serverPublicKey ="dFjbu0bFKYCxR06voqFBYlmKERRCv98mk/IquAyQ3Gs="
 
-        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig(app)
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 0
-        }
-        remoteConfig.setConfigSettingsAsync(configSettings)
-
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) {
-
-                EnrollSDK.serverPublicKey = remoteConfig.getString("serverPublicKey")
-
-                when (EnrollSDK.enrollMode) {
-                    EnrollMode.ONBOARDING -> {
-                        startActivity(Intent(this, EnrollMainOnBoardingActivity::class.java))
-                    }
-
-                    EnrollMode.AUTH -> {
-                        if (EnrollSDK.applicantId.isEmpty())
-                            throw Exception("Invalid application id")
-                        else if (EnrollSDK.levelOfTrustToken.isEmpty())
-                            throw Exception("Invalid level of trust token")
-
-                        startActivity(Intent(this, EnrollMainAuthActivity::class.java))
-                    }
-
-                    EnrollMode.UPDATE -> {
-                        if (EnrollSDK.applicantId.isEmpty())
-                            throw Exception("Invalid application id")
-                        startActivity(Intent(this, EnrollMainUpdateActivity::class.java))
-                    }
-
-                    EnrollMode.FORGET_PROFILE_DATA -> {
-                        startActivity(Intent(this, EnrollMainForgetActivity::class.java))
-                    }
-
-                    EnrollMode.SIGN_CONTRACT -> {
-                        if (EnrollSDK.contractTemplateId.isEmpty())
-                            throw Exception("Invalid template id")
-                        startActivity(Intent(this, EnrollMainSignContractActivity::class.java))
-                    }
-                }
-
-                finish()
+        when (EnrollSDK.enrollMode) {
+            EnrollMode.ONBOARDING -> {
+                startActivity(Intent(this, EnrollMainOnBoardingActivity::class.java))
             }
+
+            EnrollMode.AUTH -> {
+                if (EnrollSDK.applicantId.isEmpty())
+                    throw Exception("Invalid application id")
+                else if (EnrollSDK.levelOfTrustToken.isEmpty())
+                    throw Exception("Invalid level of trust token")
+
+                startActivity(Intent(this, EnrollMainAuthActivity::class.java))
+            }
+
+            EnrollMode.UPDATE -> {
+                if (EnrollSDK.applicantId.isEmpty())
+                    throw Exception("Invalid application id")
+                startActivity(Intent(this, EnrollMainUpdateActivity::class.java))
+            }
+
+            EnrollMode.FORGET_PROFILE_DATA -> {
+                startActivity(Intent(this, EnrollMainForgetActivity::class.java))
+            }
+
+            EnrollMode.SIGN_CONTRACT -> {
+                if (EnrollSDK.contractTemplateId.isEmpty())
+                    throw Exception("Invalid template id")
+                startActivity(Intent(this, EnrollMainSignContractActivity::class.java))
+            }
+        }
+
+        finish()
     }
 
     @Composable
