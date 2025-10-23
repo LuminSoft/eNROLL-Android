@@ -68,7 +68,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     implementation "com.airbnb.android:lottie-compose:6.0.1"
-    implementation "com.innovatrics.dot:dot-document:8.4.0"
+    implementation "com.innovatrics.dot:dot-document:8.16.1"
 //    implementation "com.innovatrics.dot:dot-face-detection-fast:8.4.0"
 //    implementation "com.innovatrics.dot:dot-face-expression-neutral:8.4.0"
 //    implementation "com.innovatrics.dot:dot-face-passive-liveness:8.4.0"
