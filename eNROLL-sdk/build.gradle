@@ -8,6 +8,7 @@ plugins {
 
 android {
     namespace 'com.luminsoft.ekyc_android_sdk'
+    ndkVersion "28.0.12433566"
     compileSdk 35
     defaultConfig {
         minSdk 24
