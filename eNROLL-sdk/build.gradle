@@ -84,9 +84,9 @@ dependencies {
     api "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     api "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     api "com.airbnb.android:lottie-compose:6.0.1"
-    api "com.innovatrics.dot:dot-document:8.11.0"
-    api "com.innovatrics.dot:dot-face-detection-fast:8.11.0"
-    api "com.innovatrics.dot:dot-face-expression-neutral:8.11.0"
+    api "com.innovatrics.dot:dot-document:8.16.1"
+    api "com.innovatrics.dot:dot-face-detection-fast:8.16.1"
+    api "com.innovatrics.dot:dot-face-expression-neutral:8.16.1"
 //    api "com.innovatrics.dot:dot-face-passive-liveness:8.11.0"
 //    api "com.innovatrics.dot:dot-nfc:8.4.0"
 //    api "com.innovatrics.dot:dot-face-verification:8.4.0"
@@ -100,7 +100,7 @@ dependencies {
 
     //region retrofit
     api "com.squareup.retrofit2:retrofit:2.9.0"
-    api "com.squareup.retrofit2:converter-gson:2.9.0"
+    api "com.squareup.retrofit2:converter-gson:3.0.0"
     api "com.squareup.okhttp3:logging-interceptor:4.8.0"
     //endregion
 
