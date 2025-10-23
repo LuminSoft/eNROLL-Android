@@ -9,10 +9,10 @@ plugins {
 android {
     namespace 'com.luminsoft.ekyc_android_sdk'
     ndkVersion "28.0.12433566"
-    compileSdk 35
+    compileSdkVersion 36
     defaultConfig {
         minSdk 24
-        targetSdk 35
+        targetSdkVersion 35
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -72,9 +72,9 @@ android {
 
 dependencies {
 
-    api "androidx.navigation:navigation-fragment-ktx:2.9.1"
-    api "androidx.navigation:navigation-ui-ktx:2.9.1"
-    api 'com.google.android.material:material:1.12.0'
+    api "androidx.navigation:navigation-fragment-ktx:2.9.5"
+    api "androidx.navigation:navigation-ui-ktx:2.9.5"
+    api 'com.google.android.material:material:1.13.0'
     api "androidx.constraintlayout:constraintlayout:2.2.1"
 
 
