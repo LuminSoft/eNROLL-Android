@@ -29,11 +29,5 @@
         <!--            android:label="@string/face_capture_screen"-->
         <!--            android:theme="@style/Theme.AppCompat.Light" />-->
 
-
-        <activity
-            android:name="com.luminsoft.enroll_sdk.innovitices.MainActivity"
-            android:configChanges="locale|orientation|keyboardHidden|screenSize"
-            android:label="@string/smile_liveness_screen"
-            android:theme="@style/Theme.AppCompat.Light" />
     </application>
 </manifest>
