@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.luminsoft.ekyc_android_sdk'
-    ndkVersion "28.0.12433566"
+    ndkVersion "29.0.14206865"
     compileSdkVersion 36
     defaultConfig {
         minSdk 24
@@ -70,7 +70,7 @@ android {
     publishing {
         singleVariant("release") {
             withSourcesJar()
-            withJavadocJar()
+//            withJavadocJar()
         }
     }
 
@@ -144,7 +144,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '1.5.00'
+                version = '1.5.01'
                 //TODO change it inside core/models/BuildInfo file
             }
         }
