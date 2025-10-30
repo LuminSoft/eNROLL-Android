@@ -1,0 +1,29 @@
+# jitpack.yml  (commit this at the repo root)
+jdk:
+  - openjdk17
+
+install:
+  # Make sure JitPack uses this SDK root and has sdkmanager on PATH
+  - export ANDROID_SDK_ROOT="${ANDROID_HOME}"
+  - export PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${PATH}"
+
+  # Accept all Android SDK licenses (non-interactive)
+  - yes | "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --licenses
+
+  # Install the exact packages the build needs
+  - "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
+      "cmdline-tools;latest" \
+      "platform-tools" \
+      "platforms;android-36" \
+      "build-tools;35.0.0" \
+      "ndk;28.0.12433566"
+
+  # Optional: diagnostics (visible in JitPack logs)
+  - "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --list_installed || true
+  - ls -la "${ANDROID_HOME}/licenses" || true
+
+# Build exactly the library module that publishes to Maven Local
+# (adjust module path if your module name is different)
+build:
+  commands:
+    - ./gradlew :eNROLL-sdk:publishToMavenLocal -Pgroup=com.github.LuminSoft -Pversion=1.4.9 --no-daemon --stacktrace
