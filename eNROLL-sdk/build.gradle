@@ -65,6 +65,9 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+        jniLibs {
+            useLegacyPackaging false
+        }
     }
 
 }
@@ -84,12 +87,12 @@ dependencies {
     api "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     api "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     api "com.airbnb.android:lottie-compose:6.0.1"
-    api "com.innovatrics.dot:dot-document:8.11.0"
-    api "com.innovatrics.dot:dot-face-detection-fast:8.11.0"
-    api "com.innovatrics.dot:dot-face-expression-neutral:8.11.0"
-    api "com.innovatrics.dot:dot-face-passive-liveness:8.11.0"
+    api "com.innovatrics.dot:dot-document:8.16.1"
+    api "com.innovatrics.dot:dot-face-detection-fast:8.16.1"
+    api "com.innovatrics.dot:dot-face-expression-neutral:8.16.1"
+//    api "com.innovatrics.dot:dot-face-passive-liveness:8.15.1"
 //    api "com.innovatrics.dot:dot-nfc:8.4.0"
-    api "com.innovatrics.dot:dot-face-verification:8.4.0"
+//    api "com.innovatrics.dot:dot-face-verification:8.4.0"
 
     api 'androidx.activity:activity-ktx:1.10.1'
     api 'androidx.fragment:fragment-ktx:1.8.8'
@@ -100,7 +103,7 @@ dependencies {
 
     //region retrofit
     api "com.squareup.retrofit2:retrofit:2.9.0"
-    api "com.squareup.retrofit2:converter-gson:2.9.0"
+    api "com.squareup.retrofit2:converter-gson:3.0.0"
     api "com.squareup.okhttp3:logging-interceptor:4.8.0"
     //endregion
 
@@ -137,7 +140,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '1.4.4'
+                version = '1.5.04'
                 //TODO change it inside core/models/BuildInfo file
             }
         }
