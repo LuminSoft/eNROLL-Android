@@ -78,7 +78,9 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
+import androidx.core.graphics.createBitmap
 
 
 @Composable
@@ -91,26 +93,30 @@ fun FaceCaptureBoardingPostScanScreenContent(
     val rememberedViewModel = remember { onBoardingViewModel }
     val context = LocalContext.current
     val activity = context.findActivity()
-    val document = onBoardingViewModel.smileImage.collectAsState()
+
+    val customerIdVM = onBoardingViewModel.customerId.collectAsState()
+
+    val emptyBitmap = remember { createBitmap(1, 1) }
+
+    val document = onBoardingViewModel.smileImage
+        .map { it ?: emptyBitmap }
+        .collectAsState(initial = emptyBitmap)
 
 
     val faceCaptureUseCase = FaceCaptureUseCase(koinInject())
     val selfieImageApproveUseCase = SelfieImageApproveUseCase(koinInject())
 
-
-    val faceCaptureOnBoardingPostScanViewModel =
-        document.value?.let {
-            remember {
-                onBoardingViewModel.customerId.value?.let { it1 ->
-                    FaceCaptureOnBoardingPostScanViewModel(
-                        faceCaptureUseCase,
-                        selfieImageApproveUseCase,
-                        it,
-                        it1
-                    )
-                }
-            }
-        }
+    val faceCaptureOnBoardingPostScanViewModel = remember(
+        document.value, customerIdVM
+    ) {
+        val customerId = onBoardingViewModel.customerId.value ?: ""
+        FaceCaptureOnBoardingPostScanViewModel(
+            faceCaptureUseCase,
+            selfieImageApproveUseCase,
+            document.value,
+            customerId
+        )
+    }
 
 
     val startForResult =
@@ -137,19 +143,11 @@ fun FaceCaptureBoardingPostScanScreenContent(
         }
 
     // State to control whether to show MainContent
-    var showMainContent by remember { mutableStateOf(faceCaptureOnBoardingPostScanViewModel != null) }
+    var showMainContent by remember { mutableStateOf(true) }
 
-    // Handle navigation to error screen if view model is null
-    LaunchedEffect(faceCaptureOnBoardingPostScanViewModel) {
-        if (faceCaptureOnBoardingPostScanViewModel == null) {
-            onBoardingViewModel.errorMessage.value = "Required data is missing"
-            navController.navigate(faceCaptureOnBoardingErrorScreen)
-            showMainContent = false
-        }
-    }
 
     // Render MainContent only if view model is not null
-    if (showMainContent && faceCaptureOnBoardingPostScanViewModel != null) {
+    if (showMainContent) {
         MainContent(
             navController,
             onBoardingViewModel,
