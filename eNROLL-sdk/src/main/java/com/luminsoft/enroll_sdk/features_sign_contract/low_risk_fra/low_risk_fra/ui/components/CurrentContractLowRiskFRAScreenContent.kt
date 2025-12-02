@@ -64,6 +64,11 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import org.koin.compose.koinInject
 
 
@@ -213,10 +218,42 @@ fun PdfViewerWidget(
     val contractVersion by currentContractLowRiskFRAVM.contractVersionNumberValue.collectAsState()
     val fileName = "$contractId${contractVersion}_final"
 
-
     var showConfirmationDialog by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    
+    // Single unified zoom state for entire PDF (prevents flashing between pages)
+    var scale by remember { mutableStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    
+    val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
+        val newScale = (scale * zoomChange).coerceIn(1f, 4f)
+        
+        // Calculate max offset with generous bounds to see all content when zoomed
+        // Multiplier 1.2 gives enough range to pan and see everything
+        val maxOffsetX = if (newScale > 1f) {
+            (screenWidth.value - 32f) * (newScale - 1f) * 1.2f // Generous horizontal pan
+        } else 0f
+        
+        val maxOffsetY = if (newScale > 1f) {
+            (screenHeight.value * 0.55f - 24f) * (newScale - 1f) * 1.2f // Generous vertical pan
+        } else 0f
+        
+        // Apply new offset with bounds
+        val newOffset = if (newScale <= 1f) {
+            Offset.Zero // Reset to center when not zoomed
+        } else {
+            val proposedOffset = offset + offsetChange
+            Offset(
+                x = proposedOffset.x.coerceIn(-maxOffsetX, maxOffsetX),
+                y = proposedOffset.y.coerceIn(-maxOffsetY, maxOffsetY)
+            )
+        }
+        
+        scale = newScale
+        offset = newOffset
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -243,18 +280,28 @@ fun PdfViewerWidget(
                     .fillMaxWidth()
                     .height(screenHeight * 0.55f)
                     .shadow(8.dp, shape = RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .background(Color.White, RoundedCornerShape(8.dp))
                     .padding(12.dp)
+                    .transformable(state = transformState) // Single zoom for entire PDF
 
             ) {
 
                 LazyColumn(
                     modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(
+                            scaleX = scale,
+                            scaleY = scale,
+                            translationX = offset.x,
+                            translationY = offset.y
+                        ),
+                    userScrollEnabled = true // Always allow scrolling to navigate pages
                 ) {
                     items(bitmaps.size) { index ->
                         Image(
                             bitmap = bitmaps[index].asImageBitmap(),
-                            contentDescription = null,
+                            contentDescription = "Contract page ${index + 1}",
                             contentScale = ContentScale.FillWidth,
                             modifier = Modifier
                                 .fillMaxWidth()

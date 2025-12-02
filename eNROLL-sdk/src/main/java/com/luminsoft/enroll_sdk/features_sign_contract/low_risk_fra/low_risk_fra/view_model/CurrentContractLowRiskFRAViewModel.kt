@@ -148,9 +148,19 @@ class CurrentContractLowRiskFRAViewModel(
             ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
         val pdfRenderer = PdfRenderer(parcelFileDescriptor)
 
+        // Render at 3x resolution for high quality zoom (300 DPI vs default 100 DPI)
+        val renderScale = 3f
+
         for (i in 0 until pdfRenderer.pageCount) {
             val page = pdfRenderer.openPage(i)
-            val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+            
+            // Create bitmap at 3x the original size for crisp text when zoomed
+            val bitmap = Bitmap.createBitmap(
+                (page.width * renderScale).toInt(),
+                (page.height * renderScale).toInt(),
+                Bitmap.Config.ARGB_8888
+            )
+            
             page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
             bitmaps.add(bitmap) 
             page.close()
