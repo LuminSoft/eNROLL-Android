@@ -5,7 +5,7 @@
 
     <groupId>com.github.LuminSoft</groupId>
     <artifactId>eNROLL-sdk</artifactId>
-    <version>1.4.0.05</version>
+    <version>1.5.05</version>
     <packaging>aar</packaging>
 
     <repositories>
