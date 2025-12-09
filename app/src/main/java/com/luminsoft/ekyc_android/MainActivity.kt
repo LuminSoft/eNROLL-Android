@@ -72,7 +72,7 @@ import java.io.File
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename = "env_andrew"
+    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
 //    filename = "env_support_team"
@@ -82,6 +82,7 @@ var dotenv = dotenv {
 //    filename = "env_naspas_production"
 //    filename = "env_naspas_staging"
     filename = "env_org_1_staging"
+    filename = "env_sleem"
 //    filename = "env_fra_staging"
 //    filename = "env_test_2"
 }
@@ -109,8 +110,8 @@ class MainActivity : ComponentActivity() {
 
     private fun getOnboardingSessionToken() {
         val request = GenerateTokenRequest(
-            tenantId = tenantId.value.text,
-            tenantSecret = tenantSecret.value.text,
+            tenantId = "9235e61e-3322-4940-a78e-4c182cf7ef637",
+            tenantSecret = "736db9db-680a-4608-b545-1c7d636c7487",
             deviceId = "your_device_id",
             correlationId = "your_correlation_id"
         )
