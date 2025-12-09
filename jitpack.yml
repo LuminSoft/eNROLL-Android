@@ -9,6 +9,4 @@ install:
     echo "RAW_VERSION=$RAW_VERSION CLEAN_VERSION=$CLEAN_VERSION FILE=$FILE"
     curl -fL --retry 3 -o "$FILE" "https://github.com/LuminSoft/eNROLL-Android/releases/download/${RAW_VERSION}/${FILE}"
     ls -lh "$FILE"
-    mkdir -p build/outputs/aar
-    cp "$FILE" build/outputs/aar/eNROLL-sdk-release.aar
-    mvn install:install-file -Dfile="$FILE" -DgroupId=com.github.LuminSoft -DartifactId=eNROLL-Android -Dversion="${CLEAN_VERSION}" -Dpackaging=aar -DlocalRepositoryPath=build/repo -DcreateChecksum=true
+    mvn install:install-file -Dfile="$FILE" -DgroupId=com.github.LuminSoft -DartifactId=eNROLL-Android -Dversion="${CLEAN_VERSION}" -Dpackaging=aar
