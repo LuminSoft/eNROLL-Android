@@ -6,6 +6,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.sdk.eNROLL
 
 
@@ -18,6 +19,7 @@ typealias EnrollSuccessModel = EnrollSuccessModel
 typealias LocalizationCode = LocalizationCode
 typealias eNROLL = eNROLL
 typealias AppColors = com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+typealias EkycStepType = EkycStepType
 
 
 

@@ -18,6 +18,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.core.utils.RootDetectionUtil
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import java.util.Locale
@@ -43,7 +44,7 @@ object eNROLL {
         contractParameters: String = "",
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
-
+        exitStep: EkycStepType? = null,
         ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -74,6 +75,7 @@ object eNROLL {
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
         EnrollSDK.contractTemplateId = templateId
         EnrollSDK.contractParameters = contractParameters
+        EnrollSDK.exitStep = exitStep
     }
 
     fun launch(

@@ -148,7 +148,7 @@ class CurrentContractLowRiskFRAViewModel(
             val page = pdfRenderer.openPage(i)
             val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
             page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            bitmaps.add(bitmap)
+            bitmaps.add(bitmap) 
             page.close()
         }
 

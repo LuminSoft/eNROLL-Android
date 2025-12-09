@@ -122,35 +122,9 @@ fun MultiplePhoneNumbersScreenContent(
                 }
             )
         }
+        // Step completion is handled automatically by ViewModel
         if (phoneNumbersApproved.value) {
-            val isEmpty = onBoardingViewModel.removeCurrentStep(EkycStepType.PhoneOtp.getStepId())
-
-            if (isEmpty) {
-                LaunchedEffect(Unit) {
-                    val apiResponse = onBoardingViewModel.getApplicantId()
-                    apiResponse.fold(
-                        {},
-                        { _ -> showDialog.value = true }
-                    )
-                }
-            }
-        }
-        if (showDialog.value) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                text = stringResource(id = R.string.successfulRegistration),
-                buttonText = stringResource(id = R.string.continue_to_next),
-                onPressedButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value,
-                            onBoardingViewModel.applicantId.value,
-                        )
-                    )
-                }
-            )
+            onBoardingViewModel.removeCurrentStep(EkycStepType.PhoneOtp.getStepId())
         }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {

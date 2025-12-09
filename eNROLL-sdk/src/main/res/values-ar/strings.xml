@@ -216,6 +216,7 @@
     <string name="someThingWentWrong">حدث خطأ</string>
     <string name="re_createAccount">إعادة إنشاء الحساب</string>
     <string name="successfulRegistration">تم إنشاء الحساب بنجاح</string>
+    <string name="stepCompletedSuccessfully">تم إكمال الخطوة بنجاح</string>
     <string name="too_many_attempts">لقد تجاوزت عدد المحاولات المسموح بها.</string>
     <string name="successfulUpdate">تم تحديث الحساب بنجاح</string>
     <string name="you_would_be_required_to_sign_documents_later_on">سوف يُطلب منك التوقيع على المستندات لاحقًا</string>

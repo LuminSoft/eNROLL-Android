@@ -222,37 +222,9 @@ private fun MainContent(
     }
 
     BackGroundView(navController = navController, showAppBar = false) {
-
+        // Step completion is handled automatically by ViewModel
         if (selfieImageApproved.value) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.SmileLiveness.getStepId())
-            if (isEmpty) {
-                LaunchedEffect(Unit) {
-                    val apiResponse = onBoardingViewModel.getApplicantId()
-                    apiResponse.fold(
-                        {},
-                        { _ -> showDialog.value = true }
-                    )
-                }
-            }
-
-        }
-        if (showDialog.value) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                text = stringResource(id = R.string.successfulRegistration),
-                buttonText = stringResource(id = R.string.continue_to_next),
-                onPressedButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value,
-                            onBoardingViewModel.applicantId.value,
-                        )
-                    )
-                }
-            )
+            onBoardingViewModel.removeCurrentStep(EkycStepType.SmileLiveness.getStepId())
         }
         if (loading.value)
             Column(

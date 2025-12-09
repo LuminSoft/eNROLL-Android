@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -11,6 +12,8 @@ import androidx.navigation.NavController
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.models.BuildInfo
+import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
+import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
@@ -65,6 +68,7 @@ class OnBoardingViewModel(
     var currentPhoneNumberCode: MutableStateFlow<String?> = MutableStateFlow("+20")
     var steps: MutableStateFlow<List<StepModel>?> = MutableStateFlow(null)
     var navController: NavController? = null
+    var activity: Activity? = null
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var passportImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
@@ -82,6 +86,10 @@ class OnBoardingViewModel(
     var isPassportAndMailFinal: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var chosenStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(ChooseStep.NationalId)
     var selectedStep: MutableStateFlow<ChooseStep?> = MutableStateFlow(null)
+    
+    // Exit step tracking - indicates SDK closed at a specific step (not fully completed)
+    var exitStepReached: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var exitStepName: MutableStateFlow<String?> = MutableStateFlow(null)
 
 
     init {
@@ -144,16 +152,19 @@ class OnBoardingViewModel(
     }
 
 
-    private fun generateToken() {
+    private fun generateToken(retryWithoutRequestId: Boolean = false) {
         loading.value = true
         ui {
             val uuid: String = UUID.randomUUID().toString()
+            // If retrying, use empty requestId to start fresh
+            val requestIdToUse = if (retryWithoutRequestId) "" else EnrollSDK.requestId
+            
             params.value = GenerateOnboardingSessionTokenUsecaseParams(
                 EnrollSDK.tenantId,
                 EnrollSDK.tenantSecret,
                 uuid,
                 EnrollSDK.correlationId,
-                EnrollSDK.requestId
+                requestIdToUse
             )
 
             val response: Either<SdkFailure, String> =
@@ -161,8 +172,14 @@ class OnBoardingViewModel(
 
             response.fold(
                 {
-                    failure.value = it
-                    loading.value = false
+                    // If failed with requestId, retry without it (start fresh)
+                    if (!retryWithoutRequestId && EnrollSDK.requestId.isNotEmpty()) {
+                        EnrollSDK.requestId = "" // Clear invalid requestId
+                        generateToken(retryWithoutRequestId = true)
+                    } else {
+                        failure.value = it
+                        loading.value = false
+                    }
                 },
                 { s ->
                     s.let { it1 ->
@@ -235,8 +252,34 @@ class OnBoardingViewModel(
     }
 
 
-    fun removeCurrentStep(id: Int): Boolean {
+    /**
+     * Removes the current step and handles navigation or completion automatically.
+     * 
+     * This method handles everything internally - no UI code needed in feature screens:
+     * - If more steps remain: navigates to next step automatically
+     * - If exit step reached: triggers success callback and finishes activity
+     * - If all steps completed: fetches applicantId, triggers callback, finishes activity
+     * 
+     * @param id The step ID that was just completed
+     */
+    fun removeCurrentStep(id: Int) {
         try {
+            // Check if this step is the configured exit step
+            val exitStep = EnrollSDK.exitStep
+            if (exitStep != null && exitStep.getStepId() == id) {
+                exitStepReached.value = true
+                exitStepName.value = exitStep.name
+                // Remove the current step from the list
+                if (steps.value != null) {
+                    steps.value = steps.value!!.toMutableList().apply {
+                        removeIf { x -> x.registrationStepId == id }
+                    }.toList()
+                }
+                // Handle completion automatically (exit step - skip getApplicantId)
+                handleCompletionAutomatically(isExitStep = true)
+                return
+            }
+            
             if (steps.value != null) {
                 val stepsSize = steps.value!!.size
                 steps.value = steps.value!!.toMutableList().apply {
@@ -244,16 +287,52 @@ class OnBoardingViewModel(
                 }.toList()
                 val newStepsSize = steps.value!!.size
                 if (stepsSize != newStepsSize) {
-                    return if (steps.value!!.isNotEmpty()) {
+                    if (steps.value!!.isNotEmpty()) {
                         navigateToNextStep()
-                        false
-                    } else
-                        true
+                    } else {
+                        // All steps completed - handle completion automatically
+                        handleCompletionAutomatically(isExitStep = false)
+                    }
                 }
             }
-            return false
         } catch (e: Exception) {
-            return false
+            // Log error if needed
+        }
+    }
+    
+    /**
+     * Handles SDK completion automatically - triggers callback and finishes activity.
+     * No dialog shown - direct completion like iOS behavior.
+     * 
+     * @param isExitStep True if exiting at a defined step, false if full completion
+     */
+    private fun handleCompletionAutomatically(isExitStep: Boolean) {
+        ui {
+            // For full completion, fetch applicant ID first
+            if (!isExitStep) {
+                getApplicantId()
+            }
+            
+            // Trigger success callback
+            val message = if (isExitStep) {
+                context.getString(R.string.stepCompletedSuccessfully)
+            } else {
+                context.getString(R.string.successfulAuthentication)
+            }
+            
+            EnrollSDK.enrollCallback?.success(
+                EnrollSuccessModel(
+                    enrollMessage = message,
+                    documentId = documentId.value,
+                    applicantId = applicantId.value,
+                    requestId = requestId.value,
+                    exitStepCompleted = isExitStep,
+                    completedStepName = exitStepName.value
+                )
+            )
+            
+            // Finish the activity
+            activity?.finish()
         }
     }
 

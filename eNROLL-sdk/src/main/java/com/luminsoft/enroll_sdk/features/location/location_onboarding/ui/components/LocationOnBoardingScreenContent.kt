@@ -64,7 +64,6 @@ import com.google.android.gms.tasks.Task
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
-import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
@@ -110,8 +109,6 @@ fun LocationOnBoardingScreenContent(
     val currentLocation = locationOnBoardingViewModel.currentLocation.collectAsState()
     val locationSent = locationOnBoardingVM.locationSent.collectAsState()
     val permissionDenied = locationOnBoardingVM.permissionDenied.collectAsState()
-    val showDialog = remember { mutableStateOf(false) }
-
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
@@ -123,20 +120,9 @@ fun LocationOnBoardingScreenContent(
     }
 
     BackGroundView(navController = navController, showAppBar = false) {
+        // Step completion is handled automatically by ViewModel
         if (locationSent.value) {
-            val isEmpty =
-                onBoardingViewModel.removeCurrentStep(EkycStepType.DeviceLocation.getStepId())
-
-            if (isEmpty) {
-                LaunchedEffect(Unit) {
-                    val apiResponse = onBoardingViewModel.getApplicantId()
-                    apiResponse.fold(
-                        {},
-                        { _ -> showDialog.value = true }
-                    )
-                }
-            }
-
+            onBoardingViewModel.removeCurrentStep(EkycStepType.DeviceLocation.getStepId())
         }
         val launcherMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -154,23 +140,6 @@ fun LocationOnBoardingScreenContent(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-        if (showDialog.value) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                text = stringResource(id = R.string.successfulRegistration),
-                buttonText = stringResource(id = R.string.continue_to_next),
-                onPressedButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value,
-                            onBoardingViewModel.applicantId.value,
-                        )
-                    )
-                }
-            )
-        }
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {

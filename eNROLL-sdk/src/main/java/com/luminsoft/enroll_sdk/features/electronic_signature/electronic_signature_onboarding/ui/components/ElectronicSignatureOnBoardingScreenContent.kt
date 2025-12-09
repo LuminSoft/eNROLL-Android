@@ -105,133 +105,43 @@ fun ElectronicSignatureOnBoardingScreenContent(
     var dialogButtonText by remember { mutableStateOf("") }
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
-    fun navigateToNextStep() {
-        onBoardingViewModel.mailValue.value = TextFieldValue()
-        onBoardingViewModel.currentPhoneNumber.value = null
-        navController.navigate(onBoardingViewModel.steps.value!!.first().stepNameNavigator())
-    }
-
-    fun removeCurrentStep(id: Int): Boolean {
-        if (onBoardingViewModel.steps.value != null) {
-            val stepsSize = onBoardingViewModel.steps.value!!.size
-            onBoardingViewModel.steps.value =
-                onBoardingViewModel.steps.value!!.toMutableList().apply {
-                    removeIf { x -> x.registrationStepId == id }
-                }.toList()
-            val newStepsSize = onBoardingViewModel.steps.value!!.size
-            if (stepsSize != newStepsSize) {
-                return onBoardingViewModel.steps.value!!.isEmpty()
-            }
-        }
-        return false
-    }
-
+    // This screen shows custom dialogs before completing - dialog button triggers step completion
     LaunchedEffect(skipped.value) {
-
         if (skipped.value!!) {
-            val isEmpty =
+            dialogMessage = context.getString(R.string.successfulRegistration)
+            dialogButtonText = context.getString(R.string.continue_to_next)
+            dialogStatus = BottomSheetStatus.SUCCESS
+            dialogOnPressButton = {
+                // ViewModel handles navigation or completion automatically
                 onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
-            if (isEmpty) {
-                val apiResponse = onBoardingViewModel.getApplicantId()
-                apiResponse.fold(
-                    {},
-                    { _ ->
-                        dialogMessage = context.getString(R.string.successfulRegistration)
-                        dialogButtonText = context.getString(R.string.continue_to_next)
-                        dialogStatus = BottomSheetStatus.SUCCESS
-                        dialogOnPressButton = {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.success(
-                                EnrollSuccessModel(
-                                    activity.getString(R.string.successfulAuthentication),
-                                    onBoardingViewModel.documentId.value,
-                                    onBoardingViewModel.applicantId.value
-                                )
-                            )
-                        }
-                        showDialog = true
-                    }
-                )
             }
-
+            showDialog = true
         }
     }
 
     LaunchedEffect(haveSignature.value) {
         if (haveSignature.value!!) {
-            val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
-            if (isEmpty) {
-                val apiResponse = onBoardingViewModel.getApplicantId()
-                apiResponse.fold(
-                    {},
-                    { _ ->
-                        dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
-                        dialogButtonText = context.getString(R.string.continue_to_next)
-                        dialogStatus = BottomSheetStatus.SUCCESS
-                        dialogOnPressButton = {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.success(
-                                EnrollSuccessModel(
-                                    activity.getString(R.string.successfulAuthentication),
-                                    onBoardingViewModel.documentId.value,
-                                    onBoardingViewModel.applicantId.value
-                                )
-                            )
-                        }
-                        showDialog = true
-                    }
-                )
-
-            } else {
-                dialogMessage =
-                    context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    navigateToNextStep()
-                    showDialog = false
-                }
-                showDialog = true
+            dialogMessage = context.getString(R.string.you_would_be_required_to_sign_documents_later_on)
+            dialogButtonText = context.getString(R.string.continue_to_next)
+            dialogStatus = BottomSheetStatus.SUCCESS
+            dialogOnPressButton = {
+                // ViewModel handles navigation or completion automatically
+                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             }
+            showDialog = true
         }
     }
 
     LaunchedEffect(applySignatureSucceed.value) {
         if (applySignatureSucceed.value!!) {
-            val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
-            if (isEmpty) {
-                val apiResponse = onBoardingViewModel.getApplicantId()
-                apiResponse.fold(
-                    {},
-                    { _ ->
-                        dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
-                        dialogButtonText = context.getString(R.string.continue_to_next)
-                        dialogStatus = BottomSheetStatus.SUCCESS
-                        dialogOnPressButton = {
-                            activity.finish()
-                            EnrollSDK.enrollCallback?.success(
-                                EnrollSuccessModel(
-                                    activity.getString(R.string.successfulAuthentication),
-                                    onBoardingViewModel.documentId.value,
-                                    onBoardingViewModel.applicantId.value
-                                )
-                            )
-                        }
-                        showDialog = true
-                    }
-                )
-
-            } else {
-                dialogMessage =
-                    context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
-                dialogButtonText = context.getString(R.string.continue_to_next)
-                dialogStatus = BottomSheetStatus.SUCCESS
-                dialogOnPressButton = {
-                    navigateToNextStep()
-                    showDialog = false
-                }
-                showDialog = true
+            dialogMessage = context.getString(R.string.we_will_contact_you_to_receive_the_physical_token)
+            dialogButtonText = context.getString(R.string.continue_to_next)
+            dialogStatus = BottomSheetStatus.SUCCESS
+            dialogOnPressButton = {
+                // ViewModel handles navigation or completion automatically
+                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             }
+            showDialog = true
         }
     }
 

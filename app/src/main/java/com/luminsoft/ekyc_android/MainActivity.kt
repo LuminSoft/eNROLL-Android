@@ -54,6 +54,7 @@ import com.luminsoft.enroll_sdk.EnrollMode
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.LocalizationCode
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
+import com.luminsoft.enroll_sdk.EkycStepType
 import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
@@ -95,6 +96,7 @@ var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
+var selectedExitStepIndex = mutableStateOf(0) // 0 = None (no exit step)
 
 class MainActivity : ComponentActivity() {
 
@@ -159,112 +161,140 @@ class MainActivity : ComponentActivity() {
                 listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
+            
+            // Exit Step options - "None" means no exit step (run full flow)
+            val exitStepList = listOf(
+                "None (Full Flow)",
+                "Personal Confirmation",
+                "Smile Liveness", 
+                "Phone OTP",
+                "Email OTP",
+                "Device Location",
+                "Security Questions",
+                "Password",
+                "AML Check",
+                "Terms & Conditions",
+                "Electronic Signature"
+            )
+            var exitStepIndex by rememberSaveable { mutableIntStateOf(selectedExitStepIndex.value) }
 
 
 
             EnrollTheme {
+                val scrollState = rememberScrollState()
+                
+                // Single scrollable column with everything
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 15.dp), verticalArrangement = Arrangement.SpaceBetween
+                        .padding(horizontal = 15.dp)
+                        .verticalScroll(scrollState)
                 ) {
-                    Column {
-                        Spacer(modifier = Modifier.height(20.dp))
-                        NormalTextField(
-                            label = "Tenant Id",
-                            value = tenantIdText.value,
-                            onValueChange = {
-                                tenantIdText.value = it
-                            })
-                        NormalTextField(
-                            label = "Tenant Secret",
-                            value = tenantSecretText.value,
-                            onValueChange = {
-                                tenantSecretText.value = it
-                            })
-                        NormalTextField(
-                            label = "Application Id",
-                            value = applicationIdText.value,
-                            onValueChange = {
-                                applicationIdText.value = it
-                            })
-                        NormalTextField(
-                            label = "Level Of Trust Token",
-                            value = levelOfTrustTokenText.value,
-                            onValueChange = {
-                                levelOfTrustTokenText.value = it
-                            })
-                        NormalTextField(
-                            label = "Request Id",
-                            value = requestIdText.value,
-                            onValueChange = {
-                                requestIdText.value = it
-                            })
+                    Spacer(modifier = Modifier.height(20.dp))
+                    NormalTextField(
+                        label = "Tenant Id",
+                        value = tenantIdText.value,
+                        onValueChange = {
+                            tenantIdText.value = it
+                        })
+                    NormalTextField(
+                        label = "Tenant Secret",
+                        value = tenantSecretText.value,
+                        onValueChange = {
+                            tenantSecretText.value = it
+                        })
+                    NormalTextField(
+                        label = "Application Id",
+                        value = applicationIdText.value,
+                        onValueChange = {
+                            applicationIdText.value = it
+                        })
+                    NormalTextField(
+                        label = "Level Of Trust Token",
+                        value = levelOfTrustTokenText.value,
+                        onValueChange = {
+                            levelOfTrustTokenText.value = it
+                        })
+                    NormalTextField(
+                        label = "Request Id",
+                        value = requestIdText.value,
+                        onValueChange = {
+                            requestIdText.value = it
+                        })
+                    Spacer(modifier = Modifier.height(15.dp))
+                    NormalTextField(
+                        label = "Template ID",
+                        value = templateIdText.value,
+                        onValueChange = {
+                            templateIdText.value = it
+                        })
+                    NormalTextField(
+                        label = "Contract Parameters",
+                        value = contractParametersText.value,
+                        onValueChange = {
+                            contractParametersText.value = it
+                        })
+                    Row {
                         Spacer(modifier = Modifier.height(15.dp))
-                        NormalTextField(
-                            label = "Template ID",
-                            value = templateIdText.value,
-                            onValueChange = {
-                                templateIdText.value = it
-                            })
-                        NormalTextField(
-                            label = "Contract Parameters",
-                            value = contractParametersText.value,
-                            onValueChange = {
-                                contractParametersText.value = it
-                            })
-                        Row {
-                            Spacer(modifier = Modifier.height(15.dp))
-
-                            ArabicCheckbox()
-                            ProductionCheckbox()
-                        }
-                        Row {
-                            Spacer(modifier = Modifier.height(15.dp))
-
-                            RememberMeCheckbox()
-                            SkipTutorialCheckbox()
-                        }
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        DropdownList(
-                            itemList = itemList,
-                            selectedIndex = selectedIndex,
-                            modifier = buttonModifier,
-                            onItemClick = { selectedIndex = it })
-
-
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(text.value)
+                        ArabicCheckbox()
+                        ProductionCheckbox()
                     }
-                    Column {
-                        val border = BorderStroke(1.dp, MaterialTheme.appColors.primary)
-                        val modifier = Modifier
+                    Row {
+                        Spacer(modifier = Modifier.height(15.dp))
+                        RememberMeCheckbox()
+                        SkipTutorialCheckbox()
+                    }
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    DropdownList(
+                        itemList = itemList,
+                        selectedIndex = selectedIndex,
+                        modifier = buttonModifier,
+                        onItemClick = { selectedIndex = it })
+                    
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(":Exit Step", style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.height(5.dp))
+                    DropdownList(
+                        itemList = exitStepList,
+                        selectedIndex = exitStepIndex,
+                        modifier = buttonModifier,
+                        onItemClick = { 
+                            exitStepIndex = it
+                            selectedExitStepIndex.value = it
+                        })
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Callback message display
+                    if (text.value.isNotEmpty()) {
+                        Text(
+                            text = text.value,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                    // Launch button (scrollable with content)
+                    Button(
+                        modifier = Modifier
                             .fillMaxWidth()
-                            .height(45.dp)
-                            .padding(
-                                start = 15.dp, end = 15.dp
-                            )
-
-                        Button(
-                            border = border,
-                            modifier = modifier,
-                            onClick = {
-                                initEnroll(activity, selectedIndex)
-                            },
-                            contentPadding = PaddingValues(0.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.appColors.primary),
-
-                            ) {
-                            Text(
-                                text = "Launch eNROLL",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.appColors.backGround
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(40.dp))
+                            .height(45.dp),
+                        onClick = {
+                            initEnroll(activity, selectedIndex)
+                        },
+                        contentPadding = PaddingValues(0.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.appColors.primary),
+                    ) {
+                        Text(
+                            text = "Launch eNROLL",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.appColors.backGround
+                        )
                     }
+                    
+
+                    
+                    Spacer(modifier = Modifier.height(40.dp))
                 }
 
             }
@@ -313,9 +343,16 @@ class MainActivity : ComponentActivity() {
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
                         clearCache()
-                        text.value =
-                            "eNROLL Message: ${enrollSuccessModel.enrollMessage}"
-
+                        // Show detailed info including exit step status
+                        val exitInfo = if (enrollSuccessModel.exitStepCompleted) {
+                            "\nExit Step: ${enrollSuccessModel.completedStepName}" +
+                            "\nRequest ID: ${enrollSuccessModel.requestId ?: "N/A"}" +
+                            "\n(Use Request ID to resume)"
+                        } else {
+                            ""
+                        }
+                        text.value = "eNROLL Message: ${enrollSuccessModel.enrollMessage}$exitInfo"
+                        Log.d("eNROLL", "Success - ExitStep: ${enrollSuccessModel.exitStepCompleted}, RequestId: ${enrollSuccessModel.requestId}")
                     }
 
                     override fun error(enrollFailedModel: EnrollFailedModel) {
@@ -325,7 +362,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                     override fun getRequestId(requestId: String) {
-                        clearCache()
+                        // Store requestId for later use (to resume flow)
+                        requestIdText.value = TextFieldValue(requestId)
                         Log.d("requestId", requestId)
                     }
 
@@ -341,7 +379,8 @@ class MainActivity : ComponentActivity() {
                 enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
                 requestId = requestIdText.value.text,
                 templateId = templateIdText.value.text,
-                contractParameters = contractParametersText.value.text
+                contractParameters = contractParametersText.value.text,
+                exitStep = getExitStepFromIndex(selectedExitStepIndex.value)
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
@@ -481,6 +520,28 @@ fun SkipTutorialCheckbox() {
             onCheckedChange = { isChecked -> skipTutorial.value = isChecked }
         )
         Text("Skip Tutorial")
+    }
+}
+
+/**
+ * Convert selected exit step index to EkycStepType enum
+ * Index 0 = None (no exit step, run full flow)
+ * Returns null if index is 0 (no exit step selected)
+ */
+fun getExitStepFromIndex(index: Int): EkycStepType? {
+    return when (index) {
+        0 -> null // None - run full flow
+        1 -> EkycStepType.PersonalConfirmation
+        2 -> EkycStepType.SmileLiveness
+        3 -> EkycStepType.PhoneOtp
+        4 -> EkycStepType.EmailOtp
+        5 -> EkycStepType.DeviceLocation
+        6 -> EkycStepType.SecurityQuestions
+        7 -> EkycStepType.SettingPassword
+        8 -> EkycStepType.AmlCheck
+        9 -> EkycStepType.TermsConditions
+        10 -> EkycStepType.ElectronicSignature
+        else -> null
     }
 }
 

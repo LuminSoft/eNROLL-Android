@@ -70,7 +70,14 @@ class MainRepositoryImplementation(private val mainRemoteDataSource: MainRemoteD
     override suspend fun getCurrentStep(): Either<SdkFailure, GetCurrentStepResponse> {
         return when (val response = mainRemoteDataSource.getCurrentStep()) {
             is BaseResponse.Success -> {
-                Either.Right(response.data as GetCurrentStepResponse)
+                // Handle 204 No Content - response.data might be empty/null
+                val data = response.data
+                if (data is GetCurrentStepResponse) {
+                    Either.Right(data)
+                } else {
+                    // 204 No Content means no current step - return empty response
+                    Either.Right(GetCurrentStepResponse())
+                }
             }
 
             is BaseResponse.Error -> {

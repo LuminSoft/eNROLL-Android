@@ -5,6 +5,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
+import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 
 
@@ -33,6 +34,10 @@ object EnrollSDK {
     var enrollMode: EnrollMode = EnrollMode.ONBOARDING
     var enrollForcedDocumentType: EnrollForcedDocumentType? =
         EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT
+    
+    // Exit step configuration - SDK will close after this step is completed
+    // When set, SDK returns control to host app after completing this step
+    var exitStep: EkycStepType? = null
 
 
     private fun getLuminBaseUrl(): String {

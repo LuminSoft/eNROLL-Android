@@ -55,6 +55,7 @@ fun SplashScreenContent(
     val failure = viewModel.failure.collectAsState()
     val activity = LocalActivity.current
     viewModel.navController = navController
+    viewModel.activity = activity
 
     Surface(
         modifier = Modifier

@@ -128,36 +128,9 @@ fun NationalIdOnBoardingBackConfirmationScreen(
                 onBoardingViewModel.isPassportAndMailFinal.value = true
                 navController.navigate(nationalIdOnBoardingPreScanScreen)
             } else {
-                val isEmpty =
-                    onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
-
-                if (isEmpty) {
-                    LaunchedEffect(Unit) {
-                        val apiResponse = onBoardingViewModel.getApplicantId()
-                        apiResponse.fold(
-                            {},
-                            { _ -> showDialog.value = true }
-                        )
-                    }
-                }
+                // Step completion is handled automatically by ViewModel
+                onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
             }
-        }
-        if (showDialog.value) {
-            DialogView(
-                bottomSheetStatus = BottomSheetStatus.SUCCESS,
-                text = stringResource(id = R.string.successfulRegistration),
-                buttonText = stringResource(id = R.string.continue_to_next),
-                onPressedButton = {
-                    activity.finish()
-                    EnrollSDK.enrollCallback?.success(
-                        EnrollSuccessModel(
-                            activity.getString(R.string.successfulAuthentication),
-                            onBoardingViewModel.documentId.value,
-                            onBoardingViewModel.applicantId.value,
-                        )
-                    )
-                }
-            )
         }
 
         if (loading.value) Column(
