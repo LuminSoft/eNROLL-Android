@@ -1,0 +1,28 @@
+jdk:
+  - openjdk17
+
+before_install:
+  - sdk install maven
+
+install:
+  - |
+    VERSION="${VERSION:-1.5.11}"
+    RAW_VERSION="${VERSION#v}"
+    AAR_FILE="eNROLL-sdk-${RAW_VERSION}.aar"
+    POM_FILE="pom-${RAW_VERSION}.xml"
+    
+    echo "Installing eNROLL SDK version: $RAW_VERSION"
+    echo "Downloading AAR: $AAR_FILE"
+    curl -fL --retry 3 -o "$AAR_FILE" "https://github.com/LuminSoft/eNROLL-Android/releases/download/${RAW_VERSION}/${AAR_FILE}"
+    
+    echo "Downloading POM: $POM_FILE"
+    curl -fL --retry 3 -o "$POM_FILE" "https://github.com/LuminSoft/eNROLL-Android/releases/download/${RAW_VERSION}/${POM_FILE}"
+    
+    echo "Installing to local Maven repository..."
+    mvn install:install-file \
+      -Dfile="$AAR_FILE" \
+      -DpomFile="$POM_FILE" \
+      -DgroupId=com.github.LuminSoft \
+      -DartifactId=eNROLL-Android \
+      -Dversion="$RAW_VERSION" \
+      -Dpackaging=aar
