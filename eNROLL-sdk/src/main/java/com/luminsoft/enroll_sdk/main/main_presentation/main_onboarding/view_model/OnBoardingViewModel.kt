@@ -90,6 +90,11 @@ class OnBoardingViewModel(
     // Exit step tracking - indicates SDK closed at a specific step (not fully completed)
     var exitStepReached: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var exitStepName: MutableStateFlow<String?> = MutableStateFlow(null)
+    
+    // Completion dialog state - shows success dialog when step/flow is completed
+    var showCompletionDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var completionDialogMessage: MutableStateFlow<String> = MutableStateFlow("")
+    var isCompletionExitStep: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
 
     init {
@@ -301,8 +306,8 @@ class OnBoardingViewModel(
     }
     
     /**
-     * Handles SDK completion automatically - triggers callback and finishes activity.
-     * No dialog shown - direct completion like iOS behavior.
+     * Handles SDK completion - shows success dialog before finishing.
+     * User must confirm dialog to trigger callback and finish activity.
      * 
      * @param isExitStep True if exiting at a defined step, false if full completion
      */
@@ -313,27 +318,41 @@ class OnBoardingViewModel(
                 getApplicantId()
             }
             
-            // Trigger success callback
-            val message = if (isExitStep) {
+            // Set dialog message based on completion type
+            completionDialogMessage.value = if (isExitStep) {
                 context.getString(R.string.stepCompletedSuccessfully)
             } else {
-                context.getString(R.string.successfulAuthentication)
+                context.getString(R.string.successfulRegistration)
             }
             
-            EnrollSDK.enrollCallback?.success(
-                EnrollSuccessModel(
-                    enrollMessage = message,
-                    documentId = documentId.value,
-                    applicantId = applicantId.value,
-                    requestId = requestId.value,
-                    exitStepCompleted = isExitStep,
-                    completedStepName = exitStepName.value
-                )
-            )
+            // Store exit step flag for callback
+            isCompletionExitStep.value = isExitStep
             
-            // Finish the activity
-            activity?.finish()
+            // Show the completion dialog
+            showCompletionDialog.value = true
         }
+    }
+    
+    /**
+     * Called when user confirms the completion dialog.
+     * Triggers success callback and finishes the activity.
+     */
+    fun onCompletionDialogConfirmed() {
+        // Trigger success callback
+        EnrollSDK.enrollCallback?.success(
+            EnrollSuccessModel(
+                enrollMessage = completionDialogMessage.value,
+                documentId = documentId.value,
+                applicantId = applicantId.value,
+                requestId = requestId.value,
+                exitStepCompleted = isCompletionExitStep.value,
+                completedStepName = exitStepName.value
+            )
+        )
+        
+        // Hide dialog and finish activity
+        showCompletionDialog.value = false
+        activity?.finish()
     }
 
     private fun navigateToNextStep() {

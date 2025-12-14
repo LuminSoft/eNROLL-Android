@@ -6,7 +6,13 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -67,7 +73,10 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_navigation.splashScreenAuthC
 import com.luminsoft.enroll_sdk.main_forget_profile_data.main_forget_di.mainForgetModule
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_di.mainSignContractModule
 import com.luminsoft.enroll_sdk.main_update.main_update_di.mainUpdateModule
+import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
+import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import com.luminsoft.ekyc_android_sdk.R
 import electronicSignatureRouter
 import forgetLocationModule
 import lostDeviceIdModule
@@ -114,15 +123,22 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             val navController = rememberNavController()
 
 
+            // Set activity reference in ViewModel
+            onBoardingViewModel.activity = this
+            
+            // Observe completion dialog state
+            val showCompletionDialog by onBoardingViewModel.showCompletionDialog.collectAsState()
+            val completionDialogMessage by onBoardingViewModel.completionDialogMessage.collectAsState()
+            
             EKYCsDKTheme(
                 appColors = EnrollSDK.appColors,
                 dynamicColor = false
             ) {
-
-                NavHost(
-                    navController = navController,
-                    startDestination = getStartingRoute()
-                ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = getStartingRoute()
+                    ) {
                     termsConditionsRouter(navController = navController, onBoardingViewModel)
                     mainRouter(navController = navController, onBoardingViewModel)
                     nationalIdRouter(navController = navController, onBoardingViewModel)
@@ -153,6 +169,19 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                         navController = navController,
                         onBoardingViewModel = onBoardingViewModel
                     )
+                    }
+                    
+                    // Completion Dialog - shown when step/flow is completed
+                    if (showCompletionDialog) {
+                        DialogView(
+                            bottomSheetStatus = BottomSheetStatus.SUCCESS,
+                            text = completionDialogMessage,
+                            buttonText = stringResource(id = R.string.continue_to_next),
+                            onPressedButton = {
+                                onBoardingViewModel.onCompletionDialogConfirmed()
+                            }
+                        )
+                    }
                 }
             }
 
