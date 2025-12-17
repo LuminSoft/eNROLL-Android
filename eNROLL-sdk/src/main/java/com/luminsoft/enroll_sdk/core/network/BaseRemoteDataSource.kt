@@ -20,12 +20,26 @@ class BaseRemoteDataSource {
     ): BaseResponse<Any> {
         try {
             val response = call.invoke()
+            
+            // Log API response details
+            android.util.Log.d("API_Response", "=== API Response ===")
+            android.util.Log.d("API_Response", "URL: ${response.raw().request.url}")
+            android.util.Log.d("API_Response", "HTTP Code: ${response.code()}")
+            android.util.Log.d("API_Response", "Is Successful: ${response.isSuccessful}")
+            
             if (response.isSuccessful) {
                 val body = response.body() ?: {}
+                android.util.Log.d("API_Response", "Body Type: ${body::class.simpleName}")
+                android.util.Log.d("API_Response", "Body: $body")
+                android.util.Log.d("API_Response", "===================")
                 if ((response.code() == 200 || response.code() == 201 || response.code() == 204))
                     return BaseResponse.Success(body)
             } else {
                 val error = decryptErrorBody(response.errorBody())
+                android.util.Log.d("API_Response", "Error Code: ${error.statusCode}")
+                android.util.Log.d("API_Response", "Error Message: ${error.message}")
+                android.util.Log.d("API_Response", "===================")
+            
 
                 return if (response.code() == 401) {
                     if (error.message == ResourceProvider.instance.getStringResource(

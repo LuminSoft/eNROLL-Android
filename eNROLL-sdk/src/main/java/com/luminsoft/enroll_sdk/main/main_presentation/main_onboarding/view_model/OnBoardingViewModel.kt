@@ -177,11 +177,27 @@ class OnBoardingViewModel(
 
             response.fold(
                 {
-                    // If failed with requestId, retry without it (start fresh)
-                    if (!retryWithoutRequestId && EnrollSDK.requestId.isNotEmpty()) {
-                        EnrollSDK.requestId = "" // Clear invalid requestId
+                    // Log the error details for debugging
+                    android.util.Log.d("RequestValidation", "=== Request ID Validation Error ===")
+                    android.util.Log.d("RequestValidation", "RequestId: ${EnrollSDK.requestId}")
+                    android.util.Log.d("RequestValidation", "Error Message: ${it.message}")
+                    android.util.Log.d("RequestValidation", "Error Type: ${it::class.simpleName}")
+                    android.util.Log.d("RequestValidation", "strInt: ${it.strInt}")
+                    
+                    // Only retry without requestId if the request was REJECTED
+                    // For complete/invalid requests, show the validation error instead
+                    val isRejectedRequest = isRequestRejected(it)
+                    android.util.Log.d("RequestValidation", "Is Rejected: $isRejectedRequest")
+                    android.util.Log.d("RequestValidation", "================================")
+                    
+                    if (!retryWithoutRequestId && EnrollSDK.requestId.isNotEmpty() && isRejectedRequest) {
+                        // Rejected request: restart from beginning
+                        android.util.Log.d("RequestValidation", "Action: Restarting from beginning (rejected)")
+                        EnrollSDK.requestId = "" // Clear rejected requestId
                         generateToken(retryWithoutRequestId = true)
                     } else {
+                        // Complete/invalid/other errors: show validation message
+                        android.util.Log.d("RequestValidation", "Action: Showing validation error")
                         failure.value = it
                         loading.value = false
                     }
@@ -244,10 +260,18 @@ class OnBoardingViewModel(
 
         response.fold(
             { failure ->
+                android.util.Log.d("GetCurrentStep", "=== GetCurrentStep FAILED ===")
+                android.util.Log.d("GetCurrentStep", "Error: ${failure.message}")
+                android.util.Log.d("GetCurrentStep", "=============================")
                 this.failure.value = failure
                 loading.value = false
             },
             { success ->
+                android.util.Log.d("GetCurrentStep", "=== GetCurrentStep SUCCESS ===")
+                android.util.Log.d("GetCurrentStep", "currentStepId: ${success.currentStepId}")
+                android.util.Log.d("GetCurrentStep", "nextStepId: ${success.nextStepId}")
+                android.util.Log.d("GetCurrentStep", "STATUS: ${success.status}")
+                android.util.Log.d("GetCurrentStep", "==============================")
                 currentStepId.value = success.currentStepId
                 removeStepsUntilCurrentStep()
             }
@@ -384,5 +408,20 @@ class OnBoardingViewModel(
                 steps.value = stepList.subList(currentStepIndex, stepList.size)
             }
         }
+    }
+    
+    /**
+     * Checks if the failure indicates a REJECTED request status.
+     * Only rejected requests should trigger a restart from beginning.
+     * Complete and invalid requests should show validation errors instead.
+     * 
+     * @param failure The SDK failure to check
+     * @return true if the request was rejected, false for complete/invalid/other errors
+     */
+    private fun isRequestRejected(failure: SdkFailure): Boolean {
+        val message = failure.message.lowercase()
+        // Check for rejected status keywords
+        // Rejected requests need to restart all steps
+        return message.contains("reject") || message.contains("rejected")
     }
 }
