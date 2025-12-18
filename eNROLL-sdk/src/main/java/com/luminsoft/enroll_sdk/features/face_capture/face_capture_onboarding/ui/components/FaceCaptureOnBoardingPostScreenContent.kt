@@ -106,15 +106,18 @@ fun FaceCaptureBoardingPostScanScreenContent(
     val faceCaptureUseCase = FaceCaptureUseCase(koinInject())
     val selfieImageApproveUseCase = SelfieImageApproveUseCase(koinInject())
 
+    val videoContent = onBoardingViewModel.videoContentBase64.collectAsState()
+    
     val faceCaptureOnBoardingPostScanViewModel = remember(
-        document.value, customerIdVM
+        document.value, customerIdVM, videoContent.value
     ) {
         val customerId = onBoardingViewModel.customerId.value ?: ""
         FaceCaptureOnBoardingPostScanViewModel(
             faceCaptureUseCase,
             selfieImageApproveUseCase,
             document.value,
-            customerId
+            customerId,
+            videoContent.value
         )
     }
 
@@ -127,6 +130,8 @@ fun FaceCaptureBoardingPostScanScreenContent(
                     val smileImageBitmap =
                         DotHelper.getThumbnail(smileImageUri, activity)
                     rememberedViewModel.smileImage.value = smileImageBitmap
+                    val videoContent = it.data?.getStringExtra(SmileLivenessActivity().outVideoContentBase64)
+                    rememberedViewModel.videoContentBase64.value = videoContent
                     navController.navigate(faceCaptureBoardingPostScanScreenContent)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()

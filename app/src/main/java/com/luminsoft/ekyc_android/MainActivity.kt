@@ -94,6 +94,7 @@ var templateId =
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"]?.takeIf { it.isNotEmpty() } ?: "")
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
+var isLocal = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 var selectedExitStepIndex = mutableStateOf(0) // 0 = None (no exit step)
@@ -238,6 +239,7 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(15.dp))
                         ArabicCheckbox()
                         ProductionCheckbox()
+                        LocalCheckbox()
                     }
                     Row {
                         Spacer(modifier = Modifier.height(15.dp))
@@ -338,7 +340,11 @@ class MainActivity : ComponentActivity() {
                     4 -> EnrollMode.SIGN_CONTRACT
                     else -> EnrollMode.ONBOARDING
                 },
-                environment = if (isProduction.value) EnrollEnvironment.PRODUCTION else EnrollEnvironment.STAGING,
+                environment = when {
+                    isLocal.value -> EnrollEnvironment.LOCAL
+                    isProduction.value -> EnrollEnvironment.PRODUCTION
+                    else -> EnrollEnvironment.STAGING
+                },
                 enrollCallback = object :
                     EnrollCallback {
                     override fun success(enrollSuccessModel: EnrollSuccessModel) {
@@ -492,9 +498,28 @@ fun ProductionCheckbox() {
     ) {
         Checkbox(
             checked = isProduction.value,
-            onCheckedChange = { isChecked -> isProduction.value = isChecked }
+            onCheckedChange = { isChecked -> 
+                isProduction.value = isChecked
+                if (isChecked) isLocal.value = false
+            }
         )
-        Text("is Production")
+        Text("Production")
+    }
+}
+
+@Composable
+fun LocalCheckbox() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = isLocal.value,
+            onCheckedChange = { isChecked -> 
+                isLocal.value = isChecked
+                if (isChecked) isProduction.value = false
+            }
+        )
+        Text("Local")
     }
 }
 

@@ -16,4 +16,7 @@ open class UploadSelfieRequestModel {
     @SerializedName("smileImageScore")
     internal var smileImageScore: Double? = 0.0
 
+    @SerializedName("record")
+    internal var record: String? = null
+
 }

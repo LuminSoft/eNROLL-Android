@@ -4,4 +4,5 @@ import android.graphics.Bitmap
 
 data class SmileLivenessResult(
     val bitmap: Bitmap,
+    val videoContentBase64: String? = null,
 )

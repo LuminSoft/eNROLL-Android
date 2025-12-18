@@ -16,6 +16,7 @@ class FaceCaptureUseCase(private val faceCaptureRepository: FaceCaptureRepositor
         val uploadSelfieRequestModel = UploadSelfieRequestModel()
         uploadSelfieRequestModel.image = DotHelper.bitmapToBase64(params.image)
         uploadSelfieRequestModel.customerId = params.customerId
+        uploadSelfieRequestModel.record = params.videoContentBase64
         return faceCaptureRepository.faceCaptureUploadSelfie(
             uploadSelfieRequestModel
         )
@@ -25,4 +26,5 @@ class FaceCaptureUseCase(private val faceCaptureRepository: FaceCaptureRepositor
 data class UploadSelfieUseCaseParams(
     val image: Bitmap,
     val customerId: String? = null,
+    val videoContentBase64: String? = null,
 )

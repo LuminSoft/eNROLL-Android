@@ -70,6 +70,7 @@ class OnBoardingViewModel(
     var navController: NavController? = null
     var activity: Activity? = null
     var smileImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
+    var videoContentBase64: MutableStateFlow<String?> = MutableStateFlow(null)
     var nationalIdFrontImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var passportImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     var nationalIdBackImage: MutableStateFlow<Bitmap?> = MutableStateFlow(null)

@@ -12,6 +12,7 @@ import com.luminsoft.enroll_sdk.innovitices.smileliveness.BasicSmileLivenessFrag
 
 class SmileLivenessActivity : AppCompatActivity() {
     var outSmileLivenessUri = "smile-liveness-uri"
+    var outVideoContentBase64 = "video-content-base64"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

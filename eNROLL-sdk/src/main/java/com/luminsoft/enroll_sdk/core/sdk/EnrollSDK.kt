@@ -44,6 +44,7 @@ object EnrollSDK {
         return when (environment) {
             EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
             EnrollEnvironment.PRODUCTION -> "https://enrollgateway.luminsoft.net"
+            EnrollEnvironment.LOCAL -> "http://197.168.1.39"
         }
     }
 
@@ -51,6 +52,7 @@ object EnrollSDK {
         return when (environment) {
             EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/SecureOnBoarding/"
             EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/SecureOnBoarding/"
+            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/SecureOnBoarding/"
         }
     }
 
@@ -58,6 +60,7 @@ object EnrollSDK {
         return when (environment) {
             EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
             EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
         }
     }
 }

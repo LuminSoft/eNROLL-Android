@@ -59,6 +59,8 @@ fun FaceCaptureOnBoardingErrorScreen(
                     val smileImageBitmap =
                         DotHelper.getThumbnail(smileImageUri, activity)
                     rememberedViewModel.smileImage.value = smileImageBitmap
+                    val videoContent = it.data?.getStringExtra(SmileLivenessActivity().outVideoContentBase64)
+                    rememberedViewModel.videoContentBase64.value = videoContent
                     navController.navigate(faceCaptureBoardingPostScanScreenContent)
                 } catch (e: Exception) {
                     onBoardingViewModel.disableLoading()

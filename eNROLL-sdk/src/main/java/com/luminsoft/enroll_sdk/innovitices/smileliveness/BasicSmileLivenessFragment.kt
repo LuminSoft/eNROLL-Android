@@ -113,6 +113,9 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
                 intent.data = smileUri
 
                 intent.putExtra(SmileLivenessActivity().outSmileLivenessUri, smileUri.toString())
+                it.videoContentBase64?.let { videoContent ->
+                    intent.putExtra(SmileLivenessActivity().outVideoContentBase64, videoContent)
+                }
 
                 requireActivity().setResult(RESULT_SUCCESS, intent)
                 requireActivity().finish()

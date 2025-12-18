@@ -18,7 +18,8 @@ class FaceCaptureOnBoardingPostScanViewModel(
     private val faceCaptureUseCase: FaceCaptureUseCase,
     private val selfieImageApproveUseCase: SelfieImageApproveUseCase,
     private val selfieImage: Bitmap,
-    private val customerId: String
+    private val customerId: String,
+    private val videoContentBase64: String? = null
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -39,7 +40,7 @@ class FaceCaptureOnBoardingPostScanViewModel(
         ui {
 
             params.value =
-                UploadSelfieUseCaseParams(selfieImage, customerId = customerId)
+                UploadSelfieUseCaseParams(selfieImage, customerId = customerId, videoContentBase64 = videoContentBase64)
 
             val response: Either<SdkFailure, UploadSelfieData> =
                 faceCaptureUseCase.call(params.value as UploadSelfieUseCaseParams)
