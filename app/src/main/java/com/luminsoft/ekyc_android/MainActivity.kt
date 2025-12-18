@@ -349,6 +349,8 @@ class MainActivity : ComponentActivity() {
                             "\nRequest ID: ${enrollSuccessModel.requestId ?: "N/A"}" +
                             "\n(Use Request ID to resume)"
                         } else {
+                            // Flow completed fully - clear stored requestId to prevent reuse
+                            requestIdText.value = TextFieldValue("")
                             ""
                         }
                         text.value = "eNROLL Message: ${enrollSuccessModel.enrollMessage}$exitInfo"
