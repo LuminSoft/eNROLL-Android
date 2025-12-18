@@ -5,6 +5,7 @@ import retrofit2.Converter
 import com.google.gson.Gson
 import java.lang.reflect.Type
 import com.google.gson.JsonParser
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 
 class EncryptedResponseBodyConverter<T>(
@@ -13,10 +14,15 @@ class EncryptedResponseBodyConverter<T>(
 ) : Converter<ResponseBody, T> {
 
     override fun convert(value: ResponseBody): T {
-        val encryptedResponse = value.string()
+        val responseString = value.string()
+
+        // Skip decryption for LOCAL environment
+        if (!EnrollSDK.isEncryptionEnabled()) {
+            return gson.fromJson(responseString, type)
+        }
 
         // Extract "Data" from the response JSON
-        val jsonObject = JsonParser.parseString(encryptedResponse).asJsonObject
+        val jsonObject = JsonParser.parseString(responseString).asJsonObject
         val encryptedData = jsonObject.get("Data")?.asString ?: ""
 
         // Decrypt the "Data" field

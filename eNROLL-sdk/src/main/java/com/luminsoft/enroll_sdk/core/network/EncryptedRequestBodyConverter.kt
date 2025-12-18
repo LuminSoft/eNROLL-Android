@@ -5,6 +5,7 @@ import retrofit2.Converter
 import java.lang.reflect.Type
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 
@@ -15,6 +16,12 @@ class EncryptedRequestBodyConverter<T>(
 
     override fun convert(value: T): RequestBody {
         val originalJson = gson.toJson(value, type)
+        
+        // Skip encryption for LOCAL environment
+        if (!EnrollSDK.isEncryptionEnabled()) {
+            return RequestBody.create("application/json".toMediaTypeOrNull(), originalJson)
+        }
+        
         val encrypted = EncryptionHelper.encrypt(originalJson)
 
         val wrapped = JsonObject().apply {

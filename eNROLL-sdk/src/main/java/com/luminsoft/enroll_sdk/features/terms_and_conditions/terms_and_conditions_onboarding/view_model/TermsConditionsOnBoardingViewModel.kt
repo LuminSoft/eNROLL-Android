@@ -7,6 +7,7 @@ import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features.terms_and_conditions.terms_and_conditions_data.terms_and_conditions_models.AcceptTermsRequestModel
@@ -112,12 +113,15 @@ class TermsConditionsOnBoardingViewModel(
                     try {
                         val jsonBody = res.string()
 
-                        // Extract the "Data" field from the JSON
-                        val base64Encrypted = JSONObject(jsonBody).getString("Data")
-
-                        // Decrypt to get PDF byte array
-                        val pdfBytes: ByteArray? =
+                        val pdfBytes: ByteArray? = if (EnrollSDK.isEncryptionEnabled()) {
+                            // Extract the "Data" field from the JSON and decrypt
+                            val base64Encrypted = JSONObject(jsonBody).getString("Data")
                             EncryptionHelper.decryptBinaryDataFromEncryptedJson(base64Encrypted)
+                        } else {
+                            // For LOCAL environment, parse PDF directly from base64
+                            val base64Data = JSONObject(jsonBody).getString("Data")
+                            android.util.Base64.decode(base64Data, android.util.Base64.DEFAULT)
+                        }
 
                         if (pdfBytes == null || pdfBytes.isEmpty()) {
                             failure.value = NetworkFailure("Invalid or missing PDF content")
@@ -125,7 +129,7 @@ class TermsConditionsOnBoardingViewModel(
                             return@fold
                         }
 
-                        // Save decrypted PDF bytes to file
+                        // Save PDF bytes to file
                         val file = File(context.cacheDir, "terms_and_conditions.pdf")
                         FileOutputStream(file).use { it.write(pdfBytes) }
 
@@ -137,7 +141,7 @@ class TermsConditionsOnBoardingViewModel(
 
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        failure.value = NetworkFailure("PDF decryption failed: ${e.message}")
+                        failure.value = NetworkFailure("PDF processing failed: ${e.message}")
                         loading.value = false
                     }
                 }

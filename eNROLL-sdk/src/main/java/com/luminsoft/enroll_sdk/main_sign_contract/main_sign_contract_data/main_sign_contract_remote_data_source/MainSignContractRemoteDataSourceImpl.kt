@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main
 
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_api.MainSignContractApi
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
@@ -28,11 +29,16 @@ class MainSignContractRemoteDataSourceImpl(
         }
         val jsonString = jsonObject.toString()
 
-        val encryptedObject = EncryptionHelper.encrypt(jsonString)
+        // Skip encryption for LOCAL environment
+        val requestBody = if (EnrollSDK.isEncryptionEnabled()) {
+            val encryptedObject = EncryptionHelper.encrypt(jsonString)
+            encryptedObject.toRequestBody("text/plain".toMediaTypeOrNull())
+        } else {
+            jsonString.toRequestBody("application/json".toMediaTypeOrNull())
+        }
+        
         return network.apiRequest {
-            mainApi.generateSignContractRequestSessionToken(
-                encryptedObject.toRequestBody("text/plain".toMediaTypeOrNull())
-            )
+            mainApi.generateSignContractRequestSessionToken(requestBody)
         }
 
     }

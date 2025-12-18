@@ -6,6 +6,7 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.NoConnectionFailure
 import com.luminsoft.enroll_sdk.core.failures.ServerFailure
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import okhttp3.ResponseBody
@@ -90,10 +91,16 @@ class BaseRemoteDataSource {
 
     private fun decryptErrorBody(errorBody: ResponseBody?): ApiErrorResponse {
         return try {
-            val encryptedResponse =
+            val responseString =
                 errorBody?.string() ?: return ApiErrorResponse(message = "Unknown error")
+            
+            // Skip decryption for LOCAL environment
+            if (!EnrollSDK.isEncryptionEnabled()) {
+                return Gson().fromJson(responseString, ApiErrorResponse::class.java)
+            }
+            
             val jsonObject =
-                Gson().fromJson(encryptedResponse, com.google.gson.JsonObject::class.java)
+                Gson().fromJson(responseString, com.google.gson.JsonObject::class.java)
             val encryptedData = jsonObject["Data"]?.asString
                 ?: return ApiErrorResponse(message = "Malformed error response")
 

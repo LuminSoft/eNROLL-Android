@@ -52,7 +52,7 @@ object EnrollSDK {
         return when (environment) {
             EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/SecureOnBoarding/"
             EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/SecureOnBoarding/"
-            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/SecureOnBoarding/"
+            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/"
         }
     }
 
@@ -62,5 +62,9 @@ object EnrollSDK {
             EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
             EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
         }
+    }
+
+    fun isEncryptionEnabled(): Boolean {
+        return environment != EnrollEnvironment.LOCAL
     }
 }

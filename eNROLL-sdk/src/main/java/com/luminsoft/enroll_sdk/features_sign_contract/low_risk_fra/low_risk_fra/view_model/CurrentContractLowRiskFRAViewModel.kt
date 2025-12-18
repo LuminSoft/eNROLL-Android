@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCase
@@ -84,12 +85,15 @@ class CurrentContractLowRiskFRAViewModel(
         try {
             val jsonBody = res.string()
 
-            // Extract the "Data" field from the JSON
-            val base64Encrypted = JSONObject(jsonBody).getString("Data")
-
-            // Decrypt to get PDF byte array
-            val pdfBytes: ByteArray? =
+            val pdfBytes: ByteArray? = if (EnrollSDK.isEncryptionEnabled()) {
+                // Extract the "Data" field from the JSON and decrypt
+                val base64Encrypted = JSONObject(jsonBody).getString("Data")
                 EncryptionHelper.decryptBinaryDataFromEncryptedJson(base64Encrypted)
+            } else {
+                // For LOCAL environment, parse PDF directly from base64
+                val base64Data = JSONObject(jsonBody).getString("Data")
+                android.util.Base64.decode(base64Data, android.util.Base64.DEFAULT)
+            }
 
             if (pdfBytes == null || pdfBytes.isEmpty()) {
                 failure.value = NetworkFailure("Invalid or missing PDF content")
@@ -97,7 +101,7 @@ class CurrentContractLowRiskFRAViewModel(
                 return
             }
 
-            // Save decrypted PDF bytes to file
+            // Save PDF bytes to file
             val file = File(context.cacheDir, "sign_contract.pdf")
             FileOutputStream(file).use { it.write(pdfBytes) }
 
@@ -109,7 +113,7 @@ class CurrentContractLowRiskFRAViewModel(
 
         } catch (e: Exception) {
             e.printStackTrace()
-            failure.value = NetworkFailure("PDF decryption failed: ${e.message}")
+            failure.value = NetworkFailure("PDF processing failed: ${e.message}")
             loading.value = false
         }
     }
