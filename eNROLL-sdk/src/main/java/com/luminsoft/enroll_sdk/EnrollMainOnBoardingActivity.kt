@@ -24,6 +24,8 @@ import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlRouter
+import com.luminsoft.enroll_sdk.features.check_cso.check_cso_di.checkCsoModule
+import com.luminsoft.enroll_sdk.features.check_cso.check_cso_navigation.checkCsoRouter
 import com.luminsoft.enroll_sdk.features.check_ntra.check_ntra_di.checkNtraModule
 import com.luminsoft.enroll_sdk.features.check_ntra.check_ntra_navigation.checkNtraRouter
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
@@ -159,6 +161,10 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                         navController = navController,
                         onBoardingViewModel
                     )
+                    checkCsoRouter(
+                        navController = navController,
+                        onBoardingViewModel
+                    )
                     phoneNumberRouter(
                         navController = navController,
                         onBoardingViewModel = onBoardingViewModel
@@ -218,6 +224,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                 modules(mainAuthModule)
                 modules(checkAmlModule)
                 modules(checkNtraModule)
+                modules(checkCsoModule)
                 modules(deviceDataModule)
                 modules(emailModule)
                 modules(faceCaptureModule)

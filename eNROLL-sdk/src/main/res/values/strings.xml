@@ -318,6 +318,8 @@
     <string name="kindly_check_aml_to_clear_your_name">kindly check AML to clear your name</string>
     <string name="ntra_check_failed">Your mobile number is not registered at NTRA under your national ID</string>
     <string name="intro11">Your mobile number will be verified with NTRA to confirm it is registered under your national ID</string>
+    <string name="cso_check_failed">Your national ID verification with CSO failed</string>
+    <string name="intro_cso">Your national ID will be verified with the Civil Status Office (CSO) to confirm its authenticity</string>
 
 
     <string name="eSignature">E-signature</string>

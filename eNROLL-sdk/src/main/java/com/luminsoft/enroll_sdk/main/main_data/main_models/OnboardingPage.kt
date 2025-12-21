@@ -120,6 +120,16 @@ sealed class OnBoardingPage(
         text = R.string.intro11
     )
 
+    data object CheckingCsoPage : OnBoardingPage(
+        images = listOf(
+            R.drawable.step_01_national_id_1,
+            R.drawable.step_01_national_id_2,
+            R.drawable.step_01_national_id_3
+        ),
+        stringValue = "CheckingCsoPage",
+        text = R.string.intro_cso
+    )
+
     data object TermsAndConditionsPage : OnBoardingPage(
         images = listOf(
             R.drawable.step_06_security_questions_1,

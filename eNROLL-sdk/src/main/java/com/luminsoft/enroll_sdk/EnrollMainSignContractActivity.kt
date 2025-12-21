@@ -17,6 +17,7 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
+import com.luminsoft.enroll_sdk.features.check_cso.check_cso_di.checkCsoModule
 import com.luminsoft.enroll_sdk.features.check_ntra.check_ntra_di.checkNtraModule
 import com.luminsoft.enroll_sdk.features.device_data.device_data_di.deviceDataModule
 import com.luminsoft.enroll_sdk.features.electronic_signature.electronic_signature_di.electronicSignatureModule
@@ -120,6 +121,7 @@ class EnrollMainSignContractActivity : ComponentActivity() {
                 modules(mainSignContractModule)
                 modules(checkAmlModule)
                 modules(checkNtraModule)
+                modules(checkCsoModule)
                 modules(deviceDataModule)
                 modules(emailModule)
                 modules(faceCaptureModule)
