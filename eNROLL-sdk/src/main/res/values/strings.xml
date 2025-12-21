@@ -316,6 +316,8 @@
     <string name="acceptTermsAndConditions">Accept Terms And Conditions</string>
     <string name="youMustApproveOurTermsToProceed">You must agree to the terms and conditions to continue.</string>
     <string name="kindly_check_aml_to_clear_your_name">kindly check AML to clear your name</string>
+    <string name="ntra_check_failed">Your mobile number is not registered at NTRA under your national ID</string>
+    <string name="intro11">Your mobile number will be verified with NTRA to confirm it is registered under your national ID</string>
 
 
     <string name="eSignature">E-signature</string>

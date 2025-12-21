@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations
 
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_navigation.checkAmlOnBoardingScreenContent
+import com.luminsoft.enroll_sdk.features.check_ntra.check_ntra_navigation.checkNtraOnBoardingScreenContent
 import com.google.gson.annotations.SerializedName
 import com.luminsoft.enroll_sdk.features.device_data.device_data_navigation.deviceDataOnBoardingPrescanScreenContent
 import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
@@ -35,6 +36,7 @@ data class StepModel(
             8 -> EkycStepType.SettingPassword
             9 -> EkycStepType.AmlCheck
             10 -> EkycStepType.TermsConditions
+            13 -> EkycStepType.NtraCheck
             12 -> EkycStepType.ElectronicSignature
             else -> {
                 EkycStepType.PersonalConfirmation
@@ -54,6 +56,7 @@ data class StepModel(
             8 -> settingPasswordOnBoardingScreenContent
             9 -> checkAmlOnBoardingScreenContent
             10 -> termsConditionsOnBoardingScreenContent
+            13 -> checkNtraOnBoardingScreenContent
             12 -> electronicSignatureContent
             else -> {
                 nationalIdOnBoardingPreScanScreen
@@ -74,6 +77,7 @@ enum class EkycStepType {
     SettingPassword,
     AmlCheck,
     TermsConditions,
+    NtraCheck,
     ElectronicSignature;
 
     fun getStepId(): Int {
@@ -88,6 +92,7 @@ enum class EkycStepType {
             SettingPassword -> 8
             AmlCheck -> 9
             TermsConditions -> 10
+            NtraCheck -> 13
             ElectronicSignature -> 12
         }
     }

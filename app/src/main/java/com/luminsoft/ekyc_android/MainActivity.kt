@@ -174,6 +174,7 @@ class MainActivity : ComponentActivity() {
                 "Security Questions",
                 "Password",
                 "AML Check",
+                "NTRA Check",
                 "Terms & Conditions",
                 "Electronic Signature"
             )
@@ -566,8 +567,9 @@ fun getExitStepFromIndex(index: Int): EkycStepType? {
         6 -> EkycStepType.SecurityQuestions
         7 -> EkycStepType.SettingPassword
         8 -> EkycStepType.AmlCheck
-        9 -> EkycStepType.TermsConditions
-        10 -> EkycStepType.ElectronicSignature
+        9 -> EkycStepType.NtraCheck
+        10 -> EkycStepType.TermsConditions
+        11 -> EkycStepType.ElectronicSignature
         else -> null
     }
 }
