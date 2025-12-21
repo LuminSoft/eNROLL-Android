@@ -166,8 +166,8 @@ fun ApplyForElectronicSignatureScreenContent(
     LaunchedEffect(applySignatureSucceed.value) {
         applySignatureSucceed.value?.let { succeed ->
             if (succeed) {
-                val isEmpty = removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
-                showSuccessDialog(isEmpty)
+                // Use onBoardingViewModel.removeCurrentStep which properly handles exit step
+                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
             }
         }
     }
