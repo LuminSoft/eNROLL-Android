@@ -344,7 +344,7 @@ private fun AnimationExtracted(
             Box {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(faceImageBaseUrl)
+                        .data("$faceImageBaseUrl?imagePath=$facePhotoPath")
                         .addHeader(
                             "Authorization",
                             "Bearer ${RetroClient.token}"
@@ -395,7 +395,7 @@ private fun ErrorAnimationExtracted(
 
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(faceImageBaseUrl)
+                    .data("$faceImageBaseUrl?imagePath=$facePhotoPath")
                     .addHeader(
                         "Authorization",
                         "Bearer ${RetroClient.token}"

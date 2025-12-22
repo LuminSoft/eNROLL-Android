@@ -60,7 +60,7 @@ object EnrollSDK {
         return when (environment) {
             EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
             EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
-            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/api/v1/onboarding/Image/GetNationalIdPhotoImage"
         }
     }
 
