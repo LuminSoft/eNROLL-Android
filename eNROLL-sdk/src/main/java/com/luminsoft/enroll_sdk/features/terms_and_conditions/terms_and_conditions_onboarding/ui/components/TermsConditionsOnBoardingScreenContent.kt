@@ -94,11 +94,14 @@ fun TermsConditionsOnBoardingScreenContent(
 
 
 
-    BackGroundView(navController = navController, showAppBar = false) {
-        // Step completion is handled automatically by ViewModel
+    // Handle step completion in LaunchedEffect to ensure it's called only once
+    LaunchedEffect(termsAccepted.value) {
         if (termsAccepted.value) {
             onBoardingViewModel.removeCurrentStep(EkycStepType.TermsConditions.getStepId())
         }
+    }
+
+    BackGroundView(navController = navController, showAppBar = false) {
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {

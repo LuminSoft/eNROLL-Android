@@ -83,12 +83,14 @@ fun SettingPasswordOnBoardingScreenContent(
     val showDialog = remember { mutableStateOf(false) }
 
 
-    BackGroundView(navController = navController, showAppBar = true) {
-        // Step completion is handled automatically by ViewModel
+    // Handle step completion in LaunchedEffect to ensure it's called only once
+    LaunchedEffect(passwordApproved.value) {
         if (passwordApproved.value) {
             onBoardingViewModel.removeCurrentStep(EkycStepType.SettingPassword.getStepId())
         }
+    }
 
+    BackGroundView(navController = navController, showAppBar = true) {
         if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {
                 failure.value?.let {

@@ -225,11 +225,14 @@ private fun MainContent(
         }
     }
 
-    BackGroundView(navController = navController, showAppBar = false) {
-        // Step completion is handled automatically by ViewModel
+    // Handle step completion in LaunchedEffect to ensure it's called only once
+    LaunchedEffect(selfieImageApproved.value) {
         if (selfieImageApproved.value) {
             onBoardingViewModel.removeCurrentStep(EkycStepType.SmileLiveness.getStepId())
         }
+    }
+
+    BackGroundView(navController = navController, showAppBar = false) {
         if (loading.value)
             Column(
                 modifier = Modifier.fillMaxSize(),

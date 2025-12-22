@@ -122,10 +122,14 @@ fun MultiplePhoneNumbersScreenContent(
                 }
             )
         }
-        // Step completion is handled automatically by ViewModel
-        if (phoneNumbersApproved.value) {
-            onBoardingViewModel.removeCurrentStep(EkycStepType.PhoneOtp.getStepId())
+
+        // Handle step completion in LaunchedEffect to ensure it's called only once
+        LaunchedEffect(phoneNumbersApproved.value) {
+            if (phoneNumbersApproved.value) {
+                onBoardingViewModel.removeCurrentStep(EkycStepType.PhoneOtp.getStepId())
+            }
         }
+
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {

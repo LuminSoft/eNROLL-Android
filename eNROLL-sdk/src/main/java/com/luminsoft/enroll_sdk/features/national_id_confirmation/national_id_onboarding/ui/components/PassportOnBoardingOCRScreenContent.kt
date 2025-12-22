@@ -146,11 +146,14 @@ private fun MainContent(
     val userHasModifiedText = remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
 
-    BackGroundView(navController = navController, showAppBar = true) {
-        // Step completion is handled automatically by ViewModel
+    // Handle step completion in LaunchedEffect to ensure it's called only once
+    LaunchedEffect(passportApproved.value) {
         if (passportApproved.value) {
             onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
         }
+    }
+
+    BackGroundView(navController = navController, showAppBar = true) {
         if (loading.value)
             Column(
                 modifier = Modifier.fillMaxSize(),

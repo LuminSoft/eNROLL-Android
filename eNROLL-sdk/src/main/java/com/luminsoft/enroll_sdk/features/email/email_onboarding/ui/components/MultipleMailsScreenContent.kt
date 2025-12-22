@@ -123,9 +123,12 @@ fun MultipleMailsScreenContent(
                 }
             )
         }
-        // Step completion is handled automatically by ViewModel
-        if (mailsApproved.value) {
-            onBoardingViewModel.removeCurrentStep(EkycStepType.EmailOtp.getStepId())
+
+        // Handle step completion in LaunchedEffect to ensure it's called only once
+        LaunchedEffect(mailsApproved.value) {
+            if (mailsApproved.value) {
+                onBoardingViewModel.removeCurrentStep(EkycStepType.EmailOtp.getStepId())
+            }
         }
 
         if (loading.value) LoadingView()

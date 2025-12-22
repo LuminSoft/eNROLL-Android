@@ -115,11 +115,14 @@ fun SecurityQuestionsOnBoardingScreenContent(
 
 
 
-    BackGroundView(navController = navController, showAppBar = true) {
-        // Step completion is handled automatically by ViewModel
+    // Handle step completion in LaunchedEffect to ensure it's called only once
+    LaunchedEffect(securityQuestionsApproved.value) {
         if (securityQuestionsApproved.value) {
             onBoardingViewModel.removeCurrentStep(EkycStepType.SecurityQuestions.getStepId())
         }
+    }
+
+    BackGroundView(navController = navController, showAppBar = true) {
         if (loading.value) LoadingView()
         else if (!failure.value?.message.isNullOrEmpty()) {
             if (failure.value is AuthFailure) {

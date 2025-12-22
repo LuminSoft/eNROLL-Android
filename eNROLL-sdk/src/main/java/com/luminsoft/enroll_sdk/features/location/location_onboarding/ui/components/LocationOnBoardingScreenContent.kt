@@ -119,11 +119,14 @@ fun LocationOnBoardingScreenContent(
         }
     }
 
-    BackGroundView(navController = navController, showAppBar = false) {
-        // Step completion is handled automatically by ViewModel
+    // Handle step completion in LaunchedEffect to ensure it's called only once
+    LaunchedEffect(locationSent.value) {
         if (locationSent.value) {
             onBoardingViewModel.removeCurrentStep(EkycStepType.DeviceLocation.getStepId())
         }
+    }
+
+    BackGroundView(navController = navController, showAppBar = false) {
         val launcherMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissionsMap ->

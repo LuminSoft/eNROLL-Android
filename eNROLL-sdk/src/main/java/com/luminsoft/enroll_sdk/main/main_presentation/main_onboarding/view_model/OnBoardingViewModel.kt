@@ -277,32 +277,32 @@ class OnBoardingViewModel(
         try {
             // Check if this step is the configured exit step
             val exitStep = EnrollSDK.exitStep
-            if (exitStep != null && exitStep.getStepId() == id) {
+            val isExitStep = exitStep != null && exitStep.getStepId() == id
+            
+            if (isExitStep) {
                 exitStepReached.value = true
-                exitStepName.value = exitStep.name
-                // Remove the current step from the list
-                if (steps.value != null) {
-                    steps.value = steps.value!!.toMutableList().apply {
-                        removeIf { x -> x.registrationStepId == id }
-                    }.toList()
-                }
-                // Handle completion automatically (exit step - skip getApplicantId)
-                handleCompletionAutomatically(isExitStep = true)
-                return
+                exitStepName.value = exitStep?.name
             }
             
+            // Remove the current step from the list
             if (steps.value != null) {
                 val stepsSize = steps.value!!.size
                 steps.value = steps.value!!.toMutableList().apply {
                     removeIf { x -> x.registrationStepId == id }
                 }.toList()
                 val newStepsSize = steps.value!!.size
+                
                 if (stepsSize != newStepsSize) {
-                    if (steps.value!!.isNotEmpty()) {
+                    if (steps.value!!.isNotEmpty() && !isExitStep) {
+                        // More steps remain and not an exit step - navigate to next
                         navigateToNextStep()
-                    } else {
-                        // All steps completed - handle completion automatically
+                    } else if (steps.value!!.isEmpty()) {
+                        // All steps completed (exit step was the last step OR normal completion)
+                        // Show "Account created" message
                         handleCompletionAutomatically(isExitStep = false)
+                    } else {
+                        // Exit step but more steps remain - show "Step completed" message
+                        handleCompletionAutomatically(isExitStep = true)
                     }
                 }
             }

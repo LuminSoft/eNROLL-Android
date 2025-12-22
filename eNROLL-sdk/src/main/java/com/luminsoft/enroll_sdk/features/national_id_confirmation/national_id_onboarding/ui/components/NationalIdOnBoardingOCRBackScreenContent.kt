@@ -121,18 +121,20 @@ fun NationalIdOnBoardingBackConfirmationScreen(
         }
 
 
-    BackGroundView(navController = navController, showAppBar = true) {
+    // Handle step completion in LaunchedEffect to ensure it's called only once
+    LaunchedEffect(backNIApproved.value) {
         if (backNIApproved.value) {
             if (isPassportAndMail.value) {
                 onBoardingViewModel.disableLoading()
                 onBoardingViewModel.isPassportAndMailFinal.value = true
                 navController.navigate(nationalIdOnBoardingPreScanScreen)
             } else {
-                // Step completion is handled automatically by ViewModel
                 onBoardingViewModel.removeCurrentStep(EkycStepType.PersonalConfirmation.getStepId())
             }
         }
+    }
 
+    BackGroundView(navController = navController, showAppBar = true) {
         if (loading.value) Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
