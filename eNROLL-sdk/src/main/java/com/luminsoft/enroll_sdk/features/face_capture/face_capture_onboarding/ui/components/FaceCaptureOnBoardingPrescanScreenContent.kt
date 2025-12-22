@@ -52,7 +52,9 @@ fun FaceCaptureBoardingPreScanScreenContent(
                     val smileImageBitmap =
                         DotHelper.getThumbnail(smileImageUri, activity)
                     rememberedViewModel.smileImage.value = smileImageBitmap
-                    val videoContent = it.data?.getStringExtra(SmileLivenessActivity().outVideoContentBase64)
+                    // Video content is saved to file to avoid TransactionTooLargeException
+                    val videoFilePath = it.data?.getStringExtra(SmileLivenessActivity().outVideoContentBase64)
+                    val videoContent = DotHelper.readVideoContentFromFile(videoFilePath)
                     rememberedViewModel.videoContentBase64.value = videoContent
                     navController.navigate(faceCaptureBoardingPostScanScreenContent)
                 } catch (e: Exception) {

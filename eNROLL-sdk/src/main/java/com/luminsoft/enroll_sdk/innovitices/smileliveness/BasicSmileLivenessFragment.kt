@@ -113,8 +113,18 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
                 intent.data = smileUri
 
                 intent.putExtra(SmileLivenessActivity().outSmileLivenessUri, smileUri.toString())
+                
+                // Save video content to file instead of passing via Intent to avoid TransactionTooLargeException
                 it.videoContentBase64?.let { videoContent ->
-                    intent.putExtra(SmileLivenessActivity().outVideoContentBase64, videoContent)
+                    try {
+                        val videoFilename = "video_${System.currentTimeMillis()}.txt"
+                        val videoFile = File(dir, videoFilename)
+                        videoFile.writeText(videoContent)
+                        intent.putExtra(SmileLivenessActivity().outVideoContentBase64, videoFile.absolutePath)
+                    } catch (e: Exception) {
+                        // If file save fails, skip video content
+                        e.printStackTrace()
+                    }
                 }
 
                 requireActivity().setResult(RESULT_SUCCESS, intent)

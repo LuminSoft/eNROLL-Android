@@ -21,7 +21,7 @@ android {
 
     buildTypes {
         release {
-            debuggable true
+            debuggable false
             minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
@@ -33,6 +33,16 @@ android {
         debug {
             debuggable true
             minifyEnabled false
+            firebaseAppDistribution {
+                releaseNotesFile = file("appdistribution/releasenotes.txt").toString()
+                testersFile = file("appdistribution/testers.txt").toString()
+            }
+        }
+        staging {
+            initWith debug
+            debuggable true
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
             firebaseAppDistribution {
                 releaseNotesFile = file("appdistribution/releasenotes.txt").toString()
                 testersFile = file("appdistribution/testers.txt").toString()

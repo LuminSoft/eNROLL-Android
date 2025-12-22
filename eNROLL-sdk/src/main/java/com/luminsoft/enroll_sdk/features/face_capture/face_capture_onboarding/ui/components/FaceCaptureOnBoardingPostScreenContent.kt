@@ -96,28 +96,25 @@ fun FaceCaptureBoardingPostScanScreenContent(
 
     val customerIdVM = onBoardingViewModel.customerId.collectAsState()
 
-    val emptyBitmap = remember { createBitmap(1, 1) }
-
-    val document = onBoardingViewModel.smileImage
-        .map { it ?: emptyBitmap }
-        .collectAsState(initial = emptyBitmap)
-
+    // Get the actual smile image - don't use empty bitmap placeholder
+    val smileImageState = onBoardingViewModel.smileImage.collectAsState()
 
     val faceCaptureUseCase = FaceCaptureUseCase(koinInject())
     val selfieImageApproveUseCase = SelfieImageApproveUseCase(koinInject())
 
     val videoContent = onBoardingViewModel.videoContentBase64.collectAsState()
     
-    val faceCaptureOnBoardingPostScanViewModel = remember(
-        document.value, customerIdVM, videoContent.value
-    ) {
+    // Only create ViewModel once when we have a valid image
+    // Using Unit as key to prevent recreation on state changes
+    val faceCaptureOnBoardingPostScanViewModel = remember {
         val customerId = onBoardingViewModel.customerId.value ?: ""
+        val selfieImage = onBoardingViewModel.smileImage.value ?: createBitmap(1, 1)
         FaceCaptureOnBoardingPostScanViewModel(
             faceCaptureUseCase,
             selfieImageApproveUseCase,
-            document.value,
+            selfieImage,
             customerId,
-            videoContent.value
+            onBoardingViewModel.videoContentBase64.value
         )
     }
 
@@ -130,7 +127,9 @@ fun FaceCaptureBoardingPostScanScreenContent(
                     val smileImageBitmap =
                         DotHelper.getThumbnail(smileImageUri, activity)
                     rememberedViewModel.smileImage.value = smileImageBitmap
-                    val videoContent = it.data?.getStringExtra(SmileLivenessActivity().outVideoContentBase64)
+                    // Video content is saved to file to avoid TransactionTooLargeException
+                    val videoFilePath = it.data?.getStringExtra(SmileLivenessActivity().outVideoContentBase64)
+                    val videoContent = DotHelper.readVideoContentFromFile(videoFilePath)
                     rememberedViewModel.videoContentBase64.value = videoContent
                     navController.navigate(faceCaptureBoardingPostScanScreenContent)
                 } catch (e: Exception) {

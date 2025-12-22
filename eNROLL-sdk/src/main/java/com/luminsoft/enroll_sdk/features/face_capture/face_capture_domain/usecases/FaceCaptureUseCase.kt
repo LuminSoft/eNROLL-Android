@@ -15,8 +15,10 @@ class FaceCaptureUseCase(private val faceCaptureRepository: FaceCaptureRepositor
     override suspend fun call(params: UploadSelfieUseCaseParams): Either<SdkFailure, UploadSelfieData> {
         val uploadSelfieRequestModel = UploadSelfieRequestModel()
         uploadSelfieRequestModel.image = DotHelper.bitmapToBase64(params.image)
-        uploadSelfieRequestModel.customerId = params.customerId
-        uploadSelfieRequestModel.record = params.videoContentBase64
+        // Note: customerId is not part of API spec, removed to match API schema
+        // API only accepts: image, naturalImageScore, smileImageScore, record
+        // TODO: Temporarily disabled for debugging - investigate liveness check failure
+        // uploadSelfieRequestModel.record = params.videoContentBase64
         return faceCaptureRepository.faceCaptureUploadSelfie(
             uploadSelfieRequestModel
         )

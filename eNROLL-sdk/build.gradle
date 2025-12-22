@@ -47,6 +47,10 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        staging {
+            initWith debug
+            matchingFallbacks = ['debug']
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -105,6 +109,12 @@ dependencies {
     api "com.squareup.retrofit2:retrofit:2.9.0"
     api "com.squareup.retrofit2:converter-gson:3.0.0"
     api "com.squareup.okhttp3:logging-interceptor:4.8.0"
+    //endregion
+
+    //region Chucker - HTTP Inspector (debug & staging only)
+    debugApi "com.github.chuckerteam.chucker:library:4.1.0"
+    stagingApi "com.github.chuckerteam.chucker:library:4.1.0"
+    releaseApi "com.github.chuckerteam.chucker:library-no-op:4.1.0"
     //endregion
 
     api "io.insert-koin:koin-core:3.4.3"

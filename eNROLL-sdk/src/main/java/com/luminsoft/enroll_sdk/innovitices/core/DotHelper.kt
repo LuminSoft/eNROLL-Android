@@ -29,22 +29,12 @@ object DotHelper {
 
     @Suppress("DEPRECATION")
     fun getThumbnail(uri: Uri?, activity: Activity): Bitmap {
-        val thumbnailSize = 150.0
+        // Use full-size image for better face matching accuracy
+        // Previous thumbnail size of 150px was too small, causing face match failures
         var input: InputStream? = activity.contentResolver.openInputStream(uri!!)
-        val onlyBoundsOptions: BitmapFactory.Options = BitmapFactory.Options()
-        onlyBoundsOptions.inJustDecodeBounds = true
-        onlyBoundsOptions.inDither = true //optional
-        onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888 //optional
-        BitmapFactory.decodeStream(input, null, onlyBoundsOptions)
-        input?.close()
-        val originalSize: Int =
-            if (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) onlyBoundsOptions.outHeight else onlyBoundsOptions.outWidth
-        val ratio = if (originalSize > thumbnailSize) originalSize / thumbnailSize else 1.0
         val bitmapOptions: BitmapFactory.Options = BitmapFactory.Options()
-        bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio)
-        bitmapOptions.inDither = true //optional
-        bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888 //
-        input = activity.contentResolver.openInputStream(uri)
+        bitmapOptions.inDither = true
+        bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888
         val bitmap: Bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions)!!
         input?.close()
         return bitmap
@@ -60,5 +50,25 @@ object DotHelper {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
         val imageBytes = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(imageBytes, Base64.DEFAULT)
+    }
+    
+    /**
+     * Read video content from file path.
+     * The video content is saved to a file to avoid TransactionTooLargeException
+     * when passing large data via Intent.
+     */
+    fun readVideoContentFromFile(filePath: String?): String? {
+        if (filePath.isNullOrEmpty()) return null
+        return try {
+            val file = java.io.File(filePath)
+            if (file.exists()) {
+                file.readText()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }
