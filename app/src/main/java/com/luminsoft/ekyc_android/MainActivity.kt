@@ -65,7 +65,8 @@ import java.io.File
 var dotenv = dotenv {
     directory = "/assets"
 //    filename="env_sleem"
-    filename="env_local"
+    filename="env_mariam"
+//    filename="env_local"
 //    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
@@ -95,7 +96,7 @@ var templateId =
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"]?.takeIf { it.isNotEmpty() } ?: "")
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
-var isLocal = mutableStateOf(true)
+var isLocal = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 var selectedExitStepIndex = mutableStateOf(0) // 0 = None (no exit step)
