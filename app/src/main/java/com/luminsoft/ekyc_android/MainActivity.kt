@@ -55,6 +55,7 @@ import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.LocalizationCode
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.EkycStepType
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
@@ -64,8 +65,8 @@ import java.io.File
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename="env_sleem"
-    filename="env_mariam"
+    filename="env_sleem"
+//    filename="env_mariam"
 //    filename="env_local"
 //    filename = "env_andrew"
 //    filename = "env_radwan"
@@ -332,6 +333,14 @@ class MainActivity : ComponentActivity() {
         } else {
             getPreferences(Context.MODE_PRIVATE).edit().clear().apply()
         }
+        
+        // Enable local debug mode if checkbox is checked (internal testing only)
+        if (isLocal.value) {
+            EnrollSDK.enableLocalDebugMode()
+        } else {
+            EnrollSDK.disableLocalDebugMode()
+        }
+        
         try {
             eNROLL.init(
                 tenantId = tenantIdText.value.text,
@@ -345,7 +354,6 @@ class MainActivity : ComponentActivity() {
                     else -> EnrollMode.ONBOARDING
                 },
                 environment = when {
-                    isLocal.value -> EnrollEnvironment.LOCAL
                     isProduction.value -> EnrollEnvironment.PRODUCTION
                     else -> EnrollEnvironment.STAGING
                 },

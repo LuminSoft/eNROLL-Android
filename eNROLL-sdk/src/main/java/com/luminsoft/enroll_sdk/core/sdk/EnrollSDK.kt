@@ -40,31 +40,58 @@ object EnrollSDK {
     var exitStep: EkycStepType? = null
 
 
+    // Internal debug flag for LOCAL environment (not exposed to clients)
+    @JvmField
+    internal var isLocalDebugMode = false
+    
+    /**
+     * Enable LOCAL environment for internal debugging only.
+     * WARNING: This is for INTERNAL TESTING ONLY.
+     * Should NEVER be used in production client apps.
+     * This method is intentionally undocumented in public SDK documentation.
+     */
+    @JvmStatic
+    fun enableLocalDebugMode() {
+        isLocalDebugMode = true
+    }
+    
+    /**
+     * Disable LOCAL environment debug mode
+     * WARNING: This is for INTERNAL TESTING ONLY.
+     */
+    @JvmStatic
+    fun disableLocalDebugMode() {
+        isLocalDebugMode = false
+    }
+    
     private fun getLuminBaseUrl(): String {
-        return when (environment) {
-            EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
-            EnrollEnvironment.PRODUCTION -> "https://enrollgateway.luminsoft.net"
-            EnrollEnvironment.LOCAL -> "http://197.168.1.39"
+        return when {
+            isLocalDebugMode -> "http://197.168.1.39"
+            environment == EnrollEnvironment.STAGING -> "https://enrollstg.luminsoft.net"
+            environment == EnrollEnvironment.PRODUCTION -> "https://enrollgateway.luminsoft.net"
+            else -> "https://enrollstg.luminsoft.net" // fallback to staging
         }
     }
 
     fun getApisUrl(): String {
-        return when (environment) {
-            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/SecureOnBoarding/"
-            EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/SecureOnBoarding/"
-            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/"
+        return when {
+            isLocalDebugMode -> getLuminBaseUrl() + ":4800/"
+            environment == EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/SecureOnBoarding/"
+            environment == EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/SecureOnBoarding/"
+            else -> getLuminBaseUrl() + ":7400/SecureOnBoarding/" // fallback to staging
         }
     }
 
     fun getImageUrl(): String {
-        return when (environment) {
-            EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
-            EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
-            EnrollEnvironment.LOCAL -> getLuminBaseUrl() + ":4800/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+        return when {
+            isLocalDebugMode -> getLuminBaseUrl() + ":4800/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+            environment == EnrollEnvironment.STAGING -> getLuminBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+            environment == EnrollEnvironment.PRODUCTION -> getLuminBaseUrl() + ":443/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage"
+            else -> getLuminBaseUrl() + ":7400/OnBoarding/api/v1/onboarding/Image/GetNationalIdPhotoImage" // fallback to staging
         }
     }
 
     fun isEncryptionEnabled(): Boolean {
-        return environment != EnrollEnvironment.LOCAL
+        return !isLocalDebugMode
     }
 }

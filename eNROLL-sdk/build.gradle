@@ -91,9 +91,9 @@ dependencies {
     api "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     api "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     api "com.airbnb.android:lottie-compose:6.0.1"
-    api "com.innovatrics.dot:dot-document:8.16.1"
-    api "com.innovatrics.dot:dot-face-detection-fast:8.16.1"
-    api "com.innovatrics.dot:dot-face-expression-neutral:8.16.1"
+    api "com.innovatrics.dot:dot-document:8.17.0"
+    api "com.innovatrics.dot:dot-face-detection-fast:8.17.0"
+    api "com.innovatrics.dot:dot-face-expression-neutral:8.17.0"
 //    api "com.innovatrics.dot:dot-face-passive-liveness:8.15.1"
 //    api "com.innovatrics.dot:dot-nfc:8.4.0"
 //    api "com.innovatrics.dot:dot-face-verification:8.4.0"
@@ -150,7 +150,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.luminsoft'
                 artifactId = 'eNROLL'
-                version = '1.5.04'
+                version = '1.5.05'
                 //TODO change it inside core/models/BuildInfo file
             }
         }
