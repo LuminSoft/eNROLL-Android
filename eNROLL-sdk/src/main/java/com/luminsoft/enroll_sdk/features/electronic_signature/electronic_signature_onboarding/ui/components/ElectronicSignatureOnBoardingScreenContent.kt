@@ -105,17 +105,11 @@ fun ElectronicSignatureOnBoardingScreenContent(
     var dialogButtonText by remember { mutableStateOf("") }
     var dialogOnPressButton: (() -> Unit)? by remember { mutableStateOf(null) }
 
-    // This screen shows custom dialogs before completing - dialog button triggers step completion
+    // Skip action - proceed directly to next step without showing dialog
     LaunchedEffect(skipped.value) {
         if (skipped.value!!) {
-            dialogMessage = context.getString(R.string.successfulRegistration)
-            dialogButtonText = context.getString(R.string.continue_to_next)
-            dialogStatus = BottomSheetStatus.SUCCESS
-            dialogOnPressButton = {
-                // ViewModel handles navigation or completion automatically
-                onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
-            }
-            showDialog = true
+            // Skip should just move to next step without any dialog
+            onBoardingViewModel.removeCurrentStep(EkycStepType.ElectronicSignature.getStepId())
         }
     }
 
