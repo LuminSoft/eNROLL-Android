@@ -324,11 +324,15 @@ class OnBoardingViewModel(
                 getApplicantId()
             }
             
+            // Use activity context for localized strings (has proper locale configuration)
+            // Fall back to application context if activity is null
+            val localizedContext = activity ?: context
+            
             // Set dialog message based on completion type
             completionDialogMessage.value = if (isExitStep) {
-                context.getString(R.string.stepCompletedSuccessfully)
+                localizedContext.getString(R.string.stepCompletedSuccessfully)
             } else {
-                context.getString(R.string.successfulRegistration)
+                localizedContext.getString(R.string.successfulRegistration)
             }
             
             // Store exit step flag for callback
