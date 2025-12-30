@@ -1,0 +1,7 @@
+jdk:
+  - openjdk17
+before_install:
+  - ./gradlew --version
+  - echo "Building eNROLL SDK version 1.5.12"
+install:
+  - ./gradlew :eNROLL-sdk:assembleRelease --stacktrace
