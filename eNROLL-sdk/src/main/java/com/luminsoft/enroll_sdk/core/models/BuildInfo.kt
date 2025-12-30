@@ -1,7 +1,7 @@
 package com.luminsoft.enroll_sdk.core.models
 
 object BuildInfo {
-    const val SDK_VERSION = "1.5.12"
+    const val SDK_VERSION = "1.5.13"
     const val INNOVATRICS_VERSION = "8.17.0"
     const val MIN_ANDROID_SDK = 24
     const val TARGET_ANDROID_SDK = 35
