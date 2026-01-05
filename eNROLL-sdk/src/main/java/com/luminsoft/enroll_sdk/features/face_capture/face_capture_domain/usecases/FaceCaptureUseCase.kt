@@ -18,7 +18,7 @@ class FaceCaptureUseCase(private val faceCaptureRepository: FaceCaptureRepositor
         // Note: customerId is not part of API spec, removed to match API schema
         // API only accepts: image, naturalImageScore, smileImageScore, record
         // TODO: Temporarily disabled for debugging - investigate liveness check failure
-//         uploadSelfieRequestModel.record = params.videoContentBase64
+         uploadSelfieRequestModel.record = params.videoContentBase64
         return faceCaptureRepository.faceCaptureUploadSelfie(
             uploadSelfieRequestModel
         )
