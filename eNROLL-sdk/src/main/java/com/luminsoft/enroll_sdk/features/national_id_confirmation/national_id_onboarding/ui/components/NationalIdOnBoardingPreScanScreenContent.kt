@@ -57,7 +57,9 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.passportOnBoardingConfirmationScreen
+import com.luminsoft.enroll_sdk.core.utils.NfcUtils
 import com.luminsoft.enroll_sdk.innovitices.activities.DocumentActivity
+import com.luminsoft.enroll_sdk.innovitices.activities.EPassportActivity
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.ChooseStep
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.RegistrationStepSetting
@@ -152,6 +154,8 @@ fun NationalIdOnBoardingPreScanScreen(
                 NationalIdOnly(activity, startForResult, rememberedViewModel)
             else if (selectedStep.value == ChooseStep.Passport)
                 PassportOnly(activity, startPassportForResult, rememberedViewModel)
+            else if (selectedStep.value == ChooseStep.EPassport)
+                EPassportOnly(activity, rememberedViewModel)
         } else
             for (i in organizationRegStepSettings(rememberedViewModel)) {
                 when (i.parseRegistrationStepSetting()) {
@@ -244,13 +248,18 @@ private fun NationalIdOrPassport(
     chosenStep: State<ChooseStep?>,
     rememberedViewModel: OnBoardingViewModel
 ) {
+    val context = LocalContext.current
+    val hasNfc = remember { NfcUtils.hasNfcSupport(context) }
+    val scrollState = rememberScrollState()
+    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(horizontal = 20.dp)
     ) {
-        Spacer(modifier = Modifier.fillMaxHeight(0.10f))
+        Spacer(modifier = Modifier.fillMaxHeight(0.05f))
 
         Text(
             text = stringResource(id = R.string.choosePersonalConfirmation),
@@ -264,19 +273,21 @@ private fun NationalIdOrPassport(
             color = MaterialTheme.appColors.secondary
         )
 
-        Spacer(modifier = Modifier.height(80.dp))
+        Spacer(modifier = Modifier.height(40.dp))
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.7f),
-            verticalArrangement = Arrangement.spacedBy(26.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
             Card(ChooseStep.NationalId, chosenStep, rememberedViewModel)
             Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
+            if (hasNfc) {
+                Card(ChooseStep.EPassport, chosenStep, rememberedViewModel)
+            }
 
         }
-        Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+        Spacer(modifier = Modifier.height(30.dp))
 
         ButtonView(
             onClick = {
@@ -337,6 +348,19 @@ private fun Card(
                 R.drawable.passport_scan_02,
                 R.drawable.passport_scan_03
             )
+            
+            val epassportImages = listOf(
+                R.drawable.passport_scan_01,
+                R.drawable.passport_scan_02,
+                R.drawable.passport_scan_03
+            )
+            
+            val images = when (step) {
+                ChooseStep.NationalId -> idImages
+                ChooseStep.Passport -> passportImages
+                ChooseStep.EPassport -> epassportImages
+            }
+            
             Box(modifier = Modifier.fillMaxHeight(0.35f), contentAlignment = Alignment.Center) {
                 Image(
                     painterResource(R.drawable.icon_back_shape),
@@ -345,7 +369,7 @@ private fun Card(
                     modifier = Modifier.fillMaxHeight(1f)
                 )
                 ImagesBox(
-                    images = if (step == ChooseStep.NationalId) idImages else passportImages,
+                    images = images,
                     modifier = Modifier.fillMaxHeight(0.7f)
                 )
 
@@ -354,8 +378,21 @@ private fun Card(
 
 
             Spacer(modifier = Modifier.height(20.dp))
+            
+            val titleRes = when (step) {
+                ChooseStep.NationalId -> R.string.nationalId
+                ChooseStep.Passport -> R.string.passport
+                ChooseStep.EPassport -> R.string.epassport
+            }
+            
+            val descriptionRes = when (step) {
+                ChooseStep.NationalId -> R.string.nationalIdDescription
+                ChooseStep.Passport -> R.string.passportDescription
+                ChooseStep.EPassport -> R.string.epassportDescription
+            }
+            
             Text(
-                text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalId else R.string.passport),
+                text = stringResource(id = titleRes),
                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 fontSize = 16.sp
             )
@@ -377,7 +414,7 @@ private fun Card(
                 Spacer(Modifier.width(5.dp))
                 Box(Modifier.fillMaxWidth(0.9f)) {
                     Text(
-                        text = stringResource(id = if (step == ChooseStep.NationalId) R.string.nationalIdDescription else R.string.passportDescription),
+                        text = stringResource(id = descriptionRes),
                         fontSize = 9.sp,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = AppColors().appBlack,
@@ -421,6 +458,45 @@ private fun PassportOnly(
                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
                 startForResult.launch(intent)
+            },
+            stringResource(id = R.string.start),
+        )
+        Spacer(
+            modifier = Modifier
+                .safeContentPadding()
+                .height(10.dp)
+        )
+    }
+}
+
+@Composable
+private fun EPassportOnly(
+    activity: Activity,
+    rememberedViewModel: OnBoardingViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+    ) {
+        EnrollItemView(
+            listOf(
+                R.drawable.step_01_passport_1,
+                R.drawable.step_01_passport_2,
+                R.drawable.step_01_passport_3
+            ), R.string.epassportPreScanContent
+        )
+        ButtonView(
+            onClick = {
+                rememberedViewModel.enableLoading()
+
+                val intent = Intent(activity.applicationContext, EPassportActivity::class.java)
+                intent.putExtra("localCode", EnrollSDK.localizationCode.name)
+
+                activity.startActivity(intent)
+                rememberedViewModel.disableLoading()
             },
             stringResource(id = R.string.start),
         )

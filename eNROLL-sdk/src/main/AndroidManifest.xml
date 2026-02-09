@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.NFC" />
+    
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
 
     <application>
 
@@ -68,6 +71,12 @@
             android:name="com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity"
             android:configChanges="locale|orientation|keyboardHidden|screenSize"
             android:label="@string/smile_liveness_screen"
+            android:theme="@style/Theme.AppCompat.Light" />
+
+        <activity
+            android:name="com.luminsoft.enroll_sdk.innovitices.activities.EPassportActivity"
+            android:configChanges="locale|orientation|keyboardHidden|screenSize"
+            android:label="@string/epassport"
             android:theme="@style/Theme.AppCompat.Light" />
 
         <activity

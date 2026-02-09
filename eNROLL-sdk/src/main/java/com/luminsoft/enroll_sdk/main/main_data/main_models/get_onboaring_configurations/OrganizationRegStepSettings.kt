@@ -25,5 +25,5 @@ enum class RegistrationStepSetting {
 }
 
 enum class ChooseStep {
-    NationalId, Passport
+    NationalId, Passport, EPassport
 }

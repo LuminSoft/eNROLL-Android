@@ -411,6 +411,12 @@
     <string name="sign">Sign</string>
     <string name="exitConfirmation">Are you sure you want to exit?</string>
     <string name="contractSignedSuccessfully">Contract Signed Successfully</string>
+    
+    <string name="nfc_reading_result_title">ePassport NFC Result</string>
+    <string name="epassport">ePassport</string>
+    <string name="epassportDescription">Scan ePassport using NFC to read chip data. Your device must support NFC.</string>
+    <string name="epassportPreScanTitle">Scan ePassport</string>
+    <string name="epassportPreScanContent">First scan the passport MRZ code, then hold the passport against your phone to read NFC chip</string>
 
 
 </resources>

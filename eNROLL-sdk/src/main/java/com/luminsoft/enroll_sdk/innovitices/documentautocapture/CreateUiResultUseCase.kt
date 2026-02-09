@@ -12,7 +12,7 @@ class CreateUiResultUseCase(
     suspend operator fun invoke(documentAutoCaptureResult: com.innovatrics.dot.document.autocapture.DocumentAutoCaptureResult): DocumentAutoCaptureResult =
         withContext(ioDispatcher) {
             DocumentAutoCaptureResult(
-                bitmap = BitmapFactory.create(documentAutoCaptureResult.bgraRawImage),
+                bitmap = BitmapFactory.create(documentAutoCaptureResult.image),
                 documentAutoCaptureResult = documentAutoCaptureResult,
             )
         }

@@ -8,9 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.innovatrics.dot.face.autocapture.FaceAutoCaptureDetection
-import com.innovatrics.dot.face.liveness.magnifeye.MagnifEyeLivenessFragment
 import com.innovatrics.dot.face.liveness.magnifeye.MagnifEyeLivenessResult
+import com.innovatrics.dot.face.liveness.magnifeye.ui.MagnifEyeLivenessFragment
 import com.luminsoft.ekyc_android_sdk.R
 
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
@@ -70,8 +69,5 @@ class BasicMagnifEyeLivenessFragment : MagnifEyeLivenessFragment() {
 
     override fun onNoCameraPermission() {
         mainViewModel.notifyNoCameraPermission()
-    }
-
-    override fun onProcessed(detection: FaceAutoCaptureDetection) {
     }
 }

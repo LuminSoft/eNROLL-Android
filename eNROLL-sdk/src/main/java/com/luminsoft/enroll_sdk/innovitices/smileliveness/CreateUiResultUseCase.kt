@@ -17,7 +17,7 @@ class CreateUiResultUseCase(
             }
             
             SmileLivenessResult(
-                bitmap = BitmapFactory.create(smileLivenessResult.smileExpressionBgrRawImage),
+                bitmap = BitmapFactory.create(smileLivenessResult.image),
                 videoContentBase64 = videoContentBase64,
             )
         }

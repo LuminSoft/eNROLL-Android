@@ -12,7 +12,7 @@ class CreateUiResultUseCase(
     suspend operator fun invoke(faceAutoCaptureResult: com.innovatrics.dot.face.autocapture.FaceAutoCaptureResult): FaceAutoCaptureResult =
         withContext(ioDispatcher) {
             FaceAutoCaptureResult(
-                bitmap = BitmapFactory.create(faceAutoCaptureResult.bgrRawImage),
+                bitmap = BitmapFactory.create(faceAutoCaptureResult.image),
                 faceAutoCaptureResult = faceAutoCaptureResult,
             )
         }

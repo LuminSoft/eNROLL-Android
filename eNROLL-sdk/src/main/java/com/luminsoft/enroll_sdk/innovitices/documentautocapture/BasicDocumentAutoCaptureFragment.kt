@@ -11,9 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureDetection
-import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureFragment
 import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureResult
+import com.innovatrics.dot.document.autocapture.ui.DocumentAutoCaptureFragment
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
@@ -108,11 +107,8 @@ class BasicDocumentAutoCaptureFragment : DocumentAutoCaptureFragment() {
         mainViewModel.notifyNoCameraPermission()
     }
 
-    override fun onCaptured(result: DocumentAutoCaptureResult) {
+    override fun onFinished(result: DocumentAutoCaptureResult) {
         documentAutoCaptureViewModel.process(result)
-    }
-
-    override fun onProcessed(detection: DocumentAutoCaptureDetection) {
     }
 
     private fun getDisc(): File {

@@ -91,12 +91,11 @@ dependencies {
     api "com.google.accompanist:accompanist-pager:0.24.2-alpha"
     api "com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha"
     api "com.airbnb.android:lottie-compose:6.0.1"
-    api "com.innovatrics.dot:dot-document:8.17.0"
-    api "com.innovatrics.dot:dot-face-detection-fast:8.17.0"
-    api "com.innovatrics.dot:dot-face-expression-neutral:8.17.0"
-//    api "com.innovatrics.dot:dot-face-passive-liveness:8.15.1"
-//    api "com.innovatrics.dot:dot-nfc:8.4.0"
-//    api "com.innovatrics.dot:dot-face-verification:8.4.0"
+    api "com.innovatrics.dot:dot-document:9.0.2"
+    api "com.innovatrics.dot:dot-face-detection-fast:9.0.2"
+    api "com.innovatrics.dot:dot-face-expression-neutral:9.0.2"
+    api "com.innovatrics.dot:dot-nfc:9.0.2"
+    implementation "dev.keiji.jp2:jp2-android:1.0.5"
 
     api 'androidx.activity:activity-ktx:1.10.1'
     api 'androidx.fragment:fragment-ktx:1.8.8'
