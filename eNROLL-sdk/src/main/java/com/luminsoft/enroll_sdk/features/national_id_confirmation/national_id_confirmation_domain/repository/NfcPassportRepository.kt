@@ -1,0 +1,10 @@
+package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.repository
+
+import arrow.core.Either
+import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.passport_nfc_upload.PassportNfcUploadRequest
+
+interface NfcPassportRepository {
+    suspend fun uploadPassportNfcData(request: PassportNfcUploadRequest): Either<SdkFailure, CustomerData>
+}

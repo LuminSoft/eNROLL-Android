@@ -1,93 +1,66 @@
 package com.luminsoft.enroll_sdk.innovitices.nfcreading
 
+import android.app.Activity
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.ViewGroup
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.google.gson.GsonBuilder
-import com.luminsoft.ekyc_android_sdk.R
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.findNavController
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.innovitices.nfcreading.ui.NfcResultScreen
+import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
 
-class NfcReadingResultFragment : Fragment(R.layout.fragment_nfc_reading_result) {
+class NfcReadingResultFragment : Fragment() {
 
-    private val nfcReadingViewModel: NfcReadingViewModel by activityViewModels()
+    private val nfcReadingViewModel: NfcReadingViewModel by activityViewModels { NfcReadingViewModelFactory(requireActivity().application) }
 
-    private lateinit var imageView: ImageView
-    private lateinit var textView: TextView
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                EKYCsDKTheme(
+                    appColors = EnrollSDK.appColors ?: AppColors(),
+                    localizationCode = EnrollSDK.localizationCode,
+                ) {
+                    val state = nfcReadingViewModel.state.collectAsStateWithLifecycle()
 
-    private val gson = GsonBuilder().setPrettyPrinting().create()
+                    // Handle upload success - finish activity with success result
+                    LaunchedEffect(state.value.uploadSuccess) {
+                        state.value.uploadSuccess?.let {
+                            requireActivity().setResult(Activity.RESULT_OK)
+                            requireActivity().finish()
+                        }
+                    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setViews(view)
-        setupNfcReadingViewModel()
-    }
-
-    private fun setViews(view: View) {
-        imageView = view.findViewById(R.id.image)
-        textView = view.findViewById(R.id.text)
-    }
-
-    private fun setupNfcReadingViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-                nfcReadingViewModel.state.collectLatest { state ->
-                    state.result?.let { result ->
-                        showResult(result)
+                    state.value.result?.let { result ->
+                        NfcResultScreen(
+                            result = result,
+                            isUploading = state.value.isUploading,
+                            uploadFailure = state.value.uploadFailure,
+                            onConfirmUpload = {
+                                nfcReadingViewModel.uploadPassportNfcData()
+                            },
+                            onResetFailure = {
+                                nfcReadingViewModel.resetUploadFailure()
+                            },
+                            onClose = {
+                                requireActivity().finish()
+                            },
+                        )
                     }
                 }
             }
-        }
-    }
-
-    private fun showResult(result: NfcReadingResult) {
-        imageView.setImageBitmap(result.faceBitmap)
-        
-        val nfcResult = result.nfcTravelDocumentReaderResult
-        val travelDocument = nfcResult.travelDocument
-        
-        val resultText = buildString {
-            appendLine("=== NFC Travel Document Reader Result ===")
-            appendLine()
-            appendLine("--- Travel Document ---")
-            appendLine("Content Size: ${nfcResult.content?.size ?: 0} bytes")
-            appendLine()
-            appendLine("--- Additional Document Details ---")
-            travelDocument.additionalDocumentDetails?.let { details ->
-                appendLine("Date of Issue: ${details.dateOfIssue}")
-                appendLine("Issuing Authority: ${details.issuingAuthority}")
-            }
-            appendLine()
-            appendLine("--- Additional Personal Details ---")
-            travelDocument.additionalPersonalDetails?.let { details ->
-                appendLine("Full Date of Birth: ${details.fullDateOfBirth}")
-                appendLine("Name of Holder:")
-                details.nameOfHolder?.let { name ->
-                    appendLine("  Primary Identifier: ${name.primaryIdentifier}")
-                    appendLine("  Secondary Identifier: ${name.secondaryIdentifier}")
-                }
-                appendLine("Other Names: ${details.otherNames}")
-                appendLine("Place of Birth: ${details.placeOfBirth}")
-                appendLine("Address: ${details.address}")
-            }
-        }
-        
-        textView.text = resultText
-        
-        Log.d("NfcReadingResult", "=== Full NFC Result ===")
-        Log.d("NfcReadingResult", resultText)
-        Log.d("NfcReadingResult", "=== JSON ===")
-        try {
-            Log.d("NfcReadingResult", gson.toJson(nfcResult))
-        } catch (e: Exception) {
-            Log.e("NfcReadingResult", "Error serializing result to JSON", e)
         }
     }
 }

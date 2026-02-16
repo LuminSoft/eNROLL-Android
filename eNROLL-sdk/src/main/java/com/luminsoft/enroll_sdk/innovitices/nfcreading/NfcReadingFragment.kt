@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
 
-    private val nfcReadingViewModel: NfcReadingViewModel by activityViewModels()
+    private val nfcReadingViewModel: NfcReadingViewModel by activityViewModels { NfcReadingViewModelFactory(requireActivity().application) }
 
     private lateinit var cancelButton: Button
 
@@ -29,7 +29,7 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
     }
 
     private fun setViews(view: View) {
-        cancelButton = view.findViewById(R.id.cancel)
+        cancelButton = view.findViewById(R.id.cancel_button)
     }
 
     private fun setupCancelButton() {

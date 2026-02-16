@@ -28,6 +28,8 @@ object RetroClient {
         baseUrl = url
     }
 
+    fun getBaseUrl(): String = baseUrl
+
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)

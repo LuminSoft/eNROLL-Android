@@ -140,6 +140,21 @@ fun NationalIdOnBoardingPreScanScreen(
             }
         }
 
+    val startEPassportForResult =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            onBoardingViewModel.disableLoading()
+            if (it.resultCode == Activity.RESULT_OK) {
+                onBoardingViewModel.removeCurrentStep(
+                    com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType.PersonalConfirmation.getStepId()
+                )
+            } else if (it.resultCode == Activity.RESULT_CANCELED) {
+                // User cancelled the ePassport scanning - no action needed, stay on selection screen
+                // ViewModel already has loading disabled
+            }
+        }
+
+    val hasNfc = remember { NfcUtils.hasNfcSupport(context) }
+
     BackGroundView(navController = navController, showAppBar = false) {
         if (loading.value) {
             Column(
@@ -148,14 +163,18 @@ fun NationalIdOnBoardingPreScanScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { SpinKitLoadingIndicator() }
         } else if (isPassportAndMailFinal.value) {
-            PassportOnly(activity, startPassportForResult, rememberedViewModel)
+            if (hasNfc) {
+                PassportOrEPassport(chosenStep, rememberedViewModel, activity, startPassportForResult, startEPassportForResult)
+            } else {
+                PassportOnly(activity, startPassportForResult, rememberedViewModel)
+            }
         } else if (selectedStep.value != null) {
             if (selectedStep.value == ChooseStep.NationalId)
                 NationalIdOnly(activity, startForResult, rememberedViewModel)
             else if (selectedStep.value == ChooseStep.Passport)
                 PassportOnly(activity, startPassportForResult, rememberedViewModel)
             else if (selectedStep.value == ChooseStep.EPassport)
-                EPassportOnly(activity, rememberedViewModel)
+                EPassportOnly(activity, startEPassportForResult, rememberedViewModel)
         } else
             for (i in organizationRegStepSettings(rememberedViewModel)) {
                 when (i.parseRegistrationStepSetting()) {
@@ -164,7 +183,11 @@ fun NationalIdOnBoardingPreScanScreen(
                     }
 
                     RegistrationStepSetting.passportOnly -> {
-                        PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                        if (hasNfc) {
+                            PassportOrEPassport(chosenStep, rememberedViewModel, activity, startPassportForResult, startEPassportForResult)
+                        } else {
+                            PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                        }
                     }
 
                     (RegistrationStepSetting.nationalIdOrPassport) -> {
@@ -174,7 +197,11 @@ fun NationalIdOnBoardingPreScanScreen(
                             }
 
                             EnrollForcedDocumentType.PASSPORT_ONLY -> {
-                                PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                                if (hasNfc) {
+                                    PassportOrEPassport(chosenStep, rememberedViewModel, activity, startPassportForResult, startEPassportForResult)
+                                } else {
+                                    PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                                }
                             }
 
                             else -> {
@@ -470,8 +497,73 @@ private fun PassportOnly(
 }
 
 @Composable
+private fun PassportOrEPassport(
+    chosenStep: State<ChooseStep?>,
+    rememberedViewModel: OnBoardingViewModel,
+    activity: Activity,
+    startPassportForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
+    startEPassportForResult: ManagedActivityResultLauncher<Intent, ActivityResult>
+) {
+    val selectedStep = rememberedViewModel.selectedStep.collectAsState()
+
+    if (selectedStep.value == ChooseStep.Passport) {
+        PassportOnly(activity, startPassportForResult, rememberedViewModel)
+    } else if (selectedStep.value == ChooseStep.EPassport) {
+        EPassportOnly(activity, startEPassportForResult, rememberedViewModel)
+    } else {
+        val scrollState = rememberScrollState()
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(horizontal = 20.dp)
+        ) {
+            Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+
+            Text(
+                text = stringResource(id = R.string.choosePersonalConfirmation),
+                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            HorizontalDivider(
+                modifier = Modifier.width(50.dp),
+                thickness = 3.dp,
+                color = MaterialTheme.appColors.secondary
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
+                Card(ChooseStep.EPassport, chosenStep, rememberedViewModel)
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+
+            ButtonView(
+                onClick = {
+                    rememberedViewModel.selectedStep.value = chosenStep.value
+                },
+                stringResource(id = R.string.continue_to_next),
+            )
+            Spacer(
+                modifier = Modifier
+                    .safeContentPadding()
+                    .height(10.dp)
+            )
+        }
+    }
+}
+
+@Composable
 private fun EPassportOnly(
     activity: Activity,
+    startEPassportForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     rememberedViewModel: OnBoardingViewModel
 ) {
     Column(
@@ -495,8 +587,7 @@ private fun EPassportOnly(
                 val intent = Intent(activity.applicationContext, EPassportActivity::class.java)
                 intent.putExtra("localCode", EnrollSDK.localizationCode.name)
 
-                activity.startActivity(intent)
-                rememberedViewModel.disableLoading()
+                startEPassportForResult.launch(intent)
             },
             stringResource(id = R.string.start),
         )

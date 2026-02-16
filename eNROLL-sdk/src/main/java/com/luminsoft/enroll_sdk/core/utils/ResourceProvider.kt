@@ -14,6 +14,8 @@ class ResourceProvider {
         this.context = context
     }
 
+    fun getContext(): Context = context
+
     fun getStringResource(id: Int): String {
         return context.resources.getString(id)
     }

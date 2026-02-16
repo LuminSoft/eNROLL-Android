@@ -24,6 +24,7 @@ import com.luminsoft.enroll_sdk.features.email.email_di.emailModule
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_di.faceCaptureModule
 import com.luminsoft.enroll_sdk.features.location.location_di.locationModule
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_di.nfcPassportModule
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_di.phoneNumbersModule
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_di.securityQuestionsModule
 import com.luminsoft.enroll_sdk.features.setting_password.password_di.passwordModule
@@ -158,6 +159,7 @@ class EnrollMainForgetActivity : ComponentActivity() {
                 modules(faceCaptureModule)
                 modules(locationModule)
                 modules(nationalIdConfirmationModule)
+                modules(nfcPassportModule)
                 modules(phoneNumbersModule)
                 modules(securityQuestionsModule)
                 modules(passwordModule)

@@ -11,6 +11,7 @@ import com.innovatrics.dot.document.autocapture.DocumentAutoCaptureResult
 import com.innovatrics.dot.document.autocapture.MrzValidation
 import com.innovatrics.dot.document.autocapture.ui.BaseDocumentAutoCaptureFragment.Configuration
 import com.innovatrics.dot.document.autocapture.ui.DocumentAutoCaptureFragment
+import com.innovatrics.dot.image.BitmapFactory
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
@@ -67,6 +68,7 @@ class PasswordCaptureFragment : DocumentAutoCaptureFragment() {
     }
 
     override fun onFinished(result: DocumentAutoCaptureResult) {
+        nfcReadingViewModel.setPassportImage(BitmapFactory.create(result.image))
         nfcReadingViewModel.setupConfiguration(result.machineReadableZone!!)
     }
 }

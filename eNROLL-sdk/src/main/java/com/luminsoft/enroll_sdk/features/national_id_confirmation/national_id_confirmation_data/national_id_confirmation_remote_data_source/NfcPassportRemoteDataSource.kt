@@ -1,0 +1,8 @@
+package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_remote_data_source
+
+import com.luminsoft.enroll_sdk.core.network.BaseResponse
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.passport_nfc_upload.PassportNfcUploadRequest
+
+interface NfcPassportRemoteDataSource {
+    suspend fun uploadPassportNfcData(request: PassportNfcUploadRequest): BaseResponse<Any>
+}

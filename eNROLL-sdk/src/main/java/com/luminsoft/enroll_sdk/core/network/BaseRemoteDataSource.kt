@@ -27,7 +27,12 @@ class BaseRemoteDataSource {
                 if ((response.code() == 200 || response.code() == 201 || response.code() == 204))
                     return BaseResponse.Success(body)
             } else {
-                val error = decryptErrorBody(response.errorBody())
+                val rawErrorBody = try {
+                    response.errorBody()?.string()
+                } catch (e: Exception) {
+                    null
+                }
+                val error = decryptErrorBodyFromString(rawErrorBody)
             
 
                 return if (response.code() == 401) {
@@ -89,10 +94,9 @@ class BaseRemoteDataSource {
         )
     }
 
-    private fun decryptErrorBody(errorBody: ResponseBody?): ApiErrorResponse {
+    private fun decryptErrorBodyFromString(responseString: String?): ApiErrorResponse {
         return try {
-            val responseString =
-                errorBody?.string() ?: return ApiErrorResponse(message = "Unknown error")
+            if (responseString.isNullOrEmpty()) return ApiErrorResponse(message = "Unknown error")
             
             // Skip decryption for LOCAL environment
             if (!EnrollSDK.isEncryptionEnabled()) {

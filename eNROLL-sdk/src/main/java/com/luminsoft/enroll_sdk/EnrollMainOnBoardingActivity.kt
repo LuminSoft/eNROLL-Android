@@ -38,6 +38,7 @@ import com.luminsoft.enroll_sdk.features.face_capture.face_capture_navigation.fa
 import com.luminsoft.enroll_sdk.features.location.location_di.locationModule
 import com.luminsoft.enroll_sdk.features.location.location_navigation.locationRouter
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_di.nationalIdConfirmationModule
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_di.nfcPassportModule
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdRouter
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_di.phoneNumbersModule
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_navigation.phoneNumberRouter
@@ -230,6 +231,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
                 modules(faceCaptureModule)
                 modules(locationModule)
                 modules(nationalIdConfirmationModule)
+                modules(nfcPassportModule)
                 modules(phoneNumbersModule)
                 modules(securityQuestionsModule)
                 modules(passwordModule)

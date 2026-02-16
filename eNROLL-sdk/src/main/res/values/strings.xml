@@ -418,5 +418,24 @@
     <string name="epassportPreScanTitle">Scan ePassport</string>
     <string name="epassportPreScanContent">First scan the passport MRZ code, then hold the passport against your phone to read NFC chip</string>
 
+    <string name="nfc_results_title">Results</string>
+    <string name="nfc_document_chip_data">Document Chip Data</string>
+    <string name="nfc_photos">Photos</string>
+    <string name="nfc_face_image">Face Image</string>
+    <string name="nfc_additional_details">Additional Details</string>
+    <string name="nfc_surname">Surname</string>
+    <string name="nfc_given_names">Given Names</string>
+    <string name="nfc_place_of_birth">Place of Birth</string>
+    <string name="nfc_other_names">Other Names</string>
+    <string name="nfc_address">Address</string>
+    <string name="nfc_date_of_issue">Date of Issue</string>
+    <string name="nfc_try_again">Try Again</string>
+    <string name="nfc_close">Close</string>
+    <string name="nfc_scanning_title">NFC Reading</string>
+    <string name="nfc_reading_in_progress">Reading Passport…</string>
+    <string name="nfc_hold_passport">Hold your passport against the back of your phone and keep it still until reading is complete.</string>
+    <string name="nfc_processing_data">Processing Data…</string>
+    <string name="nfc_processing_wait">Please wait while we process your passport data</string>
+
 
 </resources>
