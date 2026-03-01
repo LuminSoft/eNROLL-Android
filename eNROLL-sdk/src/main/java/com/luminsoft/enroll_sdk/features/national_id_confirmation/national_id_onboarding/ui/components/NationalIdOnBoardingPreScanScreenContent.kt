@@ -184,9 +184,11 @@ fun NationalIdOnBoardingPreScanScreen(
 
                     RegistrationStepSetting.passportOnly -> {
                         if (hasNfc) {
+                            // Device supports NFC - show ePassport option
                             PassportOrEPassport(chosenStep, rememberedViewModel, activity, startPassportForResult, startEPassportForResult)
                         } else {
-                            PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                            // Device doesn't support NFC - show only National ID
+                            NationalIdOnly(activity, startForResult, rememberedViewModel)
                         }
                     }
 
@@ -198,9 +200,11 @@ fun NationalIdOnBoardingPreScanScreen(
 
                             EnrollForcedDocumentType.PASSPORT_ONLY -> {
                                 if (hasNfc) {
+                                    // Device supports NFC - show ePassport option
                                     PassportOrEPassport(chosenStep, rememberedViewModel, activity, startPassportForResult, startEPassportForResult)
                                 } else {
-                                    PassportOnly(activity, startPassportForResult, rememberedViewModel)
+                                    // Device doesn't support NFC - show only National ID
+                                    NationalIdOnly(activity, startForResult, rememberedViewModel)
                                 }
                             }
 
@@ -308,7 +312,7 @@ private fun NationalIdOrPassport(
         ) {
 
             Card(ChooseStep.NationalId, chosenStep, rememberedViewModel)
-            Card(ChooseStep.Passport, chosenStep, rememberedViewModel)
+            // Card(ChooseStep.Passport, chosenStep, rememberedViewModel) // Commented out - only ePassport is supported
             if (hasNfc) {
                 Card(ChooseStep.EPassport, chosenStep, rememberedViewModel)
             }
@@ -506,11 +510,18 @@ private fun PassportOrEPassport(
 ) {
     val selectedStep = rememberedViewModel.selectedStep.collectAsState()
 
-    if (selectedStep.value == ChooseStep.Passport) {
-        PassportOnly(activity, startPassportForResult, rememberedViewModel)
-    } else if (selectedStep.value == ChooseStep.EPassport) {
+    // Commented out normal passport - only ePassport is supported
+    // if (selectedStep.value == ChooseStep.Passport) {
+    //     PassportOnly(activity, startPassportForResult, rememberedViewModel)
+    // } else 
+    if (selectedStep.value == ChooseStep.EPassport) {
         EPassportOnly(activity, startEPassportForResult, rememberedViewModel)
     } else {
+        // Directly show ePassport option without selection screen
+        // since normal passport is no longer supported
+        EPassportOnly(activity, startEPassportForResult, rememberedViewModel)
+        
+        /* Original selection UI - commented out since only ePassport is supported
         val scrollState = rememberScrollState()
 
         Column(
@@ -557,6 +568,7 @@ private fun PassportOrEPassport(
                     .height(10.dp)
             )
         }
+        */
     }
 }
 
