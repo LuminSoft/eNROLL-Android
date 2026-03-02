@@ -230,7 +230,7 @@
     <string name="documentCode">كود جواز السفر</string>
     <string name="issuingAuthority">جهة الإصدار</string>
     <string name="nationality">الجنسية</string>
-    <string name="visualZone">MRZ</string>
+    <string name="visualZone">‏MRZ‏</string>
     <string name="choosePersonalConfirmation">إختر طريقة تحديد الهوية</string>
     <string name="nationalId">بطاقة رقم قومــي</string>
     <string name="passport">جواز سفــر</string>
@@ -410,6 +410,55 @@
     <string name="sign">توقيع</string>
     <string name="exitConfirmation">هل انت متأكد تريد الخروج؟</string>
     <string name="contractSignedSuccessfully">تم التوقيع بنجاح</string>
+    
+    <string name="nfc_reading_result_title">نتيجة قراءة جواز السفر الإلكتروني</string>
+    <string name="epassport">جواز السفر الإلكتروني</string>
+    <string name="epassportDescription">امسح جواز السفر الإلكتروني باستخدام ‏NFC‏ لقراءة بيانات الشريحة. يجب أن يدعم جهازك تقنية ‏NFC‏.</string>
+    <string name="epassportPreScanTitle">مسح جواز السفر الإلكتروني</string>
+    <string name="epassportPreScanContent">أولاً امسح رمز ‏MRZ‏ الموجود في جواز السفر، ثم ضع جواز السفر على الجزء الخلفي من هاتفك لقراءة شريحة ‏NFC‏</string>
+
+    <string name="nfc_results_title">النتائج</string>
+    <string name="nfc_document_chip_data">بيانات شريحة الوثيقة</string>
+    <string name="nfc_photos">الصور</string>
+    <string name="nfc_face_image">صورة الوجه</string>
+    <string name="nfc_additional_details">تفاصيل إضافية</string>
+    <string name="nfc_surname">اللقب</string>
+    <string name="nfc_given_names">الأسماء الأولى</string>
+    <string name="nfc_place_of_birth">مكان الميلاد</string>
+    <string name="nfc_other_names">أسماء أخرى</string>
+    <string name="nfc_address">العنوان</string>
+    <string name="nfc_date_of_issue">تاريخ الإصدار</string>
+    <string name="nfc_try_again">حاول مرة أخرى</string>
+    <string name="nfc_close">إغلاق</string>
+    <string name="nfc_scanning_title">قراءة ‏NFC‏</string>
+    <string name="nfc_reading_in_progress">جاري قراءة جواز السفر…</string>
+    <string name="nfc_hold_passport">ضع جواز السفر على الجزء الخلفي من هاتفك وحافظ على ثباته حتى اكتمال القراءة.</string>
+    <string name="nfc_processing_data">جاري معالجة البيانات…</string>
+    <string name="nfc_processing_wait">يرجى الانتظار بينما نعالج بيانات جواز السفر الخاص بك</string>
+
+    <string name="dot_nfc_nfc_travel_document_reader_searching_title">جاري البحث عن شريحة ‏NFC‏…</string>
+    <string name="dot_nfc_nfc_travel_document_reader_searching_subhead">حرّك هاتفك برفق على سطح المستند حتى نجد الموضع الصحيح.</string>
+    <string name="dot_nfc_nfc_travel_document_reader_reading_title">ابقَ ثابتاً</string>
+    <string name="dot_nfc_nfc_travel_document_reader_reading_subhead">يرجى إبقاء الجهاز والمستند ثابتين.</string>
+
+    <string name="dot_document_document_auto_capture_instruction_brightness_too_high">مطلوب إضاءة أقل</string>
+    <string name="dot_document_document_auto_capture_instruction_brightness_too_high_escalated">انقل المستند إلى منطقة أقل إضاءة</string>
+    <string name="dot_document_document_auto_capture_instruction_brightness_too_low">مطلوب إضاءة أعلى</string>
+    <string name="dot_document_document_auto_capture_instruction_brightness_too_low_escalated">انقل المستند إلى منطقة أكثر إضاءة</string>
+    <string name="dot_document_document_auto_capture_instruction_candidate_selection">ثبت يدك…</string>
+    <string name="dot_document_document_auto_capture_instruction_document_does_not_fit_placeholder">ضع الوثيقة في المنتصف</string>
+    <string name="dot_document_document_auto_capture_instruction_document_not_detected">مسح الوثيقة</string>
+    <string name="dot_document_document_auto_capture_instruction_document_out_of_bounds">ضع الوثيقة في المنتصف</string>
+    <string name="dot_document_document_auto_capture_instruction_hotspots_score_too_high">تجنب الانعكاسات</string>
+    <string name="dot_document_document_auto_capture_instruction_mrz_not_present">امسح مستندًا صالحًا للقراءة آليًا</string>
+    <string name="dot_document_document_auto_capture_instruction_mrz_not_valid">امسح مستندًا صالحًا للقراءة آليًا</string>
+    <string name="dot_document_document_auto_capture_instruction_sharpness_too_low">مطلوب مزيد من الضوء</string>
+    <string name="dot_document_document_auto_capture_instruction_sharpness_too_low_escalated">انقل المستند إلى منطقة أكثر إضاءة</string>
+    <string name="dot_document_document_auto_capture_instruction_size_too_small">اقترب</string>
+    <string name="dot_document_document_auto_capture_instruction_size_too_small_escalated">قرّب المستند أكثر</string>
+
+    <string name="dot_face_face_auto_capture_instruction_size_too_large_escalated">أبعد وجهك قليلاً</string>
+    <string name="dot_face_face_auto_capture_instruction_size_too_small_escalated">قرّب وجهك أكثر</string>
 
 
 </resources>
