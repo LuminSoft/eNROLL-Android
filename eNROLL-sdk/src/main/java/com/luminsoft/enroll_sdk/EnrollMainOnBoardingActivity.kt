@@ -137,6 +137,7 @@ class EnrollMainOnBoardingActivity : ComponentActivity() {
             
             EKYCsDKTheme(
                 appColors = EnrollSDK.appColors,
+                appIcons = EnrollSDK.appIcons,
                 dynamicColor = false
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {

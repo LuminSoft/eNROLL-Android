@@ -21,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,6 +38,7 @@ import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
+import com.luminsoft.enroll_sdk.ui_components.components.SdkSplashLogo
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 @Composable
@@ -78,26 +78,11 @@ fun SplashScreenUpdateContent(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                Box(
+                SdkSplashLogo(
                     modifier = Modifier
                         .height(ScreenHelper.sh(0.12))
                         .width(ScreenHelper.sw(0.46))
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.enroll_logo_part1),
-                        contentScale = ContentScale.FillBounds,
-                        contentDescription = "",
-                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-                        modifier = Modifier.fillMaxSize()
-                    )
-                    Image(
-                        painter = painterResource(R.drawable.enroll_logo_part2),
-                        contentScale = ContentScale.FillBounds,
-                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
-                        contentDescription = "",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                )
                 ComposeLottieAnimation(
                     modifier = Modifier.size(150.dp)
                 )

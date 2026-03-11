@@ -50,6 +50,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalAnimationApi
@@ -200,5 +201,9 @@ fun OnboardingScreenContent(
 
 @Composable
 fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    EnrollItemView(onBoardingPage.images, onBoardingPage.text)
+    val customIcon = MaterialTheme.appIcons.resolveCustomIconForPage(
+        pageKey = onBoardingPage.stringValue,
+        pageClass = onBoardingPage::class.simpleName ?: ""
+    )
+    EnrollItemView(onBoardingPage.images, onBoardingPage.text, customIcon)
 }

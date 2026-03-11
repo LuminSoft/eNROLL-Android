@@ -31,6 +31,7 @@ class NfcReadingResultFragment : Fragment() {
             setContent {
                 EKYCsDKTheme(
                     appColors = EnrollSDK.appColors ?: AppColors(),
+                    appIcons = EnrollSDK.appIcons,
                     localizationCode = EnrollSDK.localizationCode,
                 ) {
                     val state = nfcReadingViewModel.state.collectAsStateWithLifecycle()

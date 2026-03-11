@@ -25,11 +25,13 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import androidx.compose.material3.Typography
 
 val LocalAppColors = staticCompositionLocalOf { AppColors() }
+val LocalAppIcons = staticCompositionLocalOf { AppIcons() }
 
 
 @Composable
 fun EKYCsDKTheme(
     appColors: AppColors,
+    appIcons: AppIcons = AppIcons(),
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     localizationCode: LocalizationCode = LocalizationCode.EN,
@@ -112,7 +114,10 @@ fun EKYCsDKTheme(
                 darkTheme
         }
     }
-    CompositionLocalProvider(LocalAppColors provides appColors) {
+    CompositionLocalProvider(
+        LocalAppColors provides appColors,
+        LocalAppIcons provides appIcons
+    ) {
         MaterialTheme(
             colorScheme = selectedColorScheme,
             typography =/* if (localizationCode == LocalizationCode.AR) sdkTypography else sdkTypographyEn*/createCustomTypography(
@@ -129,3 +134,8 @@ val MaterialTheme.appColors: AppColors
     @Composable
     @ReadOnlyComposable
     get() = LocalAppColors.current
+
+val MaterialTheme.appIcons: AppIcons
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalAppIcons.current

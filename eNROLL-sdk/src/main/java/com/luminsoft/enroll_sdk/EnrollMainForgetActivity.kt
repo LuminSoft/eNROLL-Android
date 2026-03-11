@@ -113,7 +113,8 @@ class EnrollMainForgetActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             EKYCsDKTheme(
-                appColors = EnrollSDK.appColors
+                appColors = EnrollSDK.appColors,
+                appIcons = EnrollSDK.appIcons
             ) {
                 NavHost(
                     navController = navController,

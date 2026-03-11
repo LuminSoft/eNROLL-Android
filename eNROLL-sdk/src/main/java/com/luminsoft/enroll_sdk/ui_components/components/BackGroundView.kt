@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.LogoMode
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 
@@ -85,24 +87,23 @@ fun BackGroundView(
                             .fillMaxWidth(),
                     )
 
-                    Row(
-                        horizontalArrangement = Arrangement.Absolute.Left,
-                        verticalAlignment = Alignment.Bottom, modifier = Modifier
-                            .fillMaxSize()
-                            .padding(
-                                end = ScreenHelper.sw(0.1),
-                                start = ScreenHelper.sw(0.1),
-                                bottom = ScreenHelper.sh(0.05)
+                    if (MaterialTheme.appIcons.logo.mode != LogoMode.HIDDEN) {
+                        Row(
+                            horizontalArrangement = Arrangement.Absolute.Left,
+                            verticalAlignment = Alignment.Bottom, modifier = Modifier
+                                .fillMaxSize()
+                                .padding(
+                                    end = ScreenHelper.sw(0.1),
+                                    start = ScreenHelper.sw(0.1),
+                                    bottom = ScreenHelper.sh(0.05)
+                                )
+                        ) {
+                            SdkHeaderLogo(
+                                modifier = Modifier
+                                    .width(ScreenHelper.sw(0.3))
+                                    .height(ScreenHelper.sh(0.08))
                             )
-                    ) {
-                        Image(
-                            painterResource(R.drawable.logo),
-                            contentScale = ContentScale.FillBounds,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .width(ScreenHelper.sw(0.3))
-                                .height(ScreenHelper.sh(0.08)),
-                        )
+                        }
                     }
 
                 }

@@ -22,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,6 +42,7 @@ import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_mode
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
+import com.luminsoft.enroll_sdk.ui_components.components.SdkSplashLogo
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
@@ -74,30 +74,11 @@ fun SplashScreenContent(
                     .fillMaxSize()
             ) {
 
-                Box(
+                SdkSplashLogo(
                     modifier = Modifier
-
                         .height(ScreenHelper.sh(0.12))
-                        .width(ScreenHelper.sw(0.46)) // Adjust height as per your need
-                ) {
-                    Image(
-                        painterResource(R.drawable.enroll_logo_part1),
-                        contentScale = ContentScale.FillBounds,
-                        contentDescription = "",
-                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-                        modifier = Modifier
-                            .fillMaxSize(),
-                    )
-                    Image(
-                        painterResource(R.drawable.enroll_logo_part2),
-                        contentScale = ContentScale.FillBounds,
-                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
-
-                        contentDescription = "",
-                        modifier = Modifier
-                            .fillMaxSize(),
-                    )
-                }
+                        .width(ScreenHelper.sw(0.46))
+                )
 
                 ComposeLottieAnimation(
                     modifier = Modifier

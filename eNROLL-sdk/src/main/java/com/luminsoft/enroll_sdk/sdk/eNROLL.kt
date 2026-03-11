@@ -21,6 +21,8 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.core.utils.RootDetectionUtil
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.AppTheme
 import java.util.Locale
 
 
@@ -45,6 +47,8 @@ object eNROLL {
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
         exitStep: EkycStepType? = null,
+        appIcons: AppIcons = AppIcons(),
+        appTheme: AppTheme? = null,
         ) {
         if (tenantId.isEmpty())
             throw Exception("Invalid tenant id")
@@ -68,7 +72,12 @@ object eNROLL {
         EnrollSDK.enrollCallback = enrollCallback
         EnrollSDK.enrollMode = enrollMode
         EnrollSDK.skipTutorial = skipTutorial
-        EnrollSDK.appColors = appColors
+        if (appTheme != null) {
+            EnrollSDK.appTheme = appTheme
+        } else {
+            EnrollSDK.appColors = appColors
+            EnrollSDK.appIcons = appIcons
+        }
         EnrollSDK.correlationId = correlationId
         EnrollSDK.requestId = requestId
         EnrollSDK.fontResource = fontResource!!

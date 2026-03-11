@@ -110,6 +110,7 @@ class EnrollMainAuthActivity : ComponentActivity() {
 
             EKYCsDKTheme(
                 appColors = EnrollSDK.appColors,
+                appIcons = EnrollSDK.appIcons,
                 dynamicColor = false
             ) {
                 NavHost(

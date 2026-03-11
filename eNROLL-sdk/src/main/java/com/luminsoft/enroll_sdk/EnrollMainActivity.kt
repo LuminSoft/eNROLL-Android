@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -45,6 +44,7 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.FirebaseKeys
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
+import com.luminsoft.enroll_sdk.ui_components.components.SdkSplashLogo
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 class EnrollMainActivity : ComponentActivity() {
@@ -119,26 +119,11 @@ class EnrollMainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Box(
+                    SdkSplashLogo(
                         modifier = Modifier
                             .height(ScreenHelper.sh(0.12))
                             .width(ScreenHelper.sw(0.46))
-                    ) {
-                        Image(
-                            painterResource(R.drawable.enroll_logo_part1),
-                            contentScale = ContentScale.FillBounds,
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                        Image(
-                            painterResource(R.drawable.enroll_logo_part2),
-                            contentScale = ContentScale.FillBounds,
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
+                    )
 
                     ComposeLottieLoading(modifier = Modifier.size(150.dp))
                 }

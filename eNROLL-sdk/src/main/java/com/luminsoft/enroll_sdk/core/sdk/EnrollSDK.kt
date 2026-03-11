@@ -7,6 +7,8 @@ import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
+import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.AppTheme
 
 
 object EnrollSDK {
@@ -28,6 +30,13 @@ object EnrollSDK {
     var localizationCode = LocalizationCode.AR
     var skipTutorial = false
     var appColors = AppColors()
+    var appIcons = AppIcons()
+    var appTheme: AppTheme
+        get() = AppTheme(colors = appColors, icons = appIcons)
+        set(value) {
+            appColors = value.colors
+            appIcons = value.icons
+        }
     var fontResource = 0
 
     var enrollCallback: EnrollCallback? = null
