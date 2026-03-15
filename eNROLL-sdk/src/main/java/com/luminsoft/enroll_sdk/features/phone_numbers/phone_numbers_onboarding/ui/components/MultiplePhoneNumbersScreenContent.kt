@@ -32,6 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +46,9 @@ import com.luminsoft.enroll_sdk.core.failures.AuthFailure
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_data.phone_numbers_models.verified_phones.GetVerifiedPhonesResponseModel
 import com.luminsoft.enroll_sdk.features.phone_numbers.phone_numbers_domain.usecases.ApprovePhonesUseCase
@@ -182,7 +188,11 @@ fun MultiplePhoneNumbersScreenContent(
                     R.drawable.select_phone_number2,
                     R.drawable.select_phone_number3
                 )
-                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f))
+                ResolvedStepIcon(
+                    customIcon = MaterialTheme.appIcons.phone.select,
+                    modifier = Modifier.fillMaxHeight(0.2f),
+                    defaultContent = { ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.2f)) }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
 
                 Text(
@@ -252,10 +262,12 @@ private fun PhoneItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.width(15.dp))
+                val customMobileIcon = resolveUiIcon(R.drawable.mobile_icon)
                 Image(
-                    painterResource(R.drawable.mobile_icon),
+                    resolvedPainter(customMobileIcon, R.drawable.mobile_icon),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = if (customMobileIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                        else ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(50.dp)
                 )
@@ -270,8 +282,9 @@ private fun PhoneItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val customActiveIcon = resolveUiIcon(R.drawable.active_phone)
                     Image(
-                        painterResource(R.drawable.active_phone),
+                        resolvedPainter(customActiveIcon, R.drawable.active_phone),
                         contentDescription = "",
                         modifier = Modifier
                             .height(50.dp)
@@ -308,8 +321,9 @@ private fun PhoneItem(
                     }
 
                     Spacer(modifier = Modifier.width(15.dp))
+                    val customErrorIcon = resolveUiIcon(R.drawable.error_icon)
                     Image(
-                        painterResource(R.drawable.error_icon),
+                        resolvedPainter(customErrorIcon, R.drawable.error_icon),
                         contentDescription = "",
                         modifier = Modifier
                             .height(50.dp)

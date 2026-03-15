@@ -27,6 +27,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
+import com.luminsoft.enroll_sdk.ui_components.theme.StepIcon
 import com.luminsoft.ekyc_android_sdk.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,8 +63,9 @@ fun DialogView(
             ) {
 
                 Box {
-                    Image(
-                        painterResource(R.drawable.pop_up_header),
+                    ResolvedImage(
+                        customIcon = MaterialTheme.appIcons.common.popups.background,
+                        defaultResId = R.drawable.pop_up_header,
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
@@ -75,11 +79,11 @@ fun DialogView(
                         verticalArrangement = Arrangement.Top
                     ) {
                         Spacer(modifier = Modifier.height(20.dp))
-                        Image(
-                            painterResource(getImageId(bottomSheetStatus)),
+                        ResolvedImage(
+                            customIcon = getCustomPopupIcon(bottomSheetStatus),
+                            defaultResId = getImageId(bottomSheetStatus),
                             contentDescription = "",
-
-                            )
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -168,6 +172,15 @@ fun getImageId(bottomSheetStatus: BottomSheetStatus): Int {
         BottomSheetStatus.ERROR -> {
             R.drawable.error_popup_icon
         }
+    }
+}
+
+@Composable
+fun getCustomPopupIcon(bottomSheetStatus: BottomSheetStatus): StepIcon? {
+    return when (bottomSheetStatus) {
+        BottomSheetStatus.SUCCESS -> MaterialTheme.appIcons.common.popups.successIcon
+        BottomSheetStatus.WARNING -> MaterialTheme.appIcons.common.popups.warningIcon
+        BottomSheetStatus.ERROR -> MaterialTheme.appIcons.common.popups.errorIcon
     }
 }
 

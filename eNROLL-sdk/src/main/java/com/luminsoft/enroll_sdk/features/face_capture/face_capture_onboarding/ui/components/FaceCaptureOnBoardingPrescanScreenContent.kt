@@ -31,6 +31,8 @@ import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_mode
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
+import androidx.compose.material3.MaterialTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 
 
 @Composable
@@ -81,7 +83,7 @@ fun FaceCaptureBoardingPreScanScreenContent(
                 .padding(horizontal = 20.dp)
         ) {
             EnrollItemView( listOf(R.drawable.step_02_smile_liveness_1, R.drawable.step_02_smile_liveness_2, R.drawable.step_02_smile_liveness_3)
-                , R.string.facePreCapContent)
+                , R.string.facePreCapContent, MaterialTheme.appIcons.faceMatching.preScan)
             ButtonView(
                 onClick = {
                     val intent =

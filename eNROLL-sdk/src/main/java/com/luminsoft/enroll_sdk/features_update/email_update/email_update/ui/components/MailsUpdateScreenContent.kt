@@ -19,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -164,11 +167,12 @@ fun MailsUpdateScreenContent(
                     value = mailValue.value!!,
                     height = 60.0,
                     icon = {
+                        val customMailIcon = resolveUiIcon(R.drawable.mail_icon)
                         Image(
-                            painterResource(R.drawable.mail_icon),
+                            resolvedPainter(customMailIcon, R.drawable.mail_icon),
                             contentDescription = "",
-                            colorFilter =   ColorFilter.tint(MaterialTheme.appColors.primary),
-
+                            colorFilter = if (customMailIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                                else ColorFilter.tint(MaterialTheme.appColors.primary),
                             modifier = Modifier
                                 .height(50.dp)
                         )

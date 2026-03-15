@@ -26,9 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
 import com.luminsoft.enroll_sdk.ui_components.theme.LogoMode
 import com.luminsoft.ekyc_android_sdk.R
-import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
+import androidx.compose.ui.platform.LocalContext
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveIconSource
+import androidx.compose.runtime.remember
 
 
 @Composable
@@ -57,16 +62,67 @@ fun BackGroundView(
              modifier = Modifier
                  .fillMaxSize()
          )*/
-        val images = listOf(
-            R.drawable.main_lightblue_bg01,
-            R.drawable.main_lightblue_bg02,
-            R.drawable.main_lightblue_bg03
-        )
-
-        ImagesBox(
-            images = images,
+        ResolvedStepIcon(
+            customIcon = MaterialTheme.appIcons.common.backgrounds.main,
             modifier = Modifier.fillMaxHeight(),
-            contentScale = ContentScale.FillHeight
+            contentScale = ContentScale.FillHeight,
+            defaultContent = {
+                val resources = LocalContext.current.resources
+                val bg = MaterialTheme.appIcons.common.backgrounds
+                
+                Box(modifier = Modifier.fillMaxHeight()) {
+                    // Layer 1 (primary tint by default)
+                    val layer1Id = remember(bg.layer1) {
+                        bg.layer1?.let { resolveIconSource(resources, it.source) }
+                    } ?: R.drawable.main_lightblue_bg01
+                    val layer1Tint = if (bg.layer1?.renderingMode == IconRenderingMode.ORIGINAL) {
+                        null
+                    } else {
+                        ColorFilter.tint(MaterialTheme.appColors.primary)
+                    }
+                    Image(
+                        painter = painterResource(id = layer1Id),
+                        contentDescription = "",
+                        modifier = Modifier.fillMaxHeight(),
+                        contentScale = ContentScale.FillHeight,
+                        colorFilter = layer1Tint
+                    )
+                    
+                    // Layer 2 (secondary tint by default)
+                    val layer2Id = remember(bg.layer2) {
+                        bg.layer2?.let { resolveIconSource(resources, it.source) }
+                    } ?: R.drawable.main_lightblue_bg02
+                    val layer2Tint = if (bg.layer2?.renderingMode == IconRenderingMode.ORIGINAL) {
+                        null
+                    } else {
+                        ColorFilter.tint(MaterialTheme.appColors.secondary)
+                    }
+                    Image(
+                        painter = painterResource(id = layer2Id),
+                        contentDescription = "",
+                        modifier = Modifier.fillMaxHeight(),
+                        contentScale = ContentScale.FillHeight,
+                        colorFilter = layer2Tint
+                    )
+                    
+                    // Layer 3 (primary 40% alpha tint by default)
+                    val layer3Id = remember(bg.layer3) {
+                        bg.layer3?.let { resolveIconSource(resources, it.source) }
+                    } ?: R.drawable.main_lightblue_bg03
+                    val layer3Tint = if (bg.layer3?.renderingMode == IconRenderingMode.ORIGINAL) {
+                        null
+                    } else {
+                        ColorFilter.tint(MaterialTheme.appColors.primary.copy(alpha = 0.4f))
+                    }
+                    Image(
+                        painter = painterResource(id = layer3Id),
+                        contentDescription = "",
+                        modifier = Modifier.fillMaxHeight(),
+                        contentScale = ContentScale.FillHeight,
+                        colorFilter = layer3Tint
+                    )
+                }
+            }
         )
 
         Column {
@@ -77,14 +133,15 @@ fun BackGroundView(
                         .height(ScreenHelper.sh(appBarHeight))
                 ) {
 
-                    Image(
-                        painterResource(R.drawable.header_shapes),
+                    ResolvedImage(
+                        customIcon = MaterialTheme.appIcons.common.backgrounds.header,
+                        defaultResId = R.drawable.header_shapes,
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds,
-                        colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                         modifier = Modifier
                             .fillMaxSize()
                             .fillMaxWidth(),
+                        defaultColorFilter = ColorFilter.tint(MaterialTheme.appColors.primary)
                     )
 
                     if (MaterialTheme.appIcons.logo.mode != LogoMode.HIDDEN) {

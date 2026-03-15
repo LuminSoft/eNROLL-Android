@@ -31,6 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -251,11 +254,12 @@ private fun MailItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.width(15.dp))
+                val customMailIcon = resolveUiIcon(R.drawable.mail_icon)
                 Image(
-                    painterResource(R.drawable.mail_icon),
+                    resolvedPainter(customMailIcon, R.drawable.mail_icon),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-
+                    colorFilter = if (customMailIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                        else ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(50.dp)
                 )
@@ -271,8 +275,9 @@ private fun MailItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val customActiveIcon = resolveUiIcon(R.drawable.active_phone)
                     Image(
-                        painterResource(R.drawable.active_phone),
+                        resolvedPainter(customActiveIcon, R.drawable.active_phone),
                         contentDescription = "",
                         modifier = Modifier
                             .height(50.dp)
@@ -308,8 +313,9 @@ private fun MailItem(
                     }
 
                     Spacer(modifier = Modifier.width(15.dp))
+                    val customErrorIcon = resolveUiIcon(R.drawable.error_icon)
                     Image(
-                        painterResource(R.drawable.error_icon),
+                        resolvedPainter(customErrorIcon, R.drawable.error_icon),
                         contentDescription = "",
                         modifier = Modifier
                             .height(50.dp)

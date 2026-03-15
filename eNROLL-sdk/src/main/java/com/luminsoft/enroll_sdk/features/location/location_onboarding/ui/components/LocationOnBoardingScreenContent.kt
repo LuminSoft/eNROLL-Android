@@ -67,6 +67,8 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK.googleApiKey
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.features.location.location_domain.usecases.PostLocationUseCase
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationDetails
 import com.luminsoft.enroll_sdk.features.location.location_onboarding.view_model.LocationOnBoardingViewModel
@@ -226,7 +228,7 @@ private fun RequestLocation(
                 R.drawable.step_00_location_1,
                 R.drawable.step_00_location_2,
                 R.drawable.step_00_location_3
-            ), R.string.getLocationText
+            ), R.string.getLocationText, MaterialTheme.appIcons.location.requestAccess
         )
         ButtonView(
             onClick = {
@@ -283,7 +285,7 @@ private fun PermissionDenied(
                 R.drawable.step_00_location_2,
                 R.drawable.step_00_location_3
             ),
-            R.string.locationAccessErrorText
+            R.string.locationAccessErrorText, MaterialTheme.appIcons.location.accessError
         )
         ButtonView(
             onClick = {
@@ -381,7 +383,11 @@ private fun GotLocation(
                     R.drawable.location_saved_2,
                     R.drawable.location_saved_3
                 )
-                ImagesBox(images = images, modifier = Modifier.fillMaxWidth(0.8f))
+                ResolvedStepIcon(
+                    customIcon = MaterialTheme.appIcons.location.grab,
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    defaultContent = { ImagesBox(images = images, modifier = Modifier.fillMaxWidth(0.8f)) }
+                )
             }
             if (isLoading) LoadingView()
         }

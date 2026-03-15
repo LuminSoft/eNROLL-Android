@@ -78,6 +78,7 @@ import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import org.koin.compose.koinInject
 
 
@@ -239,7 +240,7 @@ private fun RequestLocation(
                 R.drawable.step_00_location_1,
                 R.drawable.step_00_location_2,
                 R.drawable.step_00_location_3
-            ), R.string.getLocationText
+            ), R.string.getLocationText, MaterialTheme.appIcons.location.requestAccess
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -309,7 +310,7 @@ private fun PermissionDenied(
                 R.drawable.step_00_location_1,
                 R.drawable.step_00_location_2,
                 R.drawable.step_00_location_3
-            ), R.string.locationAccessErrorText
+            ), R.string.locationAccessErrorText, MaterialTheme.appIcons.location.accessError
         )
         ButtonView(
             onClick = {

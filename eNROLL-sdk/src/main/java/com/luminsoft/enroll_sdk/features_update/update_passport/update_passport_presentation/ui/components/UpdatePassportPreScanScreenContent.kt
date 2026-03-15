@@ -32,6 +32,8 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import androidx.compose.material3.MaterialTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -116,7 +118,7 @@ private fun PassportOnly(
     ) {
         EnrollItemView(
             listOf(R.drawable.step_01_passport_1, R.drawable.step_01_passport_2, R.drawable.step_01_passport_3)
-            , R.string.passportPreScanContent)
+            , R.string.passportPreScanContent, MaterialTheme.appIcons.passport.preScan)
         ButtonView(
             onClick = {
                 rememberedViewModel.enableLoading()

@@ -45,6 +45,11 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveForgetStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
 
 
 @Composable
@@ -69,12 +74,13 @@ fun ForgetListScreenContent(
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
-            Image(
-                painterResource(R.drawable.forget_icon),
+            ResolvedImage(
+                customIcon = MaterialTheme.appIcons.forget.modeIcon,
+                defaultResId = R.drawable.forget_icon,
                 contentDescription = "",
-                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.fillMaxHeight(0.17f)
+                modifier = Modifier.fillMaxHeight(0.17f),
+                defaultColorFilter = ColorFilter.tint(MaterialTheme.appColors.primary)
             )
             Spacer(modifier = Modifier.height(15.dp))
             Text(
@@ -156,13 +162,15 @@ private fun ForgetStepItem(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
+                val stepIconRes = step.parseForgetStepType().getStepIconIntSource()
+                val customStepIcon = resolveForgetStepIcon(stepIconRes)
                 Image(
-                    painterResource(step.parseForgetStepType().getStepIconIntSource()),
+                    resolvedPainter(customStepIcon, stepIconRes),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = if (customStepIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                        else ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(80.dp),
-
                     )
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(

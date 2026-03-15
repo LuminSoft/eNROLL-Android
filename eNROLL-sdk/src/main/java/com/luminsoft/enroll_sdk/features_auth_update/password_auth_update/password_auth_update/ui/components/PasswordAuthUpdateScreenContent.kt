@@ -28,6 +28,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,6 +45,8 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.main_update.main_update_presentation.main_update.view_model.UpdateViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
@@ -135,7 +140,11 @@ fun PasswordAuthUpdateScreenContent(
             ) {
                 Spacer(modifier = Modifier.height(50.dp))
                 val images= listOf(R.drawable.step_07_password_1,R.drawable.step_07_password_2,R.drawable.step_07_password_3)
-                ImagesBox(images = images,modifier = Modifier.fillMaxHeight(0.3f))
+                ResolvedStepIcon(
+                    customIcon = MaterialTheme.appIcons.password.authScreen,
+                    modifier = Modifier.fillMaxHeight(0.3f),
+                    defaultContent = { ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.3f)) }
+                )
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
@@ -150,11 +159,13 @@ fun PasswordAuthUpdateScreenContent(
                             R.drawable.visibility_icon
                         else R.drawable.visibility_off_icon
                         val description = if (passwordVisible) "Hide password" else "Show password"
+                        val customVisIcon = resolveUiIcon(imageResource)
 
                         Image(
-                            painterResource(imageResource),
+                            resolvedPainter(customVisIcon, imageResource),
                             contentDescription = description,
-                            colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                            colorFilter = if (customVisIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                                else ColorFilter.tint(MaterialTheme.appColors.primary),
                             modifier = Modifier
                                 .clickable {
                                     passwordVisible = !passwordVisible

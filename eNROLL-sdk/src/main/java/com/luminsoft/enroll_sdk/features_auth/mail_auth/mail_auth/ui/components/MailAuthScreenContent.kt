@@ -39,6 +39,8 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.models.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.features.email.email_onboarding.ui.components.OtpInputField
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.mail_auth.mail_auth.view_model.MailAuthViewModel
@@ -156,7 +158,11 @@ fun MailAuthScreenContent(
                     R.drawable.validate_mail_otp_2,
                     R.drawable.validate_mail_otp_3
                 )
-                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
+                ResolvedStepIcon(
+                    customIcon = MaterialTheme.appIcons.email.validateOtp,
+                    modifier = Modifier.fillMaxHeight(0.25f),
+                    defaultContent = { ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f)) }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Text(
                     text = stringResource(id = R.string.emailOtpGuide),

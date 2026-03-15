@@ -46,6 +46,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -306,8 +309,9 @@ private fun AnswerUpdateTextField(
             placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
             colors = textFieldColors(),
             leadingIcon = {
+                val customAnswerIcon = resolveUiIcon(R.drawable.answer_icon)
                 Image(
-                    painterResource(R.drawable.answer_icon),
+                    resolvedPainter(customAnswerIcon, R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )
@@ -368,8 +372,9 @@ fun DropdownList(
                 )
             },
             leadingIcon = {
+                val customInfoIcon = resolveUiIcon(R.drawable.info_icon)
                 Image(
-                    painterResource(R.drawable.info_icon),
+                    resolvedPainter(customInfoIcon, R.drawable.info_icon),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )

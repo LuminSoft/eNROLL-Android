@@ -35,6 +35,8 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
+import androidx.compose.material3.MaterialTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 
 @Composable
 fun UpdateNationalIdPreScanScreen(
@@ -99,7 +101,7 @@ private fun NationalIdOnly(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
         ) {
-            EnrollItemView(   listOf(R.drawable.step_01_national_id_1, R.drawable.step_01_national_id_2, R.drawable.step_01_national_id_3), R.string.documentPreScanContent)
+            EnrollItemView(   listOf(R.drawable.step_01_national_id_1, R.drawable.step_01_national_id_2, R.drawable.step_01_national_id_3), R.string.documentPreScanContent, MaterialTheme.appIcons.nationalId.preScan)
             ButtonView(
                 onClick = {
                     rememberedViewModel.enableLoading()

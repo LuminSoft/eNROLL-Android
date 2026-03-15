@@ -45,6 +45,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -54,6 +57,8 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.ScanType
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingErrorScreen
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_navigation.nationalIdOnBoardingFrontConfirmationScreen
@@ -254,7 +259,7 @@ private fun NationalIdOnly(
                 R.drawable.step_01_national_id_1,
                 R.drawable.step_01_national_id_2,
                 R.drawable.step_01_national_id_3
-            ), R.string.documentPreScanContent
+            ), R.string.documentPreScanContent, MaterialTheme.appIcons.nationalId.preScan
         )
         ButtonView(
             onClick = {
@@ -393,6 +398,12 @@ private fun Card(
                 ChooseStep.Passport -> passportImages
                 ChooseStep.EPassport -> epassportImages
             }
+
+            val customIcon = when (step) {
+                ChooseStep.NationalId -> MaterialTheme.appIcons.nationalId.choose
+                ChooseStep.Passport -> MaterialTheme.appIcons.passport.choose
+                ChooseStep.EPassport -> MaterialTheme.appIcons.passport.choose
+            }
             
             Box(modifier = Modifier.fillMaxHeight(0.35f), contentAlignment = Alignment.Center) {
                 Image(
@@ -401,9 +412,15 @@ private fun Card(
                     colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary.copy(alpha = 0.1f)),
                     modifier = Modifier.fillMaxHeight(1f)
                 )
-                ImagesBox(
-                    images = images,
-                    modifier = Modifier.fillMaxHeight(0.7f)
+                ResolvedStepIcon(
+                    customIcon = customIcon,
+                    modifier = Modifier.fillMaxHeight(0.7f),
+                    defaultContent = {
+                        ImagesBox(
+                            images = images,
+                            modifier = Modifier.fillMaxHeight(0.7f)
+                        )
+                    }
                 )
 
             }
@@ -435,14 +452,14 @@ private fun Card(
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.padding(horizontal = 15.dp)
             ) {
+                val customInfoIcon = resolveUiIcon(R.drawable.info_icon)
                 Image(
-                    painterResource(R.drawable.info_icon),
+                    resolvedPainter(customInfoIcon, R.drawable.info_icon),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.secondary),
-
+                    colorFilter = if (customInfoIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                        else ColorFilter.tint(MaterialTheme.appColors.secondary),
                     modifier = Modifier
                         .size(15.dp)
-
                 )
                 Spacer(Modifier.width(5.dp))
                 Box(Modifier.fillMaxWidth(0.9f)) {
@@ -480,7 +497,7 @@ private fun PassportOnly(
                 R.drawable.step_01_passport_1,
                 R.drawable.step_01_passport_2,
                 R.drawable.step_01_passport_3
-            ), R.string.passportPreScanContent
+            ), R.string.passportPreScanContent, MaterialTheme.appIcons.passport.preScan
         )
         ButtonView(
             onClick = {
@@ -592,7 +609,7 @@ private fun EPassportOnly(
                 R.drawable.step_01_passport_1,
                 R.drawable.step_01_passport_2,
                 R.drawable.step_01_passport_3
-            ), R.string.epassportPreScanContent
+            ), R.string.epassportPreScanContent, MaterialTheme.appIcons.passport.ePassportPreScan
         )
         ButtonView(
             onClick = {

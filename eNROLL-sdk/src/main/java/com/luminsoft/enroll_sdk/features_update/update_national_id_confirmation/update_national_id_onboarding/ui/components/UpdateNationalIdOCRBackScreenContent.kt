@@ -29,6 +29,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveFieldIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -329,6 +331,7 @@ private fun TextItem(label: Int, value: String, icon: Int) {
         else ResourceProvider.instance.getStringResource(R.string.female)
     } else value
 
+    val fieldIcon = resolveFieldIcon(icon)
     NormalTextField(label = ResourceProvider.instance.getStringResource(label),
         value = TextFieldValue(text = newValue),
         onValueChange = { },
@@ -336,7 +339,7 @@ private fun TextItem(label: Int, value: String, icon: Int) {
         enabled = false,
         icon = {
             Image(
-                painterResource(icon), contentDescription = "", modifier = Modifier.height(50.dp)
+                resolvedPainter(fieldIcon, icon), contentDescription = "", modifier = Modifier.height(50.dp)
             )
         })
 }

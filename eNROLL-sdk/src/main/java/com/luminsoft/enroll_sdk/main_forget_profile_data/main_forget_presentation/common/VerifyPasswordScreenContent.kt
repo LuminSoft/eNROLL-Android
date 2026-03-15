@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -179,11 +182,13 @@ fun PasswordTextField(
                 R.drawable.visibility_icon
             else R.drawable.visibility_off_icon
             val description = if (passwordVisible) "Hide password" else "Show password"
+            val customVisIcon = resolveUiIcon(imageResource)
 
             Image(
-                painterResource(imageResource),
+                resolvedPainter(customVisIcon, imageResource),
                 contentDescription = description,
-                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                colorFilter = if (customVisIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                    else ColorFilter.tint(MaterialTheme.appColors.primary),
                 modifier = Modifier
                     .clickable {
                         passwordVisible = !passwordVisible

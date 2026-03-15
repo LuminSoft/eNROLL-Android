@@ -43,6 +43,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -300,10 +303,12 @@ private fun AnswerTextField(
             },
             colors = textFieldColors(),
             leadingIcon = {
+                val customAnswerIcon = resolveUiIcon(R.drawable.answer_icon)
                 Image(
-                    painterResource(R.drawable.answer_icon),
+                    resolvedPainter(customAnswerIcon, R.drawable.answer_icon),
                     contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                    colorFilter = if (customAnswerIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                        else ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentDescription = "",
                 )
             },
@@ -367,9 +372,11 @@ fun DropdownList(
                 )
             },
             leadingIcon = {
+                val customInfoIcon = resolveUiIcon(R.drawable.info_icon)
                 Image(
-                    painterResource(R.drawable.info_icon),
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                    resolvedPainter(customInfoIcon, R.drawable.info_icon),
+                    colorFilter = if (customInfoIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                        else ColorFilter.tint(MaterialTheme.appColors.primary),
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                 )

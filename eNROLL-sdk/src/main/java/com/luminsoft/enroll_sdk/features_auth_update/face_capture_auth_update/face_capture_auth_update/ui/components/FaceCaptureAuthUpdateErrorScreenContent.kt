@@ -27,6 +27,9 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.features.face_capture.face_capture_navigation.faceCaptureBoardingPostScanScreenContent
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_auth.face_capture_auth.face_capture_auth_navigation.faceCaptureAuthErrorScreen
@@ -73,8 +76,9 @@ fun FaceCaptureAuthUpdateErrorScreen(
 
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painterResource(R.drawable.blured_bg),
+        ResolvedImage(
+            customIcon = MaterialTheme.appIcons.common.backgrounds.blur,
+            defaultResId = R.drawable.blured_bg,
             contentDescription = "",
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
@@ -92,7 +96,11 @@ fun FaceCaptureAuthUpdateErrorScreen(
                 R.drawable.face_recognition_capture_error_2,
                 R.drawable.face_recognition_capture_error_3
             )
-            ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f))
+            ResolvedStepIcon(
+                customIcon = MaterialTheme.appIcons.faceMatching.error,
+                modifier = Modifier.fillMaxHeight(0.35f),
+                defaultContent = { ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.35f)) }
+            )
             Spacer(modifier = Modifier.height(30.dp))
             errorMessage.value?.let { Text(text = it,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) }
             Spacer(modifier = Modifier.fillMaxHeight(0.35f))

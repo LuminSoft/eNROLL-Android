@@ -58,6 +58,18 @@ import com.luminsoft.enroll_sdk.EkycStepType
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
+import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.AppTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.CommonIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.FaceMatchingIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.IconSource
+import com.luminsoft.enroll_sdk.ui_components.theme.LocationIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.LogoConfig
+import com.luminsoft.enroll_sdk.ui_components.theme.LogoMode
+import com.luminsoft.enroll_sdk.ui_components.theme.NationalIdIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.PhoneIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.StepIcon
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import io.github.cdimascio.dotenv.dotenv
 import java.io.File
@@ -391,7 +403,6 @@ class MainActivity : ComponentActivity() {
                 localizationCode = if (isArabic.value) LocalizationCode.AR else LocalizationCode.EN,
                 googleApiKey = googleApiKey.value,
                 skipTutorial = skipTutorial.value,
-                appColors = AppColors(),
                 applicantId = applicationIdText.value.text,
                 levelOfTrustToken = levelOfTrustTokenText.value.text,
                 correlationId = "correlationId",
@@ -400,7 +411,67 @@ class MainActivity : ComponentActivity() {
                 requestId = requestIdText.value.text,
                 templateId = templateIdText.value.text,
                 contractParameters = contractParametersText.value.text,
-                exitStep = getExitStepFromIndex(selectedExitStepIndex.value)
+                exitStep = getExitStepFromIndex(selectedExitStepIndex.value),
+                appTheme = AppTheme(
+                    colors = AppColors(
+                        primary = Color(0xFFCDDC39),
+                        secondary = Color(0xFF7BB3F0),
+                        backGround = Color(0xFFF6F8FC)
+                    ),
+                    icons = AppIcons(
+                        logo = LogoConfig(
+                            mode = LogoMode.CUSTOM,
+                            asset = IconSource.Resource(R.drawable.sample_sdk_logo),
+                            renderingMode = IconRenderingMode.TEMPLATE
+                        ),
+                        location = LocationIcons(
+                            tutorial = StepIcon(
+                                source = IconSource.Resource(R.drawable.ic_location_template),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                            requestAccess = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                        ),
+                        nationalId = NationalIdIcons(
+                            tutorial = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                            tutorialIdOrPassport = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                            preScan = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                        ),
+                        faceMatching = FaceMatchingIcons(
+                            tutorial = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_face_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                            preScan = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_face_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                        ),
+                        phone = PhoneIcons(
+                            tutorial = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_mobile_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                        ),
+                        common = CommonIcons(
+                            termsAndConditions = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            )
+                        )
+                    )
+                )
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
@@ -585,4 +656,3 @@ fun getExitStepFromIndex(index: Int): EkycStepType? {
         else -> null
     }
 }
-

@@ -44,6 +44,8 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
 import com.luminsoft.enroll_sdk.ui_components.components.SdkSplashLogo
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
 
 
 @SuppressLint("ContextCastToActivity")
@@ -105,12 +107,13 @@ fun SplashScreenContent(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Image(
-                    painter = painterResource(R.drawable.horizontal_footer),
+                ResolvedImage(
+                    customIcon = MaterialTheme.appIcons.common.backgrounds.footer,
+                    defaultResId = R.drawable.horizontal_footer,
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                     modifier = Modifier
-                        .width(ScreenHelper.sw(0.15)) // Adjust the width as needed
+                        .width(ScreenHelper.sw(0.15))
                         .height(ScreenHelper.sh(0.05))
                 )
 

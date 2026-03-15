@@ -27,6 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUiIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -55,6 +58,8 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveFieldIcon
 import org.koin.compose.koinInject
 
 var userNameValue = mutableStateOf(TextFieldValue())
@@ -288,11 +293,12 @@ private fun MainContent(
                             )
                         },
                         trailingIcon = {
+                            val customEditIcon = resolveUiIcon(R.drawable.edit_icon)
                             Image(
-                                painterResource(R.drawable.edit_icon),
+                                resolvedPainter(customEditIcon, R.drawable.edit_icon),
                                 contentDescription = "",
-                                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-
+                                colorFilter = if (customEditIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                                    else ColorFilter.tint(MaterialTheme.appColors.primary),
                                 modifier = Modifier
                                     .height(50.dp)
                             )
@@ -383,6 +389,7 @@ private fun setCustomerId(
 
 @Composable
 private fun TextItem(label: Int, value: String, icon: Int) {
+    val fieldIcon = resolveFieldIcon(icon)
     NormalTextField(
         label = ResourceProvider.instance.getStringResource(label),
         value = TextFieldValue(text = value),
@@ -391,11 +398,12 @@ private fun TextItem(label: Int, value: String, icon: Int) {
         height = 60.0,
         icon = {
             Image(
-                painterResource(icon),
+                resolvedPainter(fieldIcon, icon),
                 contentDescription = "",
                 modifier = Modifier
                     .height(50.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
+                colorFilter = if (fieldIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                    else ColorFilter.tint(MaterialTheme.appColors.primary),
             )
         }
     )

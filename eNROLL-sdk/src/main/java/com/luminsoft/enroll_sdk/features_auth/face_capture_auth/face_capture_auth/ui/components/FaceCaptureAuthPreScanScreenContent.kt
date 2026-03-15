@@ -29,6 +29,8 @@ import com.luminsoft.enroll_sdk.main_auth.main_auth_presentation.main_auth.view_
 import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
+import androidx.compose.material3.MaterialTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 
 
 @Composable
@@ -76,7 +78,7 @@ fun FaceCaptureAuthPreScanScreenContent(
         ) {
             EnrollItemView(
                 listOf(R.drawable.step_02_smile_liveness_1, R.drawable.step_02_smile_liveness_2, R.drawable.step_02_smile_liveness_3)
-                , R.string.facePreCapContent)
+                , R.string.facePreCapContent, MaterialTheme.appIcons.faceMatching.preScan)
             ButtonView(
                 onClick = {
                     val intent =

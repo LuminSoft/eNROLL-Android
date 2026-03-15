@@ -38,6 +38,8 @@ import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
 import com.luminsoft.enroll_sdk.ui_components.components.SdkSplashLogo
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
 
 
 @Composable
@@ -95,8 +97,9 @@ fun SplashScreenSignContractContent(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Image(
-                    painter = painterResource(R.drawable.horizontal_footer),
+                ResolvedImage(
+                    customIcon = MaterialTheme.appIcons.common.backgrounds.footer,
+                    defaultResId = R.drawable.horizontal_footer,
                     contentScale = ContentScale.FillBounds,
                     contentDescription = "",
                     modifier = Modifier

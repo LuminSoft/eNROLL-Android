@@ -47,6 +47,8 @@ import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.MailSendOtpUseCase
 import com.luminsoft.enroll_sdk.features.email.email_domain.usecases.ValidateOtpMailUseCase
 import com.luminsoft.enroll_sdk.features.email.email_navigation.mailsOnBoardingScreenContent
@@ -172,7 +174,11 @@ fun ValidateOtpMailsScreenContent(
                     R.drawable.validate_mail_otp_2,
                     R.drawable.validate_mail_otp_3
                 )
-                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
+                ResolvedStepIcon(
+                    customIcon = MaterialTheme.appIcons.email.validateOtp,
+                    modifier = Modifier.fillMaxHeight(0.25f),
+                    defaultContent = { ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f)) }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(

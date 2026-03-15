@@ -46,6 +46,8 @@ import com.luminsoft.enroll_sdk.core.utils.FirebaseKeys
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
 import com.luminsoft.enroll_sdk.ui_components.components.SdkSplashLogo
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
 
 class EnrollMainActivity : ComponentActivity() {
 
@@ -142,8 +144,9 @@ class EnrollMainActivity : ComponentActivity() {
                         fontSize = 12.sp
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Image(
-                        painter = painterResource(R.drawable.horizontal_footer),
+                    ResolvedImage(
+                        customIcon = MaterialTheme.appIcons.common.backgrounds.footer,
+                        defaultResId = R.drawable.horizontal_footer,
                         contentScale = ContentScale.FillBounds,
                         contentDescription = "",
                         modifier = Modifier

@@ -34,6 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.resolveUpdateStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.resolvedPainter
+import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -74,11 +78,12 @@ fun UpdateListScreenContent(
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
+            val updateModeIcon = resolveUpdateStepIcon(R.drawable.update_icon)
             Image(
-                painterResource(R.drawable.update_icon),
+                resolvedPainter(updateModeIcon, R.drawable.update_icon),
                 contentDescription = "",
-                colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-
+                colorFilter = if (updateModeIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                    else ColorFilter.tint(MaterialTheme.appColors.primary),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxHeight(0.1f)
             )
@@ -144,14 +149,15 @@ private fun UpdateStepItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.width(15.dp))
+                val stepIconRes = step.parseUpdateStepType().getStepIconIntSource()
+                val customStepIcon = resolveUpdateStepIcon(stepIconRes)
                 Image(
-                    painterResource(step.parseUpdateStepType().getStepIconIntSource()),
+                    resolvedPainter(customStepIcon, stepIconRes),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary),
-
+                    colorFilter = if (customStepIcon?.renderingMode == IconRenderingMode.ORIGINAL) null
+                        else ColorFilter.tint(MaterialTheme.appColors.primary),
                     modifier = Modifier
                         .height(50.dp),
-
                     )
                 Spacer(modifier = Modifier.width(15.dp))
                 Text(
