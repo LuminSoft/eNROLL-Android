@@ -422,7 +422,7 @@ class MainActivity : ComponentActivity() {
                         logo = LogoConfig(
                             mode = LogoMode.CUSTOM,
                             asset = IconSource.Resource(R.drawable.sample_sdk_logo),
-                            renderingMode = IconRenderingMode.TEMPLATE
+                            renderingMode = IconRenderingMode.ORIGINAL
                         ),
                         location = LocationIcons(
                             tutorial = StepIcon(
@@ -438,6 +438,11 @@ class MainActivity : ComponentActivity() {
                             tutorial = StepIcon(
                                 source = IconSource.Resource(R.drawable.sample_location_icon),
                                 renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                            choose = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+
                             ),
                             tutorialIdOrPassport = StepIcon(
                                 source = IconSource.Resource(R.drawable.sample_location_icon),
@@ -464,6 +469,7 @@ class MainActivity : ComponentActivity() {
                                 renderingMode = IconRenderingMode.ORIGINAL
                             ),
                         ),
+
                         common = CommonIcons(
                             termsAndConditions = StepIcon(
                                 source = IconSource.Resource(R.drawable.sample_location_icon),
