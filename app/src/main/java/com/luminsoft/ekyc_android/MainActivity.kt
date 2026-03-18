@@ -62,6 +62,7 @@ import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.AppTheme
 import com.luminsoft.enroll_sdk.ui_components.theme.CommonIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.FaceMatchingIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.FieldIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
 import com.luminsoft.enroll_sdk.ui_components.theme.IconSource
 import com.luminsoft.enroll_sdk.ui_components.theme.LocationIcons
@@ -424,15 +425,22 @@ class MainActivity : ComponentActivity() {
                             asset = IconSource.Resource(R.drawable.sample_sdk_logo),
                             renderingMode = IconRenderingMode.ORIGINAL
                         ),
+
                         location = LocationIcons(
                             tutorial = StepIcon(
-                                source = IconSource.Resource(R.drawable.ic_location_template),
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
                                 renderingMode = IconRenderingMode.ORIGINAL
                             ),
                             requestAccess = StepIcon(
                                 source = IconSource.Resource(R.drawable.sample_location_icon),
                                 renderingMode = IconRenderingMode.ORIGINAL
                             ),
+                            accessError = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.TEMPLATE
+
+                            ),
+
                         ),
                         nationalId = NationalIdIcons(
                             tutorial = StepIcon(
@@ -453,27 +461,30 @@ class MainActivity : ComponentActivity() {
                                 renderingMode = IconRenderingMode.ORIGINAL
                             ),
                         ),
-                        faceMatching = FaceMatchingIcons(
-                            tutorial = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_face_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                            preScan = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_face_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                        ),
-                        phone = PhoneIcons(
-                            tutorial = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_mobile_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                        ),
+//                        faceMatching = FaceMatchingIcons(
+//                            tutorial = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_face_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//                            ),
+//                            preScan = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_face_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//                            ),
+//                        ),
+//                        phone = PhoneIcons(
+//                            tutorial = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_mobile_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//                            ),
+//                        ),
 
                         common = CommonIcons(
                             termsAndConditions = StepIcon(
                                 source = IconSource.Resource(R.drawable.sample_location_icon),
                                 renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                            fieldIcons = FieldIcons(
+
                             )
                         )
                     )
