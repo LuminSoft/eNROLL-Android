@@ -79,8 +79,8 @@ import java.io.File
 var dotenv = dotenv {
     directory = "/assets"
 //    filename="env_sleem"
-//    filename="env_mariam"
-    filename="env_local"
+    filename="env_mariam"
+//    filename="env_local"
 //    filename = "env_andrew"
 //    filename = "env_radwan"
 //    filename = "env_org_1"
@@ -110,7 +110,7 @@ var templateId =
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"]?.takeIf { it.isNotEmpty() } ?: "")
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
-var isLocal = mutableStateOf(true)
+var isLocal = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 var selectedExitStepIndex = mutableIntStateOf(0) // 0 = None (no exit step)
@@ -413,82 +413,82 @@ class MainActivity : ComponentActivity() {
                 templateId = templateIdText.value.text,
                 contractParameters = contractParametersText.value.text,
                 exitStep = getExitStepFromIndex(selectedExitStepIndex.value),
-                appTheme = AppTheme(
-                    colors = AppColors(
-                        primary = Color(0xFFCDDC39),
-                        secondary = Color(0xFF7BB3F0),
-                        backGround = Color(0xFFF6F8FC)
-                    ),
-                    icons = AppIcons(
-                        logo = LogoConfig(
-                            mode = LogoMode.CUSTOM,
-                            asset = IconSource.Resource(R.drawable.sample_sdk_logo),
-                            renderingMode = IconRenderingMode.ORIGINAL
-                        ),
-
-                        location = LocationIcons(
-                            tutorial = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                            requestAccess = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                            accessError = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.TEMPLATE
-
-                            ),
-
-                        ),
-                        nationalId = NationalIdIcons(
-                            tutorial = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                            choose = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-
-                            ),
-                            tutorialIdOrPassport = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                            preScan = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                        ),
-//                        faceMatching = FaceMatchingIcons(
+//                appTheme = AppTheme(
+//                    colors = AppColors(
+//                        primary = Color(0xFFCDDC39),
+//                        secondary = Color(0xFF7BB3F0),
+//                        backGround = Color(0xFFF6F8FC)
+//                    ),
+//                    icons = AppIcons(
+//                        logo = LogoConfig(
+//                            mode = LogoMode.CUSTOM,
+//                            asset = IconSource.Resource(R.drawable.sample_sdk_logo),
+//                            renderingMode = IconRenderingMode.ORIGINAL
+//                        ),
+//
+//                        location = LocationIcons(
 //                            tutorial = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_face_icon),
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//                            ),
+//                            requestAccess = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//                            ),
+//                            accessError = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                renderingMode = IconRenderingMode.TEMPLATE
+//
+//                            ),
+//
+//                        ),
+//                        nationalId = NationalIdIcons(
+//                            tutorial = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//                            ),
+//                            choose = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//
+//                            ),
+//                            tutorialIdOrPassport = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
 //                                renderingMode = IconRenderingMode.ORIGINAL
 //                            ),
 //                            preScan = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_face_icon),
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
 //                                renderingMode = IconRenderingMode.ORIGINAL
 //                            ),
 //                        ),
-//                        phone = PhoneIcons(
-//                            tutorial = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_mobile_icon),
+////                        faceMatching = FaceMatchingIcons(
+////                            tutorial = StepIcon(
+////                                source = IconSource.Resource(R.drawable.sample_face_icon),
+////                                renderingMode = IconRenderingMode.ORIGINAL
+////                            ),
+////                            preScan = StepIcon(
+////                                source = IconSource.Resource(R.drawable.sample_face_icon),
+////                                renderingMode = IconRenderingMode.ORIGINAL
+////                            ),
+////                        ),
+////                        phone = PhoneIcons(
+////                            tutorial = StepIcon(
+////                                source = IconSource.Resource(R.drawable.sample_mobile_icon),
+////                                renderingMode = IconRenderingMode.ORIGINAL
+////                            ),
+////                        ),
+//
+//                        common = CommonIcons(
+//                            termsAndConditions = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
 //                                renderingMode = IconRenderingMode.ORIGINAL
 //                            ),
-//                        ),
-
-                        common = CommonIcons(
-                            termsAndConditions = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                            fieldIcons = FieldIcons(
-
-                            )
-                        )
-                    )
-                )
+//                            fieldIcons = FieldIcons(
+//
+//                            )
+//                        )
+//                    )
+//                )
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
