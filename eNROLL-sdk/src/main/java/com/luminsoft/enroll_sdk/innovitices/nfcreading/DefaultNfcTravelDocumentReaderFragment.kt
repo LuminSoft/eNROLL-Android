@@ -20,6 +20,6 @@ class DefaultNfcTravelDocumentReaderFragment : NfcTravelDocumentReaderFragment()
 
     override fun onFailed(exception: Exception) {
         Log.e("NfcReading", "NFC reading failed", exception)
-        throw exception
+        nfcReadingViewModel.setNfcError(exception)
     }
 }

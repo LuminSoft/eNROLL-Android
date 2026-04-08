@@ -436,6 +436,9 @@
     <string name="nfc_processing_data">جاري معالجة البيانات…</string>
     <string name="nfc_processing_wait">يرجى الانتظار بينما نعالج بيانات جواز السفر الخاص بك</string>
 
+    <string name="nfc_chip_not_supported">شريحة جواز السفر هذه غير مدعومة. تعذرت قراءة شريحة NFC.</string>
+    <string name="nfc_reading_failed">فشل في قراءة شريحة NFC. يرجى المحاولة مرة أخرى.</string>
+
     <string name="dot_nfc_nfc_travel_document_reader_searching_title">جاري البحث عن شريحة ‏NFC‏…</string>
     <string name="dot_nfc_nfc_travel_document_reader_searching_subhead">حرّك هاتفك برفق على سطح المستند حتى نجد الموضع الصحيح.</string>
     <string name="dot_nfc_nfc_travel_document_reader_reading_title">ابقَ ثابتاً</string>

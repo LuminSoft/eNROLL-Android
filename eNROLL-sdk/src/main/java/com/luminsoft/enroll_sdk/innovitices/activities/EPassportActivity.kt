@@ -17,6 +17,7 @@ class EPassportActivity : AppCompatActivity() {
 
     companion object {
         const val OUT_NFC_RESULT = "OUT_NFC_RESULT"
+        const val OUT_NFC_ERROR = "OUT_NFC_ERROR"
     }
 
     private val mainViewModel: MainViewModel by viewModels()

@@ -28,6 +28,7 @@ class NfcReadingViewModel(
     data class State(
         val configuration: NfcTravelDocumentReaderFragment.Configuration? = null,
         val result: NfcReadingResult? = null,
+        val nfcError: Exception? = null,
         val isUploading: Boolean = false,
         val uploadSuccess: CustomerData? = null,
         val uploadFailure: SdkFailure? = null,
@@ -141,6 +142,10 @@ class NfcReadingViewModel(
                 }
             }
         }
+    }
+
+    fun setNfcError(exception: Exception) {
+        mutableState.update { it.copy(nfcError = exception) }
     }
 
     fun resetUploadFailure() {

@@ -154,8 +154,12 @@ fun NationalIdOnBoardingPreScanScreen(
                     com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType.PersonalConfirmation.getStepId()
                 )
             } else if (it.resultCode == Activity.RESULT_CANCELED) {
-                // User cancelled the ePassport scanning - no action needed, stay on selection screen
-                // ViewModel already has loading disabled
+                val nfcError = it.data?.getStringExtra(EPassportActivity.OUT_NFC_ERROR)
+                if (nfcError != null) {
+                    onBoardingViewModel.errorMessage.value = nfcError
+                    onBoardingViewModel.scanType.value = ScanType.PASSPORT
+                    navController.navigate(nationalIdOnBoardingErrorScreen)
+                }
             }
         }
 
