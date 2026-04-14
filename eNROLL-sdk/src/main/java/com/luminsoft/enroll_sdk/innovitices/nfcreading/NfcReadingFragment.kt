@@ -1,11 +1,11 @@
 package com.luminsoft.enroll_sdk.innovitices.nfcreading
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,10 +37,7 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    timeoutJob?.cancel()
-                    nfcReadingViewModel.cancelNfcScan()
-                    requireActivity().setResult(Activity.RESULT_CANCELED)
-                    requireActivity().finish()
+                    goBackToPassportScan()
                 }
             }
         )
@@ -67,10 +64,7 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
 
     private fun setupCancelButton() {
         cancelButton.setOnClickListener {
-            timeoutJob?.cancel()
-            nfcReadingViewModel.cancelNfcScan()
-            requireActivity().setResult(Activity.RESULT_CANCELED)
-            requireActivity().finish()
+            goBackToPassportScan()
         }
     }
 
@@ -90,9 +84,7 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
             val state = nfcReadingViewModel.state.value
             if (state.result == null && state.nfcError == null) {
                 nfcReadingViewModel.setNfcError(Exception("timeout"))
-                Toast.makeText(requireContext(), getString(R.string.nfc_scan_timeout), Toast.LENGTH_LONG).show()
-                requireActivity().setResult(Activity.RESULT_CANCELED)
-                requireActivity().finish()
+                showErrorDialogAndClose(getString(R.string.nfc_scan_timeout))
             }
         }
     }
@@ -110,9 +102,7 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
                             error.message ?: getString(R.string.nfc_reading_failed)
                         }
                         nfcReadingViewModel.clearNfcError()
-                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-                        requireActivity().setResult(Activity.RESULT_CANCELED)
-                        requireActivity().finish()
+                        showErrorDialogAndClose(errorMessage)
                         return@collectLatest
                     }
                     state.result?.let {
@@ -122,5 +112,25 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
                 }
             }
         }
+    }
+
+    private fun goBackToPassportScan() {
+        timeoutJob?.cancel()
+        nfcReadingViewModel.cancelNfcScan()
+        nfcReadingViewModel.initializeState()
+        findNavController().popBackStack()
+    }
+
+    private fun showErrorDialogAndClose(message: String) {
+        if (!isAdded) return
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.nfc_reading_failed))
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.done)) { _, _ ->
+                requireActivity().setResult(Activity.RESULT_CANCELED)
+                requireActivity().finish()
+            }
+            .show()
     }
 }
