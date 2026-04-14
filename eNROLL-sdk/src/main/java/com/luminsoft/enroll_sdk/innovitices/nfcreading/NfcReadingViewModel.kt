@@ -11,6 +11,9 @@ import com.innovatrics.dot.nfc.reader.ui.NfcTravelDocumentReaderFragment
 import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.document_upload_image.CustomerData
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.passport_nfc_upload.NfcErrorCode
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.ReportNfcFailureUseCase
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.ReportNfcFailureUseCaseParams
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.UploadNfcPassportUseCase
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_domain.usecases.UploadNfcPassportUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +26,7 @@ class NfcReadingViewModel(
     private val resolveAuthorityCertificatesFileUseCase: ResolveAuthorityCertificatesFileUseCase,
     private val createUiResultUseCase: CreateUiResultUseCase,
     private val uploadNfcPassportUseCase: UploadNfcPassportUseCase,
+    private val reportNfcFailureUseCase: ReportNfcFailureUseCase,
 ) : ViewModel() {
 
     data class State(
@@ -147,6 +151,29 @@ class NfcReadingViewModel(
 
     fun setNfcError(exception: Exception) {
         mutableState.update { it.copy(nfcError = exception) }
+        reportNfcFailure(exception)
+    }
+
+    private fun reportNfcFailure(exception: Exception) {
+        val errorCode = classifyNfcError(exception)
+        viewModelScope.launch {
+            try {
+                reportNfcFailureUseCase.call(ReportNfcFailureUseCaseParams(errorCode))
+            } catch (_: Exception) {
+                // Fire-and-forget — failure reporting should not block the user flow
+            }
+        }
+    }
+
+    private fun classifyNfcError(exception: Exception): NfcErrorCode {
+        val message = exception.message?.lowercase() ?: ""
+        return when {
+            message.contains("cancel") -> NfcErrorCode.NFCUserCanceledScan
+            message.contains("timeout") || message.contains("timed out") -> NfcErrorCode.NFCTimeOutError
+            message.contains("access control failed") || message.contains("invalid mrz") || message.contains("bac failed") -> NfcErrorCode.NFCInvalidMRZKey
+            message.contains("connection") || message.contains("tag was lost") || message.contains("transceive") -> NfcErrorCode.NFCConnectionError
+            else -> NfcErrorCode.NFCGeneralError
+        }
     }
 
     fun clearNfcError() {
