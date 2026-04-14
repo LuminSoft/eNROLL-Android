@@ -1,10 +1,12 @@
 package com.luminsoft.enroll_sdk.innovitices.nfcreading
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
@@ -29,6 +31,21 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
     private lateinit var cancelButton: Button
     private var timeoutJob: Job? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    timeoutJob?.cancel()
+                    nfcReadingViewModel.cancelNfcScan()
+                    requireActivity().setResult(Activity.RESULT_CANCELED)
+                    requireActivity().finish()
+                }
+            }
+        )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViews(view)
@@ -51,7 +68,9 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
     private fun setupCancelButton() {
         cancelButton.setOnClickListener {
             timeoutJob?.cancel()
-            findNavController().popBackStack()
+            nfcReadingViewModel.cancelNfcScan()
+            requireActivity().setResult(Activity.RESULT_CANCELED)
+            requireActivity().finish()
         }
     }
 
@@ -70,9 +89,10 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
             Log.w("NfcReading", "NFC scan timed out after ${NFC_SCAN_TIMEOUT_MS}ms")
             val state = nfcReadingViewModel.state.value
             if (state.result == null && state.nfcError == null) {
-                nfcReadingViewModel.clearNfcError()
+                nfcReadingViewModel.setNfcError(Exception("timeout"))
                 Toast.makeText(requireContext(), getString(R.string.nfc_scan_timeout), Toast.LENGTH_LONG).show()
-                findNavController().popBackStack()
+                requireActivity().setResult(Activity.RESULT_CANCELED)
+                requireActivity().finish()
             }
         }
     }
@@ -83,7 +103,7 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
                 nfcReadingViewModel.state.collectLatest { state ->
                     state.nfcError?.let { error ->
                         timeoutJob?.cancel()
-                        Log.e("NfcReading", "NFC reading error, navigating back for retry: ${error.message}")
+                        Log.e("NfcReading", "NFC reading error: ${error.message}")
                         val errorMessage = if (error.message?.contains("Access control failed") == true) {
                             getString(R.string.nfc_chip_not_supported)
                         } else {
@@ -91,7 +111,8 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
                         }
                         nfcReadingViewModel.clearNfcError()
                         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-                        findNavController().popBackStack()
+                        requireActivity().setResult(Activity.RESULT_CANCELED)
+                        requireActivity().finish()
                         return@collectLatest
                     }
                     state.result?.let {

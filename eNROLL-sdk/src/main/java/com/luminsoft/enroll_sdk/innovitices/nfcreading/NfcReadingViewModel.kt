@@ -180,6 +180,14 @@ class NfcReadingViewModel(
         mutableState.update { it.copy(nfcError = null) }
     }
 
+    /**
+     * Called when user presses Cancel or back button on NFC scanning screen.
+     * Reports user-canceled failure to backend.
+     */
+    fun cancelNfcScan() {
+        reportNfcFailure(Exception("cancel"))
+    }
+
     fun resetUploadFailure() {
         mutableState.update { it.copy(uploadFailure = null) }
     }
