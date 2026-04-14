@@ -34,6 +34,9 @@ data class TravelDocumentRequest(
 
     @SerializedName("ldsMasterFile")
     val ldsMasterFile: LdsMasterFileRequest? = null,
+
+    @SerializedName("algorithmHash")
+    val algorithmHash: String? = null,
 )
 
 data class AdditionalPersonalDetailsRequest(

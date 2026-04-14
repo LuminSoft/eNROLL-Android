@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.util.Base64
 import com.innovatrics.dot.nfc.reader.NfcTravelDocumentReaderResult
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
+import java.security.MessageDigest
 
 /**
  * Maps Innovatrics [NfcTravelDocumentReaderResult] to [PassportNfcUploadRequest]
@@ -213,6 +214,7 @@ object NfcResultMapper {
                         }
                     )
                 },
+                algorithmHash = "SHA256",
                 ldsMasterFile = travelDoc.ldsMasterFile?.lds1eMrtdApplication?.let { app ->
                     LdsMasterFileRequest(
                         lds1eMrtdApplication = Lds1eMrtdApplicationRequest(
@@ -240,10 +242,12 @@ object NfcResultMapper {
     }
 
     /**
-     * Converts a byte array to a Base64-encoded string, or null if the input is null or empty.
+     * Hashes a byte array with SHA-256 and returns the digest as a Base64-encoded string.
+     * Returns null if the input is null or empty.
      */
     private fun bytesToBase64(bytes: ByteArray?): String? {
         if (bytes == null || bytes.isEmpty()) return null
-        return Base64.encodeToString(bytes, Base64.NO_WRAP)
+        val digest = MessageDigest.getInstance("SHA-256").digest(bytes)
+        return Base64.encodeToString(digest, Base64.NO_WRAP)
     }
 }
