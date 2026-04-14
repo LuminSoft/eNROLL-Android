@@ -31,6 +31,9 @@ data class TravelDocumentRequest(
 
     @SerializedName("authenticationStatus")
     val authenticationStatus: AuthenticationStatusRequest? = null,
+
+    @SerializedName("ldsMasterFile")
+    val ldsMasterFile: LdsMasterFileRequest? = null,
 )
 
 data class AdditionalPersonalDetailsRequest(
@@ -144,6 +147,61 @@ data class AuthenticationStatusRequest(
 
     @SerializedName("data")
     val data: AuthenticationDetailRequest? = null,
+)
+
+data class LdsMasterFileRequest(
+    @SerializedName("lds1eMrtdApplication")
+    val lds1eMrtdApplication: Lds1eMrtdApplicationRequest? = null,
+)
+
+data class Lds1eMrtdApplicationRequest(
+    @SerializedName("dg1MachineReadableZoneInformation")
+    val dg1MachineReadableZoneInformation: String? = null,
+
+    @SerializedName("dg2EncodedIdentificationFeaturesFace")
+    val dg2EncodedIdentificationFeaturesFace: String? = null,
+
+    @SerializedName("dg3AdditionalIdentificationFeatureFingers")
+    val dg3AdditionalIdentificationFeatureFingers: String? = null,
+
+    @SerializedName("dg4AdditionalIdentificationFeatureIrises")
+    val dg4AdditionalIdentificationFeatureIrises: String? = null,
+
+    @SerializedName("dg5DisplayedPortrait")
+    val dg5DisplayedPortrait: String? = null,
+
+    @SerializedName("dg7DisplayedSignatureOrUsualMark")
+    val dg7DisplayedSignatureOrUsualMark: String? = null,
+
+    @SerializedName("dg8DataFeatures")
+    val dg8DataFeatures: String? = null,
+
+    @SerializedName("dg9StructureFeatures")
+    val dg9StructureFeatures: String? = null,
+
+    @SerializedName("dg10SubstanceFeature")
+    val dg10SubstanceFeature: String? = null,
+
+    @SerializedName("dg11AdditionalPersonalDetails")
+    val dg11AdditionalPersonalDetails: String? = null,
+
+    @SerializedName("dg12AdditionalDocumentDetails")
+    val dg12AdditionalDocumentDetails: String? = null,
+
+    @SerializedName("dg13OptionalDetail")
+    val dg13OptionalDetail: String? = null,
+
+    @SerializedName("dg14SecurityOptions")
+    val dg14SecurityOptions: String? = null,
+
+    @SerializedName("dg15ActiveAuthenticationPublicKeyInfo")
+    val dg15ActiveAuthenticationPublicKeyInfo: String? = null,
+
+    @SerializedName("dg16PersonsToNotif")
+    val dg16PersonsToNotif: String? = null,
+
+    @SerializedName("sodDocumentSecurityObject")
+    val sodDocumentSecurityObject: String? = null,
 )
 
 data class AuthenticationDetailRequest(

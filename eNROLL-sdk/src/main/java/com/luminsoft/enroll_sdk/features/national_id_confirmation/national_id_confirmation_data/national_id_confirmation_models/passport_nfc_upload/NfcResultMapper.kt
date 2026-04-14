@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.passport_nfc_upload
 
 import android.graphics.Bitmap
+import android.util.Base64
 import com.innovatrics.dot.nfc.reader.NfcTravelDocumentReaderResult
 import com.luminsoft.enroll_sdk.innovitices.core.DotHelper
 
@@ -212,7 +213,37 @@ object NfcResultMapper {
                         }
                     )
                 },
+                ldsMasterFile = travelDoc.ldsMasterFile?.lds1eMrtdApplication?.let { app ->
+                    LdsMasterFileRequest(
+                        lds1eMrtdApplication = Lds1eMrtdApplicationRequest(
+                            dg1MachineReadableZoneInformation = bytesToBase64(app.dg1MachineReadableZoneInformation?.bytes),
+                            dg2EncodedIdentificationFeaturesFace = bytesToBase64(app.dg2EncodedIdentificationFeaturesFace?.bytes),
+                            dg3AdditionalIdentificationFeatureFingers = bytesToBase64(app.dg3AdditionalIdentificationFeatureFingers?.bytes),
+                            dg4AdditionalIdentificationFeatureIrises = bytesToBase64(app.dg4AdditionalIdentificationFeatureIrises?.bytes),
+                            dg5DisplayedPortrait = bytesToBase64(app.dg5DisplayedPortrait?.bytes),
+                            dg7DisplayedSignatureOrUsualMark = bytesToBase64(app.dg7DisplayedSignatureOrUsualMark?.bytes),
+                            dg8DataFeatures = bytesToBase64(app.dg8DataFeatures?.bytes),
+                            dg9StructureFeatures = bytesToBase64(app.dg9StructureFeatures?.bytes),
+                            dg10SubstanceFeature = bytesToBase64(app.dg10SubstanceFeatures?.bytes),
+                            dg11AdditionalPersonalDetails = bytesToBase64(app.dg11AdditionalPersonalDetails?.bytes),
+                            dg12AdditionalDocumentDetails = bytesToBase64(app.dg12AdditionalDocumentDetails?.bytes),
+                            dg13OptionalDetail = bytesToBase64(app.dg13OptionalDetails?.bytes),
+                            dg14SecurityOptions = bytesToBase64(app.dg14SecurityOptions?.bytes),
+                            dg15ActiveAuthenticationPublicKeyInfo = bytesToBase64(app.dg15ActiveAuthenticationPublicKeyInfo?.bytes),
+                            dg16PersonsToNotif = bytesToBase64(app.dg16PersonsToNotify?.bytes),
+                            sodDocumentSecurityObject = bytesToBase64(app.sodDocumentSecurityObject?.bytes),
+                        )
+                    )
+                },
             ),
         )
+    }
+
+    /**
+     * Converts a byte array to a Base64-encoded string, or null if the input is null or empty.
+     */
+    private fun bytesToBase64(bytes: ByteArray?): String? {
+        if (bytes == null || bytes.isEmpty()) return null
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
 }
