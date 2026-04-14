@@ -51,6 +51,7 @@ class NfcReadingViewModel(
             it.copy(
                 result = null,
                 configuration = null,
+                nfcError = null,
                 isUploading = false,
                 uploadSuccess = null,
                 uploadFailure = null,
@@ -146,6 +147,10 @@ class NfcReadingViewModel(
 
     fun setNfcError(exception: Exception) {
         mutableState.update { it.copy(nfcError = exception) }
+    }
+
+    fun clearNfcError() {
+        mutableState.update { it.copy(nfcError = null) }
     }
 
     fun resetUploadFailure() {

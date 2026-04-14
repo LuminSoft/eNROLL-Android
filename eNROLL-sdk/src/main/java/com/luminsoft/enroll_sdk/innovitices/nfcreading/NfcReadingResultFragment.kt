@@ -58,6 +58,10 @@ class NfcReadingResultFragment : Fragment() {
                             onClose = {
                                 requireActivity().finish()
                             },
+                            onRestartFlow = {
+                                requireActivity().setResult(Activity.RESULT_CANCELED)
+                                requireActivity().finish()
+                            },
                         )
                     }
                 }

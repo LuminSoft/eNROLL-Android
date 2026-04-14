@@ -74,9 +74,15 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
+import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import android.provider.Settings
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -601,6 +607,28 @@ private fun EPassportOnly(
     startEPassportForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
     rememberedViewModel: OnBoardingViewModel
 ) {
+    val context = LocalContext.current
+    var showNfcDisabledDialog by remember { mutableStateOf(false) }
+
+    if (showNfcDisabledDialog) {
+        DialogView(
+            bottomSheetStatus = BottomSheetStatus.WARNING,
+            text = stringResource(id = R.string.nfc_disabled_message),
+            buttonText = stringResource(id = R.string.nfc_open_settings),
+            onPressedButton = {
+                showNfcDisabledDialog = false
+                context.startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
+            },
+            secondButtonText = stringResource(id = R.string.cancel),
+            onPressedSecondButton = {
+                showNfcDisabledDialog = false
+            },
+            onDismiss = {
+                showNfcDisabledDialog = false
+            }
+        )
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
@@ -617,6 +645,10 @@ private fun EPassportOnly(
         )
         ButtonView(
             onClick = {
+                if (!NfcUtils.isNfcEnabled(context)) {
+                    showNfcDisabledDialog = true
+                    return@ButtonView
+                }
                 rememberedViewModel.enableLoading()
 
                 val intent = Intent(activity.applicationContext, EPassportActivity::class.java)

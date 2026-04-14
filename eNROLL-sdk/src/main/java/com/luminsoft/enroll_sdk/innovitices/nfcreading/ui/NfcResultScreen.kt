@@ -51,6 +51,7 @@ fun NfcResultScreen(
     onConfirmUpload: () -> Unit,
     onResetFailure: () -> Unit,
     onClose: () -> Unit,
+    onRestartFlow: () -> Unit,
 ) {
     val travelDocument = result.nfcTravelDocumentReaderResult.travelDocument
 
@@ -68,22 +69,19 @@ fun NfcResultScreen(
         return
     }
 
-    // Show error dialog for upload failure
+    // Show error dialog for upload failure - Done exits the entire ePassport flow
     uploadFailure?.let { failure ->
         DialogView(
             bottomSheetStatus = BottomSheetStatus.ERROR,
             text = failure.message ?: stringResource(id = R.string.someThingWentWrong),
-            buttonText = stringResource(id = R.string.retry),
+            buttonText = stringResource(id = R.string.done),
             onPressedButton = {
                 onResetFailure()
-                onConfirmUpload()
-            },
-            secondButtonText = stringResource(id = R.string.cancel),
-            onPressedSecondButton = {
-                onResetFailure()
+                onRestartFlow()
             },
             onDismiss = {
                 onResetFailure()
+                onRestartFlow()
             }
         )
     }
@@ -138,7 +136,7 @@ fun NfcResultScreen(
                 details.fullDateOfBirth?.let {
                     TextItem(
                         label = R.string.birthDate,
-                        value = it,
+                        value = formatChipDate(it),
                         icon = R.drawable.calendar_icon
                     )
                     Spacer(modifier = Modifier.height(10.dp))
@@ -161,7 +159,7 @@ fun NfcResultScreen(
                 details.dateOfIssue?.let {
                     TextItem(
                         label = R.string.nfc_date_of_issue,
-                        value = it,
+                        value = formatChipDate(it),
                         icon = R.drawable.calendar_icon
                     )
                     Spacer(modifier = Modifier.height(10.dp))
@@ -174,6 +172,53 @@ fun NfcResultScreen(
                         icon = R.drawable.issuing_authurity_icon
                     )
                     Spacer(modifier = Modifier.height(10.dp))
+                }
+            }
+
+            // MRZ-based document fields (TD3)
+            travelDocument.machineReadableZoneInformation?.machineReadableZone?.td3?.let { td3 ->
+                td3.passportNumber?.value?.let { passportNum ->
+                    if (passportNum.isNotBlank()) {
+                        TextItem(
+                            label = R.string.passportDocumentNumber,
+                            value = passportNum,
+                            icon = R.drawable.issuing_authurity_icon
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+                }
+
+                td3.sex?.value?.let { sexValue ->
+                    if (sexValue.isNotBlank()) {
+                        TextItem(
+                            label = R.string.sex,
+                            value = sexValue,
+                            icon = R.drawable.user_icon
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+                }
+
+                td3.dateOfExpiry?.value?.let { expiryDate ->
+                    if (expiryDate.isNotBlank()) {
+                        TextItem(
+                            label = R.string.dateOfExpiry,
+                            value = formatMrzDate(expiryDate),
+                            icon = R.drawable.calendar_icon
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+                }
+
+                td3.nationality?.value?.let { nat ->
+                    if (nat.isNotBlank()) {
+                        TextItem(
+                            label = R.string.nationality,
+                            value = nat,
+                            icon = R.drawable.issuing_authurity_icon
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
                 }
             }
 
@@ -243,6 +288,39 @@ private fun TextItem(label: Int, value: String, icon: Int) {
             )
         }
     )
+}
+
+/**
+ * Formats a chip date from yyyyMMdd to dd/MM/yyyy for display.
+ * Returns the original string if it doesn't match the expected format.
+ */
+private fun formatChipDate(raw: String): String {
+    val trimmed = raw.trim()
+    if (trimmed.length != 8 || !trimmed.all { it.isDigit() }) return raw
+    return try {
+        "${trimmed.substring(6, 8)}/${trimmed.substring(4, 6)}/${trimmed.substring(0, 4)}"
+    } catch (_: Exception) {
+        raw
+    }
+}
+
+/**
+ * Formats an MRZ date from yyMMdd to dd/MM/yyyy for display.
+ * Uses a 10-year future window to determine the century.
+ */
+private fun formatMrzDate(raw: String): String {
+    val trimmed = raw.trim()
+    if (trimmed.length != 6 || !trimmed.all { it.isDigit() }) return formatChipDate(raw)
+    return try {
+        val yy = trimmed.substring(0, 2).toInt()
+        val mm = trimmed.substring(2, 4)
+        val dd = trimmed.substring(4, 6)
+        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) % 100
+        val century = if (yy <= currentYear + 10) "20" else "19"
+        "$dd/$mm/$century${trimmed.substring(0, 2)}"
+    } catch (_: Exception) {
+        raw
+    }
 }
 
 @Composable

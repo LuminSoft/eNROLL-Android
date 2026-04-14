@@ -440,6 +440,10 @@
     <string name="nfc_chip_not_supported">This passport chip is not supported. The NFC chip could not be read.</string>
     <string name="nfc_reading_failed">Failed to read NFC chip. Please try again.</string>
 
+    <string name="nfc_disabled_message">NFC is required to read the ePassport chip. Please enable NFC in your device settings to continue.</string>
+    <string name="nfc_open_settings">Open Settings</string>
+    <string name="nfc_scan_timeout">NFC reading timed out. Please try again and hold the passport steady against your phone.</string>
+
     <string name="dot_nfc_nfc_travel_document_reader_searching_title">Searching for NFC chip…</string>
     <string name="dot_nfc_nfc_travel_document_reader_searching_subhead">Slide your phone gently on the surface of the document until we find the right position.</string>
     <string name="dot_nfc_nfc_travel_document_reader_reading_title">Hold still</string>

@@ -423,7 +423,7 @@
     <string name="nfc_face_image">صورة الوجه</string>
     <string name="nfc_additional_details">تفاصيل إضافية</string>
     <string name="nfc_surname">اللقب</string>
-    <string name="nfc_given_names">الأسماء الأولى</string>
+    <string name="nfc_given_names">الاسم</string>
     <string name="nfc_place_of_birth">مكان الميلاد</string>
     <string name="nfc_other_names">أسماء أخرى</string>
     <string name="nfc_address">العنوان</string>
@@ -438,6 +438,10 @@
 
     <string name="nfc_chip_not_supported">شريحة جواز السفر هذه غير مدعومة. تعذرت قراءة شريحة NFC.</string>
     <string name="nfc_reading_failed">فشل في قراءة شريحة NFC. يرجى المحاولة مرة أخرى.</string>
+
+    <string name="nfc_disabled_message">تقنية NFC مطلوبة لقراءة شريحة جواز السفر الإلكتروني. يرجى تمكين NFC من إعدادات جهازك للمتابعة.</string>
+    <string name="nfc_open_settings">فتح الإعدادات</string>
+    <string name="nfc_scan_timeout">انتهت مهلة قراءة NFC. يرجى المحاولة مرة أخرى مع تثبيت جواز السفر على هاتفك.</string>
 
     <string name="dot_nfc_nfc_travel_document_reader_searching_title">جاري البحث عن شريحة ‏NFC‏…</string>
     <string name="dot_nfc_nfc_travel_document_reader_searching_subhead">حرّك هاتفك برفق على سطح المستند حتى نجد الموضع الصحيح.</string>

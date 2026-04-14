@@ -1,6 +1,10 @@
 package com.luminsoft.enroll_sdk.innovitices.activities
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.res.Configuration
+import android.nfc.NfcAdapter
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +28,9 @@ class EPassportActivity : AppCompatActivity() {
     private val dotSdkViewModel: DotSdkViewModel by viewModels { DotSdkViewModelFactory(application) }
     private val nfcReadingViewModel: NfcReadingViewModel by viewModels { NfcReadingViewModelFactory(application) }
 
+    private var nfcAdapter: NfcAdapter? = null
+    private var nfcPendingIntent: PendingIntent? = null
+
     @Suppress("DEPRECATION")
     private fun setLocale(lang: String?) {
         val locale = lang?.let { Locale(it) }
@@ -44,6 +51,33 @@ class EPassportActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_epassport)
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+        nfcPendingIntent = PendingIntent.getActivity(
+            this, 0,
+            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            flags
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        nfcAdapter?.enableForegroundDispatch(this, nfcPendingIntent, null, null)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        nfcAdapter?.disableForegroundDispatch(this)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
     }
 
     override fun onSupportNavigateUp(): Boolean {
