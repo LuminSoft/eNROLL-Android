@@ -20,6 +20,9 @@ class DefaultNfcTravelDocumentReaderFragment : NfcTravelDocumentReaderFragment()
 
     override fun onFailed(exception: Exception) {
         Log.e("NfcReading", "NFC reading failed", exception)
-        nfcReadingViewModel.setNfcError(exception)
+        // Only report to API — do NOT set nfcError.
+        // The Innovatrics reader stays active and allows re-tap after onFailed,
+        // so we must not kill the flow. The timeout catches genuinely failing passports.
+        nfcReadingViewModel.reportNfcAttemptFailure(exception)
     }
 }

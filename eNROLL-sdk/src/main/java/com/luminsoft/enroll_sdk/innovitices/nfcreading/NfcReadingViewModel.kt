@@ -149,6 +149,14 @@ class NfcReadingViewModel(
         }
     }
 
+    /**
+     * Called from DefaultNfcTravelDocumentReaderFragment.onFailed().
+     * Only reports to API — does NOT update UI state, so the Innovatrics reader keeps scanning.
+     */
+    fun reportNfcAttemptFailure(exception: Exception) {
+        reportNfcFailure(exception)
+    }
+
     fun setNfcError(exception: Exception) {
         mutableState.update { it.copy(nfcError = exception) }
         reportNfcFailure(exception)
