@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.innovitices.nfcreading
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,8 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.fragment.findNavController
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.innovitices.activities.EPassportActivity
 import com.luminsoft.enroll_sdk.innovitices.nfcreading.ui.NfcResultScreen
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
@@ -58,8 +59,12 @@ class NfcReadingResultFragment : Fragment() {
                             onClose = {
                                 requireActivity().finish()
                             },
-                            onRestartFlow = {
-                                requireActivity().setResult(Activity.RESULT_CANCELED)
+                            onErrorAcknowledged = { message ->
+                                val resultIntent = Intent().apply {
+                                    putExtra(EPassportActivity.OUT_NFC_ERROR, message)
+                                    putExtra(EPassportActivity.OUT_CLOSE_SDK_WITH_ERROR, true)
+                                }
+                                requireActivity().setResult(Activity.RESULT_CANCELED, resultIntent)
                                 requireActivity().finish()
                             },
                         )

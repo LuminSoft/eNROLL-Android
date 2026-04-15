@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
+import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
@@ -155,12 +156,18 @@ fun NationalIdOnBoardingPreScanScreen(
     val startEPassportForResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             onBoardingViewModel.disableLoading()
+            val nfcError = it.data?.getStringExtra(EPassportActivity.OUT_NFC_ERROR)
+            val shouldCloseSdk =
+                it.data?.getBooleanExtra(EPassportActivity.OUT_CLOSE_SDK_WITH_ERROR, false) == true
+
             if (it.resultCode == Activity.RESULT_OK) {
                 onBoardingViewModel.removeCurrentStep(
                     com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType.PersonalConfirmation.getStepId()
                 )
+            } else if (shouldCloseSdk && !nfcError.isNullOrBlank()) {
+                activity.finish()
+                EnrollSDK.enrollCallback?.error(EnrollFailedModel(nfcError))
             } else if (it.resultCode == Activity.RESULT_CANCELED) {
-                val nfcError = it.data?.getStringExtra(EPassportActivity.OUT_NFC_ERROR)
                 if (nfcError != null) {
                     onBoardingViewModel.errorMessage.value = nfcError
                     onBoardingViewModel.scanType.value = ScanType.PASSPORT

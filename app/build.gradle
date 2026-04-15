@@ -14,8 +14,8 @@ android {
         applicationId "com.luminsoft.EnrollTestingApp"
         minSdk 24
         targetSdk 35
-        versionCode 145
-        versionName "1.1.45"
+        versionCode 147
+        versionName "1.1.47"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

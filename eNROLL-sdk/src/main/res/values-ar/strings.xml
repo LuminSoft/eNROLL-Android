@@ -442,6 +442,9 @@
     <string name="nfc_disabled_message">تقنية NFC مطلوبة لقراءة شريحة جواز السفر الإلكتروني. يرجى تمكين NFC من إعدادات جهازك للمتابعة.</string>
     <string name="nfc_open_settings">فتح الإعدادات</string>
     <string name="nfc_scan_timeout">انتهت مهلة قراءة NFC. يرجى المحاولة مرة أخرى مع تثبيت جواز السفر على هاتفك.</string>
+    <string name="nfc_invalid_mrz_error">تعذر الوصول إلى شريحة جواز السفر باستخدام بيانات MRZ الممسوحة. يرجى التأكد من مسح جواز السفر الصحيح.</string>
+    <string name="nfc_connection_error_message">انقطعت قراءة NFC قبل اكتمالها. يرجى تثبيت جواز السفر على هاتفك أثناء القراءة.</string>
+    <string name="nfc_general_error_message">فشلت قراءة NFC لجواز السفر الإلكتروني ولا يمكن متابعة الرحلة.</string>
 
     <string name="dot_nfc_nfc_travel_document_reader_searching_title">جاري البحث عن شريحة ‏NFC‏…</string>
     <string name="dot_nfc_nfc_travel_document_reader_searching_subhead">حرّك هاتفك برفق على سطح المستند حتى نجد الموضع الصحيح.</string>

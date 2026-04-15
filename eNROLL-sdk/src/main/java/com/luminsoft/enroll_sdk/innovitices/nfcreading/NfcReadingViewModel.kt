@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk.innovitices.nfcreading
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
@@ -29,6 +30,10 @@ class NfcReadingViewModel(
     private val reportNfcFailureUseCase: ReportNfcFailureUseCase,
 ) : ViewModel() {
 
+    companion object {
+        private const val MAX_RETRYABLE_FAILURES = 4
+    }
+
     data class State(
         val configuration: NfcTravelDocumentReaderFragment.Configuration? = null,
         val result: NfcReadingResult? = null,
@@ -42,6 +47,8 @@ class NfcReadingViewModel(
     val state = mutableState.asStateFlow()
 
     private val bitmapLock = Any()
+    private var retryableFailureCount: Int = 0
+
     @Volatile
     private var passportImage: Bitmap? = null
 
@@ -50,6 +57,7 @@ class NfcReadingViewModel(
             passportImage?.recycle()
             passportImage = null
         }
+        retryableFailureCount = 0
         
         mutableState.update {
             it.copy(
@@ -93,6 +101,7 @@ class NfcReadingViewModel(
 
     fun process(nfcTravelDocumentReaderResult: NfcTravelDocumentReaderResult) {
         viewModelScope.launch {
+            retryableFailureCount = 0
             val result = createUiResultUseCase(nfcTravelDocumentReaderResult)
             mutableState.update { it.copy(result = result) }
         }
@@ -151,13 +160,44 @@ class NfcReadingViewModel(
 
     /**
      * Called from DefaultNfcTravelDocumentReaderFragment.onFailed().
-     * Only reports to API — does NOT update UI state, so the Innovatrics reader keeps scanning.
+     * Retryable NFC failures are allowed up to a limited number of attempts.
+     * Non-retryable failures such as invalid MRZ/BAC stop immediately.
      */
     fun reportNfcAttemptFailure(exception: Exception) {
-        reportNfcFailure(exception)
+        val currentState = mutableState.value
+        if (currentState.result != null || currentState.nfcError != null) return
+
+        val errorCode = classifyNfcError(exception)
+        Log.e(
+            "NfcReading",
+            "NFC attempt failed. code=$errorCode retryableFailureCount=$retryableFailureCount " +
+                "class=${exception.javaClass.name} details=${buildThrowableDebugSummary(exception)}",
+            exception,
+        )
+
+        when (errorCode) {
+            NfcErrorCode.NFCInvalidMRZKey,
+            NfcErrorCode.NFCTimeOutError -> setNfcError(exception)
+
+            NfcErrorCode.NFCConnectionError,
+            NfcErrorCode.NFCGeneralError -> {
+                retryableFailureCount += 1
+                reportNfcFailure(exception)
+
+                if (retryableFailureCount >= MAX_RETRYABLE_FAILURES) {
+                    mutableState.update { it.copy(nfcError = exception) }
+                }
+            }
+
+            NfcErrorCode.NFCUserCanceledScan -> reportNfcFailure(exception)
+        }
     }
 
+    fun getNfcErrorCode(exception: Exception): NfcErrorCode = classifyNfcError(exception)
+
     fun setNfcError(exception: Exception) {
+        val currentState = mutableState.value
+        if (currentState.result != null || currentState.nfcError != null) return
         mutableState.update { it.copy(nfcError = exception) }
         reportNfcFailure(exception)
     }
@@ -174,15 +214,51 @@ class NfcReadingViewModel(
     }
 
     private fun classifyNfcError(exception: Exception): NfcErrorCode {
-        val message = exception.message?.lowercase() ?: ""
+        val details = buildThrowableDebugSummary(exception)
+        val classNames = buildThrowableClassNames(exception)
         return when {
-            message.contains("cancel") -> NfcErrorCode.NFCUserCanceledScan
-            message.contains("timeout") || message.contains("timed out") -> NfcErrorCode.NFCTimeOutError
-            message.contains("access control failed") || message.contains("invalid mrz") || message.contains("bac failed") -> NfcErrorCode.NFCInvalidMRZKey
-            message.contains("connection") || message.contains("tag was lost") || message.contains("transceive") -> NfcErrorCode.NFCConnectionError
+            details.contains("cancel") -> NfcErrorCode.NFCUserCanceledScan
+            details.contains("timeout") || details.contains("timed out") -> NfcErrorCode.NFCTimeOutError
+            classNames.contains("accesscontrolexception") ||
+                details.contains("access control failed") ||
+                details.contains("invalid mrz") ||
+                details.contains("mrz key") ||
+                details.contains("bac failed") ||
+                details.contains("pace failed") ||
+                details.contains("wrong password") ||
+                details.contains("incorrect password") ||
+                details.contains("invalid password") ||
+                details.contains("wrong key") ||
+                details.contains("incorrect key") ||
+                details.contains("invalid key") ||
+                details.contains("key incorrect") ||
+                details.contains("security status not satisfied") ||
+                details.contains("mutual authentication") ||
+                details.contains("access denied") ||
+                (details.contains("bac") && details.contains("failed")) ||
+                (details.contains("pace") && details.contains("failed")) ||
+                (details.contains("password") && details.contains("failed")) -> NfcErrorCode.NFCInvalidMRZKey
+            classNames.contains("notconnectedexception") ||
+                details.contains("connection") ||
+                details.contains("tag was lost") ||
+                details.contains("tag lost") ||
+                details.contains("transceive") -> NfcErrorCode.NFCConnectionError
             else -> NfcErrorCode.NFCGeneralError
         }
     }
+
+    private fun buildThrowableDebugSummary(throwable: Throwable): String =
+        generateSequence(throwable) { it.cause }
+            .joinToString(separator = " | ") { current ->
+                val message = current.message?.lowercase().orEmpty()
+                "${current.javaClass.name.lowercase()}:$message"
+            }
+
+    private fun buildThrowableClassNames(throwable: Throwable): String =
+        generateSequence(throwable) { it.cause }
+            .joinToString(separator = " | ") { current ->
+                current.javaClass.name.lowercase()
+            }
 
     fun clearNfcError() {
         mutableState.update { it.copy(nfcError = null) }

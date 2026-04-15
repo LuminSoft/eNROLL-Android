@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.innovitices.nfcreading
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -19,6 +20,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_confirmation_data.national_id_confirmation_models.passport_nfc_upload.NfcErrorCode
+import com.luminsoft.enroll_sdk.innovitices.activities.EPassportActivity
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
@@ -88,14 +91,10 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
                         text = message,
                         buttonText = stringResource(id = R.string.done),
                         onPressedButton = {
-                            errorDialogMessage.value = null
-                            requireActivity().setResult(Activity.RESULT_CANCELED)
-                            requireActivity().finish()
+                            finishSdkWithError(message)
                         },
                         onDismiss = {
-                            errorDialogMessage.value = null
-                            requireActivity().setResult(Activity.RESULT_CANCELED)
-                            requireActivity().finish()
+                            finishSdkWithError(message)
                         },
                     )
                 }
@@ -125,7 +124,6 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
             val state = nfcReadingViewModel.state.value
             if (state.result == null) {
                 nfcReadingViewModel.setNfcError(Exception("timeout"))
-                errorDialogMessage.value = getString(R.string.nfc_scan_timeout)
             }
         }
     }
@@ -138,6 +136,13 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
                         timeoutJob?.cancel()
                         findNavController().navigate(resId = R.id.action_NfcReadingFragment_to_NfcReadingResultFragment)
                     }
+
+                    state.nfcError?.let { exception ->
+                        timeoutJob?.cancel()
+                        if (errorDialogMessage.value == null) {
+                            errorDialogMessage.value = resolveErrorMessage(exception)
+                        }
+                    }
                 }
             }
         }
@@ -148,6 +153,26 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
         nfcReadingViewModel.cancelNfcScan()
         nfcReadingViewModel.initializeState()
         findNavController().popBackStack()
+    }
+
+    private fun resolveErrorMessage(exception: Exception): String {
+        return when (nfcReadingViewModel.getNfcErrorCode(exception)) {
+            NfcErrorCode.NFCTimeOutError -> getString(R.string.nfc_scan_timeout)
+            NfcErrorCode.NFCInvalidMRZKey -> getString(R.string.nfc_invalid_mrz_error)
+            NfcErrorCode.NFCConnectionError -> getString(R.string.nfc_connection_error_message)
+            NfcErrorCode.NFCGeneralError -> getString(R.string.nfc_general_error_message)
+            NfcErrorCode.NFCUserCanceledScan -> getString(R.string.cancel)
+        }
+    }
+
+    private fun finishSdkWithError(message: String) {
+        errorDialogMessage.value = null
+        val resultIntent = Intent().apply {
+            putExtra(EPassportActivity.OUT_NFC_ERROR, message)
+            putExtra(EPassportActivity.OUT_CLOSE_SDK_WITH_ERROR, true)
+        }
+        requireActivity().setResult(Activity.RESULT_CANCELED, resultIntent)
+        requireActivity().finish()
     }
 
 }

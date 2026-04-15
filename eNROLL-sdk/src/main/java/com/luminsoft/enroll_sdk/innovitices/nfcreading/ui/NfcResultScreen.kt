@@ -51,7 +51,7 @@ fun NfcResultScreen(
     onConfirmUpload: () -> Unit,
     onResetFailure: () -> Unit,
     onClose: () -> Unit,
-    onRestartFlow: () -> Unit,
+    onErrorAcknowledged: (String) -> Unit,
 ) {
     val travelDocument = result.nfcTravelDocumentReaderResult.travelDocument
 
@@ -71,17 +71,18 @@ fun NfcResultScreen(
 
     // Show error dialog for upload failure - Done exits the entire ePassport flow
     uploadFailure?.let { failure ->
+        val failureMessage = failure.message ?: stringResource(id = R.string.someThingWentWrong)
         DialogView(
             bottomSheetStatus = BottomSheetStatus.ERROR,
-            text = failure.message ?: stringResource(id = R.string.someThingWentWrong),
+            text = failureMessage,
             buttonText = stringResource(id = R.string.done),
             onPressedButton = {
                 onResetFailure()
-                onRestartFlow()
+                onErrorAcknowledged(failureMessage)
             },
             onDismiss = {
                 onResetFailure()
-                onRestartFlow()
+                onErrorAcknowledged(failureMessage)
             }
         )
     }
