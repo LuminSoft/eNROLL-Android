@@ -178,6 +178,30 @@ fun NfcResultScreen(
 
             // MRZ-based document fields (TD3)
             travelDocument.machineReadableZoneInformation?.machineReadableZone?.td3?.let { td3 ->
+                // Show name from MRZ if not already shown from additionalPersonalDetails (DG11)
+                if (travelDocument.additionalPersonalDetails?.nameOfHolder == null) {
+                    td3.name?.primaryIdentifier?.value?.let { surname ->
+                        if (surname.isNotBlank()) {
+                            TextItem(
+                                label = R.string.nfc_surname,
+                                value = surname.replace('<', ' ').trim(),
+                                icon = R.drawable.user_icon
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+                    }
+                    td3.name?.secondaryIdentifier?.value?.let { givenNames ->
+                        if (givenNames.isNotBlank()) {
+                            TextItem(
+                                label = R.string.nfc_given_names,
+                                value = givenNames.replace('<', ' ').trim(),
+                                icon = R.drawable.user_icon
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+                    }
+                }
+
                 td3.passportNumber?.value?.let { passportNum ->
                     if (passportNum.isNotBlank()) {
                         TextItem(
@@ -186,6 +210,20 @@ fun NfcResultScreen(
                             icon = R.drawable.issuing_authurity_icon
                         )
                         Spacer(modifier = Modifier.height(10.dp))
+                    }
+                }
+
+                // Show DOB from MRZ if not already shown from additionalPersonalDetails (DG11)
+                if (travelDocument.additionalPersonalDetails?.fullDateOfBirth == null) {
+                    td3.dateOfBirth?.value?.let { dob ->
+                        if (dob.isNotBlank()) {
+                            TextItem(
+                                label = R.string.birthDate,
+                                value = formatMrzDate(dob),
+                                icon = R.drawable.calendar_icon
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
                     }
                 }
 

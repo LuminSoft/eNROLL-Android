@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.innovatrics.dot.mrz.MachineReadableZone
+import com.innovatrics.dot.nfc.NfcTravelDocumentReader
 import com.innovatrics.dot.nfc.reader.NfcTravelDocumentReaderResult
 import com.innovatrics.dot.nfc.reader.ui.NfcTravelDocumentReaderFragment
 import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
@@ -163,14 +164,15 @@ class NfcReadingViewModel(
      * Retryable NFC failures are allowed up to a limited number of attempts.
      * Non-retryable failures such as invalid MRZ/BAC stop immediately.
      */
-    fun reportNfcAttemptFailure(exception: Exception) {
+    fun reportNfcAttemptFailure(exception: Exception, chipReadingAttempts: Int = 1) {
         val currentState = mutableState.value
         if (currentState.result != null || currentState.nfcError != null) return
 
-        val errorCode = classifyNfcError(exception)
+        val errorCode = classifyNfcError(exception, chipReadingAttempts)
         Log.e(
             "NfcReading",
             "NFC attempt failed. code=$errorCode retryableFailureCount=$retryableFailureCount " +
+                "chipReadingAttempts=$chipReadingAttempts " +
                 "class=${exception.javaClass.name} details=${buildThrowableDebugSummary(exception)}",
             exception,
         )
@@ -213,7 +215,69 @@ class NfcReadingViewModel(
         }
     }
 
-    private fun classifyNfcError(exception: Exception): NfcErrorCode {
+    private fun classifyNfcError(exception: Exception, chipReadingAttempts: Int = 1): NfcErrorCode {
+        val throwableChain = generateSequence(exception as Throwable) { it.cause }.toList()
+
+        // ── Primary: instanceof against Innovatrics exception types ──
+        // AccessControlException = BAC/PACE failure (wrong MRZ / wrong passport).
+        // This MUST be checked first: during internal Innovatrics retries the
+        // access-control failure may appear only as a *cause* inside a
+        // NotConnectedException wrapper when the chip disconnects mid-retry.
+        if (throwableChain.any { it is NfcTravelDocumentReader.AccessControlException }) {
+            return NfcErrorCode.NFCInvalidMRZKey
+        }
+        // ChipAuthenticationException = chip-auth failure; also terminal.
+        if (throwableChain.any { it is NfcTravelDocumentReader.ChipAuthenticationException }) {
+            return NfcErrorCode.NFCInvalidMRZKey
+        }
+
+        // Check DebugInfo on any ReadException in the chain.
+        // Even when the top-level type is a plain ReadException or
+        // NotConnectedException, the DebugInfo may reveal a BAC/PACE failure
+        // that happened before the tag was lost.
+        val readException = throwableChain
+            .filterIsInstance<NfcTravelDocumentReader.ReadException>()
+            .firstOrNull()
+        if (readException != null) {
+            try {
+                val debugInfo = readException.debugInfo
+                val bacTrace = debugInfo?.bacExceptionStackTrace
+                if (!bacTrace.isNullOrBlank()) {
+                    Log.w(
+                        "NfcReading",
+                        "ReadException with BAC failure in DebugInfo – treating as terminal. bacTrace=$bacTrace",
+                    )
+                    return NfcErrorCode.NFCInvalidMRZKey
+                }
+            } catch (e: Exception) {
+                Log.w("NfcReading", "Could not read DebugInfo from ReadException", e)
+            }
+        }
+
+        // ── Repeated-reading detection (wrong-passport pattern) ──
+        // The Innovatrics library retries silently for NotConnectedException
+        // (i2.a = exception instanceof NotConnectedException). When the wrong
+        // passport is tapped, the chip disconnects on every BAC attempt and the
+        // library restarts, calling onReadingStarted() each time the chip is
+        // re-contacted. Multiple reading-start cycles without success means the
+        // chip is present but access control keeps failing at transport level.
+        if (chipReadingAttempts >= 2 &&
+            throwableChain.any { it is NfcTravelDocumentReader.NotConnectedException }
+        ) {
+            Log.w(
+                "NfcReading",
+                "NotConnectedException after $chipReadingAttempts chip-reading attempts " +
+                    "– treating as terminal access-control failure (wrong passport pattern)",
+            )
+            return NfcErrorCode.NFCInvalidMRZKey
+        }
+
+        // NotConnectedException with single reading attempt → genuine transient tag-lost.
+        if (throwableChain.any { it is NfcTravelDocumentReader.NotConnectedException }) {
+            return NfcErrorCode.NFCConnectionError
+        }
+
+        // ── Fallback: string-based classification ──
         val details = buildThrowableDebugSummary(exception)
         val classNames = buildThrowableClassNames(exception)
         return when {
