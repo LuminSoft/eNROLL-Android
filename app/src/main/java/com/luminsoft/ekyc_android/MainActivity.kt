@@ -55,7 +55,6 @@ import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.LocalizationCode
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.EkycStepType
-import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.eNROLL
 import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
@@ -78,23 +77,7 @@ import java.io.File
 
 var dotenv = dotenv {
     directory = "/assets"
-//    filename="env_sleem"
-    filename="env_mariam"
-//    filename="env_local"
-//    filename = "env_andrew"
-//    filename = "env_radwan"
-//    filename = "env_org_1"
-//    filename = "env_support_team"
-//    filename = "env_org2"
-//    filename = "env_azimut_production"
-//    filename = "env_lumin_production"
-//    filename = "env_naspas_production"
-//    filename = "env_naspas_staging"
-//    filename = "env_fra_staging"
-//    filename = "env_test_2"
-//    filename = "env_humat_staging"
-//    filename = "env_org_1_staging"
-//    filename = "env_admin_2"
+    filename = "env_client_demo"
 }
 
 var tenantId = mutableStateOf(TextFieldValue(text = dotenv["TENANT_ID"]))
@@ -110,7 +93,6 @@ var templateId =
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"]?.takeIf { it.isNotEmpty() } ?: "")
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
-var isLocal = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 var selectedExitStepIndex = mutableIntStateOf(0) // 0 = None (no exit step)
@@ -175,7 +157,7 @@ class MainActivity : ComponentActivity() {
             val activity = LocalActivity.current!!
 
             val itemList =
-                listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract")
+                listOf("Onboarding", "Sign Contract")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
             
@@ -257,7 +239,6 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(15.dp))
                         ArabicCheckbox()
                         ProductionCheckbox()
-                        LocalCheckbox()
                     }
                     Row {
                         Spacer(modifier = Modifier.height(15.dp))
@@ -347,23 +328,13 @@ class MainActivity : ComponentActivity() {
             getPreferences(Context.MODE_PRIVATE).edit().clear().apply()
         }
         
-        // Enable local debug mode if checkbox is checked (internal testing only)
-        if (isLocal.value) {
-            EnrollSDK.enableLocalDebugMode()
-        } else {
-            EnrollSDK.disableLocalDebugMode()
-        }
-        
         try {
             eNROLL.init(
                 tenantId = tenantIdText.value.text,
                 tenantSecret = tenantSecretText.value.text,
                 enrollMode = when (selectedIndex) {
                     0 -> EnrollMode.ONBOARDING
-                    1 -> EnrollMode.AUTH
-                    2 -> EnrollMode.UPDATE
-                    3 -> EnrollMode.FORGET_PROFILE_DATA
-                    4 -> EnrollMode.SIGN_CONTRACT
+                    1 -> EnrollMode.SIGN_CONTRACT
                     else -> EnrollMode.ONBOARDING
                 },
                 environment = when {
@@ -600,28 +571,12 @@ fun ProductionCheckbox() {
             checked = isProduction.value,
             onCheckedChange = { isChecked -> 
                 isProduction.value = isChecked
-                if (isChecked) isLocal.value = false
             }
         )
         Text("Production")
     }
 }
 
-@Composable
-fun LocalCheckbox() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = isLocal.value,
-            onCheckedChange = { isChecked -> 
-                isLocal.value = isChecked
-                if (isChecked) isProduction.value = false
-            }
-        )
-        Text("Local")
-    }
-}
 
 @Composable
 fun RememberMeCheckbox() {
