@@ -161,18 +161,28 @@ class NfcReadingViewModel(
 
     /**
      * Called from DefaultNfcTravelDocumentReaderFragment.onFailed().
-     * Retryable NFC failures are allowed up to a limited number of attempts.
+     *
+     * @param chipContactAttempts number of distinct physical chip contacts that
+     *  were observed inside the scan session that just failed. This is the key
+     *  signal that distinguishes:
+     *   - 1 contact  → hold-and-move (chip was present briefly then lost) →
+     *     retryable NFCConnectionError (user may re-tap).
+     *   - 2+ contacts → the chip kept re-appearing while reading failed every
+     *     time → MRZ/NFC mismatch / wrong passport → terminal NFCInvalidMRZKey
+     *     (no retry, reported on the very first user attempt).
+     *
+     * Retryable NFC failures are allowed up to MAX_RETRYABLE_FAILURES attempts.
      * Non-retryable failures such as invalid MRZ/BAC stop immediately.
      */
-    fun reportNfcAttemptFailure(exception: Exception, chipReadingAttempts: Int = 1) {
+    fun reportNfcAttemptFailure(exception: Exception, chipContactAttempts: Int = 1) {
         val currentState = mutableState.value
         if (currentState.result != null || currentState.nfcError != null) return
 
-        val errorCode = classifyNfcError(exception, chipReadingAttempts)
+        val errorCode = classifyNfcError(exception, chipContactAttempts)
         Log.e(
             "NfcReading",
             "NFC attempt failed. code=$errorCode retryableFailureCount=$retryableFailureCount " +
-                "chipReadingAttempts=$chipReadingAttempts " +
+                "chipContactAttempts=$chipContactAttempts " +
                 "class=${exception.javaClass.name} details=${buildThrowableDebugSummary(exception)}",
             exception,
         )
@@ -215,7 +225,17 @@ class NfcReadingViewModel(
         }
     }
 
-    private fun classifyNfcError(exception: Exception, chipReadingAttempts: Int = 1): NfcErrorCode {
+    /**
+     * Classify a failure exception coming from the NFC reader into one of the
+     * five publicly-exposed NfcErrorCode buckets.
+     *
+     * @param chipContactAttempts see [reportNfcAttemptFailure]. When >= 2 and
+     *  the exception is a plain NotConnectedException (no BAC debug info), we
+     *  still classify as NFCInvalidMRZKey because the chip kept re-appearing
+     *  on the antenna while every read failed – the signature of a wrong
+     *  passport whose chip resets itself after each BAC/PACE rejection.
+     */
+    private fun classifyNfcError(exception: Exception, chipContactAttempts: Int = 1): NfcErrorCode {
         val throwableChain = generateSequence(exception as Throwable) { it.cause }.toList()
 
         // ── Primary: instanceof against Innovatrics exception types ──
@@ -254,25 +274,31 @@ class NfcReadingViewModel(
             }
         }
 
-        // ── Repeated-reading detection (wrong-passport pattern) ──
+        // ── Repeated chip-contact detection (wrong-passport pattern) ──
         // The Innovatrics library retries silently for NotConnectedException
         // (i2.a = exception instanceof NotConnectedException). When the wrong
         // passport is tapped, the chip disconnects on every BAC attempt and the
         // library restarts, calling onReadingStarted() each time the chip is
         // re-contacted. Multiple reading-start cycles without success means the
-        // chip is present but access control keeps failing at transport level.
-        if (chipReadingAttempts >= 2 &&
+        // chip is physically present but access control keeps failing at
+        // transport level – classify as terminal NFCInvalidMRZKey (10212).
+        //
+        // Hold-and-move is distinguished here: it produces exactly ONE chip
+        // contact (then the chip is gone), so this branch is NOT taken, and
+        // we fall through to NFCConnectionError which is retryable.
+        if (chipContactAttempts >= 2 &&
             throwableChain.any { it is NfcTravelDocumentReader.NotConnectedException }
         ) {
             Log.w(
                 "NfcReading",
-                "NotConnectedException after $chipReadingAttempts chip-reading attempts " +
+                "NotConnectedException after $chipContactAttempts chip contacts " +
                     "– treating as terminal access-control failure (wrong passport pattern)",
             )
             return NfcErrorCode.NFCInvalidMRZKey
         }
 
-        // NotConnectedException with single reading attempt → genuine transient tag-lost.
+        // NotConnectedException with a single chip contact → genuine
+        // transient tag-lost (hold-and-move). Retryable.
         if (throwableChain.any { it is NfcTravelDocumentReader.NotConnectedException }) {
             return NfcErrorCode.NFCConnectionError
         }

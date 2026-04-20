@@ -54,6 +54,28 @@ fun NfcResultScreen(
     onErrorAcknowledged: (String) -> Unit,
 ) {
     val travelDocument = result.nfcTravelDocumentReaderResult.travelDocument
+    val machineReadableZone = travelDocument.machineReadableZoneInformation?.machineReadableZone
+    val td3 = machineReadableZone?.td3
+    val td2 = machineReadableZone?.td2
+    val td1 = machineReadableZone?.td1
+    val mrzName = td3?.name ?: td2?.name ?: td1?.name
+    val fullNameEn = buildFullName(
+        primary = mrzName?.primaryIdentifier?.value,
+        secondary = mrzName?.secondaryIdentifier?.value,
+    ).ifBlank {
+        buildFullName(
+            primary = travelDocument.additionalPersonalDetails?.nameOfHolder?.primaryIdentifier,
+            secondary = travelDocument.additionalPersonalDetails?.nameOfHolder?.secondaryIdentifier,
+        )
+    }
+    val genderValue = td3?.sex?.value ?: td2?.sex?.value ?: td1?.sex?.value
+    val birthDateValue = td3?.dateOfBirth?.value ?: td2?.dateOfBirth?.value ?: td1?.dateOfBirth?.value
+    val expiryDateValue = td3?.dateOfExpiry?.value ?: td2?.dateOfExpiry?.value ?: td1?.dateOfExpiry?.value
+    val documentNumberValue = td3?.passportNumber?.value ?: td2?.documentNumber?.value ?: td1?.documentNumber?.value
+    val issuingAuthorityValue = travelDocument.additionalDocumentDetails?.issuingAuthority
+    val nationalityValue = td3?.nationality?.value ?: td2?.nationality?.value ?: td1?.nationality?.value
+    val documentCodeValue = td3?.documentCode?.value ?: td2?.documentCode?.value ?: td1?.documentCode?.value
+    val visualZoneValue = machineReadableZone?.lines?.joinToString("\n").orEmpty()
 
     // Show full-screen loading during upload
     if (isUploading) {
@@ -113,177 +135,85 @@ fun NfcResultScreen(
                 }
             }
 
-            // Personal details from NFC chip
-            travelDocument.additionalPersonalDetails?.let { details ->
-                details.nameOfHolder?.let { name ->
-                    name.primaryIdentifier?.let {
-                        TextItem(
-                            label = R.string.nfc_surname,
-                            value = it,
-                            icon = R.drawable.user_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                    name.secondaryIdentifier?.let {
-                        TextItem(
-                            label = R.string.nfc_given_names,
-                            value = it,
-                            icon = R.drawable.user_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
-
-                details.fullDateOfBirth?.let {
-                    TextItem(
-                        label = R.string.birthDate,
-                        value = formatChipDate(it),
-                        icon = R.drawable.calendar_icon
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-
-                details.placeOfBirth?.let { pob ->
-                    if (pob.isNotEmpty()) {
-                        TextItem(
-                            label = R.string.nfc_place_of_birth,
-                            value = pob.joinToString(", "),
-                            icon = R.drawable.address_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
+            if (fullNameEn.isNotBlank()) {
+                TextItem(
+                    label = R.string.nameEn,
+                    value = fullNameEn,
+                    icon = R.drawable.user_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
             }
 
-            // Document details
-            travelDocument.additionalDocumentDetails?.let { details ->
-                details.dateOfIssue?.let {
-                    TextItem(
-                        label = R.string.nfc_date_of_issue,
-                        value = formatChipDate(it),
-                        icon = R.drawable.calendar_icon
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-
-                details.issuingAuthority?.let {
-                    TextItem(
-                        label = R.string.issuingAuthority,
-                        value = it,
-                        icon = R.drawable.issuing_authurity_icon
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
+            birthDateValue?.takeIf { it.isNotBlank() }?.let {
+                TextItem(
+                    label = R.string.birthDate,
+                    value = formatMrzDate(it),
+                    icon = R.drawable.calendar_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
             }
 
-            // MRZ-based document fields (TD3)
-            travelDocument.machineReadableZoneInformation?.machineReadableZone?.td3?.let { td3 ->
-                // Show name from MRZ if not already shown from additionalPersonalDetails (DG11)
-                if (travelDocument.additionalPersonalDetails?.nameOfHolder == null) {
-                    td3.name?.primaryIdentifier?.value?.let { surname ->
-                        if (surname.isNotBlank()) {
-                            TextItem(
-                                label = R.string.nfc_surname,
-                                value = surname.replace('<', ' ').trim(),
-                                icon = R.drawable.user_icon
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                        }
-                    }
-                    td3.name?.secondaryIdentifier?.value?.let { givenNames ->
-                        if (givenNames.isNotBlank()) {
-                            TextItem(
-                                label = R.string.nfc_given_names,
-                                value = givenNames.replace('<', ' ').trim(),
-                                icon = R.drawable.user_icon
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                        }
-                    }
-                }
-
-                td3.passportNumber?.value?.let { passportNum ->
-                    if (passportNum.isNotBlank()) {
-                        TextItem(
-                            label = R.string.passportDocumentNumber,
-                            value = passportNum,
-                            icon = R.drawable.issuing_authurity_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
-
-                // Show DOB from MRZ if not already shown from additionalPersonalDetails (DG11)
-                if (travelDocument.additionalPersonalDetails?.fullDateOfBirth == null) {
-                    td3.dateOfBirth?.value?.let { dob ->
-                        if (dob.isNotBlank()) {
-                            TextItem(
-                                label = R.string.birthDate,
-                                value = formatMrzDate(dob),
-                                icon = R.drawable.calendar_icon
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                        }
-                    }
-                }
-
-                td3.sex?.value?.let { sexValue ->
-                    if (sexValue.isNotBlank()) {
-                        TextItem(
-                            label = R.string.sex,
-                            value = sexValue,
-                            icon = R.drawable.user_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
-
-                td3.dateOfExpiry?.value?.let { expiryDate ->
-                    if (expiryDate.isNotBlank()) {
-                        TextItem(
-                            label = R.string.dateOfExpiry,
-                            value = formatMrzDate(expiryDate),
-                            icon = R.drawable.calendar_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
-
-                td3.nationality?.value?.let { nat ->
-                    if (nat.isNotBlank()) {
-                        TextItem(
-                            label = R.string.nationality,
-                            value = nat,
-                            icon = R.drawable.issuing_authurity_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
+            documentNumberValue?.takeIf { it.isNotBlank() }?.let {
+                TextItem(
+                    label = R.string.passportDocumentNumber,
+                    value = it,
+                    icon = R.drawable.passport_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
             }
 
-            // Additional personal details
-            travelDocument.additionalPersonalDetails?.let { details ->
-                details.otherNames?.let { names ->
-                    if (names.isNotEmpty()) {
-                        TextItem(
-                            label = R.string.nfc_other_names,
-                            value = names.joinToString(", "),
-                            icon = R.drawable.user_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
+            expiryDateValue?.takeIf { it.isNotBlank() }?.let {
+                TextItem(
+                    label = R.string.dateOfExpiry,
+                    value = formatMrzDate(it),
+                    icon = R.drawable.calendar_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
 
-                details.address?.let { addressList ->
-                    if (addressList.isNotEmpty()) {
-                        TextItem(
-                            label = R.string.nfc_address,
-                            value = addressList.joinToString(", "),
-                            icon = R.drawable.address_icon
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                    }
-                }
+            genderValue?.takeIf { it.isNotBlank() }?.let {
+                TextItem(
+                    label = R.string.gender,
+                    value = it,
+                    icon = R.drawable.gender_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            issuingAuthorityValue?.takeIf { it.isNotBlank() }?.let {
+                TextItem(
+                    label = R.string.issuingAuthority,
+                    value = it,
+                    icon = R.drawable.issuing_authurity_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            documentCodeValue?.takeIf { it.isNotBlank() }?.let {
+                TextItem(
+                    label = R.string.documentCode,
+                    value = it,
+                    icon = R.drawable.factory_num_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            nationalityValue?.takeIf { it.isNotBlank() }?.let {
+                TextItem(
+                    label = R.string.nationality,
+                    value = it,
+                    icon = R.drawable.nationality_icon
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            if (visualZoneValue.isNotBlank()) {
+                TextItem(
+                    label = R.string.visualZone,
+                    value = visualZoneValue,
+                    icon = R.drawable.factory_num_icon,
+                    height = 120.0
+                )
             }
         }
 
@@ -309,14 +239,15 @@ fun NfcResultScreen(
 }
 
 @Composable
-private fun TextItem(label: Int, value: String, icon: Int) {
+private fun TextItem(label: Int, value: String, icon: Int, height: Double = 60.0) {
     val fieldIcon = resolveFieldIcon(icon)
     NormalTextField(
         label = ResourceProvider.instance.getStringResource(label),
-        value = TextFieldValue(text = value),
+        value = TextFieldValue(text = getDisplayValue(label, value)),
         onValueChange = { },
         enabled = false,
-        height = 60.0,
+        singleLine = false,
+        height = height,
         icon = {
             Image(
                 resolvedPainter(fieldIcon, icon),
@@ -337,7 +268,7 @@ private fun formatChipDate(raw: String): String {
     val trimmed = raw.trim()
     if (trimmed.length != 8 || !trimmed.all { it.isDigit() }) return raw
     return try {
-        "${trimmed.substring(6, 8)}/${trimmed.substring(4, 6)}/${trimmed.substring(0, 4)}"
+        "${trimmed.substring(6, 8)}-${trimmed.substring(4, 6)}-${trimmed.substring(0, 4)}"
     } catch (_: Exception) {
         raw
     }
@@ -356,9 +287,28 @@ private fun formatMrzDate(raw: String): String {
         val dd = trimmed.substring(4, 6)
         val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) % 100
         val century = if (yy <= currentYear + 10) "20" else "19"
-        "$dd/$mm/$century${trimmed.substring(0, 2)}"
+        "$dd-$mm-$century${trimmed.substring(0, 2)}"
     } catch (_: Exception) {
         raw
+    }
+}
+
+private fun buildFullName(primary: String?, secondary: String?): String {
+    return listOf(primary, secondary)
+        .mapNotNull { it?.replace('<', ' ')?.trim()?.replace(Regex("\\s+"), " ") }
+        .filter { it.isNotBlank() }
+        .joinToString(" ")
+}
+
+private fun getDisplayValue(label: Int, value: String): String {
+    return if (label == R.string.gender) {
+        when (value.trim().uppercase()) {
+            "M" -> ResourceProvider.instance.getStringResource(R.string.male)
+            "F" -> ResourceProvider.instance.getStringResource(R.string.female)
+            else -> value
+        }
+    } else {
+        value
     }
 }
 
