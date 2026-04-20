@@ -76,6 +76,7 @@
             android:name="com.luminsoft.enroll_sdk.innovitices.activities.EPassportActivity"
             android:configChanges="locale|orientation|keyboardHidden|screenSize"
             android:label="@string/epassport"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light" />
 
         <activity
