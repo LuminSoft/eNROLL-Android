@@ -20,6 +20,8 @@ import kotlinx.coroutines.launch
 
 class PasswordCaptureFragment : DocumentAutoCaptureFragment() {
 
+    private var isCameraStarted = false
+
     private val dotSdkViewModel: DotSdkViewModel by activityViewModels { DotSdkViewModelFactory(requireActivity().application) }
     private val nfcReadingViewModel: NfcReadingViewModel by activityViewModels { NfcReadingViewModelFactory(requireActivity().application) }
 
@@ -29,13 +31,36 @@ class PasswordCaptureFragment : DocumentAutoCaptureFragment() {
         setupNfcReadingViewModel()
     }
 
+    override fun onDestroyView() {
+        stopCameraIfNeeded()
+        super.onDestroyView()
+    }
+
+    private fun startCameraIfNeeded() {
+        if (!isCameraStarted) {
+            isCameraStarted = true
+            start()
+        }
+    }
+
+    private fun stopCameraIfNeeded() {
+        if (isCameraStarted) {
+            isCameraStarted = false
+            try { stop() } catch (_: Exception) {}
+        }
+    }
+
     private fun setupDotSdkViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-                dotSdkViewModel.state.collectLatest { state ->
-                    if (state.isInitialized) {
-                        start()
+                try {
+                    dotSdkViewModel.state.collectLatest { state ->
+                        if (state.isInitialized) {
+                            startCameraIfNeeded()
+                        }
                     }
+                } finally {
+                    stopCameraIfNeeded()
                 }
             }
         }

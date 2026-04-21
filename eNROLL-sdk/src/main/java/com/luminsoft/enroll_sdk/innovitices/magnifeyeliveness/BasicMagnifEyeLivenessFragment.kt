@@ -19,6 +19,8 @@ import kotlinx.coroutines.launch
 
 class BasicMagnifEyeLivenessFragment : MagnifEyeLivenessFragment() {
 
+    private var isCameraStarted = false
+
     private val mainViewModel: MainViewModel by activityViewModels()
     private val dotSdkViewModel: DotSdkViewModel by activityViewModels {
         DotSdkViewModelFactory(
@@ -37,17 +39,40 @@ class BasicMagnifEyeLivenessFragment : MagnifEyeLivenessFragment() {
         return Configuration()
     }
 
+    override fun onDestroyView() {
+        stopCameraIfNeeded()
+        super.onDestroyView()
+    }
+
+    private fun startCameraIfNeeded() {
+        if (!isCameraStarted) {
+            isCameraStarted = true
+            start()
+        }
+    }
+
+    private fun stopCameraIfNeeded() {
+        if (isCameraStarted) {
+            isCameraStarted = false
+            try { stop() } catch (_: Exception) {}
+        }
+    }
+
     private fun setupDotSdkViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                dotSdkViewModel.state.collect { state ->
-                    if (state.isInitialized) {
-                        start()
+                try {
+                    dotSdkViewModel.state.collect { state ->
+                        if (state.isInitialized) {
+                            startCameraIfNeeded()
+                        }
+                        state.errorMessage?.let {
+                            Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                            dotSdkViewModel.notifyErrorMessageShown()
+                        }
                     }
-                    state.errorMessage?.let {
-                        Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
-                        dotSdkViewModel.notifyErrorMessageShown()
-                    }
+                } finally {
+                    stopCameraIfNeeded()
                 }
             }
         }

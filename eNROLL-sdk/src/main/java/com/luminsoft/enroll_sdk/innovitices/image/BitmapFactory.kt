@@ -16,9 +16,14 @@ fun Image.createBitmap(): Bitmap? {
 
 private fun createBitmapFromJpeg2000(bytes: ByteArray): Bitmap? {
     return try {
-        val bitmap = JP2Decoder(bytes).decode()
-        Log.d("NfcImage", "JP2 decode succeeded: ${bitmap.width}x${bitmap.height}")
-        bitmap
+        val bitmap: Bitmap? = JP2Decoder(bytes).decode()
+        if (bitmap != null) {
+            Log.d("NfcImage", "JP2 decode succeeded: ${bitmap.width}x${bitmap.height}")
+            bitmap
+        } else {
+            Log.w("NfcImage", "JP2 decode returned null, trying standard decoder")
+            android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        }
     } catch (e: Exception) {
         Log.e("NfcImage", "JP2 decode failed, trying standard decoder", e)
         android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
