@@ -1,13 +1,17 @@
 package com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,6 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -185,36 +191,48 @@ fun SignContractScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
+                    .navigationBarsPadding()
+                    .imePadding()
+                    .padding(bottom = 16.dp)
 
             ) {
-                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 val images = listOf(
                     R.drawable.validate_sms_otp_1,
                     R.drawable.validate_sms_otp_2,
                     R.drawable.validate_sms_otp_3,
                 )
-                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
-                Spacer(modifier = Modifier.fillMaxHeight(0.07f))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.22f))
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.otpSendTo),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = 10.sp,
-                        color = MaterialTheme.appColors.textColor
+                        color = MaterialTheme.appColors.textColor,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         phoneNumber.value!!,
                         fontSize = 12.sp,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        color = MaterialTheme.appColors.secondary
+                        color = MaterialTheme.appColors.secondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(0.85f)
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
@@ -224,19 +242,26 @@ fun SignContractScreenContent(
                     )
                 }
                 Spacer(modifier = Modifier.height(15.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f)
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
+                        maxLines = 1
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -256,7 +281,7 @@ fun SignContractScreenContent(
                             }
 
                     )
-                Spacer(modifier = Modifier.fillMaxHeight(0.35f))
+                Spacer(modifier = Modifier.weight(1f))
                 ButtonView(
                     onClick = {
                         signContractOTPViewModel.callValidateOtp(otpValue.value)
