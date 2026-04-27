@@ -6,13 +6,17 @@ import GetDefaultEmailUseCase
 import MailSendOTPUseCase
 import ValidateOtpMailUseCase
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,6 +38,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -159,29 +165,38 @@ fun ForgetPasswordAuthScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
+                    .navigationBarsPadding()
+                    .imePadding()
+                    .padding(bottom = 16.dp)
 
             ) {
-                Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+                Spacer(modifier = Modifier.height(8.dp))
                 val images = listOf(
                     R.drawable.validate_mail_otp_1,
                     R.drawable.validate_mail_otp_2,
                     R.drawable.validate_mail_otp_3
                 )
-                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.25f))
-                Spacer(modifier = Modifier.fillMaxHeight(0.07f))
+                ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.22f))
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = stringResource(id = R.string.emailOtpGuideWithMailVariable),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.textColor,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Text(
                     text = forgetPasswordViewModel.defaultMailValue.value,
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.secondary,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
@@ -191,24 +206,31 @@ fun ForgetPasswordAuthScreenContent(
                     )
                 }
                 Spacer(modifier = Modifier.height(15.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f)
                     )
                     Timer(ticksF, ticks)
                     Text(
                         text = stringResource(id = R.string.second),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
+                        maxLines = 1
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Spacer(modifier = Modifier.fillMaxHeight(0.35f))
+                Spacer(modifier = Modifier.weight(1f))
                 ButtonView(
                     onClick = {
                         forgetPasswordViewModel.callValidateOtp(otpValue.value, navController)
