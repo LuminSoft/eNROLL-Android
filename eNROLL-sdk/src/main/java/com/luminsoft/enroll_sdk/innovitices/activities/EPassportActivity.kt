@@ -1,18 +1,12 @@
 package com.luminsoft.enroll_sdk.innovitices.activities
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.content.res.Configuration
 import android.nfc.NfcAdapter
-import android.nfc.Tag
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.innovatrics.dot.nfc.reader.ui.NfcTravelDocumentReaderFragment
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
@@ -35,7 +29,6 @@ class EPassportActivity : AppCompatActivity() {
     private val nfcReadingViewModel: NfcReadingViewModel by viewModels { NfcReadingViewModelFactory(application) }
 
     private var nfcAdapter: NfcAdapter? = null
-    private var nfcPendingIntent: PendingIntent? = null
     private val readerModeFlags =
         NfcAdapter.FLAG_READER_NFC_A or
             NfcAdapter.FLAG_READER_NFC_B or
@@ -44,7 +37,10 @@ class EPassportActivity : AppCompatActivity() {
 
     private val readerModeCallback = NfcAdapter.ReaderCallback { tag ->
         runOnUiThread {
-            dispatchReaderModeTag(tag)
+            val syntheticIntent = Intent(NfcAdapter.ACTION_TECH_DISCOVERED).apply {
+                putExtra(NfcAdapter.EXTRA_TAG, tag)
+            }
+            onNewIntent(syntheticIntent)
         }
     }
 
@@ -70,16 +66,6 @@ class EPassportActivity : AppCompatActivity() {
         setContentView(R.layout.activity_epassport)
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
-        }
-        nfcPendingIntent = PendingIntent.getActivity(
-            this, 0,
-            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-            flags
-        )
     }
 
     override fun onResume() {
@@ -92,13 +78,11 @@ class EPassportActivity : AppCompatActivity() {
                 putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 100)
             },
         )
-        nfcAdapter?.enableForegroundDispatch(this, nfcPendingIntent, null, null)
     }
 
     override fun onPause() {
         super.onPause()
         nfcAdapter?.disableReaderMode(this)
-        nfcAdapter?.disableForegroundDispatch(this)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -111,54 +95,4 @@ class EPassportActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    private fun dispatchReaderModeTag(tag: Tag) {
-        val readerFragment = findActiveReaderFragment()
-        if (readerFragment == null) {
-            Log.w(TAG, "Reader mode detected a tag but no active NFC reader fragment was found")
-            return
-        }
-
-        try {
-            val syntheticIntent = Intent(NfcAdapter.ACTION_TECH_DISCOVERED).apply {
-                putExtra(NfcAdapter.EXTRA_TAG, tag)
-            }
-            val receiverField =
-                NfcTravelDocumentReaderFragment::class.java.getDeclaredField("nfcTagReceiver")
-            receiverField.isAccessible = true
-            val receiver = receiverField.get(readerFragment) ?: run {
-                Log.w(TAG, "Reader mode tag ignored because Innovatrics receiver is not ready yet")
-                return
-            }
-            val deliverMethod =
-                receiver.javaClass.getDeclaredMethod("a", receiver.javaClass, Intent::class.java)
-            deliverMethod.isAccessible = true
-            deliverMethod.invoke(null, receiver, syntheticIntent)
-        } catch (exception: Exception) {
-            Log.e(TAG, "Failed to forward reader mode tag to Innovatrics NFC fragment", exception)
-        }
-    }
-
-    private fun findActiveReaderFragment(): NfcTravelDocumentReaderFragment? =
-        supportFragmentManager.findActiveReaderFragment()
-
-    private fun Fragment.findActiveReaderFragment(): NfcTravelDocumentReaderFragment? {
-        if (this is NfcTravelDocumentReaderFragment && isAdded) {
-            return this
-        }
-
-        childFragmentManager.fragments.reversed().forEach { child ->
-            child.findActiveReaderFragment()?.let { return it }
-        }
-
-        return null
-    }
-
-    private fun androidx.fragment.app.FragmentManager.findActiveReaderFragment():
-        NfcTravelDocumentReaderFragment? {
-        fragments.reversed().forEach { fragment ->
-            fragment.findActiveReaderFragment()?.let { return it }
-        }
-
-        return null
-    }
 }
