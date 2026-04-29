@@ -58,8 +58,26 @@ class NfcReadingViewModel(
             passportImage?.recycle()
             passportImage = null
         }
-        retryableFailureCount = 0
-        
+        // NOTE: retryableFailureCount is intentionally NOT reset here.
+        //
+        // initializeState() is called on every entry into the NFC flow –
+        // both at PasswordCaptureFragment.setupNfcReadingViewModel() and at
+        // NfcReadingFragment.goBackToPassportScan() (when the user dismisses
+        // a retryable-error dialog). Resetting the counter on those paths
+        // makes the MAX_RETRYABLE_FAILURES cap unreachable: each user
+        // re-tap clears the budget back to 0, so terminal verdict never
+        // fires and the user can retry indefinitely on a chip whose data
+        // is corrupt (Innovatrics dot-nfc 9.0.2 LDS NPE pattern, field log
+        // 2026-04-29 16:24:13–16:25:05).
+        //
+        // The counter resets correctly on the genuine "fresh budget" cases:
+        //  - process(): on a successful read (resets to 0).
+        //  - VM destruction: when the EPassportActivity is finished, the
+        //    by-activityViewModels VM is GC'd and a new instance starts
+        //    naturally at 0 for the next enrollment.
+        // Within a single enrollment attempt, every user-visible retry
+        // must consume the same four-retry budget.
+
         mutableState.update {
             it.copy(
                 result = null,

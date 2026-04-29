@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.innovitices.nfcreading
 
+import android.os.SystemClock
 import android.util.Log
 import androidx.fragment.app.activityViewModels
 import com.innovatrics.dot.nfc.NfcTravelDocumentReader
@@ -81,6 +82,27 @@ class DefaultNfcTravelDocumentReaderFragment : NfcTravelDocumentReaderFragment()
      */
     private var terminalReported: Boolean = false
 
+    /**
+     * Wall-clock time (SystemClock.elapsedRealtime) of the most recent
+     * SEARCHING → READING transition (chip contact #1). Used by the
+     * wrong-passport heuristic in [onReadingStarted] to distinguish the
+     * two patterns that both produce `chipContactAttempts >= 2`:
+     *
+     *  - Wrong passport: the chip never physically leaves the antenna; the
+     *    Innovatrics library detects the BAC failure internally and re-enters
+     *    search in milliseconds, then fires onReadingStarted again very
+     *    shortly after. The full #1 → #2 cycle is well under
+     *    [MIN_HUMAN_REMOVAL_MS] in observed runs (~40 ms in the field log).
+     *  - Hold-and-move: the user physically lifts the phone, the library
+     *    fires onSearchingStarted as the tag goes out of range, the user
+     *    repositions and re-taps. Even a fast user takes several hundred
+     *    milliseconds for this; observed minimum in real testing is well
+     *    above [MIN_HUMAN_REMOVAL_MS].
+     *
+     * 0 means "no contact #1 timestamp yet" (also reset by [resetSessionCounters]).
+     */
+    private var firstChipContactAtMs: Long = 0L
+
     override fun provideConfiguration(): Configuration {
         return nfcReadingViewModel.state.value.configuration!!
     }
@@ -147,10 +169,17 @@ class DefaultNfcTravelDocumentReaderFragment : NfcTravelDocumentReaderFragment()
         }
 
         chipContactAttempts++
+        val nowMs = SystemClock.elapsedRealtime()
+        val msSinceFirstContact = if (firstChipContactAtMs == 0L) 0L
+            else nowMs - firstChipContactAtMs
+        if (chipContactAttempts == 1) {
+            firstChipContactAtMs = nowMs
+        }
         Log.d(
             "NfcReading",
             "onReadingStarted – chip contact #$chipContactAttempts " +
-                "(files=$numberOfElementaryFiles, bacOk=$bacSucceededAtLeastOnce)",
+                "(files=$numberOfElementaryFiles, bacOk=$bacSucceededAtLeastOnce, " +
+                "msSinceFirstContact=$msSinceFirstContact)",
         )
         if (bacJustSucceededThisCallback) {
             Log.i(
@@ -159,27 +188,125 @@ class DefaultNfcTravelDocumentReaderFragment : NfcTravelDocumentReaderFragment()
             )
         }
 
-        // Wrong-passport detection – fires ONLY when BOTH conditions hold:
+        // Wrong-passport detection – fires ONLY when ALL THREE conditions hold:
         //  1. The chip has physically re-appeared at the antenna
         //     (chipContactAttempts >= 2), AND
-        //  2. BAC has NEVER succeeded in this session (bacSucceededAtLeastOnce
-        //     is false).
+        //  2. BAC has NEVER succeeded in this session
+        //     (!bacSucceededAtLeastOnce), AND
+        //  3. The contact-#1 → contact-#2 cycle completed faster than a
+        //     human can physically lift the phone and re-tap
+        //     (msSinceFirstContact < MIN_HUMAN_REMOVAL_MS).
         //
-        // Condition 1 alone is not enough: on a CORRECT passport the user may
-        // tap, move away mid-read (triggering onSearchingStarted restart and
-        // then another onReadingStarted when re-tapping) – firing terminal
-        // 10212 there would be a false positive. The extra !bacSucceededAtLeastOnce
-        // gate ensures we only call it a mismatch when the key has demonstrably
-        // never opened the chip in this session.
-        if (chipContactAttempts >= 2 && !bacSucceededAtLeastOnce) {
+        // Why all three are required:
+        //  * (1) alone fires false positives whenever the user moves the phone
+        //    mid-read on a CORRECT passport.
+        //  * (1)+(2) (the previous gate) still false-fires on hold-and-move
+        //    BEFORE BAC ever succeeded, because the JMRTD/Innovatrics readers
+        //    surface BAC success only after the first elementary file is read –
+        //    if the user moves during PACE/BAC there is no `bacSucceededAtLeastOnce`
+        //    latch yet, and #2 looks identical to a wrong-passport re-tap from
+        //    just these two flags.
+        //  * (3) is the deciding signal. The Innovatrics library's internal
+        //    BAC retry on a SAME chip that doesn't open with the supplied
+        //    MRZ key is a millisecond-scale loop – the search restart in field
+        //    logs lands ~40 ms after the failing onReadingStarted, and
+        //    onReadingStarted #2 lands ~40 ms after that. By contrast, the
+        //    fastest human "move and re-tap" cycle is several hundred
+        //    milliseconds (>1 s in typical use). MIN_HUMAN_REMOVAL_MS sits
+        //    comfortably between the two regimes.
+        //
+        // Net effect on user-visible behaviour:
+        //  * Wrong passport (chip stays at antenna, BAC fails internally):
+        //    terminal NFCInvalidMRZKey (10212) on contact #2 – first user
+        //    attempt, no retry. (Production parity preserved.)
+        //  * Hold-and-move on a CORRECT passport: heuristic skipped,
+        //    `chipContactAttempts` keeps growing as the user re-taps; the
+        //    Innovatrics library will eventually surface a real failure
+        //    through onFailed, which the viewmodel classifier handles with
+        //    its own MAX_RETRYABLE_FAILURES cap. (Bug fix.)
+        if (chipContactAttempts >= 2 &&
+            !bacSucceededAtLeastOnce &&
+            msSinceFirstContact in 1 until MIN_HUMAN_REMOVAL_MS
+        ) {
             Log.w(
                 "NfcReading",
                 "Chip re-contacted $chipContactAttempts× with BAC never succeeding " +
-                    "– MRZ/NFC mismatch detected, reporting terminal NFCInvalidMRZKey (10212)",
+                    "in ${msSinceFirstContact}ms (< ${MIN_HUMAN_REMOVAL_MS}ms human-removal " +
+                    "threshold) – MRZ/NFC mismatch detected, reporting terminal " +
+                    "NFCInvalidMRZKey (10212)",
             )
             terminalReported = true
             resetSessionCounters()
             nfcReadingViewModel.setNfcError(Exception("access control failed"))
+            return
+        }
+        if (chipContactAttempts >= 2 && !bacSucceededAtLeastOnce) {
+            Log.d(
+                "NfcReading",
+                "Chip re-contacted $chipContactAttempts× after ${msSinceFirstContact}ms " +
+                    "(>= ${MIN_HUMAN_REMOVAL_MS}ms) – treating as hold-and-move retry, " +
+                    "letting the reader run again",
+            )
+        }
+
+        // Hard cap on chip-contact retries within a single scan session.
+        //
+        // Two distinct silent-loop patterns require this cap, because in both
+        // the Innovatrics library (dot-nfc 9.0.2) keeps ping-ponging
+        // onSearchingStarted ↔ onReadingStarted forever and never calls
+        // onSucceeded or onFailed:
+        //
+        //  (A) BAC never succeeded (!bacSucceededAtLeastOnce):
+        //      Wrong passport tapped slowly, demagnetised chip, faulty
+        //      antenna alignment, etc. The library retries BAC every time the
+        //      chip reappears. The user sees no feedback until the library's
+        //      own 60-second scan timeout, then gets a generic
+        //      NFCTimeOutError (10211) that doesn't explain the real cause.
+        //      Field log 2026-04-29 16:24:13–16:25:05.
+        //
+        //  (B) BAC succeeded but the LDS read never completes
+        //      (bacSucceededAtLeastOnce). Hold-and-move on a correct passport
+        //      where the chip is lost mid-read every time, or the chip data
+        //      is corrupt and triggers an internal exception that the library
+        //      swallows. The earlier KDoc here assumed the library would
+        //      surface the error via onFailed eventually; field log
+        //      2026-04-29 16:40:13–16:41:47 disproves that – six chip
+        //      contacts over 90 s, BAC succeeded twice, no onFailed ever
+        //      fired, no dialog ever appeared, user gave up manually.
+        //
+        // Both patterns are bounded by the same MAX_HOLD_AND_MOVE_RETRIES
+        // budget. The terminal exception message routes the failure to the
+        // appropriate NfcErrorCode bucket via classifyNfcError's fallback:
+        //
+        //  - (A) "hold-and-move retry budget exhausted" → NFCGeneralError
+        //    (10209). The user sees the generic "couldn't read passport"
+        //    dialog – correct, since at this point we cannot tell wrong
+        //    passport from antenna failure with high confidence.
+        //  - (B) "post-BAC retry budget exhausted" → NFCGeneralError (10209).
+        //    Same dialog – BAC matched the MRZ so the passport is the right
+        //    one, but the chip read could not complete.
+        //
+        // The cap value matches the dev-lumin JMRTD branch's
+        // MAX_RETRYABLE_FAILURES = 4, so user-visible retry behaviour is
+        // consistent across the two NFC backends.
+        if (chipContactAttempts > MAX_HOLD_AND_MOVE_RETRIES) {
+            val terminalMessage = if (bacSucceededAtLeastOnce) {
+                "post-BAC retry budget exhausted"
+            } else {
+                "hold-and-move retry budget exhausted"
+            }
+            Log.w(
+                "NfcReading",
+                "Chip-contact retry budget exhausted (chipContactAttempts=" +
+                    "$chipContactAttempts > $MAX_HOLD_AND_MOVE_RETRIES retries, " +
+                    "bacOk=$bacSucceededAtLeastOnce) – reporting terminal " +
+                    "NFCGeneralError (10209) to avoid the Innovatrics library's " +
+                    "silent ping-pong loop. terminalMessage=$terminalMessage",
+            )
+            terminalReported = true
+            resetSessionCounters()
+            nfcReadingViewModel.setNfcError(Exception(terminalMessage))
+            return
         }
     }
 
@@ -254,9 +381,65 @@ class DefaultNfcTravelDocumentReaderFragment : NfcTravelDocumentReaderFragment()
         phase = ReaderPhase.IDLE
         chipContactAttempts = 0
         searchRestartCount = 0
+        firstChipContactAtMs = 0L
         // NOTE: terminalReported is intentionally NOT reset here. Once a
         // terminal verdict has been reported the Innovatrics reader is still
         // alive under the error dialog and must continue to be ignored until
         // the fragment is destroyed.
+    }
+
+    companion object {
+        /**
+         * Minimum elapsed time (ms) between chip contact #1 and chip contact #2
+         * that we will accept as evidence of a HUMAN move-and-re-tap cycle on a
+         * correct passport, rather than the Innovatrics library's internal
+         * BAC-retry loop on a wrong passport.
+         *
+         * Empirical anchors (Samsung S22 / dot-nfc 9.0.2, see field log
+         * 2026-04-29 15:33–34 for the original wrong-passport regression):
+         *  * Library-internal BAC retry cycle: ~40 ms
+         *    (onReadingStarted → onSearchingStarted ≈ 37 ms,
+         *     onSearchingStarted → next onReadingStarted ≈ 1.2 s in that
+         *     specific log because the user was holding the device away – the
+         *     pure library cycle is ~40 ms when the chip stays at the
+         *     antenna).
+         *  * Fastest observed human re-tap on a correct passport: ~700 ms.
+         *
+         * 500 ms gives a comfortable margin on both sides. If a future
+         * device/library version closes this gap, raise the constant; do NOT
+         * lower it – false positives here are user-visible terminal failures.
+         */
+        private const val MIN_HUMAN_REMOVAL_MS: Long = 500L
+
+        /**
+         * Maximum number of hold-and-move retries the Innovatrics path will
+         * accept while BAC has NEVER succeeded in the current session.
+         *
+         * Mirrors `MAX_RETRYABLE_FAILURES = 4` in the dev-lumin branch's
+         * `NfcReadingViewModel.classifyNfcError`, but with an unavoidable
+         * one-event offset because the two paths surface failures
+         * differently:
+         *  - JMRTD/dev-lumin: per-attempt `onFailed` allows the classifier
+         *    to count failures and upgrade the *next* attempt to terminal
+         *    on its failure event.
+         *  - Innovatrics: there is no per-attempt failure event, only
+         *    `onReadingStarted` for the next contact. Terminal therefore
+         *    has to fire at the START of the next contact, before that
+         *    contact gets a chance to run.
+         *
+         * `chipContactAttempts > MAX_HOLD_AND_MOVE_RETRIES = 4` triggers
+         * the terminal:
+         *  - Contact #1 (initial) and contacts #2..#4 (three real retries
+         *    where BAC actually gets to run) are allowed.
+         *  - Contact #5 enters `onReadingStarted` and is immediately
+         *    upgraded to terminal NFCInvalidMRZKey (10212).
+         *
+         * This is a deliberate trade-off vs the field log
+         * (2026-04-29 16:09:00–16:09:54) where the user re-tapped four
+         * times and then waited ~35 s for the library's own 60 s timeout
+         * to fire NFCTimeOutError (10211). Sacrificing one nominal retry
+         * is preferable to that long silent wait.
+         */
+        private const val MAX_HOLD_AND_MOVE_RETRIES: Int = 4
     }
 }
