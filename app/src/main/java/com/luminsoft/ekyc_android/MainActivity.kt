@@ -428,67 +428,36 @@ class MainActivity : ComponentActivity() {
 //
 //                        location = LocationIcons(
 //                            tutorial = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
-//                                renderingMode = IconRenderingMode.ORIGINAL
-//                            ),
-//                            requestAccess = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
-//                                renderingMode = IconRenderingMode.ORIGINAL
-//                            ),
-//                            accessError = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
-//                                renderingMode = IconRenderingMode.TEMPLATE
-//
-//                            ),
-//
-//                        ),
-//                        nationalId = NationalIdIcons(
-//                            tutorial = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
-//                                renderingMode = IconRenderingMode.ORIGINAL
-//                            ),
-//                            choose = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
-//                                renderingMode = IconRenderingMode.ORIGINAL
-//
-//                            ),
-//                            tutorialIdOrPassport = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                source = IconSource.Resource(R.drawable.sample_face_icon),
 //                                renderingMode = IconRenderingMode.ORIGINAL
 //                            ),
 //                            preScan = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                source = IconSource.Resource(R.drawable.sample_face_icon),
 //                                renderingMode = IconRenderingMode.ORIGINAL
 //                            ),
 //                        ),
-////                        faceMatching = FaceMatchingIcons(
-////                            tutorial = StepIcon(
-////                                source = IconSource.Resource(R.drawable.sample_face_icon),
-////                                renderingMode = IconRenderingMode.ORIGINAL
-////                            ),
-////                            preScan = StepIcon(
-////                                source = IconSource.Resource(R.drawable.sample_face_icon),
-////                                renderingMode = IconRenderingMode.ORIGINAL
-////                            ),
-////                        ),
-////                        phone = PhoneIcons(
-////                            tutorial = StepIcon(
-////                                source = IconSource.Resource(R.drawable.sample_mobile_icon),
-////                                renderingMode = IconRenderingMode.ORIGINAL
-////                            ),
-////                        ),
-//
-//                        common = CommonIcons(
-//                            termsAndConditions = StepIcon(
-//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                        phone = PhoneIcons(
+//                            tutorial = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_mobile_icon),
 //                                renderingMode = IconRenderingMode.ORIGINAL
 //                            ),
-//                            fieldIcons = FieldIcons(
-//
-//                            )
-//                        )
-//                    )
-//                )
+//                        ),
+
+                        common = CommonIcons(
+                            termsAndConditions = StepIcon(
+                                source = IconSource.Resource(R.drawable.sample_location_icon),
+                                renderingMode = IconRenderingMode.ORIGINAL
+                            ),
+                            fieldIcons = FieldIcons(
+
+
+                                user = StepIcon(
+                                    source = IconSource.Resource(R.drawable.sample_location_icon),
+                                    renderingMode = IconRenderingMode.TEMPLATE)
+                            )
+                        )
+                    )
+                )
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
