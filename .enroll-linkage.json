@@ -1,0 +1,136 @@
+{
+  "projectName": "eNROLL Android SDK",
+  "projectType": "native-android-sdk",
+  "productLines": {
+    "enroll": {
+      "branch": "release/production",
+      "androidArtifact": "com.github.LuminSoft:eNROLL-Android",
+      "androidVersion": "v1.5.24",
+      "iosDistribution": "pod",
+      "iosPodName": "EnrollFramework",
+      "iosPodVersion": "~> 3.0.7",
+      "usesInnovatrics": true,
+      "innovatricsVersion": "9.0.2",
+      "nativeModules": [
+        "check_aml",
+        "check_cso",
+        "check_ntra",
+        "device_data",
+        "electronic_signature",
+        "email",
+        "face_capture",
+        "location",
+        "national_id_confirmation",
+        "phone_numbers",
+        "security_questions",
+        "setting_password",
+        "terms_and_conditions"
+      ],
+      "nativeModes": ["onboarding", "auth", "update", "forgetProfileData", "signContract"],
+      "nativeApiFeatures": [
+        "theming",
+        "iconCustomization",
+        "localization",
+        "forcedDocumentType",
+        "exitStep",
+        "correlationId",
+        "skipTutorial",
+        "requestIdTracking",
+        "contractSigning",
+        "callbacks"
+      ],
+      "relatedPlugins": [
+        {
+          "name": "enroll_flutter_plugin",
+          "path": "/Users/luminsoft/StudioProjects/enroll_flutter_plugin",
+          "type": "flutter-plugin"
+        },
+        {
+          "name": "enroll-react-native",
+          "path": "/Users/luminsoft/StudioProjects/enroll-react-native",
+          "type": "react-native-plugin"
+        },
+        {
+          "name": "enroll-capacitor",
+          "path": "/Users/luminsoft/StudioProjects/enroll-capacitor",
+          "type": "capacitor-plugin"
+        }
+      ]
+    },
+    "enroll-neo": {
+      "branch": "development-lumin-sdk",
+      "androidArtifact": "com.github.LuminSoft:eNROLL-Lite-Android",
+      "androidVersion": "v1.3.2",
+      "iosDistribution": "xcframework",
+      "iosXcframeworkName": "EnrollFramework.xcframework",
+      "iosCorePod": "EnrollNeoCore",
+      "iosCorePodVersion": "1.0.17",
+      "usesInnovatrics": false,
+      "ocrDependency": "com.github.LuminSoft:Lumin-OCR:0.0.40",
+      "nativeModules": [
+        "check_aml",
+        "check_cso",
+        "check_ntra",
+        "cso_confirmation",
+        "device_data",
+        "electronic_signature",
+        "email",
+        "epassport",
+        "face_capture",
+        "location",
+        "national_id_confirmation",
+        "phone_numbers",
+        "security_questions",
+        "setting_password",
+        "terms_and_conditions"
+      ],
+      "nativeModes": ["onboarding", "auth", "update", "forgetProfileData", "signContract"],
+      "nativeApiFeatures": [
+        "theming",
+        "iconCustomization",
+        "localization",
+        "forcedDocumentType",
+        "exitStep",
+        "correlationId",
+        "skipTutorial",
+        "requestIdTracking",
+        "contractSigning",
+        "callbacks"
+      ],
+      "relatedPlugins": [
+        {
+          "name": "enroll_neo_plugin",
+          "path": "/Users/luminsoft/StudioProjects/enroll_neo_plugin",
+          "type": "flutter-plugin"
+        },
+        {
+          "name": "enroll-neo-react-native",
+          "path": "/Users/luminsoft/StudioProjects/enroll-neo-react-native",
+          "type": "react-native-plugin"
+        },
+        {
+          "name": "enroll-capacitor-neo",
+          "path": "/Users/luminsoft/StudioProjects/enroll-capacitor-neo",
+          "type": "capacitor-plugin"
+        }
+      ]
+    }
+  },
+  "docs": {
+    "files": [
+      "README.md",
+      "CHANGELOG.md",
+      "ARCHITECTURE.md",
+      "ICON_CUSTOMIZATION.md",
+      "PROJECT_RULES.md",
+      "RELEASE_PROCESS.md",
+      "ENROLL_LINKAGE.md"
+    ]
+  },
+  "workflowCommands": {
+    "checkNativeToFlutter": "/check-native-to-flutter",
+    "copyFlutterToSiblingPlugins": "/copy-flutter-to-sibling-plugins",
+    "checkSync": "bash /Users/luminsoft/StudioProjects/ekyc-android/scripts/check-enroll-sync.sh"
+  },
+  "lastVerifiedAt": "2026-05-17T17:06:00Z"
+}
