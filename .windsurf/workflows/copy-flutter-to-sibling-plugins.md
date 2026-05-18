@@ -53,10 +53,14 @@ Use this workflow after a Flutter plugin implementation is confirmed complete, t
      - Verify XCFramework paths are correct in the podspec
      - Confirm copied XCFramework MD5 matches Flutter Neo's
 
-8. **Update docs** in sibling plugins:
-   - Update `CHANGELOG.md` with mirrored changes
-   - Update `docs/api.md` if API types changed
-   - Update `ENROLL_LINKAGE.md` if features or versions changed
+8. **Update docs in all affected sibling plugins** (required — a copied feature is NOT complete until code AND docs are updated):
+   - `README.md` — update install sections, config tables, modes list, usage examples, SDK version strings
+   - TypeScript/API docs (`src/types.ts`, `docs/api.md`, `src/definitions.ts`) — update parameter tables, type definitions, enum values
+   - Example usage — update example app code if new params/modes were added
+   - `CHANGELOG.md` / release notes — add entry for mirrored changes
+   - `ENROLL_LINKAGE.md` — update feature lists, version references
+   - `.enroll-linkage.json` → `docs.missingDocsForFeatures` — clear resolved items, add any remaining gaps
+   - For Neo: if XCFramework version/path changed, document the new version in both sibling plugin README and podspec
 
 9. **Update `.enroll-linkage.json`** in sibling plugins:
    - Update `features.exposedByThisProject`
@@ -86,3 +90,10 @@ Use this workflow after a Flutter plugin implementation is confirmed complete, t
 - Do NOT change package names, publishing configuration, or app IDs.
 - Do NOT implement features in sibling plugins before Flutter has them.
 - Enroll Flutter uses `appColors` (deprecated naming); Neo Flutter uses `enrollColors`. Preserve this naming difference.
+- Do NOT mark a copied feature complete unless code AND docs are both updated in the target plugin.
+
+## Docs Completion Gate
+
+- A feature is NOT considered "mirrored" unless its documentation is also updated in the sibling plugin.
+- If code is copied but docs are missing, add the feature name to `.enroll-linkage.json` → `docs.missingDocsForFeatures` in the affected plugin.
+- Do NOT consider this workflow complete while any sibling plugin has non-empty `docs.missingDocsForFeatures`.

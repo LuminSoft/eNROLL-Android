@@ -64,11 +64,19 @@ Do **not** update React Native or Capacitor from this command.
    - Docs gaps
    - Version mismatch
 
-6. **Update metadata only if stale**: `.enroll-linkage.json` and `ENROLL_LINKAGE.md` in the Flutter plugin only.
+6. **Update Flutter docs** (required — workflow is NOT complete until docs match implemented features):
+   - `README.md` — update install sections, config tables, modes list, usage examples
+   - API docs (`lib/` dartdoc or any `docs/` markdown) — update parameter tables, type definitions
+   - Example usage — update example app code if new params/modes were added
+   - `CHANGELOG.md` / release notes — add entry for new or changed features
+   - `ENROLL_LINKAGE.md` — update feature lists, version references
+   - `.enroll-linkage.json` → `docs.missingDocsForFeatures` — clear resolved items, add any remaining gaps
 
-7. **Run sync checker**: `bash /Users/luminsoft/StudioProjects/ekyc-android/scripts/check-enroll-sync.sh`
+7. **Update metadata only if stale**: `.enroll-linkage.json` and `ENROLL_LINKAGE.md` in the Flutter plugin only.
 
-8. **Stop before RN/Capacitor work**. Use `/copy-flutter-to-sibling-plugins` separately.
+8. **Run sync checker**: `bash /Users/luminsoft/StudioProjects/ekyc-android/scripts/check-enroll-sync.sh`
+
+9. **Stop before RN/Capacitor work**. Use `/copy-flutter-to-sibling-plugins` separately.
 
 ## Naming Notes
 
@@ -76,3 +84,9 @@ Do **not** update React Native or Capacitor from this command.
 - Neo Flutter uses `enrollColors` / `enrollTheme`.
 - Document naming differences, do not rename.
 - Both native branches have `FORGET_PROFILE_DATA` mode. Neither Flutter plugin currently exposes it.
+
+## Docs Completion Gate
+
+- A feature is NOT considered "implemented in Flutter" unless its documentation is also updated.
+- If code is implemented but docs are missing, add the feature name to `.enroll-linkage.json` → `docs.missingDocsForFeatures`.
+- Do NOT mark a native→Flutter sync complete while `docs.missingDocsForFeatures` is non-empty.

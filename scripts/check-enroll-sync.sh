@@ -293,6 +293,37 @@ check_plugin() {
     warn "ENROLL_LINKAGE.md: missing"
   fi
 
+  # --- README.md ---
+  if [[ -f "${plugin_path}/README.md" ]]; then
+    pass "README.md: present"
+  else
+    fail "README.md: MISSING"
+  fi
+
+  # --- Feature names in README (best-effort) ---
+  local exposed_features
+  exposed_features=$(json_array "$linkage" "features.exposedByThisProject")
+  if [[ -n "$exposed_features" && -f "${plugin_path}/README.md" ]]; then
+    local readme_content undocumented_count=0
+    readme_content=$(cat "${plugin_path}/README.md")
+    while IFS= read -r feat; do
+      [[ -z "$feat" ]] && continue
+      # Normalize: SIGN_CONTRACT → signContract, AUTH → auth, etc.
+      local lower_feat
+      lower_feat=$(echo "$feat" | tr '[:upper:]' '[:lower:]' | sed 's/_//g')
+      local readme_lower
+      readme_lower=$(echo "$readme_content" | tr '[:upper:]' '[:lower:]' | sed 's/_//g')
+      if ! echo "$readme_lower" | grep -q "$lower_feat"; then
+        ((undocumented_count++))
+      fi
+    done <<< "$exposed_features"
+    if [[ $undocumented_count -eq 0 ]]; then
+      pass "README coverage: all exposed features mentioned"
+    else
+      warn "README coverage: ${undocumented_count} exposed feature(s) not found in README"
+    fi
+  fi
+
   echo ""
 }
 

@@ -37,15 +37,23 @@ Use this workflow when the native SDK has a new release and all dependent plugin
      - Update `.enroll-linkage.json` with new version
      - For enroll-neo: copy XCFramework from Flutter plugin + update `EnrollNeoCore` pod version
 
-5. **If new features were added** to the native SDK:
+5. **Update docs in ALL affected plugins** (required — SDK version updates must also update):
+   - `README.md` — update install sections, native SDK version strings, dependency snippets
+   - Android dependency snippets — update `build.gradle` version references in docs/README
+   - iOS Pod/XCFramework install sections — update pod version, XCFramework notes in docs/README
+   - `CHANGELOG.md` / release notes — add entry for version bump
+   - `ENROLL_LINKAGE.md` — update version references
+   - `.enroll-linkage.json` — update `nativeSdk.androidVersion`, `nativeSdk.iosVersion` / `iosCorePodVersion`, and clear/update `docs.missingDocsForFeatures`
+
+6. **If new features were added** to the native SDK:
    - Update `features.nativeAvailable` in native SDK's `.enroll-linkage.json`
    - Add to `features.missingFromThisProject` in plugins that don't expose it yet
    - Implement in Flutter first, then mirror to siblings
 
 // turbo
-6. **Run sync check**:
+7. **Run sync check**:
    ```
    bash /Users/luminsoft/StudioProjects/ekyc-android/scripts/check-enroll-sync.sh
    ```
 
-7. **Report** version updates applied and any remaining issues.
+8. **Report** version updates applied, docs updated, and any remaining issues.

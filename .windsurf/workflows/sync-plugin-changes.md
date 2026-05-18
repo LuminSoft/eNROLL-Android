@@ -24,10 +24,20 @@ This is a convenience alias. Use `/copy-flutter-to-sibling-plugins` for the full
 
 1. Read the Flutter plugin's `.enroll-linkage.json` to detect product line.
 2. Run `/check-native-to-flutter` to confirm Flutter is up to date with native.
+   - This includes verifying and updating Flutter docs (see docs gate in that workflow).
 3. Run `/copy-flutter-to-sibling-plugins` to mirror Flutter → RN + Capacitor.
+   - This includes updating docs in all sibling plugins (see docs gate in that workflow).
+
+4. **Verify docs across ALL plugins** (required — combined workflow must check all docs):
+   - Native SDK: verify native docs (README, API notes) reflect current features
+   - Flutter: verify Flutter docs match implemented features
+   - React Native: verify RN docs (README, `docs/api.md`, TypeScript types) match mirrored features
+   - Capacitor: verify Capacitor docs (README, `src/definitions.ts`) match mirrored features
+   - Linkage metadata: verify `docs.missingDocsForFeatures` is empty in all plugins
+   - Report any non-empty `docs.missingDocsForFeatures` as **warnings** or **failures**
 
 // turbo
-4. Run sync check:
+5. Run sync check:
    ```
    bash /Users/luminsoft/StudioProjects/ekyc-android/scripts/check-enroll-sync.sh
    ```
@@ -40,3 +50,4 @@ This is a convenience alias. Use `/copy-flutter-to-sibling-plugins` for the full
 - For enroll iOS: use CocoaPods only, no XCFramework copying.
 - Do NOT mix production/Innovatrics code with Neo/non-Innovatrics code.
 - Do NOT remove or rename public APIs.
+- Do NOT consider the sync complete while any plugin has missing docs for implemented features.
