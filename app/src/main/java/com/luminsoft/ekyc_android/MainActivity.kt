@@ -443,21 +443,21 @@ class MainActivity : ComponentActivity() {
 //                            ),
 //                        ),
 
-                        common = CommonIcons(
-                            termsAndConditions = StepIcon(
-                                source = IconSource.Resource(R.drawable.sample_location_icon),
-                                renderingMode = IconRenderingMode.ORIGINAL
-                            ),
-                            fieldIcons = FieldIcons(
-
-
-                                user = StepIcon(
-                                    source = IconSource.Resource(R.drawable.sample_location_icon),
-                                    renderingMode = IconRenderingMode.TEMPLATE)
-                            )
-                        )
-                    )
-                )
+//                        common = CommonIcons(
+//                            termsAndConditions = StepIcon(
+//                                source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                renderingMode = IconRenderingMode.ORIGINAL
+//                            ),
+//                            fieldIcons = FieldIcons(
+//
+//
+//                                user = StepIcon(
+//                                    source = IconSource.Resource(R.drawable.sample_location_icon),
+//                                    renderingMode = IconRenderingMode.TEMPLATE)
+//                            )
+//                        )
+//                    )
+//                )
             )
         } catch (e: Exception) {
             Log.e("error", e.toString())
