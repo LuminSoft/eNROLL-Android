@@ -7,18 +7,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.luminsoft.enroll_sdk.core.widgets.ImagesBox
 import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedStepIcon
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import com.luminsoft.enroll_sdk.ui_components.theme.StepIcon
 
 
@@ -49,14 +47,11 @@ fun EnrollItemView(images: List<Int>, textResourceId: Int, customStepIcon: StepI
             }
         )
         Spacer(modifier = Modifier.height(80.dp))
-        Text(
+        EnrollText(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = textResourceId),
-            fontSize = MaterialTheme.typography.labelLarge.fontSize,
-            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
+            style = EnrollTextStyle.BODY,
+            textAlign = TextAlign.Center
         )
     }
 }
-

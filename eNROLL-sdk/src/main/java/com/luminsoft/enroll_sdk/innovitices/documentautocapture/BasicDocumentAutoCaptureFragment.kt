@@ -18,6 +18,7 @@ import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
 import com.luminsoft.enroll_sdk.innovitices.MainViewModel
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_SUCCESS
+import com.luminsoft.enroll_sdk.ui_components.theme.applyEnrollTypography
 
 import kotlinx.coroutines.launch
 import java.io.File
@@ -38,6 +39,7 @@ class BasicDocumentAutoCaptureFragment : DocumentAutoCaptureFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyEnrollTypography()
         setupDotSdkViewModel()
         setupDocumentAutoCaptureViewModel()
     }

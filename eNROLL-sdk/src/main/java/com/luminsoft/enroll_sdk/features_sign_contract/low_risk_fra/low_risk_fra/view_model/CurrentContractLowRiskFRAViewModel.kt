@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import arrow.core.Either
+import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.NetworkFailure
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
@@ -180,7 +181,7 @@ class CurrentContractLowRiskFRAViewModel(
         try {
             val sourceFile = pdfFile.value
             if (sourceFile == null || !sourceFile.exists()) {
-                Toast.makeText(context, "PDF not ready or missing", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.pdf_not_ready), Toast.LENGTH_LONG).show()
                 return
             }
 
@@ -211,7 +212,11 @@ class CurrentContractLowRiskFRAViewModel(
             ).show()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "Failed to save PDF: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.pdf_save_failed, e.message),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

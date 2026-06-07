@@ -195,7 +195,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.otpSendTo),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         color = MaterialTheme.appColors.textColor,
                         textAlign = TextAlign.End,
                         modifier = Modifier.weight(1f)
@@ -204,7 +204,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                     if (onBoardingViewModel.currentPhoneNumber.value != null)
                         Text(
                             onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
-                            fontSize = 12.sp,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
                             fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             color = MaterialTheme.appColors.secondary,
                             maxLines = 1,
@@ -224,7 +224,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                             )
                         Text(
                             ResourceProvider.instance.getStringResource(R.string.edit),
-                            fontSize = 8.sp,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
                             color = Color.White,
                             fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
@@ -254,7 +254,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                         text = stringResource(id = R.string.timerOtpMessage),
                         color = MaterialTheme.appColors.textColor,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f)
                     )
@@ -263,7 +263,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                         text = stringResource(id = R.string.second),
                         color = MaterialTheme.appColors.textColor,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         maxLines = 1
                     )
                 }
@@ -274,7 +274,7 @@ fun ValidateOtpPhoneNumberScreenContent(
                         text = stringResource(id = R.string.resend),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.primary,
-                        fontSize = 14.sp,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
@@ -346,7 +346,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 12.sp
+            fontSize = MaterialTheme.typography.bodySmall.fontSize
         )
     }
 }

@@ -436,14 +436,14 @@ private fun PDFHeader(
                         Text(
                             text = contractFileModelList[index].sectionOrder!!.toString(),
                             color = Color.White, // White text
-                            fontSize = 14.sp,     // Smaller text
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,     // Smaller text
                         )
                     }
                 else
                     Text(
                         text = contractFileModelList[index].sectionOrder!!.toString(),
                         color = MaterialTheme.appColors.appBlack,
-                        fontSize = 14.sp,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
                     )

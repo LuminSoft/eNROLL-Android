@@ -81,7 +81,7 @@ fun NfcScanningScreen(
             Text(
                 text = stringResource(id = R.string.nfc_scanning_title),
                 color = Color.White,
-                fontSize = 18.sp,
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 fontWeight = FontWeight.Bold,
                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 modifier = Modifier.align(Alignment.Center)
@@ -137,7 +137,7 @@ fun NfcScanningScreen(
                     text = stringResource(id = R.string.nfc_processing_data),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     color = MaterialTheme.appColors.primary,
                     textAlign = TextAlign.Center,
                 )
@@ -147,10 +147,10 @@ fun NfcScanningScreen(
                 Text(
                     text = stringResource(id = R.string.nfc_processing_wait),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 14.sp,
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     color = MaterialTheme.appColors.appBlack.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
-                    lineHeight = 22.sp,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
                 )
             } else {
                 // Waiting state - hold passport near device
@@ -158,7 +158,7 @@ fun NfcScanningScreen(
                     text = stringResource(id = R.string.nfc_reading_in_progress),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     color = MaterialTheme.appColors.primary,
                     textAlign = TextAlign.Center,
                 )
@@ -166,10 +166,10 @@ fun NfcScanningScreen(
                 Text(
                     text = stringResource(id = R.string.nfc_hold_passport),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 14.sp,
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     color = MaterialTheme.appColors.appBlack.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
-                    lineHeight = 22.sp,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
                 )
             }
         }

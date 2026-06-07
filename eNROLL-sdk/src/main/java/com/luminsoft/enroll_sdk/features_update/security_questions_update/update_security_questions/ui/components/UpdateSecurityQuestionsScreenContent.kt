@@ -201,7 +201,7 @@ fun UpdateSecurityQuestionsScreenContent(
 
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = MaterialTheme.appColors.textColor,
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
@@ -306,7 +306,7 @@ private fun AnswerUpdateTextField(
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp) },
+            placeholder = { Text(stringResource(id = R.string.answer), fontSize = MaterialTheme.typography.bodySmall.fontSize) },
             colors = textFieldColors(),
             leadingIcon = {
                 val customAnswerIcon = resolveUiIcon(R.drawable.answer_icon)
@@ -317,7 +317,7 @@ private fun AnswerUpdateTextField(
                 )
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 12.sp,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 color = Color.Black
             )
         )
@@ -360,7 +360,7 @@ fun DropdownList(
             placeholder = {
                 Text(
                     stringResource(id = R.string.chooseAQuestions),
-                    fontSize = 12.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
             },
             colors = textFieldColors(),
@@ -380,7 +380,7 @@ fun DropdownList(
                 )
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 12.sp,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 color = MaterialTheme.appColors.primary
             )
         )
@@ -404,7 +404,7 @@ fun DropdownList(
                         text = {
                             Text(
                                 text = label.question!!,
-                                fontSize = 12.sp,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                                 color = MaterialTheme.appColors.primary
                             )
                         },

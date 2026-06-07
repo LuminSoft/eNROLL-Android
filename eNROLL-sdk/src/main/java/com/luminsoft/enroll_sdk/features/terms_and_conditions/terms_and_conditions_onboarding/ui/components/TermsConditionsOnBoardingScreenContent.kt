@@ -180,7 +180,7 @@ fun PdfViewerWidget(
             Text(
                 text = stringResource(id = R.string.readTermsAndConditions),
                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                fontSize = 18.sp,
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.appColors.textColor,
                 textAlign = TextAlign.Center,

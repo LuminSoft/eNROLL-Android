@@ -61,6 +61,9 @@ import com.luminsoft.enroll_sdk.ui_components.components.NormalTextField
 import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.AppTheme
 import com.luminsoft.enroll_sdk.ui_components.theme.CommonIcons
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollFontSize
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollLocalizationOverrides
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTypography
 import com.luminsoft.enroll_sdk.ui_components.theme.FaceMatchingIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.FieldIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.IconRenderingMode
@@ -114,6 +117,11 @@ var isLocal = mutableStateOf(false)
 var skipTutorial = mutableStateOf(false)
 var isRememberMe = mutableStateOf(false)
 var selectedExitStepIndex = mutableIntStateOf(0) // 0 = None (no exit step)
+
+private data class DemoFontOption(
+    val label: String,
+    val resourceName: String
+)
 
 class MainActivity : ComponentActivity() {
 
@@ -178,6 +186,15 @@ class MainActivity : ComponentActivity() {
                 listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
+            val fontOptions = listOf(
+                DemoFontOption(label = "Itim (English)", resourceName = "itim_regular"),
+                DemoFontOption(label = "Poppins (English)", resourceName = "poppins_regular"),
+                DemoFontOption(label = "Cairo (Arabic)", resourceName = "cairo_regular"),
+                DemoFontOption(label = "GE Flow (Arabic)", resourceName = "ge_flow_regular")
+            )
+            val fontSizeOptions = EnrollFontSize.entries
+            var selectedFontIndex by rememberSaveable { mutableIntStateOf(0) }
+            var selectedFontSizeIndex by rememberSaveable { mutableIntStateOf(0) }
             
             // Exit Step options - "None" means no exit step (run full flow)
             val exitStepList = listOf(
@@ -286,6 +303,27 @@ class MainActivity : ComponentActivity() {
 
                     Spacer(modifier = Modifier.height(20.dp))
 
+                    Text("Font Type", style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.height(5.dp))
+                    DropdownList(
+                        itemList = fontOptions.map { it.label },
+                        selectedIndex = selectedFontIndex,
+                        modifier = buttonModifier,
+                        onItemClick = { selectedFontIndex = it }
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text("Font Size", style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.height(5.dp))
+                    DropdownList(
+                        itemList = fontSizeOptions.map { it.name.lowercase().replaceFirstChar(Char::uppercase) },
+                        selectedIndex = selectedFontSizeIndex,
+                        modifier = buttonModifier,
+                        onItemClick = { selectedFontSizeIndex = it }
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
                     // Callback message display
                     if (text.value.isNotEmpty()) {
                         Text(
@@ -299,7 +337,12 @@ class MainActivity : ComponentActivity() {
                             .fillMaxWidth()
                             .height(45.dp),
                         onClick = {
-                            initEnroll(activity, selectedIndex)
+                            initEnroll(
+                                activity = activity,
+                                selectedIndex = selectedIndex,
+                                fontFamily = fontOptions[selectedFontIndex].resourceName,
+                                fontSize = fontSizeOptions[selectedFontSizeIndex]
+                            )
                         },
                         contentPadding = PaddingValues(0.dp),
                         shape = RoundedCornerShape(12.dp),
@@ -331,7 +374,9 @@ class MainActivity : ComponentActivity() {
 
     private fun initEnroll(
         activity: Activity,
-        selectedIndex: Int
+        selectedIndex: Int,
+        fontFamily: String,
+        fontSize: EnrollFontSize
     ) {
         if (isRememberMe.value) {
             getPreferences(Context.MODE_PRIVATE).edit {
@@ -413,6 +458,17 @@ class MainActivity : ComponentActivity() {
                 templateId = templateIdText.value.text,
                 contractParameters = contractParametersText.value.text,
                 exitStep = getExitStepFromIndex(selectedExitStepIndex.value),
+                appTheme = AppTheme(
+                    typography = EnrollTypography(
+                        fontFamily = fontFamily,
+                        dynamicTypeEnabled = true,
+                        fontSize = fontSize,
+                        localizationOverrides = EnrollLocalizationOverrides(
+                            englishFileName = "enroll_localizations_en",
+                            arabicFileName = "enroll_localizations_ar"
+                        )
+                    )
+                )
 //                appTheme = AppTheme(
 //                    colors = AppColors(
 //                        primary = Color(0xFFCDDC39),

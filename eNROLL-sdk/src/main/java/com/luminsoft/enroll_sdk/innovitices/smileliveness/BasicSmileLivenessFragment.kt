@@ -19,6 +19,7 @@ import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
 import com.luminsoft.enroll_sdk.innovitices.MainViewModel
 import com.luminsoft.enroll_sdk.innovitices.activities.SmileLivenessActivity
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_SUCCESS
+import com.luminsoft.enroll_sdk.ui_components.theme.applyEnrollTypography
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -38,6 +39,7 @@ class BasicSmileLivenessFragment : SmileLivenessFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyEnrollTypography()
         setupDotSdkViewModel()
         setupSmileLivenessViewModel()
     }

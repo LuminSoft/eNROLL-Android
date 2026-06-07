@@ -177,7 +177,7 @@ fun MailAuthScreenContent(
                     text = stringResource(id = R.string.emailOtpGuide),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.textColor,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -200,7 +200,7 @@ fun MailAuthScreenContent(
                         text = stringResource(id = R.string.timerOtpMessage),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f)
                     )
@@ -209,7 +209,7 @@ fun MailAuthScreenContent(
                         text = stringResource(id = R.string.second),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         maxLines = 1
                     )
                 }
@@ -265,7 +265,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 12.sp
+            fontSize = MaterialTheme.typography.bodySmall.fontSize
         )
     }
 }

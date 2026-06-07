@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
@@ -41,8 +39,10 @@ import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.main.main_presentation.main_onboarding.view_model.OnBoardingViewModel
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
+import com.luminsoft.enroll_sdk.ui_components.components.EnrollText
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
 import com.luminsoft.enroll_sdk.ui_components.components.SdkSplashLogo
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
@@ -96,12 +96,11 @@ fun SplashScreenContent(
                     .align(Alignment.BottomCenter) // Align Row at the bottom
                     .padding(bottom = 72.dp) // Add padding if needed
             ) {
-                Text(
-                    text = "Sponsored by",
-                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                EnrollText(
+                    text = stringResource(id = R.string.sponsored_by),
+                    style = EnrollTextStyle.SUB_TITLE,
                     color = MaterialTheme.appColors.textColor,
-                    textAlign = TextAlign.Center,
-                    fontSize = 12.sp
+                    textAlign = TextAlign.Center
                 )
 
 

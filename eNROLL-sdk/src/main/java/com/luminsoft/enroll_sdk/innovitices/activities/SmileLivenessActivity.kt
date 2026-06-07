@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_INTERRUPTED
 import com.luminsoft.enroll_sdk.innovitices.smileliveness.BasicSmileLivenessFragment
+import com.luminsoft.enroll_sdk.ui_components.theme.applyEnrollActionBarTypography
 
 class SmileLivenessActivity : AppCompatActivity() {
     var outSmileLivenessUri = "smile-liveness-uri"
@@ -17,6 +18,7 @@ class SmileLivenessActivity : AppCompatActivity() {
         setResult(RESULT_INTERRUPTED)
         setFragment()
         this.setTitle(R.string.smile_liveness_screen)
+        applyEnrollActionBarTypography()
     }
 
 

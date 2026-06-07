@@ -14,7 +14,11 @@
 .externalNativeBuild
 .cxx
 local.properties
-/app/src/main/assets
+/app/src/main/assets/*
+!/app/src/main/assets/enroll_localizations_en.json
+!/app/src/main/assets/enroll_localizations_ar.json
+!/app/src/main/assets/licenses/
+!/app/src/main/assets/licenses/OFL_poppins.txt
 /app/src/main/res/raw/iengine.lic
 assets/env_andrew
 assets/env_radwan

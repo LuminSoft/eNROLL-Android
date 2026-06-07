@@ -15,6 +15,7 @@ import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModel
 import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
 import com.luminsoft.enroll_sdk.innovitices.MainViewModel
+import com.luminsoft.enroll_sdk.ui_components.theme.applyEnrollTypography
 import kotlinx.coroutines.launch
 
 class BasicMagnifEyeLivenessFragment : MagnifEyeLivenessFragment() {
@@ -31,6 +32,7 @@ class BasicMagnifEyeLivenessFragment : MagnifEyeLivenessFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyEnrollTypography()
         setupDotSdkViewModel()
         setupMagnifEyeLivenessViewModel()
     }

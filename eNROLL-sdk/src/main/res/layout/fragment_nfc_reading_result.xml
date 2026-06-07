@@ -14,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/nfc_reading_result_title"
-            android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
 
@@ -32,8 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:fontFamily="monospace"
-            android:textSize="12sp" />
+            android:fontFamily="monospace" />
 
     </LinearLayout>
 

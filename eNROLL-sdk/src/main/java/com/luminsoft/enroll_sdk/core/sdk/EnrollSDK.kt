@@ -9,6 +9,7 @@ import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configu
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.AppTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTypography
 
 
 object EnrollSDK {
@@ -31,11 +32,13 @@ object EnrollSDK {
     var skipTutorial = false
     var appColors = AppColors()
     var appIcons = AppIcons()
+    var typography: EnrollTypography? = null
     var appTheme: AppTheme
-        get() = AppTheme(colors = appColors, icons = appIcons)
+        get() = AppTheme(colors = appColors, icons = appIcons, typography = typography)
         set(value) {
             appColors = value.colors
             appIcons = value.icons
+            typography = value.typography
         }
     var fontResource = 0
 

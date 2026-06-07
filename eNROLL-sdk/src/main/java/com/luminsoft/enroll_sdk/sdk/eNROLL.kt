@@ -19,6 +19,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.LocalizationCode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.main.main_data.main_models.get_onboaring_configurations.EkycStepType
+import com.luminsoft.enroll_sdk.core.utils.DynamicLocalizationManager
 import com.luminsoft.enroll_sdk.core.utils.RootDetectionUtil
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.AppIcons
@@ -77,6 +78,7 @@ object eNROLL {
         } else {
             EnrollSDK.appColors = appColors
             EnrollSDK.appIcons = appIcons
+            EnrollSDK.typography = null
         }
         EnrollSDK.correlationId = correlationId
         EnrollSDK.requestId = requestId
@@ -106,6 +108,10 @@ object eNROLL {
             throw Exception("Invalid tenant secret")
 
         setLocale(EnrollSDK.localizationCode, activity)
+        DynamicLocalizationManager.configure(
+            activity,
+            EnrollSDK.typography?.localizationOverrides
+        )
 
         activity.startActivity(Intent(activity, EnrollMainActivity::class.java))
 

@@ -170,7 +170,7 @@ fun SecurityQuestionAuthScreenContent(
                 Text(
                     text = stringResource(id = R.string.youMustAnswerSecurityQuestion),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center
 
@@ -199,7 +199,7 @@ fun SecurityQuestionAuthScreenContent(
                             Text(
                                 text = it,
                                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                                fontSize = 12.sp,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                                 color = MaterialTheme.appColors.textColor
                             )
                         }
@@ -264,7 +264,7 @@ private fun AnswerTextField(
             },
             modifier = Modifier
                 .fillMaxWidth(),
-            placeholder = { Text(stringResource(id = R.string.answer), fontSize = 12.sp,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) },
+            placeholder = { Text(stringResource(id = R.string.answer), fontSize = MaterialTheme.typography.bodySmall.fontSize,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,) },
             colors = textFieldColors(),
             leadingIcon = {
                 val customAnswerIcon = resolveUiIcon(R.drawable.answer_icon)
@@ -277,7 +277,7 @@ private fun AnswerTextField(
                 )
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 12.sp,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 color = Color.Black
             )
         )

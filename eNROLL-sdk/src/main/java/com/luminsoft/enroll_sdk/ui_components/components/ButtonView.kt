@@ -5,18 +5,22 @@ package com.luminsoft.enroll_sdk.ui_components.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollFontSize
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
+import kotlin.math.max
 
 @Composable
 fun ButtonView(
@@ -50,20 +54,24 @@ fun ButtonView(
 
     }
 
-    val modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .height(height.dp)
-
-    if (width != null) {
-        modifier.width(width.dp)
+    val presetMinimumHeight = when (
+        EnrollSDK.typography?.fontSize ?: EnrollFontSize.SMALL
+    ) {
+        EnrollFontSize.SMALL -> 48.0
+        EnrollFontSize.MEDIUM -> 56.0
+        EnrollFontSize.LARGE -> 64.0
     }
+    val buttonModifier = Modifier
+        .fillMaxWidth()
+        .then(if (width != null) Modifier.width(width.dp) else Modifier)
+        .heightIn(min = max(height, presetMinimumHeight).dp)
 
     Button(
         enabled = isEnabled,
         onClick = onClick,
         border = border,
-        contentPadding = PaddingValues(0.dp),
-        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        modifier = buttonModifier,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColor,
@@ -72,7 +80,14 @@ fun ButtonView(
 
 
         ) {
-        Text(text = title, style = MaterialTheme.typography.titleMedium, color = textColorF,fontFamily = MaterialTheme.typography.labelLarge.fontFamily,)
+        EnrollText(
+            text = title,
+            style = EnrollTextStyle.BUTTON,
+            color = textColorF,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            maxLines = 2
+        )
 
     }
 }

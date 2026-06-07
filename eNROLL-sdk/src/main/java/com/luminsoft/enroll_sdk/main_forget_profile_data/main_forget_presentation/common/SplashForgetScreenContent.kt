@@ -86,10 +86,10 @@ fun SplashScreenForgetContent(
                     .padding(bottom = 72.dp) // Add padding if needed
             ) {
                 Text(
-                    text = "Sponsored by",
+                    text = stringResource(id = R.string.sponsored_by),
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
-                    fontSize = 12.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
 
 

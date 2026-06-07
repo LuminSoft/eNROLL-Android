@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.luminsoft.enroll_sdk.innovitices.documentautocapture.BasicDocumentAutoCaptureFragment
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.innovitices.core.RESULT_INTERRUPTED
+import com.luminsoft.enroll_sdk.ui_components.theme.applyEnrollActionBarTypography
 import java.util.*
 
 
@@ -39,18 +40,21 @@ class DocumentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val extras = intent.extras
+        var titleResource = R.string.document_front_screen
         if (extras != null) {
             val value = extras.getInt("scanType", frontScan)
             val lang = extras.getString("localCode", "ar")
             setLocale(lang)
-            when (value) {
-                frontScan -> this.setTitle(R.string.document_front_screen)
-                backScan -> this.setTitle(R.string.document_back_screen)
-                passportScan -> this.setTitle(R.string.passport_screen)
+            titleResource = when (value) {
+                backScan -> R.string.document_back_screen
+                passportScan -> R.string.passport_screen
+                else -> R.string.document_front_screen
             }
         }
 
         super.onCreate(savedInstanceState)
+        setTitle(titleResource)
+        applyEnrollActionBarTypography()
         setResult(RESULT_INTERRUPTED)
         setFragment()
     }

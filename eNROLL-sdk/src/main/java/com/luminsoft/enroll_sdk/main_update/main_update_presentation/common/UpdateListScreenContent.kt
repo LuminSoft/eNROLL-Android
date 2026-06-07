@@ -93,7 +93,7 @@ fun UpdateListScreenContent(
                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp
+                fontSize = MaterialTheme.typography.titleLarge.fontSize
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -164,7 +164,7 @@ private fun UpdateStepItem(
                     text = stringResource(id = step.parseUpdateStepType().getStepNameIntSource()),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.colorScheme.inverseSurface,
-                    fontSize = 12.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
             }
 

@@ -210,7 +210,7 @@ fun PhonesUpdateScreenContent(
                         label = {
                             Text(
                                 ResourceProvider.instance.getStringResource(R.string.phoneNumber),
-                                fontSize = 14.sp,
+                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                                 color = MaterialTheme.appColors.primary
                             )
                         },
@@ -224,7 +224,7 @@ fun PhonesUpdateScreenContent(
                     text = stringResource(id = R.string.sendPhoneOtpContent),
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
-                    fontSize = 12.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 

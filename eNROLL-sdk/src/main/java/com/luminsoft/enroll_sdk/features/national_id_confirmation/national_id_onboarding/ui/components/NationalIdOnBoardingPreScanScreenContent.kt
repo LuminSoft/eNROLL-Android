@@ -77,8 +77,10 @@ import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
+import com.luminsoft.enroll_sdk.ui_components.components.EnrollText
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import android.provider.Settings
 import androidx.compose.runtime.mutableStateOf
@@ -316,9 +318,10 @@ private fun NationalIdOrPassport(
     ) {
         Spacer(modifier = Modifier.height(50.dp))
 
-        Text(
+        EnrollText(
             text = stringResource(id = R.string.choosePersonalConfirmation),
-            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+            style = EnrollTextStyle.TITLE,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -387,13 +390,10 @@ private fun Card(
         ) {
         Column(
             modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .padding(vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(5.dp))
-
             val idImages = listOf(
                 R.drawable.id_scan_01, R.drawable.id_scan_02, R.drawable.id_scan_03
             )
@@ -422,27 +422,27 @@ private fun Card(
                 ChooseStep.EPassport -> MaterialTheme.appIcons.passport.choose
             }
             
-            Box(modifier = Modifier.fillMaxHeight(0.35f), contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier.size(96.dp),
+                contentAlignment = Alignment.Center
+            ) {
                 Image(
                     painterResource(R.drawable.icon_back_shape),
                     contentDescription = "",
                     colorFilter = ColorFilter.tint(MaterialTheme.appColors.primary.copy(alpha = 0.1f)),
-                    modifier = Modifier.fillMaxHeight(1f)
+                    modifier = Modifier.fillMaxSize()
                 )
                 ResolvedStepIcon(
                     customIcon = customIcon,
-                    modifier = Modifier.fillMaxHeight(0.7f),
+                    modifier = Modifier.fillMaxSize(0.7f),
                     defaultContent = {
                         ImagesBox(
                             images = images,
-                            modifier = Modifier.fillMaxHeight(0.7f)
+                            modifier = Modifier.fillMaxSize(0.7f)
                         )
                     }
                 )
-
             }
-
-
 
             Spacer(modifier = Modifier.height(20.dp))
             
@@ -458,16 +458,16 @@ private fun Card(
                 ChooseStep.EPassport -> R.string.epassportDescription
             }
             
-            Text(
+            EnrollText(
                 text = stringResource(id = titleRes),
-                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                fontSize = 16.sp
+                style = EnrollTextStyle.TITLE,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.padding(horizontal = 15.dp)
+                modifier = Modifier.padding(horizontal = 20.dp)
             ) {
                 val customInfoIcon = resolveUiIcon(R.drawable.info_icon)
                 Image(
@@ -479,17 +479,15 @@ private fun Card(
                         .size(15.dp)
                 )
                 Spacer(Modifier.width(5.dp))
-                Box(Modifier.fillMaxWidth(0.9f)) {
-                    Text(
-                        text = stringResource(id = descriptionRes),
-                        fontSize = 9.sp,
-                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        color = AppColors().appBlack,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 15.sp,
-                        modifier = Modifier.align(Alignment.TopStart)
-                    )
-                }
+                EnrollText(
+                    text = stringResource(id = descriptionRes),
+                    style = EnrollTextStyle.BODY,
+                    color = AppColors().appBlack,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 20.dp)
+                )
             }
         }
 

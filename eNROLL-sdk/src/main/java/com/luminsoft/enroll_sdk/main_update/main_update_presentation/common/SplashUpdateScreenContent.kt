@@ -97,11 +97,11 @@ fun SplashScreenUpdateContent(
                     .padding(bottom = 72.dp)
             ) {
                 Text(
-                    text = "Sponsored by",
+                    text = stringResource(id = R.string.sponsored_by),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
-                    fontSize = 12.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 ResolvedImage(

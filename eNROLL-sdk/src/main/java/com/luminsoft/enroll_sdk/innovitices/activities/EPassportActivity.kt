@@ -13,6 +13,8 @@ import com.luminsoft.enroll_sdk.innovitices.DotSdkViewModelFactory
 import com.luminsoft.enroll_sdk.innovitices.MainViewModel
 import com.luminsoft.enroll_sdk.innovitices.nfcreading.NfcReadingViewModel
 import com.luminsoft.enroll_sdk.innovitices.nfcreading.NfcReadingViewModelFactory
+import com.luminsoft.enroll_sdk.ui_components.theme.applyEnrollActionBarTypography
+import com.luminsoft.enroll_sdk.ui_components.theme.applyEnrollTypography
 import java.util.*
 
 class EPassportActivity : AppCompatActivity() {
@@ -64,6 +66,8 @@ class EPassportActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_epassport)
+        findViewById<android.view.View>(android.R.id.content).applyEnrollTypography()
+        applyEnrollActionBarTypography()
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     }

@@ -175,14 +175,14 @@ fun MailAuthUpdateScreenContent(
                 Text(
                     text = stringResource(id = R.string.emailOtpGuideWithMailVariable),
                     color = MaterialTheme.appColors.textColor,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
                     text = mailSent.value ?: "",
                     color = MaterialTheme.appColors.secondary,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center,
@@ -206,7 +206,7 @@ fun MailAuthUpdateScreenContent(
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f)
                     )
@@ -214,7 +214,7 @@ fun MailAuthUpdateScreenContent(
                     Text(
                         text = stringResource(id = R.string.second),
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         maxLines = 1
                     )
                 }
@@ -279,7 +279,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             text = ticks.toString(),
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 12.sp
+            fontSize = MaterialTheme.typography.bodySmall.fontSize
         )
     }
 }

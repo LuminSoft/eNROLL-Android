@@ -184,7 +184,7 @@ fun MultipleMailsUpdateScreenContent(
                 Text(
                     text = stringResource(id = R.string.youAddedTheFollowingMails),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 14.sp
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
@@ -268,7 +268,7 @@ private fun MailItem(
                     text = model.email!!,
                     color = MaterialTheme.appColors.appBlack,
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
             }
             if (model.isDefault!!)
@@ -308,7 +308,7 @@ private fun MailItem(
                                 .clickable(enabled = true) {
                                     multipleMailsViewModel.callMakeDefaultMail(model.email!!)
                                 },
-                            fontSize = 8.sp
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize
                         )
                     }
 

@@ -2,6 +2,7 @@ package com.luminsoft.enroll_sdk
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -14,6 +15,7 @@ import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.models.sdkModule
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.DynamicLocalizationManager
 import com.luminsoft.enroll_sdk.core.utils.ResourceProvider
 import com.luminsoft.enroll_sdk.core.utils.WifiService
 import com.luminsoft.enroll_sdk.features.check_aml.check_aml_di.checkAmlModule
@@ -83,6 +85,10 @@ import java.util.Locale
 
 @Suppress("DEPRECATION")
 class EnrollMainForgetActivity : ComponentActivity() {
+
+    override fun getResources(): Resources {
+        return DynamicLocalizationManager.wrapResources(this, super.getResources())
+    }
 
     @Deprecated("Deprecated in Java")
     @SuppressLint("MissingSuperCall")

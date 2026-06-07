@@ -213,7 +213,7 @@ fun SignContractScreenContent(
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.otpSendTo),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         color = MaterialTheme.appColors.textColor,
                         textAlign = TextAlign.End,
                         modifier = Modifier.weight(1f)
@@ -221,7 +221,7 @@ fun SignContractScreenContent(
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         phoneNumber.value!!,
-                        fontSize = 12.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.secondary,
                         maxLines = 1,
@@ -251,7 +251,7 @@ fun SignContractScreenContent(
                         text = stringResource(id = R.string.timerOtpMessage),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f)
                     )
@@ -260,7 +260,7 @@ fun SignContractScreenContent(
                         text = stringResource(id = R.string.second),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         maxLines = 1
                     )
                 }
@@ -270,7 +270,7 @@ fun SignContractScreenContent(
                         text = stringResource(id = R.string.resend),
                         color = MaterialTheme.appColors.primary,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = 14.sp,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
@@ -325,7 +325,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 12.sp
+            fontSize = MaterialTheme.typography.bodySmall.fontSize
         )
     }
 }

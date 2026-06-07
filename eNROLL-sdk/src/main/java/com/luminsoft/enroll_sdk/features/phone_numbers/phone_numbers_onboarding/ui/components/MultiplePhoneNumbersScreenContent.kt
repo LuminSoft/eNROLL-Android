@@ -198,7 +198,7 @@ fun MultiplePhoneNumbersScreenContent(
                 Text(
                     text = stringResource(id = R.string.youAddedTheFollowingPhoneNumbers),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 14.sp
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
@@ -315,7 +315,7 @@ private fun PhoneItem(
                                 .clickable(enabled = true) {
                                     multiplePhoneNumbersVM.callMakeDefaultPhone(model.phoneNumber!!)
                                 },
-                            fontSize = 10.sp
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize
 
                         )
                     }

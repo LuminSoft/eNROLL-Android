@@ -48,7 +48,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
@@ -79,9 +78,11 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
+import com.luminsoft.enroll_sdk.ui_components.components.EnrollText
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.LoadingView
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import org.koin.compose.koinInject
 
 
@@ -392,12 +393,11 @@ private fun GotLocation(
             if (isLoading) LoadingView()
         }
         Spacer(modifier = Modifier.fillMaxHeight(0.1f))
-        androidx.compose.material3.Text(
+        EnrollText(
             modifier = Modifier
                 .fillMaxWidth(),
             text = stringResource(id = R.string.locationSuccessText),
-            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+            style = EnrollTextStyle.TITLE,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -423,16 +423,14 @@ private fun GotLocation(
 
             Column {
 
-                androidx.compose.material3.Text(
+                EnrollText(
                     text = stringResource(id = R.string.latitude, currentLocation.latitude),
-                    fontSize = 12.sp,
-                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                    style = EnrollTextStyle.BODY,
                     color = MaterialTheme.appColors.textColor
                 )
-                androidx.compose.material3.Text(
+                EnrollText(
                     text = stringResource(id = R.string.longitude, currentLocation.longitude),
-                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp,
+                    style = EnrollTextStyle.BODY,
                     color = MaterialTheme.appColors.textColor
                 )
             }

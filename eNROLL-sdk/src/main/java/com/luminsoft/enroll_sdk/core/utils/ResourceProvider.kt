@@ -17,7 +17,7 @@ class ResourceProvider {
     fun getContext(): Context = context
 
     fun getStringResource(id: Int): String {
-        return context.resources.getString(id)
+        return DynamicLocalizationManager.getString(context, id) ?: context.resources.getString(id)
     }
     fun getDeviceData():String{
 

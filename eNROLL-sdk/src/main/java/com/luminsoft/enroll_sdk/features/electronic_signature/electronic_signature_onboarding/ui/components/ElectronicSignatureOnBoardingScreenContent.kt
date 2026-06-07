@@ -41,8 +41,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import applyElectronicSignatureContent
@@ -59,8 +59,10 @@ import com.luminsoft.enroll_sdk.ui_components.components.BackGroundView
 import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.ButtonView
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
+import com.luminsoft.enroll_sdk.ui_components.components.EnrollText
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
 import com.luminsoft.enroll_sdk.ui_components.theme.ConstantColors
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import org.koin.compose.koinInject
 
@@ -237,9 +239,9 @@ private fun ApplyForSignatureOrAlreadyHave(
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.25f))
 
-        Text(
+        EnrollText(
             text = stringResource(id = R.string.eSignature),
-            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+            style = EnrollTextStyle.TITLE,
             color = MaterialTheme.appColors.textColor
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -368,11 +370,15 @@ private fun Card(
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
-            Text(
+            EnrollText(
                 text = stringResource(id = if (step == ElectronicSignatureChooseStep.AlreadyHaveSignature) R.string.haveSignature else R.string.applyForSignature),
-                fontSize = 12.sp,
-                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                color = MaterialTheme.appColors.primary
+                style = EnrollTextStyle.BODY,
+                color = MaterialTheme.appColors.primary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                textAlign = TextAlign.Center,
+                maxLines = 2
             )
         }
 
@@ -383,5 +389,4 @@ private fun Card(
 enum class ElectronicSignatureChooseStep {
     ApplyForSignature, AlreadyHaveSignature
 }
-
 

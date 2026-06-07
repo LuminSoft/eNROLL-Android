@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -24,7 +23,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 
 
@@ -76,11 +75,9 @@ fun NormalTextField(
             modifier = Modifier
                 .fillMaxWidth(width)
                 .height(height.dp),
-            textStyle = MaterialTheme.typography.labelSmall.copy(
-                color = MaterialTheme.appColors.primary,
-                fontSize = 14.sp,
-
-                ),
+            textStyle = enrollTextStyle(EnrollTextStyle.INPUT).copy(
+                color = MaterialTheme.appColors.primary
+            ),
             cursorBrush = SolidColor(error?.let { MaterialTheme.appColors.errorColor }
                 ?: MaterialTheme.appColors.primary),
             visualTransformation = visualTransformation,
@@ -99,11 +96,10 @@ fun NormalTextField(
                     interactionSource = interactionSource,
                     isError = error != null,
                     label = {
-                        Text(
+                        EnrollText(
                             text = label,
-                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             color = MaterialTheme.appColors.textColor.copy(alpha = 0.6f),
-                            style = MaterialTheme.typography.labelSmall
+                            style = EnrollTextStyle.INPUT
                         )
                     },
                     leadingIcon = icon ?: painter?.let {
@@ -145,11 +141,10 @@ fun NormalTextField(
             }
         )
         if (error != null) {
-            Text(
+            EnrollText(
                 text = error,
-                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                 color = MaterialTheme.appColors.errorColor,
-                style = MaterialTheme.typography.labelSmall
+                style = EnrollTextStyle.INPUT
             )
         }
     }

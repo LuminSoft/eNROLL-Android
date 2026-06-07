@@ -87,7 +87,7 @@ fun ForgetListScreenContent(
                 text = stringResource(id = R.string.cannotLogin),
                 color = MaterialTheme.appColors.textColor,
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp,
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
 
                 )
@@ -181,7 +181,7 @@ private fun ForgetStepItem(
                     minLines = 2,
                     maxLines = 2,
                     textAlign = TextAlign.Center,
-                    fontSize = 15.sp
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize
                 )
                 Text(
                     text = stringResource(
@@ -192,7 +192,7 @@ private fun ForgetStepItem(
                     color = MaterialTheme.appColors.textColor,
                     minLines = 3,
                     textAlign = TextAlign.Center,
-                    fontSize = 11.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
                 Spacer(modifier = Modifier.height(10.dp))
             }

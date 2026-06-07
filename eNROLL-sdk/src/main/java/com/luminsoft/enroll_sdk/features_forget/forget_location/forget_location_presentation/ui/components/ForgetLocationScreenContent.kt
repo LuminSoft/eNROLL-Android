@@ -453,13 +453,13 @@ private fun GotLocation(
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.latitude, currentLocation.latitude),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = Color.Black
                 )
                 androidx.compose.material3.Text(
                     text = stringResource(id = R.string.longitude, currentLocation.longitude),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = Color.Black
                 )
             }

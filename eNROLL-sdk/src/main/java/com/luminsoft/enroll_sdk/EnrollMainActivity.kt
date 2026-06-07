@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
@@ -41,6 +43,7 @@ import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
+import com.luminsoft.enroll_sdk.core.utils.DynamicLocalizationManager
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.FirebaseKeys
 import com.luminsoft.enroll_sdk.ui_components.components.ScreenHelper
@@ -50,6 +53,10 @@ import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
 
 class EnrollMainActivity : ComponentActivity() {
+
+    override fun getResources(): Resources {
+        return DynamicLocalizationManager.wrapResources(this, super.getResources())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,10 +145,10 @@ class EnrollMainActivity : ComponentActivity() {
                         .padding(bottom = 72.dp)
                 ) {
                     Text(
-                        text = "Sponsored by",
+                        text = stringResource(id = R.string.sponsored_by),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 12.sp
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     ResolvedImage(

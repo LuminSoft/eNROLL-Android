@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
@@ -14,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -26,6 +29,9 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 import com.luminsoft.enroll_sdk.ui_components.theme.EKYCsDKTheme
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollFontSize
+import com.luminsoft.enroll_sdk.ui_components.theme.buttonSp
+import com.luminsoft.enroll_sdk.ui_components.theme.titleSp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -40,6 +46,7 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
     private val nfcReadingViewModel: NfcReadingViewModel by activityViewModels { NfcReadingViewModelFactory(requireActivity().application) }
 
     private lateinit var cancelButton: Button
+    private lateinit var header: TextView
     private lateinit var dialogComposeView: ComposeView
     private var timeoutJob: Job? = null
     private val errorDialogMessage = mutableStateOf<String?>(null)
@@ -73,8 +80,27 @@ class NfcReadingFragment : Fragment(R.layout.fragment_nfc_reading) {
 
     private fun setViews(view: View) {
         cancelButton = view.findViewById(R.id.cancel_button)
+        header = view.findViewById(R.id.header)
         dialogComposeView = view.findViewById(R.id.dialog_compose_view)
+        applyTypography()
         setupDialogComposeView()
+    }
+
+    private fun applyTypography() {
+        val fontSize = EnrollSDK.typography?.fontSize ?: EnrollFontSize.SMALL
+        header.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize.titleSp)
+        cancelButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize.buttonSp)
+
+        val fontResourceId = EnrollSDK.typography?.fontFamily
+            ?.takeIf(String::isNotBlank)
+            ?.let { resources.getIdentifier(it, "font", requireContext().packageName) }
+            ?: 0
+        if (fontResourceId != 0) {
+            ResourcesCompat.getFont(requireContext(), fontResourceId)?.let { typeface ->
+                header.typeface = typeface
+                cancelButton.typeface = typeface
+            }
+        }
     }
 
     private fun setupDialogComposeView() {

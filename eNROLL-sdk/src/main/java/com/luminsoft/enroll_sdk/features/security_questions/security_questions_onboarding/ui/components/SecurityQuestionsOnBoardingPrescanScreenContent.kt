@@ -195,7 +195,7 @@ fun SecurityQuestionsOnBoardingScreenContent(
                 Text(
                     text = stringResource(id = R.string.youMustChooseThreeQuestions),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = MaterialTheme.appColors.textColor
                 )
 
@@ -297,7 +297,7 @@ private fun AnswerTextField(
                 Text(
                     stringResource(id = R.string.answer),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = MaterialTheme.appColors.secondary
                 )
             },
@@ -313,7 +313,7 @@ private fun AnswerTextField(
                 )
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 12.sp,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 color = Color.Black,
                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
             )
@@ -359,7 +359,7 @@ fun DropdownList(
                 Text(
                     stringResource(id = R.string.chooseAQuestions),
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = MaterialTheme.appColors.primary
                 )
             },
@@ -382,7 +382,7 @@ fun DropdownList(
                 )
             },
             textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 12.sp,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily ,
                 color = MaterialTheme.appColors.primary
             )
@@ -409,7 +409,7 @@ fun DropdownList(
                             Text(
                                 text = label.question!!,
                                 fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                                fontSize = 12.sp,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                                 color = MaterialTheme.appColors.primary
                             )
                         },

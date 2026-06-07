@@ -194,7 +194,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                 ) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.otpSendTo),
-                        fontSize = 8.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         color = MaterialTheme.appColors.textColor,
                         textAlign = TextAlign.End,
                         modifier = Modifier.weight(1f)
@@ -202,7 +202,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         phoneValue.value!!,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         color = MaterialTheme.appColors.secondary,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -221,7 +221,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                             )
                         Text(
                             ResourceProvider.instance.getStringResource(R.string.edit),
-                            fontSize = 8.sp,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
                             color = Color.White,
                             modifier = Modifier
                                 .padding(horizontal = 5.dp)
@@ -249,7 +249,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                     Text(
                         text = stringResource(id = R.string.timerOtpMessage),
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f)
                     )
@@ -257,7 +257,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                     Text(
                         text = stringResource(id = R.string.second),
                         color = MaterialTheme.appColors.textColor,
-                        fontSize = 10.sp,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         maxLines = 1
                     )
                 }
@@ -267,7 +267,7 @@ fun ValidateOtpPhonesUpdateScreenContent(
                     Text(
                         text = stringResource(id = R.string.resend),
                         color = MaterialTheme.appColors.primary,
-                        fontSize = 14.sp,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(enabled = true) {
@@ -353,7 +353,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             text = ticks.toString(),
             color = MaterialTheme.appColors.textColor,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 12.sp
+            fontSize = MaterialTheme.typography.bodySmall.fontSize
         )
     }
 }

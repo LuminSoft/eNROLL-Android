@@ -204,7 +204,7 @@ fun MailsOnBoardingScreenContent(
                     color = MaterialTheme.appColors.textColor,
                     textAlign = TextAlign.Center,
                     fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 12.sp
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(0.35f))
 

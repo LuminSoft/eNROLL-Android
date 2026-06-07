@@ -25,11 +25,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -50,6 +48,9 @@ import com.luminsoft.enroll_sdk.ui_components.components.BottomSheetStatus
 import com.luminsoft.enroll_sdk.ui_components.components.DialogView
 import com.luminsoft.enroll_sdk.ui_components.components.EnrollItemView
 import com.luminsoft.enroll_sdk.ui_components.components.SpinKitLoadingIndicator
+import com.luminsoft.enroll_sdk.ui_components.components.enrollTextStyle
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollFontSize
 import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 
 @OptIn(ExperimentalPagerApi::class)
@@ -91,10 +92,16 @@ fun OnboardingScreenContent(
                     ?.let { PagerScreen(onBoardingPage = it) }
             }
 
+            val footerHeight = when (EnrollSDK.typography?.fontSize ?: EnrollFontSize.SMALL) {
+                EnrollFontSize.SMALL -> 150.dp
+                EnrollFontSize.MEDIUM -> 160.dp
+                EnrollFontSize.LARGE -> 170.dp
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp)
+                    .height(footerHeight)
                     .padding(start = 20.dp, end = 20.dp)
             ) {
                 HorizontalPagerIndicator(
@@ -110,12 +117,10 @@ fun OnboardingScreenContent(
                 if (pagerState.currentPage != ((pages.value?.size ?: 0) - 1))
                     ClickableText(
                         text = AnnotatedString(stringResource(id = R.string.skip)),
-                        style = TextStyle(
-                            fontSize = 20.sp,
+                        style = enrollTextStyle(EnrollTextStyle.BUTTON).copy(
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.appColors.primary,
-                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                            color = MaterialTheme.appColors.primary
                         ),
                         modifier = Modifier
                             .align(Alignment.CenterStart),
@@ -160,11 +165,9 @@ fun OnboardingScreenContent(
                     if (pagerState.currentPage == ((pages.value?.size ?: 0) - 1))
                         ClickableText(
                             text = AnnotatedString(stringResource(id = R.string.done)),
-                            style = TextStyle(
-                                fontSize = 20.sp,
+                            style = enrollTextStyle(EnrollTextStyle.BUTTON).copy(
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
-                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                                 color = MaterialTheme.appColors.primary
                             ),
                             modifier = Modifier

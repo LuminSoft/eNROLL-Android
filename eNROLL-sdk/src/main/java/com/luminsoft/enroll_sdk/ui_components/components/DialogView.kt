@@ -1,6 +1,5 @@
 package com.luminsoft.enroll_sdk.ui_components.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,16 +15,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.enroll_sdk.ui_components.theme.appIcons
 import com.luminsoft.enroll_sdk.ui_components.theme.ResolvedImage
@@ -87,12 +84,10 @@ fun DialogView(
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Text(
+                EnrollText(
                     text = text,
                     color = MaterialTheme.appColors.textColor,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                    fontSize = 16.sp,
+                    style = EnrollTextStyle.BODY,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
