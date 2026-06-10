@@ -86,6 +86,138 @@ print(len(val) if isinstance(val, list) else 0)
 }
 
 # ---------------------------------------------------------------------------
+# Discover public configuration symbols added on the current feature branch.
+# Override ENROLL_SYNC_BASE_REF when comparing against a branch other than
+# release/production.
+# ---------------------------------------------------------------------------
+extract_new_public_api_symbols() {
+  local base_ref="${ENROLL_SYNC_BASE_REF:-release/production}"
+  local public_api_file="eNROLL-sdk/src/main/java/com/luminsoft/enroll_sdk/ui_components/theme/AppTheme.kt"
+  local entry_point_file="eNROLL-sdk/src/main/java/com/luminsoft/enroll_sdk/sdk/eNROLL.kt"
+
+  if ! git -C "$NATIVE_SDK_PATH" rev-parse --verify --quiet "$base_ref" >/dev/null; then
+    return
+  fi
+
+  local base_commit
+  base_commit=$(git -C "$NATIVE_SDK_PATH" merge-base HEAD "$base_ref")
+
+  python3 - "$NATIVE_SDK_PATH" "$base_commit" "$public_api_file" "$entry_point_file" <<'PY'
+import pathlib
+import re
+import subprocess
+import sys
+
+repo = pathlib.Path(sys.argv[1])
+base_commit = sys.argv[2]
+relative_file = sys.argv[3]
+entry_point_file = sys.argv[4]
+
+current = (repo / relative_file).read_text()
+base = subprocess.run(
+    ["git", "-C", str(repo), "show", f"{base_commit}:{relative_file}"],
+    check=False,
+    capture_output=True,
+    text=True,
+).stdout
+current_entry_point = (repo / entry_point_file).read_text()
+base_entry_point = subprocess.run(
+    ["git", "-C", str(repo), "show", f"{base_commit}:{entry_point_file}"],
+    check=False,
+    capture_output=True,
+    text=True,
+).stdout
+
+def public_config_symbols(source):
+    data_classes = {}
+    enum_classes = set(re.findall(
+        r"^\s*enum\s+class\s+([A-Za-z_]\w*)",
+        source,
+        re.MULTILINE,
+    ))
+    lines = source.splitlines()
+    index = 0
+    while index < len(lines):
+        match = re.match(r"^\s*data\s+class\s+([A-Za-z_]\w*)\s*\(", lines[index])
+        if not match:
+            index += 1
+            continue
+
+        class_name = match.group(1)
+        fields = []
+        index += 1
+        while index < len(lines) and not re.match(r"^\s*\)", lines[index]):
+            field = re.match(
+                r"^\s*val\s+([A-Za-z_]\w*)\s*:\s*([A-Za-z_]\w*)",
+                lines[index],
+            )
+            if field:
+                fields.append((field.group(1), field.group(2)))
+            index += 1
+        data_classes[class_name] = fields
+        index += 1
+
+    symbols = set()
+    pending = ["AppTheme"]
+    visited = set()
+    while pending:
+        class_name = pending.pop()
+        if class_name in visited or class_name not in data_classes:
+            continue
+        visited.add(class_name)
+        if class_name != "AppTheme":
+            symbols.add(class_name)
+        for field_name, field_type in data_classes[class_name]:
+            symbols.add(field_name)
+            if field_type in data_classes or field_type in enum_classes:
+                symbols.add(field_type)
+                pending.append(field_type)
+    return symbols
+
+def init_parameters(source):
+    parameters = set()
+    in_init = False
+    for line in source.splitlines():
+        if re.match(r"^\s*fun\s+init\s*\(", line):
+            in_init = True
+            continue
+        if in_init and re.match(r"^\s*\)", line):
+            break
+        if in_init:
+            parameter = re.match(r"^\s*([A-Za-z_]\w*)\s*:", line)
+            if parameter:
+                parameters.add(parameter.group(1))
+    return parameters
+
+added_symbols = (
+    public_config_symbols(current) - public_config_symbols(base)
+) | (
+    init_parameters(current_entry_point) - init_parameters(base_entry_point)
+)
+for symbol in sorted(added_symbols):
+    print(symbol)
+PY
+}
+
+plugin_contains_symbol() {
+  local plugin_path="$1"
+  local symbol="$2"
+  local search_paths=()
+  local candidate
+
+  for candidate in android ios lib src; do
+    [[ -d "${plugin_path}/${candidate}" ]] && search_paths+=("${plugin_path}/${candidate}")
+  done
+
+  [[ ${#search_paths[@]} -gt 0 ]] &&
+    grep -RIsq \
+      --include='*.kt' --include='*.java' --include='*.swift' \
+      --include='*.dart' --include='*.ts' --include='*.tsx' \
+      --exclude-dir=Frameworks \
+      -- "$symbol" "${search_paths[@]}"
+}
+
+# ---------------------------------------------------------------------------
 # Extract actual SDK version from android/build.gradle
 # ---------------------------------------------------------------------------
 extract_gradle_sdk_version() {
@@ -258,6 +390,30 @@ check_plugin() {
     else
       warn "Feature gap vs Flutter: ${plugin_feat_count} exposed / ${flutter_feat_count} in Flutter"
     fi
+  fi
+
+  # --- Public API additions on the native feature branch ---
+  local new_public_symbols
+  new_public_symbols=$(extract_new_public_api_symbols)
+  if [[ -n "$new_public_symbols" ]]; then
+    local missing_public_symbols=()
+    while IFS= read -r public_symbol; do
+      [[ -z "$public_symbol" ]] && continue
+      if ! plugin_contains_symbol "$plugin_path" "$public_symbol"; then
+        missing_public_symbols+=("$public_symbol")
+      fi
+    done <<< "$new_public_symbols"
+
+    if [[ ${#missing_public_symbols[@]} -eq 0 ]]; then
+      pass "New native public API: exposed"
+    else
+      local missing_public_summary
+      printf -v missing_public_summary '%s, ' "${missing_public_symbols[@]}"
+      missing_public_summary="${missing_public_summary%, }"
+      warn "New native public API not found in plugin: ${missing_public_summary}"
+    fi
+  else
+    pass "New native public API: no additions vs ${ENROLL_SYNC_BASE_REF:-release/production}"
   fi
 
   # --- Missing Features ---
