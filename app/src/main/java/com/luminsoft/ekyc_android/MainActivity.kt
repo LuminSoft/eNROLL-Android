@@ -82,8 +82,8 @@ import java.io.File
 var dotenv = dotenv {
     directory = "/assets"
 //    filename="env_sleem"
-//    filename="env_mariam"
-    filename="env_admin1"
+    filename="env_mariam"
+//    filename="env_admin1"
 //    filename="env_local"
 //    filename = "env_andrew"
 //    filename = "env_radwan"
@@ -188,10 +188,10 @@ class MainActivity : ComponentActivity() {
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
             val fontOptions = listOf(
-                DemoFontOption(label = "Itim (English)", resourceName = "itim_regular"),
-                DemoFontOption(label = "Poppins (English)", resourceName = "poppins_regular"),
-                DemoFontOption(label = "Cairo (Arabic)", resourceName = "cairo_regular"),
-                DemoFontOption(label = "GE Flow (Arabic)", resourceName = "ge_flow_regular")
+                DemoFontOption(label = "Itim - Handwritten (English)", resourceName = "itim_regular"),
+                DemoFontOption(label = "Merriweather - Serif (English)", resourceName = "merriweather_variable"),
+                DemoFontOption(label = "Amiri - Naskh (Arabic)", resourceName = "amiri_regular"),
+                DemoFontOption(label = "Reem Kufi - Kufi (Arabic)", resourceName = "reem_kufi_variable")
             )
             val fontSizeOptions = EnrollFontSize.entries
             var selectedFontIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -464,10 +464,10 @@ class MainActivity : ComponentActivity() {
                         fontFamily = fontFamily,
                         dynamicTypeEnabled = true,
                         fontSize = fontSize,
-                        localizationOverrides = EnrollLocalizationOverrides(
-                            englishFileName = "enroll_localizations_en",
-                            arabicFileName = "enroll_localizations_ar"
-                        )
+//                        localizationOverrides = EnrollLocalizationOverrides(
+//                            englishFileName = "enroll_localizations_en",
+//                            arabicFileName = "enroll_localizations_ar"
+//                        )
                     )
                 )
 //                appTheme = AppTheme(
