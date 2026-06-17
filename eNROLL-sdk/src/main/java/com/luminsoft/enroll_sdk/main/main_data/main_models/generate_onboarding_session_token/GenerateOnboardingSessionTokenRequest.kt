@@ -1,5 +1,6 @@
 package com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token
 
+import android.net.Uri
 import com.google.gson.annotations.SerializedName
 
 open class GenerateOnboardingSessionTokenRequest {
@@ -39,5 +40,7 @@ open class GenerateOnboardingSessionTokenRequest {
 
     @SerializedName("requestId")
     internal var requestId: String? = null
+
+    internal var signContractFileUri: Uri? = null
 
 }

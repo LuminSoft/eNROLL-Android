@@ -48,6 +48,7 @@ import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.EnrollSuccessModel
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
+import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.lightenColor
@@ -83,6 +84,7 @@ fun CurrentContractLowRiskFRAScreenContent(
     val context = LocalContext.current
 
     val contractFileModelList = signContractViewModel.contractFileModelList.collectAsState()
+    val isSingleApprovalMode = EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK
 
     val currentContractLowRiskFRAViewModel =
         remember {
@@ -90,9 +92,10 @@ fun CurrentContractLowRiskFRAScreenContent(
                 getCurrentContractLowRiskFRAUseCase = getCurrentContractLowRiskFRAUseCase,
                 getSignContractFileLowRiskFRAUseCase = getSignContractFileLowRiskFRAUseCase,
                 context = context,
-                contractId = signContractViewModel.contractId.value!!,
-                contractVersionNumber = signContractViewModel.contractVersionNumber.value!!,
-                currentText = contractFileModelList.value!![0].signContractTextEnum.toString()
+                contractId = signContractViewModel.contractId.value.orEmpty(),
+                contractVersionNumber = signContractViewModel.contractVersionNumber.value.orEmpty(),
+                currentText = contractFileModelList.value?.firstOrNull()?.signContractTextEnum.orEmpty(),
+                loadFullContractOnInit = isSingleApprovalMode
             )
         }
     val currentContractLowRiskFRAVM = remember { currentContractLowRiskFRAViewModel }
@@ -109,12 +112,12 @@ fun CurrentContractLowRiskFRAScreenContent(
 
 
     LaunchedEffect(currentStepIndex.value) {
-        if (getCurrentContract.value)
+        if (!isSingleApprovalMode && getCurrentContract.value)
             currentContractLowRiskFRAVM.callGetCurrentContract(xCurrentText = signContractViewModel.getContractText())
     }
 
     LaunchedEffect(showAllContracts.value) {
-        if (showAllContracts.value)
+        if (!isSingleApprovalMode && showAllContracts.value)
             currentContractLowRiskFRAVM.callGetSignContractFile()
     }
     BackGroundView(navController = navController, showAppBar = true) {
@@ -182,17 +185,24 @@ fun CurrentContractLowRiskFRAScreenContent(
                     }
                 }
             }
+        } else if (bitmap.value == null) {
+            LoadingView()
         } else {
             PdfViewerWidget(
                 bitmap.value!!,
                 activity = activity,
-                contractFileModelList = contractFileModelList.value!!,
+                contractFileModelList = contractFileModelList.value ?: arrayListOf(),
                 currentStepIndex = currentStepIndex.value,
                 showAllContracts = showAllContracts.value,
+                isSingleApprovalMode = isSingleApprovalMode,
                 currentContractLowRiskFRAVM = currentContractLowRiskFRAVM,
                 context = context,
                 onAcceptClick = {
-                    signContractViewModel.getNextContract()
+                    if (isSingleApprovalMode) {
+                        navController.navigate(signContractScreenContent)
+                    } else {
+                        signContractViewModel.getNextContract()
+                    }
                 }, onSignClick = {
                     navController.navigate(signContractScreenContent)
                 }
@@ -211,12 +221,13 @@ fun PdfViewerWidget(
     contractFileModelList: ArrayList<ContractFileModel>,
     currentStepIndex: Int,
     showAllContracts: Boolean,
+    isSingleApprovalMode: Boolean = false,
     currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
     context: Context
 ) {
     val contractId by currentContractLowRiskFRAVM.contractIdValue.collectAsState()
     val contractVersion by currentContractLowRiskFRAVM.contractVersionNumberValue.collectAsState()
-    val fileName = "$contractId${contractVersion}_final"
+    val fileName = if (isSingleApprovalMode) "pdf_contract" else "$contractId${contractVersion}_final"
 
     var showConfirmationDialog by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
@@ -265,7 +276,9 @@ fun PdfViewerWidget(
                 .wrapContentSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            if (!showAllContracts)
+            if (isSingleApprovalMode)
+                DownloadIcon(currentContractLowRiskFRAVM, context, fileName)
+            else if (!showAllContracts)
                 PDFHeader(
                     contractFileModelList,
                     currentStepIndex,
@@ -318,7 +331,12 @@ fun PdfViewerWidget(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
             ) {
-                if (!showAllContracts)
+                if (isSingleApprovalMode)
+                    ButtonView(
+                        onClick = onAcceptClick,
+                        title = stringResource(id = R.string.approve)
+                    )
+                else if (!showAllContracts)
                     ButtonView(
                         onClick = onAcceptClick,
                         title = stringResource(id = R.string.approve)
@@ -457,4 +475,3 @@ private fun PDFHeader(
         )
     }
 }
-

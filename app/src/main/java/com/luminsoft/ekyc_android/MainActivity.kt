@@ -2,11 +2,15 @@ package com.luminsoft.ekyc_android
 
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,6 +52,7 @@ import androidx.core.content.edit
 import com.luminsoft.ekyc_android.theme.EnrollTheme
 import com.luminsoft.enroll_sdk.AppColors
 import com.luminsoft.enroll_sdk.EnrollCallback
+import com.luminsoft.enroll_sdk.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.EnrollEnvironment
 import com.luminsoft.enroll_sdk.EnrollFailedModel
 import com.luminsoft.enroll_sdk.EnrollMode
@@ -135,6 +140,8 @@ class MainActivity : ComponentActivity() {
     private var requestIdText = mutableStateOf(TextFieldValue())
     private var templateIdText = mutableStateOf(TextFieldValue())
     private var contractParametersText = mutableStateOf(TextFieldValue())
+    private var signContractFileUri = mutableStateOf<Uri?>(null)
+    private var signContractFileName = mutableStateOf("")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -196,6 +203,16 @@ class MainActivity : ComponentActivity() {
             val fontSizeOptions = EnrollFontSize.entries
             var selectedFontIndex by rememberSaveable { mutableIntStateOf(0) }
             var selectedFontSizeIndex by rememberSaveable { mutableIntStateOf(0) }
+            val signContractModeList = listOf("Contract Template (mode 5)", "PDF File (mode 1)")
+            var selectedSignContractModeIndex by rememberSaveable {
+                mutableIntStateOf(sharedPref.getInt("signContractModeIndex", 0))
+            }
+            val pdfPickerLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.OpenDocument()
+            ) { uri ->
+                signContractFileUri.value = uri
+                signContractFileName.value = uri?.let { getDisplayName(it) }.orEmpty()
+            }
             
             // Exit Step options - "None" means no exit step (run full flow)
             val exitStepList = listOf(
@@ -258,19 +275,6 @@ class MainActivity : ComponentActivity() {
                         onValueChange = {
                             requestIdText.value = it
                         })
-                    Spacer(modifier = Modifier.height(15.dp))
-                    NormalTextField(
-                        label = "Template ID",
-                        value = templateIdText.value,
-                        onValueChange = {
-                            templateIdText.value = it
-                        })
-                    NormalTextField(
-                        label = "Contract Parameters",
-                        value = contractParametersText.value,
-                        onValueChange = {
-                            contractParametersText.value = it
-                        })
                     Row {
                         Spacer(modifier = Modifier.height(15.dp))
                         ArabicCheckbox()
@@ -289,6 +293,62 @@ class MainActivity : ComponentActivity() {
                         selectedIndex = selectedIndex,
                         modifier = buttonModifier,
                         onItemClick = { selectedIndex = it })
+
+                    if (selectedIndex == 4) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text("Sign Contract Mode", style = MaterialTheme.typography.labelLarge)
+                        Spacer(modifier = Modifier.height(5.dp))
+                        DropdownList(
+                            itemList = signContractModeList,
+                            selectedIndex = selectedSignContractModeIndex,
+                            modifier = buttonModifier,
+                            onItemClick = {
+                                selectedSignContractModeIndex = it
+                                signContractFileUri.value = null
+                                signContractFileName.value = ""
+                            })
+
+                        Spacer(modifier = Modifier.height(10.dp))
+                        if (selectedSignContractModeIndex == 0) {
+                            NormalTextField(
+                                label = "Template ID",
+                                value = templateIdText.value,
+                                onValueChange = {
+                                    templateIdText.value = it
+                                })
+                            NormalTextField(
+                                label = "Contract Parameters",
+                                value = contractParametersText.value,
+                                onValueChange = {
+                                    contractParametersText.value = it
+                                })
+                        } else {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(45.dp),
+                                onClick = {
+                                    pdfPickerLauncher.launch(arrayOf("application/pdf"))
+                                },
+                                contentPadding = PaddingValues(0.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.appColors.primary),
+                            ) {
+                                Text(
+                                    text = "Pick PDF",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.appColors.backGround
+                                )
+                            }
+                            if (signContractFileName.value.isNotEmpty()) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = signContractFileName.value,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
                     
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(":Exit Step", style = MaterialTheme.typography.labelLarge)
@@ -342,7 +402,9 @@ class MainActivity : ComponentActivity() {
                                 activity = activity,
                                 selectedIndex = selectedIndex,
                                 fontFamily = fontOptions[selectedFontIndex].resourceName,
-                                fontSize = fontSizeOptions[selectedFontSizeIndex]
+                                fontSize = fontSizeOptions[selectedFontSizeIndex],
+                                signContractModeIndex = selectedSignContractModeIndex,
+                                selectedSignContractFileUri = signContractFileUri.value
                             )
                         },
                         contentPadding = PaddingValues(0.dp),
@@ -365,6 +427,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun getDisplayName(uri: Uri): String {
+        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex >= 0 && cursor.moveToFirst()) {
+                return cursor.getString(nameIndex)
+            }
+        }
+        return uri.lastPathSegment ?: "Selected PDF"
+    }
+
     private fun clearCache() {
         val cacheDir = File(this.cacheDir, "/scanned/") // Use 'this' for Activity context
         if (cacheDir.exists()) {
@@ -377,8 +449,31 @@ class MainActivity : ComponentActivity() {
         activity: Activity,
         selectedIndex: Int,
         fontFamily: String,
-        fontSize: EnrollFontSize
+        fontSize: EnrollFontSize,
+        signContractModeIndex: Int,
+        selectedSignContractFileUri: Uri?
     ) {
+        val selectedSignContractMode = if (signContractModeIndex == 0) {
+            EnrollContractSignatureMode.LOW_RISK_FRA
+        } else {
+            EnrollContractSignatureMode.LOW_RISK
+        }
+
+        if (selectedIndex == 4) {
+            if (applicationIdText.value.text.isBlank()) {
+                text.value = "Application Id is required for sign contract"
+                return
+            }
+            if (selectedSignContractMode == EnrollContractSignatureMode.LOW_RISK_FRA && templateIdText.value.text.isBlank()) {
+                text.value = "Template ID is required for contract template mode"
+                return
+            }
+            if (selectedSignContractMode == EnrollContractSignatureMode.LOW_RISK && selectedSignContractFileUri == null) {
+                text.value = "PDF file is required for PDF sign contract mode"
+                return
+            }
+        }
+
         if (isRememberMe.value) {
             getPreferences(Context.MODE_PRIVATE).edit {
                 putString("tenantId", tenantIdText.value.text)
@@ -387,6 +482,7 @@ class MainActivity : ComponentActivity() {
                 putString("levelOfTrustToken", levelOfTrustTokenText.value.text)
                 putString("templateId", templateIdText.value.text)
                 putString("contractParameters", contractParametersText.value.text)
+                putInt("signContractModeIndex", signContractModeIndex)
                 apply()
             }
         } else {
@@ -458,6 +554,13 @@ class MainActivity : ComponentActivity() {
                 requestId = requestIdText.value.text,
                 templateId = templateIdText.value.text,
                 contractParameters = contractParametersText.value.text,
+                signContractMode = selectedSignContractMode,
+                signContractFileUri = if (selectedSignContractMode == EnrollContractSignatureMode.LOW_RISK) {
+                    selectedSignContractFileUri
+                } else {
+                    null
+                },
+                signContractApproach = 1,
                 exitStep = getExitStepFromIndex(selectedExitStepIndex.value),
                 appTheme = AppTheme(
                     typography = EnrollTypography(

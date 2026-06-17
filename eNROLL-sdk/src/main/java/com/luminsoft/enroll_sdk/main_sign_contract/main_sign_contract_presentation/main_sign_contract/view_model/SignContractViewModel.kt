@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import arrow.core.Either
 import arrow.core.raise.Null
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.core.network.RetroClient
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.DeviceIdentifier
@@ -88,7 +89,12 @@ class SignContractViewModel(
                     loading.value = false
                 },
                 {
-                    getSignContractSteps()
+                    if (EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK_FRA) {
+                        getSignContractSteps()
+                    } else {
+                        loading.value = false
+                        navigateToNextStep()
+                    }
                 })
 
         }
@@ -143,6 +149,9 @@ class SignContractViewModel(
                 EnrollSDK.applicantId,
                 EnrollSDK.contractTemplateId,
                 EnrollSDK.contractParameters,
+                EnrollSDK.signContractMode,
+                EnrollSDK.signContractFileUri,
+                EnrollSDK.signContractApproach,
             )
 
             val response: Either<SdkFailure, String> =

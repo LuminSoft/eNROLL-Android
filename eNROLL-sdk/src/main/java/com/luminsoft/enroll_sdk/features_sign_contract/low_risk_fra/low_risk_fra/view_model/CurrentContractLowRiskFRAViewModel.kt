@@ -32,7 +32,8 @@ class CurrentContractLowRiskFRAViewModel(
     private val contractId: String,
     private val contractVersionNumber: String,
     private val currentText: String,
-    private val context: Context
+    private val context: Context,
+    private val loadFullContractOnInit: Boolean = false
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -50,7 +51,11 @@ class CurrentContractLowRiskFRAViewModel(
     init {
         contractIdValue.value = contractId
         contractVersionNumberValue.value = contractVersionNumber
-        getCurrentContract(currentText)
+        if (loadFullContractOnInit) {
+            getSignContractFile()
+        } else {
+            getCurrentContract(currentText)
+        }
     }
 
 

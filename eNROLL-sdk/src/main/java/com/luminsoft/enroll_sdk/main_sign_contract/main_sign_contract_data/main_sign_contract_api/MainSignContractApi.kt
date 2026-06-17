@@ -4,6 +4,7 @@ import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_s
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.StepSignContractModel
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 import retrofit2.Response
@@ -14,6 +15,7 @@ interface MainSignContractApi {
     @POST("api/v1/Auth/GenerateSignContractRequestSessionToken")
     suspend fun generateSignContractRequestSessionToken(
         @Part("Data") data: RequestBody,
+        @Part signContractFile: MultipartBody.Part? = null,
       /*  @Part("TenantId") tenantId: RequestBody,
         @Part("TenantSecret") tenantSecret: RequestBody,
         @Part("ApplicantId") applicantId: RequestBody,

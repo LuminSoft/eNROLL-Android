@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Build
 import com.luminsoft.enroll_sdk.EnrollMainActivity
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
@@ -13,6 +14,7 @@ import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
 import com.luminsoft.enroll_sdk.EnrollMainSignContractActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
+import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -45,6 +47,9 @@ object eNROLL {
         requestId: String = "",
         templateId: String = "",
         contractParameters: String = "",
+        signContractMode: EnrollContractSignatureMode = EnrollContractSignatureMode.LOW_RISK_FRA,
+        signContractFileUri: Uri? = null,
+        signContractApproach: Int = 1,
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
         exitStep: EkycStepType? = null,
@@ -60,8 +65,24 @@ object eNROLL {
                 throw Exception("Invalid Applicant Id or Level Of Trust Token")
         }
         if (enrollMode == EnrollMode.SIGN_CONTRACT) {
-            if (templateId.isEmpty())
-                throw Exception("Invalid template Id")
+            if (applicantId.isEmpty())
+                throw Exception("Invalid application id")
+            when (signContractMode) {
+                EnrollContractSignatureMode.LOW_RISK_FRA -> {
+                    if (templateId.isEmpty())
+                        throw Exception("Invalid template Id")
+                }
+
+                EnrollContractSignatureMode.LOW_RISK -> {
+                    if (signContractFileUri == null)
+                        throw Exception("Invalid sign contract file")
+                }
+
+                EnrollContractSignatureMode.HIGH_RISK,
+                EnrollContractSignatureMode.HIGH_RISK_FRA -> {
+                    throw Exception("Unsupported sign contract mode")
+                }
+            }
         }
         EnrollSDK.environment = environment
         EnrollSDK.tenantSecret = tenantSecret
@@ -86,6 +107,9 @@ object eNROLL {
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
         EnrollSDK.contractTemplateId = templateId
         EnrollSDK.contractParameters = contractParameters
+        EnrollSDK.signContractMode = signContractMode
+        EnrollSDK.signContractFileUri = signContractFileUri
+        EnrollSDK.signContractApproach = signContractApproach
         EnrollSDK.exitStep = exitStep
     }
 

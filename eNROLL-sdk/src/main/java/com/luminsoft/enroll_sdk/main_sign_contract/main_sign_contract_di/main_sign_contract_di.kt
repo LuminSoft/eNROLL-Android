@@ -27,7 +27,7 @@ val mainSignContractModule = module {
         GetSignContractStepsUsecase(get())
     }
     single<MainSignContractRemoteDataSource> {
-        MainSignContractRemoteDataSourceImpl(get(), get())
+        MainSignContractRemoteDataSourceImpl(get(), get(), androidContext())
     }
     single<MainSignContractRepository> {
         MainSignContractRepositoryImplementation(get())

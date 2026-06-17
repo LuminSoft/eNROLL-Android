@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk
 
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
+import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollFailedModel
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -12,6 +13,7 @@ import com.luminsoft.enroll_sdk.sdk.eNROLL
 
 // Re-export all the necessary classes
 typealias EnrollCallback = EnrollCallback
+typealias EnrollContractSignatureMode = EnrollContractSignatureMode
 typealias EnrollEnvironment = EnrollEnvironment
 typealias EnrollFailedModel = EnrollFailedModel
 typealias EnrollMode = EnrollMode
@@ -20,7 +22,6 @@ typealias LocalizationCode = LocalizationCode
 typealias eNROLL = eNROLL
 typealias AppColors = com.luminsoft.enroll_sdk.ui_components.theme.AppColors
 typealias EkycStepType = EkycStepType
-
 
 
 

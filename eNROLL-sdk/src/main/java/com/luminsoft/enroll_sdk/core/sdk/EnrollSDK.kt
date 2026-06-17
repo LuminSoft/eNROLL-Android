@@ -1,6 +1,8 @@
 package com.luminsoft.enroll_sdk.core.sdk
 
+import android.net.Uri
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
+import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.core.models.EnrollEnvironment
 import com.luminsoft.enroll_sdk.core.models.EnrollForcedDocumentType
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
@@ -23,6 +25,9 @@ object EnrollSDK {
     var levelOfTrustToken = ""
     var contractTemplateId = ""
     var contractParameters = ""
+    var signContractMode = EnrollContractSignatureMode.LOW_RISK_FRA
+    var signContractFileUri: Uri? = null
+    var signContractApproach = 1
     var serverPublicKey = ""
     var updateSteps = arrayListOf<String>()
 

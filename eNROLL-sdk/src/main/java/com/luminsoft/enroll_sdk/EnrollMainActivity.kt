@@ -42,6 +42,7 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.models.EnrollMode
+import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.core.sdk.EnrollSDK
 import com.luminsoft.enroll_sdk.core.utils.DynamicLocalizationManager
 import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
@@ -102,8 +103,12 @@ class EnrollMainActivity : ComponentActivity() {
             }
 
             EnrollMode.SIGN_CONTRACT -> {
-                if (EnrollSDK.contractTemplateId.isEmpty())
+                if (EnrollSDK.applicantId.isEmpty())
+                    throw Exception("Invalid application id")
+                if (EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK_FRA && EnrollSDK.contractTemplateId.isEmpty())
                     throw Exception("Invalid template id")
+                if (EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK && EnrollSDK.signContractFileUri == null)
+                    throw Exception("Invalid sign contract file")
                 startActivity(Intent(this, EnrollMainSignContractActivity::class.java))
             }
         }

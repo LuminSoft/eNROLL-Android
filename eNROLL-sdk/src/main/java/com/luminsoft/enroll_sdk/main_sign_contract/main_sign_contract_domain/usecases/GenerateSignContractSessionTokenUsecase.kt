@@ -1,7 +1,9 @@
 package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases
 
+import android.net.Uri
 import arrow.core.Either
 import com.luminsoft.enroll_sdk.core.failures.SdkFailure
+import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
 import com.luminsoft.enroll_sdk.core.utils.UseCase
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenRequest
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.repository.MainSignContractRepository
@@ -18,8 +20,9 @@ class GenerateSignContractSessionTokenUsecase(private val mainRepository: MainSi
         generateOnboardingSessionTokenRequest.applicantId = params.applicantId
         generateOnboardingSessionTokenRequest.contractTemplateId = params.contractTemplateId
         generateOnboardingSessionTokenRequest.contractParams = params.contractParams
-        generateOnboardingSessionTokenRequest.signContractMode = "5"
-        generateOnboardingSessionTokenRequest.signContractApproach = "1"
+        generateOnboardingSessionTokenRequest.signContractMode = params.signContractMode.value.toString()
+        generateOnboardingSessionTokenRequest.signContractApproach = params.signContractApproach.toString()
+        generateOnboardingSessionTokenRequest.signContractFileUri = params.signContractFileUri
         return mainRepository.generateSignContractSessionToken(generateOnboardingSessionTokenRequest)
     }
 }
@@ -29,5 +32,8 @@ data class GenerateSignContractSessionTokenUsecaseParams(
     val tenantSecret: String,
     val applicantId: String,
     val contractTemplateId: String,
-    val contractParams: String
+    val contractParams: String,
+    val signContractMode: EnrollContractSignatureMode,
+    val signContractFileUri: Uri?,
+    val signContractApproach: Int
 )
