@@ -128,7 +128,7 @@ fun createEnrollTypography(
         typography = typography,
         legacyFontResId = legacyFontResId
     )
-    val sizes = typography.fontSize.toEnrollFontSizes()
+    val sizes = typography.fontSize.toEnrollFontSizes(localizationCode)
     val defaultTypography = Typography()
 
     return Typography(
@@ -223,13 +223,20 @@ private data class ResolvedEnrollFontSizes(
     val inputLineHeight: Int
 )
 
-private fun EnrollFontSize.toEnrollFontSizes(): ResolvedEnrollFontSizes {
+private fun EnrollFontSize.toEnrollFontSizes(
+    localizationCode: LocalizationCode
+): ResolvedEnrollFontSizes {
+    val title = titleSp(localizationCode).toInt()
+    val body = bodySp(localizationCode).toInt()
+    val button = buttonSp(localizationCode).toInt()
+    val input = inputSp(localizationCode).toInt()
+
     return when (this) {
         EnrollFontSize.SMALL -> ResolvedEnrollFontSizes(
-            title = titleSp.toInt(),
-            body = bodySp.toInt(),
-            button = buttonSp.toInt(),
-            input = inputSp.toInt(),
+            title = title,
+            body = body,
+            button = button,
+            input = input,
             titleLineHeight = 28,
             bodyLineHeight = 24,
             buttonLineHeight = 24,
@@ -237,10 +244,10 @@ private fun EnrollFontSize.toEnrollFontSizes(): ResolvedEnrollFontSizes {
         )
 
         EnrollFontSize.MEDIUM -> ResolvedEnrollFontSizes(
-            title = titleSp.toInt(),
-            body = bodySp.toInt(),
-            button = buttonSp.toInt(),
-            input = inputSp.toInt(),
+            title = title,
+            body = body,
+            button = button,
+            input = input,
             titleLineHeight = 32,
             bodyLineHeight = 27,
             buttonLineHeight = 27,
@@ -248,10 +255,10 @@ private fun EnrollFontSize.toEnrollFontSizes(): ResolvedEnrollFontSizes {
         )
 
         EnrollFontSize.LARGE -> ResolvedEnrollFontSizes(
-            title = titleSp.toInt(),
-            body = bodySp.toInt(),
-            button = buttonSp.toInt(),
-            input = inputSp.toInt(),
+            title = title,
+            body = body,
+            button = button,
+            input = input,
             titleLineHeight = 40,
             bodyLineHeight = 32,
             buttonLineHeight = 32,

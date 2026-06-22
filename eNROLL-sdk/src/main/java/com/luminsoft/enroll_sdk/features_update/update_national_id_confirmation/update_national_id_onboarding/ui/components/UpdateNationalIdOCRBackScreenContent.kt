@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -158,7 +161,13 @@ fun UpdateNationalIdBackConfirmationScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 24.dp)
+                        .navigationBarsPadding()
                 ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .verticalScroll(rememberScrollState())
+                    ) {
                     Spacer(modifier = Modifier.height(20.dp))
                     if (customerData.value!!.profession != null) TextItem(
                         R.string.profession,
@@ -193,8 +202,9 @@ fun UpdateNationalIdBackConfirmationScreen(
                         customerData.value!!.maritalStatus!!,
                         R.drawable.marital_status_icon
                     )
-                    Spacer(modifier = Modifier.fillMaxHeight(0.3f))
-
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Column {
                     ButtonView(
                         onClick = {
                             updateViewModel.enableLoading()
@@ -220,6 +230,8 @@ fun UpdateNationalIdBackConfirmationScreen(
                         borderColor = MaterialTheme.appColors.primary,
                         textColor = MaterialTheme.appColors.primary
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
             } else if (!failure.value?.message.isNullOrEmpty()) {
                 when (failure.value) {

@@ -14,9 +14,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -236,8 +237,9 @@ private fun ApplyForSignatureOrAlreadyHave(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 24.dp)
+            .navigationBarsPadding()
     ) {
-        Spacer(modifier = Modifier.fillMaxHeight(0.25f))
+        Spacer(modifier = Modifier.weight(1f))
 
         EnrollText(
             text = stringResource(id = R.string.eSignature),
@@ -255,10 +257,11 @@ private fun ApplyForSignatureOrAlreadyHave(
         Spacer(modifier = Modifier.height(80.dp))
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Box(modifier = Modifier.weight(1f)) {
+            Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
                 Card(
                     ElectronicSignatureChooseStep.AlreadyHaveSignature,
                     chosenStep,
@@ -266,7 +269,7 @@ private fun ApplyForSignatureOrAlreadyHave(
                 )
             }
 
-            Box(modifier = Modifier.weight(1f)) {
+            Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
                 Card(
                     ElectronicSignatureChooseStep.ApplyForSignature,
                     chosenStep,
@@ -274,7 +277,7 @@ private fun ApplyForSignatureOrAlreadyHave(
                 )
             }
         }
-        Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+        Spacer(modifier = Modifier.weight(1.5f))
 
         ButtonView(
             onClick = {
@@ -309,11 +312,7 @@ private fun ApplyForSignatureOrAlreadyHave(
         )
 
 
-        Spacer(
-            modifier = Modifier
-                .safeContentPadding()
-                .height(10.dp)
-        )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 
 
@@ -342,6 +341,7 @@ private fun Card(
                 shape = RoundedCornerShape(12.dp)
             )
             .alpha(alpha)
+            .fillMaxHeight()
             .clickable(step != chosenStep.value!!) {
                 rememberedViewModel.chosenStep.value = step
             },
@@ -350,8 +350,8 @@ private fun Card(
 
         Column(
             modifier = Modifier
-                .fillMaxHeight(0.3f)
-                .fillMaxWidth(),
+                .fillMaxSize()
+                .padding(vertical = 12.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

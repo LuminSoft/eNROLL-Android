@@ -117,7 +117,8 @@ class SignContractViewModel(
                     response.let {
                         contractId.value = res.contractId.toString()
                         contractVersionNumber.value = res.contractVersionNumber.toString()
-                        contractFileModelList.value = res.contractVersionDetailModel
+                        contractFileModelList.value =
+                            sortContractFiles(res.contractVersionDetailModel)
                         currentStepIndex.value = 0
                         loading.value = false
                         navigateToNextStep()
@@ -192,5 +193,16 @@ class SignContractViewModel(
 
     fun getContractText(): String {
         return contractFileModelList.value!![currentStepIndex.value].signContractTextEnum!!
+    }
+
+    private fun sortContractFiles(
+        contractFiles: ArrayList<ContractFileModel>
+    ): ArrayList<ContractFileModel> {
+        return ArrayList(
+            contractFiles.sortedWith(
+                compareBy<ContractFileModel> { it.sectionOrder ?: Int.MAX_VALUE }
+                    .thenBy { it.signContractTextEnum?.toIntOrNull() ?: Int.MAX_VALUE }
+            )
+        )
     }
 }

@@ -33,13 +33,13 @@ fun AppCompatActivity.applyEnrollActionBarTypography() {
     window.decorView.post {
         window.decorView.findTextViews()
             .filter { it.text?.toString() == actionBarTitle?.toString() }
-            .forEach { it.applyEnrollTypography(EnrollTextStyle.TITLE) }
+            .forEach { it.applyEnrollTypography(EnrollTextStyle.SUB_TITLE) }
     }
 }
 
 private fun TextView.applyEnrollTypography(style: EnrollTextStyle) {
     val typography = EnrollSDK.typography ?: EnrollTypography.default
-    val size = typography.fontSize.sizeFor(style)
+    val size = typography.fontSize.legacySizeFor(style)
 
     if (typography.dynamicTypeEnabled) {
         setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
@@ -52,14 +52,25 @@ private fun TextView.applyEnrollTypography(style: EnrollTextStyle) {
     }
 }
 
-private fun EnrollFontSize.sizeFor(style: EnrollTextStyle): Float =
-    when (style) {
-        EnrollTextStyle.TITLE -> titleSp
+/**
+ * Resolves the SP size to apply to a native (non-Compose) view.
+ *
+ * Third-party capture screens use fixed-height layouts (e.g. the document scan
+ * instruction bar) that overflow and overlap at the LARGE tier, so the applied
+ * size is capped at MEDIUM for native views. Arabic-specific MEDIUM reductions
+ * are honored via the localization-aware size functions.
+ */
+private fun EnrollFontSize.legacySizeFor(style: EnrollTextStyle): Float {
+    val cappedSize = if (this == EnrollFontSize.LARGE) EnrollFontSize.MEDIUM else this
+    val localizationCode = EnrollSDK.localizationCode
+    return when (style) {
+        EnrollTextStyle.TITLE -> cappedSize.titleSp(localizationCode)
         EnrollTextStyle.SUB_TITLE,
-        EnrollTextStyle.BODY -> bodySp
-        EnrollTextStyle.BUTTON -> buttonSp
-        EnrollTextStyle.INPUT -> inputSp
+        EnrollTextStyle.BODY -> cappedSize.bodySp(localizationCode)
+        EnrollTextStyle.BUTTON -> cappedSize.buttonSp(localizationCode)
+        EnrollTextStyle.INPUT -> cappedSize.inputSp(localizationCode)
     }
+}
 
 private fun resolveEnrollTypeface(context: Context, fontFamily: String?): Typeface? {
     val configuredFontId = fontFamily

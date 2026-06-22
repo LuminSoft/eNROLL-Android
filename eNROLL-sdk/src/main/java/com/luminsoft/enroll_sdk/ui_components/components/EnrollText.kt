@@ -5,7 +5,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.luminsoft.enroll_sdk.ui_components.theme.EnrollTextStyle
@@ -24,7 +26,13 @@ fun EnrollText(
     Text(
         text = text,
         modifier = modifier,
-        style = enrollTextStyle(style),
+        style = enrollTextStyle(style).copy(
+            platformStyle = PlatformTextStyle(includeFontPadding = true),
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None
+            )
+        ),
         color = color,
         textAlign = textAlign,
         maxLines = maxLines,

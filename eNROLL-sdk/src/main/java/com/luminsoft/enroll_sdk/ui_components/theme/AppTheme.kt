@@ -1,5 +1,7 @@
 package com.luminsoft.enroll_sdk.ui_components.theme
 
+import com.luminsoft.enroll_sdk.core.models.LocalizationCode
+
 /**
  * Unified theme configuration for the eNROLL SDK.
  *
@@ -57,6 +59,27 @@ val EnrollFontSize.inputSp: Float
         EnrollFontSize.MEDIUM -> 17f
         EnrollFontSize.LARGE -> 21f
     }
+
+/**
+ * Arabic glyphs (e.g. Amiri-Naskh) render visually taller than Latin glyphs at the
+ * same point size, so the MEDIUM tier reads as oversized in Arabic. These overloads
+ * apply a slightly reduced MEDIUM size when the active language is Arabic, while
+ * SMALL/LARGE and all Latin sizes remain unchanged.
+ */
+private fun EnrollFontSize.isArabicMedium(localizationCode: LocalizationCode): Boolean =
+    this == EnrollFontSize.MEDIUM && localizationCode == LocalizationCode.AR
+
+fun EnrollFontSize.titleSp(localizationCode: LocalizationCode): Float =
+    if (isArabicMedium(localizationCode)) 21f else titleSp
+
+fun EnrollFontSize.bodySp(localizationCode: LocalizationCode): Float =
+    if (isArabicMedium(localizationCode)) 16f else bodySp
+
+fun EnrollFontSize.buttonSp(localizationCode: LocalizationCode): Float =
+    if (isArabicMedium(localizationCode)) 17f else buttonSp
+
+fun EnrollFontSize.inputSp(localizationCode: LocalizationCode): Float =
+    if (isArabicMedium(localizationCode)) 15f else inputSp
 
 data class EnrollLocalizationOverrides(
     val englishFileName: String? = null,

@@ -42,7 +42,7 @@ class SignContractOTPViewModel(
         loading.value = true
         ui {
             val response: Either<SdkFailure, SignContractSendOTPResponseModel> =
-                signContractSendOTPUseCase.call(params.value as Null)
+                signContractSendOTPUseCase.call(null)
 
             response.fold(
                 {

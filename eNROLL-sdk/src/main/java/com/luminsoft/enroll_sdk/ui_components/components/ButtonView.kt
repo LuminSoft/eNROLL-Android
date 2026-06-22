@@ -57,9 +57,9 @@ fun ButtonView(
     val presetMinimumHeight = when (
         EnrollSDK.typography?.fontSize ?: EnrollFontSize.SMALL
     ) {
-        EnrollFontSize.SMALL -> 48.0
-        EnrollFontSize.MEDIUM -> 56.0
-        EnrollFontSize.LARGE -> 64.0
+        EnrollFontSize.SMALL -> 42.0
+        EnrollFontSize.MEDIUM -> 44.0
+        EnrollFontSize.LARGE -> 48.0
     }
     val buttonModifier = Modifier
         .fillMaxWidth()
