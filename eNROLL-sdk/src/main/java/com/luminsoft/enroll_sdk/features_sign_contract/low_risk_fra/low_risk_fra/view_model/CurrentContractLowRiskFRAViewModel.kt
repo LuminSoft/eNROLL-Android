@@ -43,7 +43,7 @@ class CurrentContractLowRiskFRAViewModel(
     var navController: NavController? = null
     var otpApproved: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var pdfFile: MutableStateFlow<File?> = MutableStateFlow(null)
-    var bitmap: MutableStateFlow<List<Bitmap>?> = MutableStateFlow(null)
+    var pageCount: MutableStateFlow<Int?> = MutableStateFlow(null)
     var contractIdValue: MutableStateFlow<String> = MutableStateFlow("")
     var contractVersionNumberValue: MutableStateFlow<String> = MutableStateFlow("")
 
@@ -65,6 +65,7 @@ class CurrentContractLowRiskFRAViewModel(
 
     private fun getCurrentContract(mCurrentText: String) {
         loading.value = true
+        pageCount.value = null
         ui {
 
             params.value =
@@ -72,6 +73,7 @@ class CurrentContractLowRiskFRAViewModel(
                     contractId = contractId,
                     contractVersionNumber = contractVersionNumber,
                     currentText = mCurrentText,
+                    currentApproach = EnrollSDK.signContractApproach.toString(),
                 )
             val response: Either<SdkFailure, ResponseBody> =
                 getCurrentContractLowRiskFRAUseCase.call(params.value as GetCurrentContractLowRiskFRAUseCaseParams)
@@ -113,7 +115,13 @@ class CurrentContractLowRiskFRAViewModel(
 
             // Update state
             pdfFile.value = file
-            bitmap.value = renderPdf(file)
+            val count = getPdfPageCount(file)
+            if (count <= 0) {
+                failure.value = NetworkFailure("Invalid or empty PDF content")
+                loading.value = false
+                return
+            }
+            pageCount.value = count
             //                        termsPdfReceived.value = true
             loading.value = false
 
@@ -130,6 +138,7 @@ class CurrentContractLowRiskFRAViewModel(
 
     private fun getSignContractFile() {
         loading.value = true
+        pageCount.value = null
         ui {
 
             params.value = GetSignContractFileLowRiskFRAUseCaseParams()
@@ -148,34 +157,43 @@ class CurrentContractLowRiskFRAViewModel(
         }
     }
 
-    private fun renderPdf(file: File): List<Bitmap> {
-        val bitmaps = mutableListOf<Bitmap>()
+    private fun getPdfPageCount(file: File): Int {
+        val parcelFileDescriptor =
+            ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+        val pdfRenderer = PdfRenderer(parcelFileDescriptor)
+        return try {
+            pdfRenderer.pageCount
+        } finally {
+            pdfRenderer.close()
+            parcelFileDescriptor.close()
+        }
+    }
+
+    fun renderPdfPage(pageIndex: Int): Bitmap? {
+        val file = pdfFile.value ?: return null
         val parcelFileDescriptor =
             ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
         val pdfRenderer = PdfRenderer(parcelFileDescriptor)
 
-        // Render at 3x resolution for high quality zoom (300 DPI vs default 100 DPI)
-        val renderScale = 3f
-
-        for (i in 0 until pdfRenderer.pageCount) {
-            val page = pdfRenderer.openPage(i)
-            
-            // Create bitmap at 3x the original size for crisp text when zoomed
-            val bitmap = Bitmap.createBitmap(
-                (page.width * renderScale).toInt(),
-                (page.height * renderScale).toInt(),
-                Bitmap.Config.ARGB_8888
-            )
-            
-            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            bitmaps.add(bitmap) 
-            page.close()
+        return try {
+            if (pageIndex !in 0 until pdfRenderer.pageCount) return null
+            val page = pdfRenderer.openPage(pageIndex)
+            try {
+                val renderScale = 2f
+                val bitmap = Bitmap.createBitmap(
+                    (page.width * renderScale).toInt(),
+                    (page.height * renderScale).toInt(),
+                    Bitmap.Config.ARGB_8888
+                )
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                bitmap
+            } finally {
+                page.close()
+            }
+        } finally {
+            pdfRenderer.close()
+            parcelFileDescriptor.close()
         }
-
-        pdfRenderer.close()
-        parcelFileDescriptor.close()
-
-        return bitmaps
     }
 
     fun downloadPDF(context: Context, fileName: String) {

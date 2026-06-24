@@ -1,6 +1,7 @@
 package com.luminsoft.enroll_sdk.core.network
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
@@ -45,34 +46,43 @@ object RetroClient {
         val trustManager = CustomTrustManager()
         sslContext.init(null, arrayOf(trustManager), null)
 
-        val chuckerCollector = ChuckerCollector(
-            context = context,
-            showNotification = true,
-            retentionPeriod = RetentionManager.Period.ONE_HOUR
-        )
-
-        val chuckerInterceptor = ChuckerInterceptor.Builder(context)
-            .collector(chuckerCollector)
-            .maxContentLength(250_000L)
-            .redactHeaders("Authorization", "Bearer")
-            .alwaysReadResponseBody(true)
-            .addBodyDecoder(DecryptedBodyDecoder())
-            .build()
-
-        return OkHttpClient.Builder()
+        val builder = OkHttpClient.Builder()
             .sslSocketFactory(sslContext.socketFactory, trustManager) // Use custom TrustManager
             .readTimeout(READ_TIME_OUT_CONNECTION.toLong(), TINE_UNIT_FOR_CONNECTION)
             .writeTimeout(WRITE_TIME_OUT_CONNECTION.toLong(), TINE_UNIT_FOR_CONNECTION)
             .connectTimeout(TIME_OUT_CONNECTION.toLong(), TINE_UNIT_FOR_CONNECTION)
             .addInterceptor(authInterceptor)
-            .addInterceptor(chuckerInterceptor)
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }).build()
+
+        if (isDebuggable(context)) {
+            val chuckerCollector = ChuckerCollector(
+                context = context,
+                showNotification = true,
+                retentionPeriod = RetentionManager.Period.ONE_HOUR
+            )
+
+            val chuckerInterceptor = ChuckerInterceptor.Builder(context)
+                .collector(chuckerCollector)
+                .maxContentLength(250_000L)
+                .redactHeaders("Authorization", "Bearer")
+                .alwaysReadResponseBody(true)
+                .addBodyDecoder(DecryptedBodyDecoder())
+                .build()
+
+            builder
+                .addInterceptor(chuckerInterceptor)
+                .addInterceptor(HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                })
+        }
+
+        return builder.build()
+    }
+
+    private fun isDebuggable(context: Context): Boolean {
+        return (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
     }
 
 }
-
 
 
 

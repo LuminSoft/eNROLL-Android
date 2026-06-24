@@ -13,7 +13,7 @@ class GetCurrentContractLowRiskFRAUseCase(private val lowRiskFRARepository: LowR
     override suspend fun call(params: GetCurrentContractLowRiskFRAUseCaseParams): Either<SdkFailure, ResponseBody> {
         val getCurrentContractRequestModel = GetCurrentContractRequestModel()
         getCurrentContractRequestModel.contractId = params.contractId
-        getCurrentContractRequestModel.currentApproach = "1"
+        getCurrentContractRequestModel.currentApproach = params.currentApproach
         getCurrentContractRequestModel.contractVersionNumber = params.contractVersionNumber
         getCurrentContractRequestModel.currentText = params.currentText
         getCurrentContractRequestModel.type = "5"
@@ -24,5 +24,6 @@ class GetCurrentContractLowRiskFRAUseCase(private val lowRiskFRARepository: LowR
 data class GetCurrentContractLowRiskFRAUseCaseParams(
     val contractId: String? = null,
     val contractVersionNumber: String? = null,
-    val currentText: String? = null
+    val currentText: String? = null,
+    val currentApproach: String? = null
 )

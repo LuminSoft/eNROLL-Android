@@ -29,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -71,6 +72,8 @@ import androidx.compose.foundation.gestures.transformable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import org.koin.compose.koinInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 @Composable
@@ -104,7 +107,7 @@ fun CurrentContractLowRiskFRAScreenContent(
     val activity = context.findActivity()
     val loading = currentContractLowRiskFRAVM.loading.collectAsState()
     val failure = currentContractLowRiskFRAVM.failure.collectAsState()
-    val bitmap = currentContractLowRiskFRAVM.bitmap.collectAsState()
+    val pageCount = currentContractLowRiskFRAVM.pageCount.collectAsState()
     val currentStepIndex = signContractViewModel.currentStepIndex.collectAsState()
     val getCurrentContract = signContractViewModel.getCurrentContract.collectAsState()
     val showAllContracts = signContractViewModel.showAllContracts.collectAsState()
@@ -185,16 +188,17 @@ fun CurrentContractLowRiskFRAScreenContent(
                     }
                 }
             }
-        } else if (bitmap.value == null) {
+        } else if (pageCount.value == null) {
             LoadingView()
         } else {
             PdfViewerWidget(
-                bitmap.value!!,
+                pageCount = pageCount.value ?: 0,
                 activity = activity,
                 contractFileModelList = contractFileModelList.value ?: arrayListOf(),
                 currentStepIndex = currentStepIndex.value,
                 showAllContracts = showAllContracts.value,
                 isSingleApprovalMode = isSingleApprovalMode,
+                renderKey = "${currentStepIndex.value}-${showAllContracts.value}-${isSingleApprovalMode}",
                 currentContractLowRiskFRAVM = currentContractLowRiskFRAVM,
                 context = context,
                 onAcceptClick = {
@@ -214,7 +218,7 @@ fun CurrentContractLowRiskFRAScreenContent(
 
 @Composable
 fun PdfViewerWidget(
-    bitmaps: List<Bitmap>,
+    pageCount: Int,
     onAcceptClick: () -> Unit,
     onSignClick: () -> Unit,
     activity: Activity,
@@ -222,6 +226,7 @@ fun PdfViewerWidget(
     currentStepIndex: Int,
     showAllContracts: Boolean,
     isSingleApprovalMode: Boolean = false,
+    renderKey: String,
     currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
     context: Context
 ) {
@@ -308,17 +313,14 @@ fun PdfViewerWidget(
                             scaleY = scale,
                             translationX = offset.x,
                             translationY = offset.y
-                        ),
+                    ),
                     userScrollEnabled = true // Always allow scrolling to navigate pages
                 ) {
-                    items(bitmaps.size) { index ->
-                        Image(
-                            bitmap = bitmaps[index].asImageBitmap(),
-                            contentDescription = "Contract page ${index + 1}",
-                            contentScale = ContentScale.FillWidth,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
+                    items(pageCount) { index ->
+                        PdfPageImage(
+                            pageIndex = index,
+                            renderKey = renderKey,
+                            currentContractLowRiskFRAVM = currentContractLowRiskFRAVM
                         )
                     }
                 }
@@ -384,6 +386,36 @@ fun PdfViewerWidget(
             )
         }
     }
+}
+
+@Composable
+private fun PdfPageImage(
+    pageIndex: Int,
+    renderKey: String,
+    currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel
+) {
+    val bitmap by produceState<Bitmap?>(initialValue = null, pageIndex, renderKey) {
+        value = withContext(Dispatchers.IO) {
+            currentContractLowRiskFRAVM.renderPdfPage(pageIndex)
+        }
+    }
+
+    bitmap?.let {
+        Image(
+            bitmap = it.asImageBitmap(),
+            contentDescription = "Contract page ${pageIndex + 1}",
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+        )
+    } ?: Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(480.dp)
+            .padding(vertical = 4.dp)
+            .background(Color.White)
+    )
 }
 
 @Composable

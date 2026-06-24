@@ -55,10 +55,14 @@ class MainSignContractRemoteDataSourceImpl(
         }
         
         val signContractFilePart =
-            request.signContractFileUri?.takeIf {
-                request.signContractMode == EnrollContractSignatureMode.LOW_RISK.value.toString()
-            }?.let { uri ->
-                createPdfMultipartPart(uri)
+            if (request.signContractMode == EnrollContractSignatureMode.LOW_RISK.value.toString()) {
+                request.signContractFileBytes?.takeIf { it.isNotEmpty() }?.let { bytes ->
+                    createPdfMultipartPart(bytes)
+                } ?: request.signContractFileUri?.let { uri ->
+                    createPdfMultipartPart(uri)
+                }
+            } else {
+                null
             }
 
         return network.apiRequest {
@@ -105,6 +109,15 @@ class MainSignContractRemoteDataSourceImpl(
         )
     }
 
+    private fun createPdfMultipartPart(bytes: ByteArray): MultipartBody.Part {
+        val requestBody = bytes.toRequestBody("application/pdf".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(
+            "signContractFile",
+            "sign_contract.pdf",
+            requestBody
+        )
+    }
+
     private fun getFileName(uri: Uri): String {
         context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
             val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -115,6 +128,5 @@ class MainSignContractRemoteDataSourceImpl(
         return "sign_contract.pdf"
     }
 }
-
 
 

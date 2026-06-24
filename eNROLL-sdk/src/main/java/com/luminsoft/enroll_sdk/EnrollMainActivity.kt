@@ -107,7 +107,10 @@ class EnrollMainActivity : ComponentActivity() {
                     throw Exception("Invalid application id")
                 if (EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK_FRA && EnrollSDK.contractTemplateId.isEmpty())
                     throw Exception("Invalid template id")
-                if (EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK && EnrollSDK.signContractFileUri == null)
+                if (EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK &&
+                    EnrollSDK.signContractFileUri == null &&
+                    EnrollSDK.signContractFileBytes?.isNotEmpty() != true
+                )
                     throw Exception("Invalid sign contract file")
                 startActivity(Intent(this, EnrollMainSignContractActivity::class.java))
             }

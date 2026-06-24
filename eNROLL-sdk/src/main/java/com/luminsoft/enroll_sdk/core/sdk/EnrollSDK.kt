@@ -27,6 +27,7 @@ object EnrollSDK {
     var contractParameters = ""
     var signContractMode = EnrollContractSignatureMode.LOW_RISK_FRA
     var signContractFileUri: Uri? = null
+    var signContractFileBytes: ByteArray? = null
     var signContractApproach = 1
     var serverPublicKey = ""
     var updateSteps = arrayListOf<String>()

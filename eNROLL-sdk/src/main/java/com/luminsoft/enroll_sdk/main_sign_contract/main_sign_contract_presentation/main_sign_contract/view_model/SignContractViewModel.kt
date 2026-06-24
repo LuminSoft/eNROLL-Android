@@ -63,7 +63,16 @@ class SignContractViewModel(
     var showAllContracts: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     override fun retry(navController: NavController) {
-        TODO("Not yet implemented")
+        this.navController = navController
+        failure.value = null
+        token.value = null
+        contractId.value = null
+        contractVersionNumber.value = null
+        contractFileModelList.value = null
+        currentStepIndex.value = 0
+        getCurrentContract.value = false
+        showAllContracts.value = false
+        generateToken()
     }
 
 
@@ -152,6 +161,7 @@ class SignContractViewModel(
                 EnrollSDK.contractParameters,
                 EnrollSDK.signContractMode,
                 EnrollSDK.signContractFileUri,
+                EnrollSDK.signContractFileBytes,
                 EnrollSDK.signContractApproach,
             )
 

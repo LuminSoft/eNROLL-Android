@@ -49,6 +49,7 @@ object eNROLL {
         contractParameters: String = "",
         signContractMode: EnrollContractSignatureMode = EnrollContractSignatureMode.LOW_RISK_FRA,
         signContractFileUri: Uri? = null,
+        signContractFile: ByteArray? = null,
         signContractApproach: Int = 1,
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
@@ -64,17 +65,24 @@ object eNROLL {
             if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
                 throw Exception("Invalid Applicant Id or Level Of Trust Token")
         }
+        val hasSignContractFile =
+            signContractFileUri != null || (signContractFile != null && signContractFile.isNotEmpty())
+        val resolvedSignContractMode = if (hasSignContractFile) {
+            EnrollContractSignatureMode.LOW_RISK
+        } else {
+            signContractMode
+        }
         if (enrollMode == EnrollMode.SIGN_CONTRACT) {
             if (applicantId.isEmpty())
                 throw Exception("Invalid application id")
-            when (signContractMode) {
+            when (resolvedSignContractMode) {
                 EnrollContractSignatureMode.LOW_RISK_FRA -> {
                     if (templateId.isEmpty())
                         throw Exception("Invalid template Id")
                 }
 
                 EnrollContractSignatureMode.LOW_RISK -> {
-                    if (signContractFileUri == null)
+                    if (!hasSignContractFile)
                         throw Exception("Invalid sign contract file")
                 }
 
@@ -107,8 +115,9 @@ object eNROLL {
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
         EnrollSDK.contractTemplateId = templateId
         EnrollSDK.contractParameters = contractParameters
-        EnrollSDK.signContractMode = signContractMode
+        EnrollSDK.signContractFileBytes = signContractFile
         EnrollSDK.signContractFileUri = signContractFileUri
+        EnrollSDK.signContractMode = resolvedSignContractMode
         EnrollSDK.signContractApproach = signContractApproach
         EnrollSDK.exitStep = exitStep
     }

@@ -220,7 +220,7 @@ fun SignContractScreenContent(
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
-                        phoneNumber.value!!,
+                        phoneNumber.value.orEmpty(),
                         fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         color = MaterialTheme.appColors.secondary,
@@ -329,4 +329,3 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
     }
 }
-
