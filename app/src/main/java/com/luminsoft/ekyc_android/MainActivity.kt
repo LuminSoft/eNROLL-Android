@@ -203,7 +203,7 @@ class MainActivity : ComponentActivity() {
             val fontSizeOptions = EnrollFontSize.entries
             var selectedFontIndex by rememberSaveable { mutableIntStateOf(0) }
             var selectedFontSizeIndex by rememberSaveable { mutableIntStateOf(0) }
-            val signContractModeList = listOf("Contract Template (mode 5)", "PDF File (mode 1)")
+            val signContractModeList = listOf("Contract Template", "PDF File")
             var selectedSignContractModeIndex by rememberSaveable {
                 mutableIntStateOf(sharedPref.getInt("signContractModeIndex", 0))
             }
@@ -554,13 +554,11 @@ class MainActivity : ComponentActivity() {
                 requestId = requestIdText.value.text,
                 templateId = templateIdText.value.text,
                 contractParameters = contractParametersText.value.text,
-                signContractMode = selectedSignContractMode,
                 signContractFileUri = if (selectedSignContractMode == EnrollContractSignatureMode.LOW_RISK) {
                     selectedSignContractFileUri
                 } else {
                     null
                 },
-                signContractApproach = 1,
                 exitStep = getExitStepFromIndex(selectedExitStepIndex.value),
                 appTheme = AppTheme(
                     typography = EnrollTypography(

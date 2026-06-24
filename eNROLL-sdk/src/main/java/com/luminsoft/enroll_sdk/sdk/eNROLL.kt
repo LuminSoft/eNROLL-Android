@@ -47,10 +47,8 @@ object eNROLL {
         requestId: String = "",
         templateId: String = "",
         contractParameters: String = "",
-        signContractMode: EnrollContractSignatureMode = EnrollContractSignatureMode.LOW_RISK_FRA,
         signContractFileUri: Uri? = null,
         signContractFile: ByteArray? = null,
-        signContractApproach: Int = 1,
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
         exitStep: EkycStepType? = null,
@@ -70,7 +68,7 @@ object eNROLL {
         val resolvedSignContractMode = if (hasSignContractFile) {
             EnrollContractSignatureMode.LOW_RISK
         } else {
-            signContractMode
+            EnrollContractSignatureMode.LOW_RISK_FRA
         }
         if (enrollMode == EnrollMode.SIGN_CONTRACT) {
             if (applicantId.isEmpty())
@@ -118,7 +116,7 @@ object eNROLL {
         EnrollSDK.signContractFileBytes = signContractFile
         EnrollSDK.signContractFileUri = signContractFileUri
         EnrollSDK.signContractMode = resolvedSignContractMode
-        EnrollSDK.signContractApproach = signContractApproach
+        EnrollSDK.signContractApproach = 1
         EnrollSDK.exitStep = exitStep
     }
 
