@@ -43,5 +43,6 @@ open class GenerateOnboardingSessionTokenRequest {
 
     internal var signContractFileUri: Uri? = null
     internal var signContractFileBytes: ByteArray? = null
+    internal var contractFileName: String? = null
 
 }

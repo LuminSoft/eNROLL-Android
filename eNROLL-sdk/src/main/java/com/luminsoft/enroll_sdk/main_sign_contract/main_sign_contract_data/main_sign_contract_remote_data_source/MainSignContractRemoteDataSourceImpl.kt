@@ -19,6 +19,9 @@ import okio.BufferedSink
 import okio.source
 import org.json.JSONObject
 import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainSignContractRemoteDataSourceImpl(
     private val network: com.luminsoft.enroll_sdk.core.network.BaseRemoteDataSource,
@@ -57,7 +60,7 @@ class MainSignContractRemoteDataSourceImpl(
         val signContractFilePart =
             if (request.signContractMode == EnrollContractSignatureMode.LOW_RISK.value.toString()) {
                 request.signContractFileBytes?.takeIf { it.isNotEmpty() }?.let { bytes ->
-                    createPdfMultipartPart(bytes)
+                    createPdfMultipartPart(bytes, request.contractFileName)
                 } ?: request.signContractFileUri?.let { uri ->
                     createPdfMultipartPart(uri)
                 }
@@ -109,13 +112,18 @@ class MainSignContractRemoteDataSourceImpl(
         )
     }
 
-    private fun createPdfMultipartPart(bytes: ByteArray): MultipartBody.Part {
+    private fun createPdfMultipartPart(bytes: ByteArray, contractFileName: String?): MultipartBody.Part {
         val requestBody = bytes.toRequestBody("application/pdf".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(
             "signContractFile",
-            "sign_contract.pdf",
+            contractFileName?.takeIf { it.isNotBlank() } ?: generateTimestampPdfFileName(),
             requestBody
         )
+    }
+
+    private fun generateTimestampPdfFileName(): String {
+        val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale("en", "US", "POSIX"))
+        return "${formatter.format(Date())}.pdf"
     }
 
     private fun getFileName(uri: Uri): String {
@@ -128,5 +136,4 @@ class MainSignContractRemoteDataSourceImpl(
         return "sign_contract.pdf"
     }
 }
-
 

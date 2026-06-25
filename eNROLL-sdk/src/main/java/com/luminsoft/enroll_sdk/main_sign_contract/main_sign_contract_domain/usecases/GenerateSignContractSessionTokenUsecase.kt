@@ -24,6 +24,7 @@ class GenerateSignContractSessionTokenUsecase(private val mainRepository: MainSi
         generateOnboardingSessionTokenRequest.signContractApproach = params.signContractApproach.toString()
         generateOnboardingSessionTokenRequest.signContractFileUri = params.signContractFileUri
         generateOnboardingSessionTokenRequest.signContractFileBytes = params.signContractFileBytes
+        generateOnboardingSessionTokenRequest.contractFileName = params.contractFileName
         return mainRepository.generateSignContractSessionToken(generateOnboardingSessionTokenRequest)
     }
 }
@@ -37,5 +38,6 @@ data class GenerateSignContractSessionTokenUsecaseParams(
     val signContractMode: EnrollContractSignatureMode,
     val signContractFileUri: Uri?,
     val signContractFileBytes: ByteArray?,
+    val contractFileName: String?,
     val signContractApproach: Int
 )

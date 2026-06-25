@@ -162,6 +162,7 @@ class SignContractViewModel(
                 EnrollSDK.signContractMode,
                 EnrollSDK.signContractFileUri,
                 EnrollSDK.signContractFileBytes,
+                EnrollSDK.contractFileName,
                 EnrollSDK.signContractApproach,
             )
 

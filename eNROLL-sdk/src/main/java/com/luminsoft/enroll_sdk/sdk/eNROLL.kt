@@ -49,6 +49,7 @@ object eNROLL {
         contractParameters: String = "",
         signContractFileUri: Uri? = null,
         signContractFile: ByteArray? = null,
+        contractFileName: String? = null,
         fontResource: Int? = 0,
         enrollForcedDocumentType: EnrollForcedDocumentType? = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
         exitStep: EkycStepType? = null,
@@ -115,6 +116,7 @@ object eNROLL {
         EnrollSDK.contractParameters = contractParameters
         EnrollSDK.signContractFileBytes = signContractFile
         EnrollSDK.signContractFileUri = signContractFileUri
+        EnrollSDK.contractFileName = contractFileName
         EnrollSDK.signContractMode = resolvedSignContractMode
         EnrollSDK.signContractApproach = 1
         EnrollSDK.exitStep = exitStep
