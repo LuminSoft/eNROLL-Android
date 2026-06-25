@@ -2,7 +2,6 @@ package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main
 
 import android.content.Context
 import android.net.Uri
-import android.provider.OpenableColumns
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_api.MainSignContractApi
 import com.luminsoft.enroll_sdk.core.network.BaseResponse
 import com.luminsoft.enroll_sdk.core.models.EnrollContractSignatureMode
@@ -62,7 +61,7 @@ class MainSignContractRemoteDataSourceImpl(
                 request.signContractFileBytes?.takeIf { it.isNotEmpty() }?.let { bytes ->
                     createPdfMultipartPart(bytes, request.contractFileName)
                 } ?: request.signContractFileUri?.let { uri ->
-                    createPdfMultipartPart(uri)
+                    createPdfMultipartPart(uri, request.contractFileName)
                 }
             } else {
                 null
@@ -85,8 +84,8 @@ class MainSignContractRemoteDataSourceImpl(
         return network.apiRequest { mainApi.getSignContractSteps() }
     }
 
-    private fun createPdfMultipartPart(uri: Uri): MultipartBody.Part {
-        val fileName = getFileName(uri)
+    private fun createPdfMultipartPart(uri: Uri, contractFileName: String?): MultipartBody.Part {
+        val fileName = resolveContractFileName(contractFileName)
         val requestBody = object : RequestBody() {
             override fun contentType(): MediaType? = "application/pdf".toMediaTypeOrNull()
 
@@ -116,24 +115,17 @@ class MainSignContractRemoteDataSourceImpl(
         val requestBody = bytes.toRequestBody("application/pdf".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(
             "signContractFile",
-            contractFileName?.takeIf { it.isNotBlank() } ?: generateTimestampPdfFileName(),
+            resolveContractFileName(contractFileName),
             requestBody
         )
+    }
+
+    private fun resolveContractFileName(contractFileName: String?): String {
+        return contractFileName?.takeIf { it.isNotBlank() } ?: generateTimestampPdfFileName()
     }
 
     private fun generateTimestampPdfFileName(): String {
         val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale("en", "US", "POSIX"))
         return "${formatter.format(Date())}.pdf"
     }
-
-    private fun getFileName(uri: Uri): String {
-        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            if (nameIndex >= 0 && cursor.moveToFirst()) {
-                return cursor.getString(nameIndex)
-            }
-        }
-        return "sign_contract.pdf"
-    }
 }
-
