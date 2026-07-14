@@ -43,7 +43,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.ekyc_android_sdk.R
 import com.luminsoft.enroll_sdk.core.failures.AuthFailure
@@ -187,56 +186,54 @@ fun ValidateOtpPhoneNumberScreenContent(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.otpSendTo),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         color = MaterialTheme.appColors.textColor,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.weight(1f)
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.width(7.dp))
-                    if (onBoardingViewModel.currentPhoneNumber.value != null)
-                        Text(
-                            onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
-                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                            color = MaterialTheme.appColors.secondary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(0.85f)
-                        )
-                    Spacer(modifier = Modifier.width(7.dp))
-                    Box {
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .background(
-                                    MaterialTheme.appColors.secondary,
-                                    shape = RoundedCornerShape(0.dp)
-                                ),
-
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        if (onBoardingViewModel.currentPhoneNumber.value != null)
+                            Text(
+                                onBoardingViewModel.currentPhoneNumberCode.value!! + onBoardingViewModel.currentPhoneNumber.value!!,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                                color = MaterialTheme.appColors.secondary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
                             )
+                        Spacer(modifier = Modifier.width(10.dp))
                         Text(
                             ResourceProvider.instance.getStringResource(R.string.edit),
                             fontSize = MaterialTheme.typography.bodySmall.fontSize,
                             color = Color.White,
                             fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
-                                .padding(horizontal = 5.dp)
+                                .background(
+                                    MaterialTheme.appColors.secondary,
+                                    shape = RoundedCornerShape(6.dp)
+                                )
                                 .clickable(enabled = true) {
                                     navController.navigate(phoneNumbersOnBoardingScreenContent)
                                 }
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         )
                     }
 
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
@@ -245,27 +242,36 @@ fun ValidateOtpPhoneNumberScreenContent(
 
                         )
                 }
-                Spacer(modifier = Modifier.height(15.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.appColors.textColor,
-                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Timer(ticksF, ticks)
-                    Text(
-                        text = stringResource(id = R.string.second),
-                        color = MaterialTheme.appColors.textColor,
-                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        maxLines = 1
-                    )
+                Spacer(modifier = Modifier.height(18.dp))
+                if (ticks > 0) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.timerOtpMessage),
+                            color = MaterialTheme.appColors.textColor,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Timer(ticksF, ticks)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(id = R.string.second),
+                                color = MaterialTheme.appColors.textColor,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                                maxLines = 1
+                            )
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -328,6 +334,7 @@ fun ValidateOtpPhoneNumberScreenContent(
 
 @Composable
 private fun Timer(ticksF: Float, ticks: Int) {
+    val progress = ticksF.coerceIn(0f, 1f)
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
             progress = { 1f },
@@ -336,7 +343,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             strokeWidth = 3.dp,
         )
         CircularProgressIndicator(
-            progress = { ticksF },
+            progress = { progress },
             modifier = Modifier.size(30.dp),
             color = MaterialTheme.appColors.secondary,
             strokeWidth = 3.dp,

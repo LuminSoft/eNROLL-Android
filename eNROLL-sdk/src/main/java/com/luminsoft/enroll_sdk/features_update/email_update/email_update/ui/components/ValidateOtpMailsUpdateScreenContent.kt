@@ -43,7 +43,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.luminsoft.enroll_sdk.ui_components.theme.appColors
 import com.luminsoft.ekyc_android_sdk.R
@@ -186,85 +185,91 @@ fun ValidateOtpMailsUpdateScreenContent(
                 )
                 ImagesBox(images = images, modifier = Modifier.fillMaxHeight(0.22f))
                 Spacer(modifier = Modifier.height(12.dp))
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         ResourceProvider.instance.getStringResource(R.string.emailOtpSendTo),
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                         fontSize = MaterialTheme.typography.bodySmall.fontSize,
                         color = MaterialTheme.appColors.textColor,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.weight(1f)
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.width(7.dp))
-                    Text(
-                        mailValue.value!!.text,
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        color = MaterialTheme.appColors.secondary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(0.85f)
-                    )
-                    Spacer(modifier = Modifier.width(7.dp))
-                    Box {
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .background(
-                                    MaterialTheme.appColors.secondary,
-                                    shape = RoundedCornerShape(0.dp)
-                                ),
-
-                            )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            mailValue.value!!.text,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                            color = MaterialTheme.appColors.secondary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
                         Text(
                             ResourceProvider.instance.getStringResource(R.string.edit),
                             fontSize = MaterialTheme.typography.bodySmall.fontSize,
                             color = Color.White,
                             fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
                             modifier = Modifier
-                                .padding(horizontal = 5.dp)
+                                .background(
+                                    MaterialTheme.appColors.secondary,
+                                    shape = RoundedCornerShape(6.dp)
+                                )
                                 .clickable(enabled = true) {
                                     navController.navigate(mailsUpdateScreenContent)
                                 }
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         )
                     }
 
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     OtpInputField(
-                        otp = otpValue,                        textColor =           MaterialTheme.appColors.textColor,
-
+                        otp = otpValue,
+                        textColor = MaterialTheme.appColors.textColor,
                         count = 6,
                     )
                 }
-                Spacer(modifier = Modifier.height(15.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.timerOtpMessage),
-                        color = MaterialTheme.appColors.textColor,
-                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Timer(ticksF, ticks)
-                    Text(
-                        text = stringResource(id = R.string.second),
-                        color = MaterialTheme.appColors.textColor,
-                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        maxLines = 1
-                    )
+                Spacer(modifier = Modifier.height(18.dp))
+                if (ticks > 0) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.timerOtpMessage),
+                            color = MaterialTheme.appColors.textColor,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Timer(ticksF, ticks)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(id = R.string.second),
+                                color = MaterialTheme.appColors.textColor,
+                                fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                                maxLines = 1
+                            )
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -333,6 +338,7 @@ fun ValidateOtpMailsUpdateScreenContent(
 
 @Composable
 private fun Timer(ticksF: Float, ticks: Int) {
+    val progress = ticksF.coerceIn(0f, 1f)
     Box(Modifier.size(50.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
             progress = { 1f },
@@ -341,7 +347,7 @@ private fun Timer(ticksF: Float, ticks: Int) {
             strokeWidth = 3.dp,
         )
         CircularProgressIndicator(
-            progress = { ticksF },
+            progress = { progress },
             modifier = Modifier.size(30.dp),
             color = MaterialTheme.appColors.secondary,
             strokeWidth = 3.dp,
@@ -355,4 +361,3 @@ private fun Timer(ticksF: Float, ticks: Int) {
         )
     }
 }
-
