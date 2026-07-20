@@ -10,7 +10,7 @@ android {
     namespace 'com.luminsoft.ekyc_android_sdk'
     compileSdk 35
     defaultConfig {
-        minSdk 24
+        minSdk 28
         targetSdk 35
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -68,6 +68,7 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += 'META-INF/versions/9/OSGI-INF/MANIFEST.MF'
         }
         jniLibs {
             useLegacyPackaging false
@@ -77,6 +78,23 @@ android {
 }
 
 dependencies {
+
+    api "com.itida.rssigning:rssigning:1.0.17"
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1"
+    api "androidx.documentfile:documentfile:1.0.1"
+    api("com.itextpdf:sign:9.3.0") { exclude group: "org.bouncycastle" }
+    api("com.itextpdf:io:9.3.0") { exclude group: "org.bouncycastle" }
+    api("com.itextpdf:layout:9.3.0") { exclude group: "org.bouncycastle" }
+    api("com.itextpdf:kernel:9.3.0") { exclude group: "org.bouncycastle" }
+    api("com.itextpdf:bouncy-castle-adapter:9.3.0") { exclude group: "org.bouncycastle" }
+    api "androidx.cardview:cardview:1.0.0"
+    api "androidx.viewpager2:viewpager2:1.0.0"
+    api "org.bouncycastle:bcprov-jdk18on:1.82"
+    api "org.bouncycastle:bcpkix-jdk18on:1.82"
+    api("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3") {
+        exclude group: "com.github.mhiew", module: "pdfium-android"
+    }
+    api "io.github.oothp:pdfium-android:1.9.5-beta01"
 
     api "androidx.navigation:navigation-fragment-ktx:2.9.1"
     api "androidx.navigation:navigation-ui-ktx:2.9.1"
