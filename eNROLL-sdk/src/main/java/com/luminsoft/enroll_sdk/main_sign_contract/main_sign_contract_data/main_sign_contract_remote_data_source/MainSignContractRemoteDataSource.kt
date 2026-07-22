@@ -8,4 +8,5 @@ interface MainSignContractRemoteDataSource {
     suspend fun generateSignContractSessionToken(request: GenerateOnboardingSessionTokenRequest): BaseResponse<Any>
     suspend fun initializeSignContractRequest(request: InitializeRequestRequest): BaseResponse<Any>
     suspend fun getSignContractSteps(): BaseResponse<Any>
+    suspend fun getSignContractFiles(): BaseResponse<Any>
 }

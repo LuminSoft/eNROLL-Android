@@ -87,8 +87,8 @@ import java.io.File
 var dotenv = dotenv {
     directory = "/assets"
 //    filename="env_sleem"
-//    filename="env_mariam"
-    filename="env_admin1"
+    filename="env_mariam"
+//    filename="env_admin1"
 //    filename="env_local"
 //    filename = "env_andrew"
 //    filename = "env_radwan"
@@ -311,7 +311,7 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(10.dp))
                         if (selectedSignContractModeIndex == 0) {
                             NormalTextField(
-                                label = "Template ID",
+                                label = "Template ID(s) — e.g. 56 or 56,63,71",
                                 value = templateIdText.value,
                                 onValueChange = {
                                     templateIdText.value = it
@@ -465,7 +465,7 @@ class MainActivity : ComponentActivity() {
                 return
             }
             if (selectedSignContractMode == EnrollContractSignatureMode.LOW_RISK_FRA && templateIdText.value.text.isBlank()) {
-                text.value = "Template ID is required for contract template mode"
+                text.value = "Template ID(s) required (e.g. 56 or 56,63,71)"
                 return
             }
             if (selectedSignContractMode == EnrollContractSignatureMode.LOW_RISK && selectedSignContractFileUri == null) {

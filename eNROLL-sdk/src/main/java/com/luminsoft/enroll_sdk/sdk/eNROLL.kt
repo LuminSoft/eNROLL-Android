@@ -30,6 +30,13 @@ import java.util.Locale
 
 
 object eNROLL {
+    /**
+     * Initialize the eNROLL SDK.
+     *
+     * @param templateId Contract template ID. For multi-signing, pass comma-separated IDs
+     *   (e.g. "56,63,71"). The SDK will display each contract for approval and sign all
+     *   with a single OTP.
+     */
     @Throws(Exception::class)
     fun init(
         tenantId: String,

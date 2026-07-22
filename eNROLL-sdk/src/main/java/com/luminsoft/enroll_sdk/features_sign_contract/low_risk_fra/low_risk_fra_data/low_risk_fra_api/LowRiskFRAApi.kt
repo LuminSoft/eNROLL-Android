@@ -8,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 import retrofit2.http.Streaming
 
 interface LowRiskFRAApi {
@@ -25,5 +26,8 @@ interface LowRiskFRAApi {
     @GET("api/v1/SignContractRequest/GetSignContractFile")
     suspend fun getSignContractFile(): Response<ResponseBody>
 
+    @Streaming
+    @GET("api/v1/SignContractRequest/GetSignContractFileByRequestId")
+    suspend fun getSignContractFileByRequestId(@Query("requestId") requestId: String): Response<ResponseBody>
 
 }

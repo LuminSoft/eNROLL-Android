@@ -19,10 +19,13 @@ import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_co
 import com.luminsoft.enroll_sdk.features.security_questions.security_questions_data.security_questions_models.GetSecurityQuestionsResponseModel
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_navigation.currentContractLowRiskFRAScreenContent
 import com.luminsoft.enroll_sdk.main.main_presentation.common.MainViewModel
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_files.SignContractFileItemModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.ContractFileModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.StepSignContractModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecaseParams
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractFilesUsecase
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractFilesUsecaseParams
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractStepsUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractStepsUsecaseParams
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.InitializeRequestSignContractUsecase
@@ -33,6 +36,7 @@ class SignContractViewModel(
     private val generateSignContractSessionToken: GenerateSignContractSessionTokenUsecase,
     private val initializeRequestUsecase: InitializeRequestSignContractUsecase,
     private val getSignContractStepsUsecase: GetSignContractStepsUsecase,
+    private val getSignContractFilesUsecase: GetSignContractFilesUsecase,
     private val context: Context
 
 ) : ViewModel(),
@@ -62,6 +66,11 @@ class SignContractViewModel(
     var getCurrentContract: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var showAllContracts: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
+    var isMultiSigning: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var signContractFiles: MutableStateFlow<List<SignContractFileItemModel>?> = MutableStateFlow(null)
+    var currentContractFileIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+    var currentRequestId: MutableStateFlow<String?> = MutableStateFlow(null)
+
     override fun retry(navController: NavController) {
         this.navController = navController
         failure.value = null
@@ -72,6 +81,10 @@ class SignContractViewModel(
         currentStepIndex.value = 0
         getCurrentContract.value = false
         showAllContracts.value = false
+        isMultiSigning.value = false
+        signContractFiles.value = null
+        currentContractFileIndex.value = 0
+        currentRequestId.value = null
         generateToken()
     }
 
@@ -99,13 +112,50 @@ class SignContractViewModel(
                 },
                 {
                     if (EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK_FRA) {
-                        getSignContractSteps()
+                        if (isMultiSigning.value) {
+                            getSignContractFiles()
+                        } else {
+                            getSignContractSteps()
+                        }
                     } else {
                         loading.value = false
                         navigateToNextStep()
                     }
                 })
 
+        }
+    }
+
+    private fun getSignContractFiles() {
+        loading.value = true
+        ui {
+            params.value = GetSignContractFilesUsecaseParams()
+            val response: Either<SdkFailure, List<SignContractFileItemModel>> =
+                getSignContractFilesUsecase.call(params.value as GetSignContractFilesUsecaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                { files ->
+                    val sortedFiles = files.sortedBy { it.displayOrder ?: Int.MAX_VALUE }
+                    signContractFiles.value = sortedFiles
+
+                    if (sortedFiles.size > 1) {
+                        isMultiSigning.value = true
+                        currentContractFileIndex.value = 0
+                        currentRequestId.value = sortedFiles[0].signContractRequestId
+                        loading.value = false
+                        navigateToNextStep()
+                    } else {
+                        isMultiSigning.value = false
+                        if (sortedFiles.isNotEmpty()) {
+                            currentRequestId.value = sortedFiles[0].signContractRequestId
+                        }
+                        getSignContractSteps()
+                    }
+                })
         }
     }
 
@@ -153,17 +203,22 @@ class SignContractViewModel(
     private fun generateToken() {
         loading.value = true
         ui {
+            val templateIdRaw = EnrollSDK.contractTemplateId
+            val parsedIds = parseContractTemplateIds(templateIdRaw)
+            isMultiSigning.value = parsedIds.size > 1
+
             params.value = GenerateSignContractSessionTokenUsecaseParams(
-                EnrollSDK.tenantId,
-                EnrollSDK.tenantSecret,
-                EnrollSDK.applicantId,
-                EnrollSDK.contractTemplateId,
-                EnrollSDK.contractParameters,
-                EnrollSDK.signContractMode,
-                EnrollSDK.signContractFileUri,
-                EnrollSDK.signContractFileBytes,
-                EnrollSDK.contractFileName,
-                EnrollSDK.signContractApproach,
+                tenantId = EnrollSDK.tenantId,
+                tenantSecret = EnrollSDK.tenantSecret,
+                applicantId = EnrollSDK.applicantId,
+                contractTemplateId = templateIdRaw,
+                contractTemplateIds = if (parsedIds.size > 1) parsedIds else null,
+                contractParams = EnrollSDK.contractParameters,
+                signContractMode = EnrollSDK.signContractMode,
+                signContractFileUri = EnrollSDK.signContractFileUri,
+                signContractFileBytes = EnrollSDK.signContractFileBytes,
+                contractFileName = EnrollSDK.contractFileName,
+                signContractApproach = EnrollSDK.signContractApproach,
             )
 
             val response: Either<SdkFailure, String> =
@@ -184,6 +239,12 @@ class SignContractViewModel(
         }
     }
 
+    private fun parseContractTemplateIds(rawIds: String): List<String> {
+        return rawIds.split(",")
+            .map { it.trim().trim('[', ']', '"', '\'') }
+            .filter { it.isNotBlank() }
+    }
+
     private fun navigateToNextStep() {
         mailValue.value = TextFieldValue()
         currentPhoneNumber.value = null
@@ -200,6 +261,29 @@ class SignContractViewModel(
             currentStepIndex.value++
             getCurrentContract.value = true
         }
+    }
+
+    fun getNextContractFile() {
+        val files = signContractFiles.value ?: return
+        val nextIndex = currentContractFileIndex.value + 1
+        if (nextIndex >= files.size) {
+            showAllContracts.value = true
+        } else {
+            currentContractFileIndex.value = nextIndex
+            currentRequestId.value = files[nextIndex].signContractRequestId
+            getCurrentContract.value = true
+        }
+    }
+
+    fun getCurrentContractFileName(): String {
+        val files = signContractFiles.value ?: return ""
+        val index = currentContractFileIndex.value
+        return files.getOrNull(index)?.fileName ?: ""
+    }
+
+    fun getContractProgress(): String {
+        val files = signContractFiles.value ?: return ""
+        return "${currentContractFileIndex.value + 1} / ${files.size}"
     }
 
     fun getContractText(): String {

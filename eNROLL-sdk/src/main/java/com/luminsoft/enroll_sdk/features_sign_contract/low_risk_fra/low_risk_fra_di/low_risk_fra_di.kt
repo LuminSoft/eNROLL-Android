@@ -8,6 +8,7 @@ import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.phone_low_risk_fra_remote_data_source.LowRiskFRARemoteDataSourceImpl
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_data.phone_low_risk_fra_repository.LowRiskFRARepositoryImplementation
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.repository.LowRiskFRARepository
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileByRequestIdUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.LowRiskFRASendOTPUseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,6 +17,9 @@ import org.koin.dsl.module
 val lowRiskFRAModule = module {
     single {
         LowRiskFRASendOTPUseCase(get())
+    }
+    single {
+        GetSignContractFileByRequestIdUseCase(get())
     }
     single<LowRiskFRARemoteDataSource> {
         LowRiskFRARemoteDataSourceImpl(get(), get())
@@ -30,7 +34,7 @@ val lowRiskFRAModule = module {
         RetroClient.provideRetrofit(okHttpClient).create(LowRiskFRAApi::class.java)
     }
     viewModel {
-        CurrentContractLowRiskFRAViewModel(get(), get(), get(), get(), get(), get())
+        CurrentContractLowRiskFRAViewModel(get(), get(), get(), get(), get(), get(), get())
     }
 
 

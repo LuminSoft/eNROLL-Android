@@ -9,6 +9,7 @@ import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_remote_data_source.MainSignContractRemoteDataSourceImpl
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.repository.MainSignContractRepository
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GenerateSignContractSessionTokenUsecase
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractFilesUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.GetSignContractStepsUsecase
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_domain.usecases.InitializeRequestSignContractUsecase
 import org.koin.android.ext.koin.androidApplication
@@ -26,6 +27,9 @@ val mainSignContractModule = module {
     single {
         GetSignContractStepsUsecase(get())
     }
+    single {
+        GetSignContractFilesUsecase(get())
+    }
     single<MainSignContractRemoteDataSource> {
         MainSignContractRemoteDataSourceImpl(get(), get(), androidContext())
     }
@@ -40,7 +44,7 @@ val mainSignContractModule = module {
     }
     viewModel {
         SignContractViewModel(
-            get(), get(), get(), context = androidApplication()
+            get(), get(), get(), get(), context = androidApplication()
         )
     }
 

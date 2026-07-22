@@ -65,5 +65,18 @@ class LowRiskFRARepositoryImplementation(private val mailRemoteDataSource: LowRi
         }
     }
 
+    override suspend fun getSignContractFileByRequestId(requestId: String): Either<SdkFailure, ResponseBody> {
+        return when (val response = mailRemoteDataSource.getSignContractFileByRequestId(requestId)) {
+            is BaseResponse.Success -> {
+                val responseBody = response.data as ResponseBody
+                Either.Right(responseBody)
+            }
+
+            is BaseResponse.Error -> {
+                Either.Left(response.error)
+            }
+        }
+    }
+
 }
 

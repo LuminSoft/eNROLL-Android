@@ -18,6 +18,8 @@ import com.luminsoft.enroll_sdk.core.utils.EncryptionHelper
 import com.luminsoft.enroll_sdk.core.utils.ui
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCaseParams
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileByRequestIdUseCase
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileByRequestIdUseCaseParams
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileLowRiskFRAUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileLowRiskFRAUseCaseParams
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,11 +31,13 @@ import java.io.FileOutputStream
 class CurrentContractLowRiskFRAViewModel(
     private val getCurrentContractLowRiskFRAUseCase: GetCurrentContractLowRiskFRAUseCase,
     private val getSignContractFileLowRiskFRAUseCase: GetSignContractFileLowRiskFRAUseCase,
+    private val getSignContractFileByRequestIdUseCase: GetSignContractFileByRequestIdUseCase,
     private val contractId: String,
     private val contractVersionNumber: String,
     private val currentText: String,
     private val context: Context,
-    private val loadFullContractOnInit: Boolean = false
+    private val loadFullContractOnInit: Boolean = false,
+    private val requestId: String? = null
 ) :
     ViewModel() {
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -51,7 +55,9 @@ class CurrentContractLowRiskFRAViewModel(
     init {
         contractIdValue.value = contractId
         contractVersionNumberValue.value = contractVersionNumber
-        if (loadFullContractOnInit) {
+        if (requestId != null) {
+            getSignContractFileByRequestId(requestId)
+        } else if (loadFullContractOnInit) {
             getSignContractFile()
         } else {
             getCurrentContract(currentText)
@@ -134,6 +140,29 @@ class CurrentContractLowRiskFRAViewModel(
 
     fun callGetSignContractFile() {
         getSignContractFile()
+    }
+
+    fun callGetSignContractFileByRequestId(reqId: String) {
+        getSignContractFileByRequestId(reqId)
+    }
+
+    private fun getSignContractFileByRequestId(reqId: String) {
+        loading.value = true
+        pageCount.value = null
+        ui {
+            params.value = GetSignContractFileByRequestIdUseCaseParams(reqId)
+            val response: Either<SdkFailure, ResponseBody> =
+                getSignContractFileByRequestIdUseCase.call(params.value as GetSignContractFileByRequestIdUseCaseParams)
+
+            response.fold(
+                {
+                    failure.value = it
+                    loading.value = false
+                },
+                { res ->
+                    parsePDFFileResponse(res)
+                })
+        }
     }
 
     private fun getSignContractFile() {

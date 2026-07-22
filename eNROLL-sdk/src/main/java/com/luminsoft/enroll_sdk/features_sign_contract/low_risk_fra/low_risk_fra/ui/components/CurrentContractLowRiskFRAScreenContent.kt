@@ -56,6 +56,7 @@ import com.luminsoft.enroll_sdk.core.utils.lightenColor
 import com.luminsoft.enroll_sdk.features.national_id_confirmation.national_id_onboarding.ui.components.findActivity
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra.view_model.CurrentContractLowRiskFRAViewModel
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetCurrentContractLowRiskFRAUseCase
+import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileByRequestIdUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.low_risk_fra.low_risk_fra_domain.usecases.GetSignContractFileLowRiskFRAUseCase
 import com.luminsoft.enroll_sdk.features_sign_contract.sign_contract.sign_contract_navigation.signContractScreenContent
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.ContractFileModel
@@ -84,21 +85,27 @@ fun CurrentContractLowRiskFRAScreenContent(
 
     val getCurrentContractLowRiskFRAUseCase = GetCurrentContractLowRiskFRAUseCase(koinInject())
     val getSignContractFileLowRiskFRAUseCase = GetSignContractFileLowRiskFRAUseCase(koinInject())
+    val getSignContractFileByRequestIdUseCase = GetSignContractFileByRequestIdUseCase(koinInject())
     val context = LocalContext.current
 
     val contractFileModelList = signContractViewModel.contractFileModelList.collectAsState()
     val isSingleApprovalMode = EnrollSDK.signContractMode == EnrollContractSignatureMode.LOW_RISK
+    val isMultiSigning = signContractViewModel.isMultiSigning.collectAsState()
+    val currentContractFileIndex = signContractViewModel.currentContractFileIndex.collectAsState()
+    val currentRequestId = signContractViewModel.currentRequestId.collectAsState()
 
     val currentContractLowRiskFRAViewModel =
         remember {
             CurrentContractLowRiskFRAViewModel(
                 getCurrentContractLowRiskFRAUseCase = getCurrentContractLowRiskFRAUseCase,
                 getSignContractFileLowRiskFRAUseCase = getSignContractFileLowRiskFRAUseCase,
+                getSignContractFileByRequestIdUseCase = getSignContractFileByRequestIdUseCase,
                 context = context,
                 contractId = signContractViewModel.contractId.value.orEmpty(),
                 contractVersionNumber = signContractViewModel.contractVersionNumber.value.orEmpty(),
                 currentText = contractFileModelList.value?.firstOrNull()?.signContractTextEnum.orEmpty(),
-                loadFullContractOnInit = isSingleApprovalMode
+                loadFullContractOnInit = isSingleApprovalMode,
+                requestId = if (isMultiSigning.value) currentRequestId.value else null
             )
         }
     val currentContractLowRiskFRAVM = remember { currentContractLowRiskFRAViewModel }
@@ -115,13 +122,32 @@ fun CurrentContractLowRiskFRAScreenContent(
 
 
     LaunchedEffect(currentStepIndex.value) {
-        if (!isSingleApprovalMode && getCurrentContract.value)
+        if (!isSingleApprovalMode && !isMultiSigning.value && getCurrentContract.value)
             currentContractLowRiskFRAVM.callGetCurrentContract(xCurrentText = signContractViewModel.getContractText())
     }
 
     LaunchedEffect(showAllContracts.value) {
-        if (!isSingleApprovalMode && showAllContracts.value)
-            currentContractLowRiskFRAVM.callGetSignContractFile()
+        if (showAllContracts.value) {
+            if (isMultiSigning.value) {
+                navController.navigate(signContractScreenContent)
+            } else if (!isSingleApprovalMode) {
+                val reqId = currentRequestId.value
+                if (reqId != null) {
+                    currentContractLowRiskFRAVM.callGetSignContractFileByRequestId(reqId)
+                } else {
+                    currentContractLowRiskFRAVM.callGetSignContractFile()
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(currentContractFileIndex.value) {
+        if (isMultiSigning.value && getCurrentContract.value) {
+            val reqId = currentRequestId.value
+            if (reqId != null) {
+                currentContractLowRiskFRAVM.callGetSignContractFileByRequestId(reqId)
+            }
+        }
     }
     BackGroundView(navController = navController, showAppBar = true) {
 
@@ -198,12 +224,17 @@ fun CurrentContractLowRiskFRAScreenContent(
                 currentStepIndex = currentStepIndex.value,
                 showAllContracts = showAllContracts.value,
                 isSingleApprovalMode = isSingleApprovalMode,
-                renderKey = "${currentStepIndex.value}-${showAllContracts.value}-${isSingleApprovalMode}",
+                isMultiSigning = isMultiSigning.value,
+                contractFileName = if (isMultiSigning.value) signContractViewModel.getCurrentContractFileName() else null,
+                contractProgress = if (isMultiSigning.value) signContractViewModel.getContractProgress() else null,
+                renderKey = "${currentStepIndex.value}-${showAllContracts.value}-${isSingleApprovalMode}-${currentContractFileIndex.value}",
                 currentContractLowRiskFRAVM = currentContractLowRiskFRAVM,
                 context = context,
                 onAcceptClick = {
                     if (isSingleApprovalMode) {
                         navController.navigate(signContractScreenContent)
+                    } else if (isMultiSigning.value) {
+                        signContractViewModel.getNextContractFile()
                     } else {
                         signContractViewModel.getNextContract()
                     }
@@ -226,6 +257,9 @@ fun PdfViewerWidget(
     currentStepIndex: Int,
     showAllContracts: Boolean,
     isSingleApprovalMode: Boolean = false,
+    isMultiSigning: Boolean = false,
+    contractFileName: String? = null,
+    contractProgress: String? = null,
     renderKey: String,
     currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
     context: Context
@@ -281,7 +315,14 @@ fun PdfViewerWidget(
                 .wrapContentSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            if (isSingleApprovalMode)
+            if (isMultiSigning) {
+                MultiSigningHeader(
+                    contractFileName = contractFileName.orEmpty(),
+                    contractProgress = contractProgress.orEmpty(),
+                    currentContractLowRiskFRAVM = currentContractLowRiskFRAVM,
+                    context = context
+                )
+            } else if (isSingleApprovalMode)
                 DownloadIcon(currentContractLowRiskFRAVM, context, fileName)
             else if (!showAllContracts)
                 PDFHeader(
@@ -333,7 +374,18 @@ fun PdfViewerWidget(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
             ) {
-                if (isSingleApprovalMode)
+                if (isMultiSigning) {
+                    if (showAllContracts)
+                        ButtonView(
+                            onClick = onSignClick,
+                            title = stringResource(id = R.string.sign)
+                        )
+                    else
+                        ButtonView(
+                            onClick = onAcceptClick,
+                            title = stringResource(id = R.string.approve)
+                        )
+                } else if (isSingleApprovalMode)
                     ButtonView(
                         onClick = onAcceptClick,
                         title = stringResource(id = R.string.approve)
@@ -504,6 +556,57 @@ private fun PDFHeader(
             currentContractLowRiskFRAVM,
             context,
             fileName
+        )
+    }
+}
+
+@Composable
+private fun MultiSigningHeader(
+    contractFileName: String,
+    contractProgress: String,
+    currentContractLowRiskFRAVM: CurrentContractLowRiskFRAViewModel,
+    context: Context
+) {
+    val shape = RoundedCornerShape(8.dp)
+
+    Row(
+        modifier = Modifier
+            .shadow(
+                elevation = 6.dp,
+                shape = shape,
+                clip = false
+            )
+            .clip(shape)
+            .border(
+                width = 1.dp,
+                color = lightenColor(MaterialTheme.appColors.primary, 0.4f),
+                shape = shape
+            )
+            .background(
+                color = lightenColor(MaterialTheme.appColors.primary, 0.55f),
+                shape = shape
+            )
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = contractFileName,
+                color = MaterialTheme.appColors.appBlack,
+                fontSize = 14.sp,
+                maxLines = 1
+            )
+            Text(
+                text = contractProgress,
+                color = MaterialTheme.appColors.primary,
+                fontSize = 12.sp
+            )
+        }
+        DownloadIcon(
+            currentContractLowRiskFRAVM,
+            context,
+            contractFileName.replace(".pdf", "")
         )
     }
 }

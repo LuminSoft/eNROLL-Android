@@ -3,6 +3,7 @@ package com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main
 import com.luminsoft.enroll_sdk.main.main_data.main_models.generate_onboarding_session_token.GenerateOnboardingSessionTokenResponse
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestRequest
 import com.luminsoft.enroll_sdk.main.main_data.main_models.initialize_request.InitializeRequestResponse
+import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_files.SignContractFileItemModel
 import com.luminsoft.enroll_sdk.main_sign_contract.main_sign_contract_data.main_sign_contract_models.get_sign_contract_steps.StepSignContractModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -14,8 +15,7 @@ interface MainSignContractApi {
     @Multipart
     @POST("api/v1/Auth/GenerateSignContractRequestSessionToken")
     suspend fun generateSignContractRequestSessionToken(
-        @Part("Data") data: RequestBody,
-        @Part signContractFile: MultipartBody.Part? = null,
+        @Part parts: List<MultipartBody.Part>,
       /*  @Part("TenantId") tenantId: RequestBody,
         @Part("TenantSecret") tenantSecret: RequestBody,
         @Part("ApplicantId") applicantId: RequestBody,
@@ -31,5 +31,8 @@ interface MainSignContractApi {
 
     @GET("api/v1/SignContractRequest/GetFraSignContractVersion")
     suspend fun getSignContractSteps(): Response<StepSignContractModel>
+
+    @GET("api/v1/SignContractRequest/GetSignContractFiles")
+    suspend fun getSignContractFiles(): Response<List<SignContractFileItemModel>>
 
 }
