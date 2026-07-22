@@ -73,6 +73,7 @@ class MainSignContractRemoteDataSourceImpl(
         val templateIds = parseTemplateIds(request)
         val contractTemplateId = templateIds.firstOrNull()
             ?: request.contractTemplateId.orEmpty().trim()
+        val contractParams = request.contractParams?.takeIf { it.isNotBlank() }
 
         return mutableListOf<MultipartBody.Part>().apply {
             addFormData("tenantId", request.tenantId)
@@ -85,11 +86,9 @@ class MainSignContractRemoteDataSourceImpl(
             addFormData("signContractApproach", request.signContractApproach)
             addFormData("contractTemplateId", contractTemplateId)
             addFormData("signContractOption", "2")
-            addFormData("contractDetails", "null")
-            addFormData(
-                "contractDetails",
-                request.contractParams?.takeIf { it.isNotBlank() } ?: "[object Object]"
-            )
+            contractParams?.let {
+                addFormData("contractParams", it)
+            }
             templateIds.forEach { templateId ->
                 addFormData("contractTemplateIds", templateId)
             }
@@ -168,6 +167,7 @@ class MainSignContractRemoteDataSourceImpl(
         val templateIds = parseTemplateIds(request)
         val contractTemplateId = templateIds.firstOrNull()
             ?: request.contractTemplateId.orEmpty().trim()
+        val contractParams = request.contractParams?.takeIf { it.isNotBlank() }
 
         return buildString {
             appendLine("POST api/v1/Auth/GenerateSignContractRequestSessionToken")
@@ -182,10 +182,9 @@ class MainSignContractRemoteDataSourceImpl(
             appendLine("signContractApproach=${request.signContractApproach.orEmpty()}")
             appendLine("contractTemplateId=$contractTemplateId")
             appendLine("signContractOption=2")
-            appendLine("contractDetails=null")
-            appendLine(
-                "contractDetails=${request.contractParams?.takeIf { it.isNotBlank() } ?: "[object Object]"}"
-            )
+            contractParams?.let {
+                appendLine("contractParams=$it")
+            }
             templateIds.forEach { templateId ->
                 appendLine("contractTemplateIds=$templateId")
             }
