@@ -19,6 +19,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.BufferedSink
 import okio.source
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.text.SimpleDateFormat
@@ -70,27 +71,36 @@ class MainSignContractRemoteDataSourceImpl(
     private fun createFraTemplateSigningParts(
         request: GenerateOnboardingSessionTokenRequest
     ): List<MultipartBody.Part> {
-        val templateIds = parseTemplateIds(request)
-        val contractTemplateId = templateIds.firstOrNull()
-            ?: request.contractTemplateId.orEmpty().trim()
-        val contractParams = request.contractParams?.takeIf { it.isNotBlank() }
+        val jsonString = createFraTemplateSigningJson(request).toString()
+        val requestBody = if (EnrollSDK.isEncryptionEnabled()) {
+            val encryptedObject = EncryptionHelper.encrypt(jsonString)
+            encryptedObject.toRequestBody("text/plain".toMediaTypeOrNull())
+        } else {
+            jsonString.toRequestBody("application/json".toMediaTypeOrNull())
+        }
 
-        return mutableListOf<MultipartBody.Part>().apply {
-            addFormData("tenantId", request.tenantId)
-            addFormData("tenantSecret", request.tenantSecret)
-            addFormData("deviceId", DeviceIdentifier.getDeviceId(context))
-            addFormData("applicantId", request.applicantId)
-            addFormData("mode", "signContract")
-            addFormData("signContractMode", request.signContractMode)
-            addFormData("urlConfig", resolveUrlConfig())
-            addFormData("signContractApproach", request.signContractApproach)
-            addFormData("contractTemplateId", contractTemplateId)
-            addFormData("signContractOption", "2")
-            contractParams?.let {
-                addFormData("contractParams", it)
+        return listOf(MultipartBody.Part.createFormData("Data", null, requestBody))
+    }
+
+    private fun createFraTemplateSigningJson(request: GenerateOnboardingSessionTokenRequest): JSONObject {
+        return JSONObject().apply {
+            put("tenantId", request.tenantId)
+            put("tenantSecret", request.tenantSecret)
+            put("deviceId", DeviceIdentifier.getDeviceId(context))
+            put("applicantId", request.applicantId)
+            put("mode", "signContract")
+            put("signContractMode", request.signContractMode)
+            put("urlConfig", resolveUrlConfig())
+            put("signContractApproach", request.signContractApproach)
+            put("contractTemplateId", request.contractTemplateId)
+            request.contractTemplateIds?.takeIf { it.isNotEmpty() }?.let { ids ->
+                put("contractTemplateIds", JSONArray().apply {
+                    ids.forEach { put(it) }
+                })
             }
-            templateIds.forEach { templateId ->
-                addFormData("contractTemplateIds", templateId)
+            put("signContractOption", "2")
+            request.contractParams?.takeIf { it.isNotBlank() }?.let {
+                put("contractParams", it)
             }
         }
     }
@@ -126,16 +136,6 @@ class MainSignContractRemoteDataSourceImpl(
         return parts
     }
 
-    private fun MutableList<MultipartBody.Part>.addFormData(name: String, value: String?) {
-        add(MultipartBody.Part.createFormData(name, value.orEmpty()))
-    }
-
-    private fun parseTemplateIds(request: GenerateOnboardingSessionTokenRequest): List<String> {
-        return request.contractTemplateIds.orEmpty()
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-    }
-
     private fun resolveUrlConfig(): String {
         return when (EnrollSDK.environment) {
             EnrollEnvironment.PRODUCTION -> "Production"
@@ -164,30 +164,15 @@ class MainSignContractRemoteDataSourceImpl(
     }
 
     private fun buildFraTemplateSigningLog(request: GenerateOnboardingSessionTokenRequest): String {
-        val templateIds = parseTemplateIds(request)
-        val contractTemplateId = templateIds.firstOrNull()
-            ?: request.contractTemplateId.orEmpty().trim()
-        val contractParams = request.contractParams?.takeIf { it.isNotBlank() }
+        val safeJson = createFraTemplateSigningJson(request).apply {
+            if (has("tenantSecret")) put("tenantSecret", "***")
+        }
 
         return buildString {
             appendLine("POST api/v1/Auth/GenerateSignContractRequestSessionToken")
             appendLine("multipart/form-data")
-            appendLine("tenantId=${request.tenantId.orEmpty()}")
-            appendLine("tenantSecret=***")
-            appendLine("deviceId=${DeviceIdentifier.getDeviceId(context)}")
-            appendLine("applicantId=${request.applicantId.orEmpty()}")
-            appendLine("mode=signContract")
-            appendLine("signContractMode=${request.signContractMode.orEmpty()}")
-            appendLine("urlConfig=${resolveUrlConfig()}")
-            appendLine("signContractApproach=${request.signContractApproach.orEmpty()}")
-            appendLine("contractTemplateId=$contractTemplateId")
-            appendLine("signContractOption=2")
-            contractParams?.let {
-                appendLine("contractParams=$it")
-            }
-            templateIds.forEach { templateId ->
-                appendLine("contractTemplateIds=$templateId")
-            }
+            appendLine("Data=<${if (EnrollSDK.isEncryptionEnabled()) "encrypted text/plain" else "application/json"}>")
+            appendLine("Data preview=$safeJson")
         }
     }
 

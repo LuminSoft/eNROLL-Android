@@ -36,7 +36,7 @@ open class GenerateOnboardingSessionTokenRequest {
     internal var contractTemplateId: String? = null
 
     @SerializedName("ContractTemplateIds")
-    internal var contractTemplateIds: List<String>? = null
+    internal var contractTemplateIds: List<Int>? = null
 
     @SerializedName("ContractParams")
     internal var contractParams: String? = null

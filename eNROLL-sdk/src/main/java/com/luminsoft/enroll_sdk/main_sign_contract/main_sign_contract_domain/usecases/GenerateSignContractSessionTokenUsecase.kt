@@ -35,7 +35,7 @@ data class GenerateSignContractSessionTokenUsecaseParams(
     val tenantSecret: String,
     val applicantId: String,
     val contractTemplateId: String,
-    val contractTemplateIds: List<String>? = null,
+    val contractTemplateIds: List<Int>? = null,
     val contractParams: String,
     val signContractMode: EnrollContractSignatureMode,
     val signContractFileUri: Uri?,

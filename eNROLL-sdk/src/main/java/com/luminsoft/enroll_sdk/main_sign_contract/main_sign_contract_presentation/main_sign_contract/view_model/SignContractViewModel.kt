@@ -206,12 +206,13 @@ class SignContractViewModel(
             val templateIdRaw = EnrollSDK.contractTemplateId
             val parsedIds = parseContractTemplateIds(templateIdRaw)
             isMultiSigning.value = parsedIds.size > 1
+            val contractTemplateId = parsedIds.firstOrNull()?.toString() ?: templateIdRaw
 
             params.value = GenerateSignContractSessionTokenUsecaseParams(
                 tenantId = EnrollSDK.tenantId,
                 tenantSecret = EnrollSDK.tenantSecret,
                 applicantId = EnrollSDK.applicantId,
-                contractTemplateId = templateIdRaw,
+                contractTemplateId = contractTemplateId,
                 contractTemplateIds = if (parsedIds.size > 1) parsedIds else null,
                 contractParams = EnrollSDK.contractParameters,
                 signContractMode = EnrollSDK.signContractMode,
@@ -239,10 +240,10 @@ class SignContractViewModel(
         }
     }
 
-    private fun parseContractTemplateIds(rawIds: String): List<String> {
+    private fun parseContractTemplateIds(rawIds: String): List<Int> {
         return rawIds.split(",")
             .map { it.trim().trim('[', ']', '"', '\'') }
-            .filter { it.isNotBlank() }
+            .mapNotNull { it.toIntOrNull() }
     }
 
     private fun navigateToNextStep() {
