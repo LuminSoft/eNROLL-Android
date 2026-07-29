@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +37,9 @@ import com.itida.rssigning.data.dto.configrations.SigningConfiguration
 import com.itida.rssigning.data.dto.response.FileDetails
 import com.itida.rssigning.service.RSSigning
 import com.luminsoft.ekyc_android.theme.EnrollTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ItidaRsSigningDebugActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +54,30 @@ class ItidaRsSigningDebugActivity : ComponentActivity() {
 
     @Composable
     private fun ItidaRsSigningTestScreen() {
-        var baseUrl by remember { mutableStateOf("http://197.44.231.205:8000") }
-        var username by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        var nationalId by remember { mutableStateOf("") }
-        var channelId by remember { mutableStateOf("1") }
+        var baseUrl by remember { mutableStateOf(intent.getStringExtra("baseUrl") ?: "http://197.44.231.205:8000") }
+        var username by remember { mutableStateOf(intent.getStringExtra("username") ?: "") }
+        var password by remember { mutableStateOf(intent.getStringExtra("password") ?: "") }
+        var nationalId by remember { mutableStateOf(intent.getStringExtra("nationalId") ?: "") }
+        var channelId by remember { mutableStateOf(intent.getStringExtra("channelId") ?: "1") }
         var resultText by remember { mutableStateOf("Ready. This uses a generated sample PDF.") }
         var loading by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
+        val autoRun = intent.getBooleanExtra("autoRun", false)
+
+        LaunchedEffect(autoRun) {
+            if (autoRun) {
+                loading = true
+                resultText = "Running..."
+                resultText = runSigningTest(
+                    baseUrl = baseUrl.trim(),
+                    username = username.trim(),
+                    password = password,
+                    nationalId = nationalId.trim(),
+                    channelId = channelId.trim(),
+                )
+                loading = false
+            }
+        }
 
         Column(
             modifier = Modifier
@@ -70,11 +89,7 @@ class ItidaRsSigningDebugActivity : ComponentActivity() {
             Text("ITIDA RS Signing Test", style = MaterialTheme.typography.titleLarge)
             Text("Debug-only screen. Fill credentials and press Run.")
 
-            TestTextField(
-                label = "Base URL",
-                value = baseUrl,
-                onValueChange = { baseUrl = it },
-            )
+            TestTextField("Base URL", baseUrl, { baseUrl = it })
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
                     modifier = Modifier.weight(1f),
@@ -90,29 +105,10 @@ class ItidaRsSigningDebugActivity : ComponentActivity() {
                 }
             }
 
-            TestTextField(
-                label = "Username",
-                value = username,
-                onValueChange = { username = it },
-            )
-            TestTextField(
-                label = "Password",
-                value = password,
-                onValueChange = { password = it },
-                isPassword = true,
-            )
-            TestTextField(
-                label = "National ID",
-                value = nationalId,
-                onValueChange = { nationalId = it },
-                keyboardType = KeyboardType.Number,
-            )
-            TestTextField(
-                label = "Channel ID",
-                value = channelId,
-                onValueChange = { channelId = it },
-                keyboardType = KeyboardType.Number,
-            )
+            TestTextField("Username", username, { username = it })
+            TestTextField("Password", password, { password = it }, isPassword = true)
+            TestTextField("National ID", nationalId, { nationalId = it }, keyboardType = KeyboardType.Number)
+            TestTextField("Channel ID", channelId, { channelId = it }, keyboardType = KeyboardType.Number)
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
@@ -173,8 +169,9 @@ class ItidaRsSigningDebugActivity : ComponentActivity() {
         if (nationalId.isEmpty()) return "National ID is required"
         if (channelId.isEmpty()) return "Channel ID is required"
 
-        return try {
-            val result = RSSigning.getInstance(this).sign(
+        return withContext(Dispatchers.IO) {
+            try {
+            val result = RSSigning.getInstance(this@ItidaRsSigningDebugActivity).sign(
                 appearanceConfiguration = AppearanceConfiguration(),
                 signingConfiguration = SigningConfiguration(
                     authUsername = username,
@@ -198,10 +195,11 @@ class ItidaRsSigningDebugActivity : ComponentActivity() {
             ).joinToString("\n")
             Log.i("ITIDA_RS_TEST", message)
             message
-        } catch (e: Exception) {
+            } catch (e: Exception) {
             val message = "${e.javaClass.simpleName}: ${e.message}"
             Log.e("ITIDA_RS_TEST", message, e)
             message
+            }
         }
     }
 
@@ -232,12 +230,12 @@ class ItidaRsSigningDebugActivity : ComponentActivity() {
             endobj
             xref
             0 6
-            0000000000 65535 f 
-            0000000010 00000 n 
-            0000000059 00000 n 
-            0000000116 00000 n 
-            0000000244 00000 n 
-            0000000368 00000 n 
+            0000000000 65535 f
+            0000000010 00000 n
+            0000000059 00000 n
+            0000000116 00000 n
+            0000000244 00000 n
+            0000000368 00000 n
             trailer
             << /Root 1 0 R /Size 6 >>
             startxref
