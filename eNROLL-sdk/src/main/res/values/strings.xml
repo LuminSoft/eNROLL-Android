@@ -474,5 +474,20 @@
     <string name="dot_face_face_auto_capture_instruction_size_too_large_escalated">Move your face back</string>
     <string name="dot_face_face_auto_capture_instruction_size_too_small_escalated">Move your face closer</string>
 
+    <string name="questionnaire">Questionnaire</string>
+    <string name="questionnaire_submit">Submit</string>
+    <string name="questionnaire_required_answers">Please answer all required questions.</string>
+    <string name="questionnaire_completed_successfully">Questionnaire completed successfully</string>
+    <string name="questionnaire_text_placeholder">Enter answer</string>
+    <string name="questionnaire_number_placeholder">Enter number</string>
+    <string name="questionnaire_single_select_placeholder">Select answer</string>
+    <string name="questionnaire_date_placeholder">Select date</string>
+    <string name="questionnaire_file_placeholder">Upload PDF or image</string>
+    <string name="questionnaire_invalid_extension">Supported files are PDF, JPG, JPEG, and PNG.</string>
+    <string name="questionnaire_file_size_exceeded">File size must not exceed 5 MB.</string>
+    <string name="questionnaire_unsupported_type">Unsupported question type</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="loading">Loading</string>
 
 </resources>

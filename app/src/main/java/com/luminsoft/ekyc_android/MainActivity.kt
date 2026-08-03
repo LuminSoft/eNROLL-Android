@@ -116,6 +116,8 @@ var levelOfTrustToken =
     mutableStateOf(TextFieldValue(dotenv["LEVEL_OF_TRUST_TOKEN"]?.takeIf { it.isNotEmpty() } ?: ""))
 var templateId =
     mutableStateOf(TextFieldValue(dotenv["TEMPLATE_ID"]?.takeIf { it.isNotEmpty() } ?: ""))
+var questionnaireId =
+    mutableStateOf(TextFieldValue(dotenv["QUESTIONNAIRE_ID"]?.takeIf { it.isNotEmpty() } ?: ""))
 var googleApiKey = mutableStateOf(dotenv["GOOGLE_API_KEY"]?.takeIf { it.isNotEmpty() } ?: "")
 var isArabic = mutableStateOf(false)
 var isProduction = mutableStateOf(false)
@@ -139,6 +141,7 @@ class MainActivity : ComponentActivity() {
     private var levelOfTrustTokenText = mutableStateOf(TextFieldValue())
     private var requestIdText = mutableStateOf(TextFieldValue())
     private var templateIdText = mutableStateOf(TextFieldValue())
+    private var questionnaireIdText = mutableStateOf(TextFieldValue())
     private var contractParametersText = mutableStateOf(TextFieldValue())
     private var signContractFileUri = mutableStateOf<Uri?>(null)
     private var signContractFileName = mutableStateOf("")
@@ -186,12 +189,19 @@ class MainActivity : ComponentActivity() {
                     templateId.value.text
                 )!!
             )
+        questionnaireIdText.value =
+            TextFieldValue(
+                text = sharedPref.getString(
+                    "questionnaireId",
+                    questionnaireId.value.text
+                )!!
+            )
 
         setContent {
             val activity = LocalActivity.current!!
 
             val itemList =
-                listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract")
+                listOf("Onboarding", "Auth", "Update", "Forget Profile Data", "Sign Contract", "Questionnaire")
             var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
             val buttonModifier = Modifier.width(300.dp)
             val fontOptions = listOf(
@@ -349,6 +359,15 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+                    if (selectedIndex == 5) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        NormalTextField(
+                            label = "Questionnaire Id",
+                            value = questionnaireIdText.value,
+                            onValueChange = {
+                                questionnaireIdText.value = it
+                            })
+                    }
                     
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(":Exit Step", style = MaterialTheme.typography.labelLarge)
@@ -473,6 +492,16 @@ class MainActivity : ComponentActivity() {
                 return
             }
         }
+        if (selectedIndex == 5) {
+            if (applicationIdText.value.text.isBlank()) {
+                text.value = "Application Id is required for questionnaire"
+                return
+            }
+            if (questionnaireIdText.value.text.isBlank()) {
+                text.value = "Questionnaire Id is required"
+                return
+            }
+        }
 
         if (isRememberMe.value) {
             getPreferences(Context.MODE_PRIVATE).edit {
@@ -481,6 +510,7 @@ class MainActivity : ComponentActivity() {
                 putString("applicationId", applicationIdText.value.text)
                 putString("levelOfTrustToken", levelOfTrustTokenText.value.text)
                 putString("templateId", templateIdText.value.text)
+                putString("questionnaireId", questionnaireIdText.value.text)
                 putString("contractParameters", contractParametersText.value.text)
                 putInt("signContractModeIndex", signContractModeIndex)
                 apply()
@@ -506,6 +536,7 @@ class MainActivity : ComponentActivity() {
                     2 -> EnrollMode.UPDATE
                     3 -> EnrollMode.FORGET_PROFILE_DATA
                     4 -> EnrollMode.SIGN_CONTRACT
+                    5 -> EnrollMode.QUESTIONNAIRE
                     else -> EnrollMode.ONBOARDING
                 },
                 environment = when {
@@ -552,6 +583,7 @@ class MainActivity : ComponentActivity() {
                 fontResource = R.font.itim_regular,
                 enrollForcedDocumentType = EnrollForcedDocumentType.NATIONAL_ID_OR_PASSPORT,
                 requestId = requestIdText.value.text,
+                questionnaireId = questionnaireIdText.value.text,
                 templateId = templateIdText.value.text,
                 contractParameters = contractParametersText.value.text,
                 signContractFileUri = if (selectedSignContractMode == EnrollContractSignatureMode.LOW_RISK) {

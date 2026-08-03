@@ -215,6 +215,10 @@ class EnrollMainForgetActivity : ComponentActivity() {
             EnrollMode.SIGN_CONTRACT -> {
                 splashScreenSignContractContent
             }
+
+            EnrollMode.QUESTIONNAIRE -> {
+                splashScreenForgetContent
+            }
         }
     }
 

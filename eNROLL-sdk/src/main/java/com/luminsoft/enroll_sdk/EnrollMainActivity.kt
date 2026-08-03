@@ -114,6 +114,14 @@ class EnrollMainActivity : ComponentActivity() {
                     throw Exception("Invalid sign contract file")
                 startActivity(Intent(this, EnrollMainSignContractActivity::class.java))
             }
+
+            EnrollMode.QUESTIONNAIRE -> {
+                if (EnrollSDK.applicantId.isEmpty())
+                    throw Exception("Invalid application id")
+                if (EnrollSDK.questionnaireId.isEmpty())
+                    throw Exception("Invalid questionnaire id")
+                startActivity(Intent(this, EnrollMainQuestionnaireActivity::class.java))
+            }
         }
 
         finish()

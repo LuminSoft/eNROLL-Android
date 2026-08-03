@@ -473,5 +473,20 @@
     <string name="dot_face_face_auto_capture_instruction_size_too_large_escalated">أبعد وجهك قليلاً</string>
     <string name="dot_face_face_auto_capture_instruction_size_too_small_escalated">قرّب وجهك أكثر</string>
 
+    <string name="questionnaire">الاستبيان</string>
+    <string name="questionnaire_submit">إرسال</string>
+    <string name="questionnaire_required_answers">برجاء الإجابة على جميع الأسئلة المطلوبة.</string>
+    <string name="questionnaire_completed_successfully">تم إكمال الاستبيان بنجاح</string>
+    <string name="questionnaire_text_placeholder">أدخل الإجابة</string>
+    <string name="questionnaire_number_placeholder">أدخل رقمًا</string>
+    <string name="questionnaire_single_select_placeholder">اختر إجابة</string>
+    <string name="questionnaire_date_placeholder">اختر التاريخ</string>
+    <string name="questionnaire_file_placeholder">ارفع ملف PDF أو صورة</string>
+    <string name="questionnaire_invalid_extension">الملفات المدعومة هي PDF و JPG و JPEG و PNG.</string>
+    <string name="questionnaire_file_size_exceeded">يجب ألا يتجاوز حجم الملف 5 ميجابايت.</string>
+    <string name="questionnaire_unsupported_type">نوع السؤال غير مدعوم</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="loading">جاري التحميل</string>
 
 </resources>

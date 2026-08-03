@@ -11,6 +11,7 @@ import com.luminsoft.enroll_sdk.EnrollMainActivity
 import com.luminsoft.enroll_sdk.EnrollMainAuthActivity
 import com.luminsoft.enroll_sdk.EnrollMainForgetActivity
 import com.luminsoft.enroll_sdk.EnrollMainOnBoardingActivity
+import com.luminsoft.enroll_sdk.EnrollMainQuestionnaireActivity
 import com.luminsoft.enroll_sdk.EnrollMainSignContractActivity
 import com.luminsoft.enroll_sdk.EnrollMainUpdateActivity
 import com.luminsoft.enroll_sdk.core.models.EnrollCallback
@@ -52,6 +53,7 @@ object eNROLL {
         appColors: AppColors = AppColors(),
         correlationId: String = "",
         requestId: String = "",
+        questionnaireId: String = "",
         templateId: String = "",
         contractParameters: String = "",
         signContractFileUri: Uri? = null,
@@ -70,6 +72,12 @@ object eNROLL {
         if (enrollMode == EnrollMode.AUTH) {
             if (applicantId.isEmpty() || levelOfTrustToken.isEmpty())
                 throw Exception("Invalid Applicant Id or Level Of Trust Token")
+        }
+        if (enrollMode == EnrollMode.QUESTIONNAIRE) {
+            if (applicantId.isEmpty())
+                throw Exception("Invalid application id")
+            if (questionnaireId.isEmpty())
+                throw Exception("Invalid questionnaire id")
         }
         val hasSignContractFile =
             signContractFileUri != null || (signContractFile != null && signContractFile.isNotEmpty())
@@ -117,6 +125,7 @@ object eNROLL {
         }
         EnrollSDK.correlationId = correlationId
         EnrollSDK.requestId = requestId
+        EnrollSDK.questionnaireId = questionnaireId
         EnrollSDK.fontResource = fontResource!!
         EnrollSDK.enrollForcedDocumentType = enrollForcedDocumentType
         EnrollSDK.contractTemplateId = templateId

@@ -23,6 +23,7 @@ object EnrollSDK {
     var correlationId = ""
     var requestId = ""
     var levelOfTrustToken = ""
+    var questionnaireId = ""
     var contractTemplateId = ""
     var contractParameters = ""
     var signContractMode = EnrollContractSignatureMode.LOW_RISK_FRA

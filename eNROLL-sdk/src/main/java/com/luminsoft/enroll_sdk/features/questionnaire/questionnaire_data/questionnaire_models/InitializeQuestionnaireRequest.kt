@@ -1,0 +1,3 @@
+package com.luminsoft.enroll_sdk.features.questionnaire.questionnaire_data.questionnaire_models
+
+class InitializeQuestionnaireRequest
