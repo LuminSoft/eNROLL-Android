@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.luminsoft</groupId>
   <artifactId>eNROLL</artifactId>
-  <version>1.5.31</version>
+  <version>1.5.32</version>
   <packaging>aar</packaging>
   <dependencyManagement>
     <dependencies>
