@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.luminsoft</groupId>
   <artifactId>eNROLL</artifactId>
-  <version>1.5.36</version>
+  <version>1.5.37</version>
   <packaging>aar</packaging>
   <dependencyManagement>
     <dependencies>
@@ -73,8 +73,14 @@
     </dependency>
     <dependency>
       <groupId>com.airbnb.android</groupId>
+      <artifactId>lottie</artifactId>
+      <version>6.6.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.airbnb.android</groupId>
       <artifactId>lottie-compose</artifactId>
-      <version>6.0.1</version>
+      <version>6.6.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
